@@ -1,0 +1,203 @@
+/* 
+    Document   : yiistyle
+    Created on : 03-12-2010, 11:20:38
+    Author     : jacmoe
+    Description:
+        Yii specific flash, portlet and operations styles.
+*/
+
+div.flash-error, div.flash-notice, div.flash-success
+{
+	padding:.8em;
+	margin-bottom:1em;
+	border:2px solid #ddd;
+}
+
+div.flash-error
+{
+	background:#FBE3E4;
+	color:#8a1f11;
+	border-color:#FBC2C4;
+}
+
+div.flash-notice
+{
+	background:#FFF6BF;
+	color:#514721;
+	border-color:#FFD324;
+}
+
+div.flash-success
+{
+	background:#E6EFC2;
+	color:#264409;
+	border-color:#C6D880;
+}
+
+div.flash-error a
+{
+	color:#8a1f11;
+}
+
+div.flash-notice a
+{
+	color:#514721;
+}
+
+div.flash-success a
+{
+	color:#264409;
+}
+
+.portlet
+{
+
+}
+
+.portlet-decoration
+{
+    height: 0;
+    padding: 0;
+    visibility: hidden;
+}
+
+.portlet-title
+{
+    height: 0;
+    padding: 0;
+    visibility: hidden;
+}
+
+.portlet-content
+{
+}
+
+.portlet-content ul
+{
+}
+
+.portlet-content li
+{
+}
+
+.operations
+{
+}
+
+.operations li
+{
+}
+
+.operations li a
+{
+}
+
+.operations li a:visited
+{
+}
+
+.operations li a:hover
+{
+}
+
+.floaty {
+  padding: 15px;
+  margin: 0 0 1.2em 0;
+  border: 1px solid #C5C5C5;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+.meta ul li
+{
+    display: inline;
+}
+
+.tags a
+{
+    background:url("../images/tag2.png") no-repeat;
+    padding-left: 14px;
+    vertical-align:middle;
+}
+
+fieldset {border: 1px solid #e4e4e4; margin:0;}
+legend {color: #484848;}
+
+fieldset.collapsible { border-width: 1px 0 0 0; font-size: 0.9em; }
+fieldset.collapsible legend { padding-left: 16px; background: url(../images/arrow_expanded.png) no-repeat 0% 40%; cursor:pointer; }
+fieldset.collapsible.collapsed legend { background-image: url(../images/arrow_collapsed.png); }
+
+table.list { border: 1px solid #e4e4e4;  border-collapse: collapse; width: 100%; margin-bottom: 4px; }
+table.list th {  padding: 4px; white-space:nowrap; border: 1px solid #e4e4e4;}
+table.list td { vertical-align: top; border: 1px solid #e4e4e4;}
+table.list td.id { width: 2%; text-align: center;}
+table.list td.checkbox { width: 15px; padding: 0px;}
+
+/**
+ * CSS styles for CLinkPager.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright &copy; 2008-2010 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ * @version $Id: pager.css 1678 2010-01-07 21:02:00Z qiang.xue $
+ * @since 1.0
+ */
+
+ul.yiiPager
+{
+	font-size:11px;
+	border:0;
+	margin:0;
+	padding:0;
+	line-height:100%;
+	display:inline;
+}
+
+ul.yiiPager li
+{
+	display:inline;
+}
+
+ul.yiiPager a:link,
+ul.yiiPager a:visited
+{
+	border:solid 1px #c68900 !important;
+	font-weight:bold;
+	color:#c68900 !important;
+	padding:1px 6px;
+	text-decoration:none;
+}
+
+ul.yiiPager .page a
+{
+	font-weight:normal;
+}
+
+ul.yiiPager a:hover
+{
+	border:solid 1px #c68900 !important;
+}
+
+ul.yiiPager .selected a
+{
+	background:#c68900 !important;
+	color:#FFFFFF !important;
+	font-weight:bold;
+}
+
+ul.yiiPager .hidden a
+{
+	border:solid 1px #c68900 !important;
+	color:#888888;
+}
+
+/**
+ * Hide first and last buttons by default.
+ */
+ul.yiiPager .first,
+ul.yiiPager .last
+{
+	display:none;
+}

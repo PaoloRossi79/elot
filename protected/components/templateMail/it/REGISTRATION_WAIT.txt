@@ -1,0 +1,65 @@
+<style>
+.ReadMsgBody .ExternalClass { width: 100%; }
+</style>
+<div style="background:#DBE2E6;text-align:center;">
+   <center>
+      <div style="width:500px;">
+               <div style="float:right;margin-left:15px;margin-right:25px;margin-bottom:10px;padding-top:20px;">
+                  <a href="##SITE_LINK##" target="_blank"><img src="##SITE_LINK##/themes/clos_registration/images/logo_email.png" border="0" width="159" height="170"/></a>
+               </div>
+      </div>
+   </center>
+   <div style="text-align:center;padding-top:15px;padding-bottom:15px;">
+      <center>
+      <div style="margin-bottom:30px;"></div>
+
+         <div style="width:500px;margin-left:15px;margin-right:15px;background:#FFFFFF;border:1px solid #BDC9D0;">
+            <div style="background:#BDC9D0;height:15px;"><span style="font-size:1px">&nbsp;</span></div>
+
+            <div style="margin-left:25px;margin-right:25px;margin-bottom:25px;font-family:Arial,sans-serif;font-size:12px;color:#595959;text-align:left;">
+               <div style="height:18px"><span style="font-size:1px">&nbsp;</span></div>
+
+               <h3 style="font-size:16px;font-weight:bold;margin-top:0;margin-bottom:0;color:#0F0F0F!important;margin-bottom:10px;">
+                  Benvenuto su ##SITE_NAME##
+               </h3>
+               <p style="line-height:19px">
+                  Grazie per esserti registrato su <b>##SITE_NAME##</b>. Il tuo account &egrave; in attesa di attivazione.
+               </p>
+               <p style="line-height:19px">
+                  Questo &egrave; il riepilogo dei dati che hai inserito:
+               </p>
+               <p>
+                   <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Nome e cognome:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##FULLNAME##</td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Data di nascita:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##DOB##</td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Indirizzo e-mail:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;"><a href="mailto:##USER_EMAIL##" style="font-size:12px;color:#595959;text-decoration: none;">##USER_EMAIL##</a></td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Password:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##PASSWORD2##</td>
+                   </tr>
+                   </table>
+            </p>
+            <p>
+            Riceverai un'e-mail quando il tuo account sar&agrave; attivo e potrai effettuare il login.
+            </p>
+
+
+            </div>
+         </div>
+         <div style="height:10px;"><span style="font-size:1px">&nbsp;</span></div>
+          <div style="width:500px;margin-left:15px;margin-right:15px;margin-bottom:15px;font-size:11px;color:#718694;font-family:Arial,sans-serif;">
+              E-mail inviata da <a href="##SITE_LINK##" style="font-size:11px;color:#718694;text-decoration:underline;font-weight:bold;">##SITE_NAME##</a>.<br/>
+              Assicurati di aggiungere <a href="mailto:##FROM_EMAIL##" style="font-size:11px;color:#718694;text-decoration: none;">##FROM_EMAIL##</a> alla tua rubrica o di inserirlo tra i mittenti attendibili.
+          </div>
+      </center>
+   </div>
+</div>

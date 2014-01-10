@@ -1,0 +1,78 @@
+<style>
+.ReadMsgBody .ExternalClass { width: 100%; }
+</style>
+<div style="background:#DBE2E6;text-align:center;">
+   <center>
+      <div style="width:500px;">
+               <div style="float:right;margin-left:15px;margin-right:25px;margin-bottom:10px;padding-top:20px;">
+                  <a href="##SITE_LINK##" target="_blank"><img src="##SITE_LINK##/themes/clos_registration/images/logo_email.png" border="0" width="159" height="170"/></a>
+               </div>
+      </div>
+   </center>
+   <div style="text-align:center;padding-top:15px;padding-bottom:15px;">
+      <center>
+      <div style="margin-bottom:30px;"></div>
+
+         <div style="width:500px;margin-left:15px;margin-right:15px;background:#FFFFFF;border:1px solid #BDC9D0;">
+            <div style="background:#BDC9D0;height:15px;"><span style="font-size:1px">&nbsp;</span></div>
+
+            <div style="margin-left:25px;margin-right:25px;margin-bottom:25px;font-family:Arial,sans-serif;font-size:12px;color:#595959;text-align:left;">
+               <div style="height:18px"><span style="font-size:1px">&nbsp;</span></div>
+
+               <h3 style="font-size:16px;font-weight:bold;margin-top:0;margin-bottom:0;color:#0F0F0F!important;margin-bottom:10px;">
+                  ##INVITER_NAME## ti ha invitato a fare parte della community privata ##SITE_NAME##
+               </h3>
+               <p style="line-height:19px">
+                  Clicca sul pulsante per registrarti su <b>##SITE_NAME##</b> accettando il suo invito. Usa esclusivamente questo link per registrarti e il tuo account sar&agrave; subito attivo.
+               </p>
+			   <p>
+				  Ricordati che una volta attivato il tuo account potrai invitare anche tu i tuoi amici, andando alla pagina "Profilo e opzioni personali" (trovi il link in alto a destra su tutte le pagine) e poi cliccando su "Invita gli amici su Clos 1,81".
+			   </p>
+               <p>
+                   <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Mittente:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##INVITER_NAME##<br/><a href="mailto:##INVITER_EMAIL##" style="font-size:12px;color:#595959;text-decoration: none;">##INVITER_EMAIL##</a></td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Destinatario:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;"><a href="mailto:##INVITED_EMAIL##" style="font-size:12px;color:#595959;text-decoration: none;">##INVITED_EMAIL##</a></td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Messaggio:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##MESSAGE##</td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">Spedito:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##INVITE_DATE##</td>
+                   </tr>
+                   <tr>
+                      <td width="30%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">ID Invito:</td>
+                      <td width="70%" valign="top" style="padding: 5px 0;font-size:12px;color:#595959;">##INVITE_ID##</td>
+                   </tr>
+                   </table>
+            </p>
+
+
+            <p style="line-height:19px">
+               Hai dubbi o pensi ci sia un errore? Contatta ##SITE_NAME## inviando un'e-mail a <a href="mailto:##FROM_EMAIL##" target="_blank" style="text-decoration:none;color:#6887B4;">##FROM_EMAIL##</a>.
+            </p>
+
+               <p style="text-align:center;">
+                  <a href="##INVITE_LINK##" target="_blank" style="padding-right:12px;padding-left:12px;padding-top:12px;padding-bottom:12px;color: #FFFFFF;text-decoration:none;background:#6887B4;line-height:36px;border: 1px solid #6887B4;text-align: center;font-size: 14px;">
+                     Registrati ora &raquo;
+                  </a>
+                  <div style="clear:both"><span style="font-size:1px">&nbsp;</span></div>
+               </p>
+
+
+            </div>
+         </div>
+         <div style="height:10px;"><span style="font-size:1px">&nbsp;</span></div>
+          <div style="width:500px;margin-left:15px;margin-right:15px;margin-bottom:15px;font-size:11px;color:#718694;font-family:Arial,sans-serif;">
+              E-mail inviata da <a href="##SITE_LINK##" style="font-size:11px;color:#718694;text-decoration:underline;font-weight:bold;">##SITE_NAME##</a>.<br/>
+              Assicurati di aggiungere <a href="mailto:##FROM_EMAIL##" style="font-size:11px;color:#718694;text-decoration: none;">##FROM_EMAIL##</a> alla tua rubrica o di inserirlo tra i mittenti attendibili.
+          </div>
+      </center>
+   </div>
+</div>

@@ -1,0 +1,151 @@
+/* CSS dello scroller con i main deals */
+
+/* Generico dello scroller */
+
+.main-inserzioni-container {
+   background-color: #FFFFFF;
+   border: 0px solid #FFFFFF; 
+   /*box-shadow: 0px 0px 20px #808080;*/
+   /*box-shadow: 0px 0px 10px rgba(0,0,0,0.2);*/
+   width: 100%;
+   max-width: 1600px;
+   margin: 0 auto;
+}
+
+.main-inserzioni {
+   position: relative; 
+   overflow: auto;
+   margin: 0 ;
+   padding: 0;
+   width: 100% !important;
+   max-width: 1600px;
+   margin: 0 auto;
+}
+
+a.slider-arrow.next, a.slider-arrow.prev {
+   position: absolute;
+   top: 0;
+   font-size: 40px;
+   color: #FFFFFF;
+   color: rgba(255,255,255,0.8);
+   text-decoration: none;
+   text-shadow: 0px 0px 6px #808080;
+   text-shadow: 0px 0px 16px rgba(0,0,0,0.1);
+   height: 450px;
+   line-height: 450px;
+   padding: 0 10px 0 5px;
+   background-image: none;
+}
+
+a.slider-arrow.next:hover, a.slider-arrow.prev:hover {
+   color: rgb(255,255,255);
+}
+
+a.slider-arrow.next {
+   right: 10px;
+}
+
+a.slider-arrow.prev{
+   left: 10px;
+}
+
+.main-inserzioni ul, .main-inserzioni li { 
+   list-style: none; 
+   list-style-position: outside;
+   margin: 0;
+   padding: 0;
+}
+
+.main-inserzioni ul li { 
+   float: left; 
+   height: 450px;
+   position: relative;
+   background-color: silver;
+   background-repeat: no-repeat;
+   background-position: center top;
+}
+
+.main-inserzioni ul li .main-width {
+   width: 980px;
+   height: 450px;
+}
+
+/* Specifiche delle offerte all'interno */
+
+.main-to-align {
+   display: table-cell;
+   height: 450px;
+   vertical-align: middle;
+   background: url('../img/shadow.png');
+}
+
+.main-inserzioni .main-box {
+   /*
+   background: #FFFFFF;
+   background: rgba(255,255,255,0.8);
+   box-shadow: 0px 0px 6px #808080;
+   box-shadow: 0px 0px 16px rgba(0,0,0,0.1);
+   border: 1px solid #DDDDDD;
+   */
+   width: 410px;
+   text-align: left;
+   text-shadow: 0px 0px 20px #FFFFFF;
+}
+
+.main-inserzioni .main-box:hover {
+   /*
+   border: 1px solid #BBBBBB;
+   box-shadow: 0px 0px 6px #707070;
+   box-shadow: 0px 0px 16px rgba(0,0,0,0.2);
+   */
+}
+
+.main-inserzioni .main-box .main-padding {
+   padding: 25px 0 25px 80px;
+}
+
+
+.main-inserzioni h2 {
+   font-size: 40px;
+   letter-spacing: -1px;
+   margin: 0;
+   padding: 0;
+   font-weight: bold;
+   line-height: 37px;
+   color: #424242;
+}
+
+.main-inserzioni h2 a {
+   color: #424242;
+}
+
+.main-inserzioni .main-box-text {
+   margin-top: 16px;
+   margin-bottom: 21px;
+}
+
+.main-inserzioni .main-box-subtitle, .main-inserzioni .main-box-subtitle a {
+   font-size: 11px;
+   text-transform: uppercase;
+   color: #909090;
+   margin-top: 8px;
+}
+
+.main-inserzioni .main-box-price {
+   float: left;
+   font-size: 32px;
+   line-height: 32px;
+   letter-spacing: -1px;
+   color: #424242;
+}
+
+.main-inserzioni .main-purchase-button, .main-inserzioni .main-more-details {
+   float: right;
+   height: 27px;
+   margin-left: 5px;
+}
+
+
+.main-inserzioni ul a {
+    background-image: none;
+}

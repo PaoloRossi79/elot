@@ -1,0 +1,39 @@
+<style>
+.ReadMsgBody .ExternalClass { width: 100%; }
+</style>
+<div style="background-color:#ffffff;">
+<div style="margin-left:5px;margin-right:5px;">
+   <img src="http://clos181.com/images/logo.png" border="0" style="float:right;margin-left:10px;margin-bottom:10px;"/>
+   <div style="margin-bottom:25px;font-size:1px;">&nbsp;</div>
+   <div style="text-align:left;margin-left:10px;margin-right:10px;margin-bottom:55px;" align="left">
+
+   <h1 style="font-size:16px;font-weight:bold;color:#4F5861;font-family:Arial,sans-serif;">Gentile ##USER_NAME##,</h1>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Un nostro acquirente ha acquistato merce presso di noi. Dovete eseguire un ritiro commissionato, indirizzo di ritiro e consegna sono indicati nel PDF allegato.
+   </p>
+   <br />
+   <br />
+   <br />
+   ##ORDERS_ROWS_BLOCK##
+
+    <br/>
+
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Allegato alla presente trova un allegato con i dati del mittente e del destinatario. La preghiamo di contattare il mittente avvisando del suo arrivo quanto prima.
+   </p>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Se ha dubbi o domande non esiti a contattare lo staff di ##SITE_NAME## mandando un messaggio a <a href="##FROM_EMAIL##" target="_blank" style="color:#718694;font-weight:bold;">##FROM_EMAIL##</a>.
+   </p>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Grazie per la Sua collaborazione,<br/>
+      <b style="font-size:14px;">Il team di ##SITE_NAME##</b> <img src="http://clos181.com/images/logo_uva.png" border="0" align="top"/>
+   </p>
+
+</div>
+
+<div style="margin-left:10px;margin-right:10px;margin-bottom:15px;font-size:11px;color:#999999;font-family:Arial,sans-serif;">
+   Questa E-mail &eacute; stata inviata da <a href="##SITE_LINK##" style="font-size:11px;color:#999999;text-decoration:underline;font-weight:bold;">##SITE_NAME##</a>.<br/>
+   Assicurati di aggiungere <a href="mailto:##FROM_EMAIL##" style="font-size:11px;color:#999999;text-decoration: none;">##FROM_EMAIL##</a> alla tua rubrica o di inserirlo tra i mittenti attendibili.
+</div>
+</div>
+</div>

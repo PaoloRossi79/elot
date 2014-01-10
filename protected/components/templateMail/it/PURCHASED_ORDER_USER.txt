@@ -1,0 +1,44 @@
+<style>
+.ReadMsgBody .ExternalClass { width: 100%; }
+</style>
+<div style="background-color:#ffffff;">
+<div style="margin-left:5px;margin-right:5px;">
+   <img src="http://clos181.com/images/logo.png" border="0" style="float:right;margin-left:10px;margin-bottom:10px;"/>
+   <div style="margin-bottom:25px;font-size:1px;">&nbsp;</div>
+<div style="text-align:left;margin-left:10px;margin-right:10px;margin-bottom:55px;" align="left">
+
+   <h1 style="font-size:16px;font-weight:bold;color:#4F5861;font-family:Arial,sans-serif;">Gentile ##USER_NAME##,</h1>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Il tuo ordine su ##SITE_NAME## &egrave; stato inviato ai produttori che procederanno alla spedizione dei prodotti acquistati nei termini contrattuali.
+   </p>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Di seguito trovi il riepilogo del tuo ordine, per maggiori dettagli <a href="##MYORDERS_LINK##" target="_blank" style="color:#718694;font-weight:bold;">visita la pagina dei tuoi ordini</a> nel tuo profilo personale su ##SITE_NAME##:
+   </p>
+
+   <div style="font-family:Arial,sans-serif;font-size:13px;font-weight:bold;text-align:center;padding-right:5px;background:#4F5861;color:#FFFFFF;border-top:1px solid #cccccc;">
+      <br/>
+      ORDINE N. ##ORDER_ID## DEL ##ORDER_DATE##
+      <br/><br/>
+   </div>
+   ##ORDERS_ROWS_BLOCK##
+   <div style="font-family:Arial,sans-serif;font-size:13px;text-align:center;padding-right:5px;color:#4F5861;border-top:1px solid #cccccc;border-bottom:1px solid #cccccc;background:#e5e5e5;">
+      <br/>
+      TOTALE PAGATO: <b>##ORDER_TOTAL##</b>
+      <br/><br/>
+   </div>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Se hai dubbi o domande non esitare a contattare lo staff di ##SITE_NAME## mandando un messaggio a <a href="##FROM_EMAIL##" target="_blank" style="color:#718694;font-weight:bold;">##FROM_EMAIL##</a>.
+   </p>
+   <p style="font-size:13px;color:#4F5861;font-family:Arial,sans-serif;">
+      Grazie per il tuo acquisto,<br/>
+      <b style="font-size:14px;">Il team di ##SITE_NAME##</b> <img src="http://clos181.com/images/logo_uva.png" border="0" align="top"/>
+   </p>
+
+</div>
+
+<div style="margin-left:10px;margin-right:10px;margin-bottom:15px;font-size:11px;color:#999999;font-family:Arial,sans-serif;">
+   Questa E-mail &eacute; stata inviata da <a href="##SITE_LINK##" style="font-size:11px;color:#999999;text-decoration:underline;font-weight:bold;">##SITE_NAME##</a>.<br/>
+   Assicurati di aggiungere <a href="mailto:##FROM_EMAIL##" style="font-size:11px;color:#999999;text-decoration: none;">##FROM_EMAIL##</a> alla tua rubrica o di inserirlo tra i mittenti attendibili.
+</div>
+</div>
+</div>

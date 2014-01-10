@@ -1,0 +1,34 @@
+TODO:
+
+1) RICERCA
+    a) MAIN PAGE: categoria
+                data (1 sola...estrazioni solo quel giorno)
+                geo: distanza rispetto alla località inserita
+    a) LOT INDEX: categoria
+                data (2 ... range) OK
+                geo: distanza rispetto alla località inserita
+                ticket price: intervallo (slider o 2 campi) OK
+                buy price: intervallo (slider o 2 campi) OK
+                keyword: free text da usare in ricerca
+   
+2) registrazione e login via facebook, twitter, g+ OK
+3) cambio stato delle lotterie
+4) aggiungere check x biglietti rimanenti
+
+5) Newsletter: 
+    a) gestire pagina di selezione delle NL
+    b) funzione di invio
+    c) possibilità di annuncio sponsorizzato, con commissione più alta
+
+6) ANNULLAMENTO Lotteria:
+    a) fino a 24 H prima dell'estrazione
+
+7) LOTTERIE:
+    a) Non mostrare totali dei biglietti, ma solo status
+    b) con Data Scad: mostra tempo mancante
+                      no min limit: venditore può annullare se troppo pochi
+    c) Fix Num Lot: inserire cmq una data di scadenza (se non inserita): [param] giorni
+
+8) Invita amici da Facebook (sharer)
+
+9) acquisto ticket: apri box per inviare ad amico e per dare conferma -> OK

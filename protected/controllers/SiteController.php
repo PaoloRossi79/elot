@@ -149,10 +149,16 @@ class SiteController extends Controller
 		// collect user input data
 		if(isset($_POST['RegisterForm']))
 		{
-			$model->attributes=$_POST['RegisterForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->register())
-				$this->redirect(Yii::app()->homeUrl);
+                        // check if already registered
+                        $already = Users::model()->find('email = "'.$_POST['RegisterForm']['email'].'"');
+                        if($already){
+                            $model->addError('email', 'Email already registered. Try login.');
+                        } else {
+                            $model->attributes=$_POST['RegisterForm'];
+                            // validate user input and redirect to the previous page if valid
+                            if($model->validate() && $model->register())
+                                    $this->redirect(Yii::app()->homeUrl);
+                        }
 		}
 		// display the login form
 		$this->render('register',array('model'=>$model));

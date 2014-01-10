@@ -115,8 +115,21 @@ class Subscriptions extends PActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function createNewSubscription($type,$value){
+            $sub = new Subscriptions;
+            $sub->nl_type = $type;
+            $sub->nl_type_id = $value;
+            $sub->user_id = Yii::app()->user->id;
+            $sub->is_active = 1;
+            $sub->term_cond = 1;
+            $sub->privacy_ok = 1;
+            $sub->sub_ip = CHttpRequest::getUserHostAddress();
+            $sub->sub_dns = CHttpRequest::getUserHost();
+            return $sub;
+        }
 
-	/**
+        /**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.

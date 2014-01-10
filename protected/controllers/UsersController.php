@@ -33,7 +33,7 @@ class UsersController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('buyCredit','myProfile'),
+				'actions'=>array('buyCredit','myProfile','editNewsletter'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -190,6 +190,75 @@ class UsersController extends Controller
 			'model'=>$model,
 		));
 	}
+        
+        /**
+	 * Save newsletter changes
+	 */
+	public function actionEditNewsletter()
+	{        
+            $data = array();
+            $error = array();
+            $this->subscriptionForm = new SubscriptionForm;
+            if(isset($_POST['SubscriptionForm'])){
+                $catEqual= $this->subscriptionForm->catSelections == $_POST['SubscriptionForm']['catSelections'];
+                $othEqual= $this->subscriptionForm->othSelections == $_POST['SubscriptionForm']['othSelections'];
+                if(!$catEqual || !$othEqual){
+                    if(!$_POST['SubscriptionForm']['privacyOk'] || !$_POST['SubscriptionForm']['termsOk']){
+                        if(!$_POST['SubscriptionForm']['privacyOk']){
+                            $this->subscriptionForm->addError('privacyOk', 'You must accept privacy policy!');
+                        }
+                        if(!$_POST['SubscriptionForm']['termsOk']){
+                            $this->subscriptionForm->addError('termsOk', 'You must accept terms & conditions!');
+                        }
+                    } else {
+                        if(isset($_POST['SubscriptionForm']['catSelections'])){
+                            $error['cat'] = array();
+                            $cats = $_POST['SubscriptionForm']['catSelections'];
+                            foreach($cats as $cat){
+                                // check for already subscribed
+                                if(!in_array($cat, $this->subscriptionForm->catSelections)){
+                                    $sub = Subscriptions::createNewSubscription('cat',$cat);
+                                    if($sub->save()){
+
+                                    } else {
+                                        $error['cat'][] = $cat;
+                                    }
+                                }
+                            }
+                            // delete removed
+                            foreach($this->subscriptionForm->catSelections as $selCat){
+                                if(!in_array($selCat,$cats)){
+                                    $remSub = Subscriptions::model()->find('nl_type = "cat" and nl_type_id = '.$selCat.' and user_id = '.Yii::app()->user->id)->delete();
+                                }
+                            }
+                        }
+                        if(isset($_POST['SubscriptionForm']['othSelections'])){
+                            $error['oth'] = array();
+                            $oths = $_POST['SubscriptionForm']['othSelections'];
+                            foreach($oths as $oth){
+                                // check for already subscribed
+                                if(!in_array($oth, $this->subscriptionForm->othSelections)){
+                                    $sub = Subscriptions::createNewSubscription('oth',$oth);
+                                    if($sub->save()){
+
+                                    } else {
+                                        $error['oth'][] = $oth;
+                                    }
+                                }
+                            }
+                            // delete removed
+                            foreach($this->subscriptionForm->othSelections as $selOth){
+                                if(!in_array($selOth,$oths)){
+                                    $remSub = Subscriptions::model()->find('nl_type = "oth" and nl_type_id = '.$selOth.' and user_id = '.Yii::app()->user->id)->delete();
+                                }
+                            }
+                        }
+                    }
+                    $data["error"] = $error;
+                }
+            }
+            $this->renderPartial('_newsletter', $data, false, true);
+        }
         
         /**
 	 * Buy credit for user a particular model.

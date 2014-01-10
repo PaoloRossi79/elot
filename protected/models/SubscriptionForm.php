@@ -9,7 +9,10 @@ class SubscriptionForm extends CFormModel
 {
 	public $categories;
 	public $others;
-        public $selections;
+        public $catSelections;
+        public $othSelections;
+        public $privacyOk;
+        public $termsOk;
         const bestseller = 0;
         const nearest = 1;
         const newest = 2;
@@ -42,13 +45,22 @@ class SubscriptionForm extends CFormModel
 	 */
         public function __construct($scenario='')
 	{
-            
                 $this->categories=PrizeCategories::model()->getPrizeCatCheckbox();
 		$this->others = array(
                     SubscriptionForm::bestseller => 'Best Sellers',
                     SubscriptionForm::nearest => 'Nearest to you',
                     SubscriptionForm::newest => 'Newest lottery',
                 );
+                $this->catSelections = array();
+                $this->othSelections = array();
+                $newsletters = Subscriptions::model()->findAll('user_id = '.Yii::app()->user->id);
+                foreach($newsletters as $k => $news) {
+                    if($news->nl_type == "cat"){
+                        $this->catSelections[] = $news->nl_type_id;
+                    } elseif($news->nl_type == "oth"){
+                        $this->othSelections[] = $news->nl_type_id;
+                    }
+                }
                 parent::__construct($scenario);
 	}
 }

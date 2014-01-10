@@ -1,0 +1,433 @@
+CREATE DATABASE  IF NOT EXISTS `elot` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `elot`;
+-- MySQL dump 10.13  Distrib 5.5.34, for debian-linux-gnu (i686)
+--
+-- Host: 127.0.0.1    Database: elot
+-- ------------------------------------------------------
+-- Server version	5.5.34-0ubuntu0.12.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `tickets`
+--
+
+DROP TABLE IF EXISTS `tickets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tickets` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL,
+  `lottery_id` int(10) NOT NULL,
+  `serial_number` int(16) NOT NULL,
+  `status` tinyint(2) DEFAULT NULL,
+  `price` double(10,2) NOT NULL,
+  `value` double(10,2) NOT NULL,
+  `promotion_id` int(10) unsigned DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tickets`
+--
+
+LOCK TABLES `tickets` WRITE;
+/*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
+INSERT INTO `tickets` VALUES (14,697,1974,554013,1,12.00,12.00,NULL,'2013-11-01 21:11:07','2013-11-01 21:11:07',697),(15,697,1,202007,2,1.00,1.00,NULL,'2013-11-01 21:11:48','2013-11-01 21:11:48',697),(16,697,1,226352,3,1.00,1.00,NULL,'2013-11-01 21:11:50','2013-11-01 21:11:50',697),(17,697,1975,931406,NULL,1.00,1.00,NULL,'2013-11-06 21:03:38','2013-11-06 21:03:38',697),(18,697,1973,615596,NULL,11.00,11.00,NULL,'2013-11-07 17:40:14','2013-11-07 17:40:14',697),(19,697,1976,829580,NULL,2.00,2.00,NULL,'2013-11-07 17:40:15','2013-11-07 17:40:15',697),(20,697,1973,664341,NULL,11.00,11.00,NULL,'2013-11-07 17:45:05','2013-11-07 17:45:05',697),(21,697,1973,596742,NULL,11.00,11.00,NULL,'2013-11-07 17:47:46','2013-11-07 17:47:46',697),(22,697,1976,856381,1,2.00,2.00,NULL,'2013-11-07 17:48:32','2013-11-07 17:48:32',697),(23,697,1973,871339,1,11.00,11.00,NULL,'2013-11-07 17:48:35','2013-11-07 17:48:35',697),(24,697,1976,815129,1,2.00,2.00,NULL,'2013-11-07 17:48:36','2013-11-07 17:48:36',697),(25,697,2,450782,1,12.00,12.00,NULL,'2013-11-07 19:38:14','2013-11-07 19:38:14',697),(26,697,1973,306979,1,11.00,11.00,NULL,'2013-11-07 19:38:15','2013-11-07 19:38:15',697),(27,697,1,375954,1,1.00,1.00,NULL,'2013-11-13 20:29:56','2013-11-13 20:29:56',697),(28,697,1,610263,1,1.00,1.00,NULL,'2013-11-13 21:19:03','2013-11-13 21:19:03',697),(29,697,1,732043,1,1.00,1.00,NULL,'2013-11-13 21:19:05','2013-11-13 21:19:05',697),(30,697,1,618296,1,1.00,1.00,NULL,'2013-11-13 21:19:08','2013-11-13 21:19:08',697),(31,697,1,131858,1,1.00,1.00,NULL,'2013-11-13 21:19:09','2013-11-13 21:19:09',697),(32,697,1,390951,1,1.00,1.00,NULL,'2013-11-13 21:19:11','2013-11-13 21:19:11',697),(33,697,1,439476,1,1.00,1.00,NULL,'2013-11-13 21:21:10','2013-11-13 21:21:10',697),(34,697,2,116385,1,12.00,12.00,NULL,'2013-11-13 21:21:19','2013-11-13 21:21:19',697),(35,697,2,933803,1,12.00,12.00,NULL,'2013-11-13 21:22:37','2013-11-13 21:22:37',697),(36,697,1973,432980,1,11.00,11.00,NULL,'2013-11-13 21:23:00','2013-11-13 21:23:00',697),(37,697,2,135662,1,12.00,12.00,NULL,'2013-11-13 21:24:51','2013-11-13 21:24:51',697),(38,697,1973,789543,1,11.00,11.00,NULL,'2013-11-13 21:25:30','2013-11-13 21:25:30',697),(39,697,1974,339521,1,12.00,12.00,NULL,'2013-11-13 21:26:09','2013-11-13 21:26:09',697),(40,697,1974,208251,1,12.00,12.00,NULL,'2013-11-13 21:27:06','2013-11-13 21:27:06',697),(41,697,1973,275012,1,11.00,11.00,NULL,'2013-11-13 21:27:42','2013-11-13 21:27:42',697),(42,697,1974,465145,1,12.00,12.00,NULL,'2013-11-13 21:27:48','2013-11-13 21:27:48',697),(43,697,1973,718236,1,11.00,11.00,NULL,'2013-11-13 21:29:20','2013-11-13 21:29:20',697),(44,697,2,452494,1,12.00,12.00,NULL,'2013-11-13 21:29:29','2013-11-13 21:29:29',697),(45,697,1,924991,1,1.00,1.00,NULL,'2013-11-13 21:29:30','2013-11-13 21:29:30',697),(46,697,1,674213,1,1.00,1.00,NULL,'2013-11-13 21:29:31','2013-11-13 21:29:31',697),(47,697,1,367713,1,1.00,1.00,NULL,'2013-11-13 21:29:32','2013-11-13 21:29:32',697),(48,697,1,154869,1,1.00,1.00,NULL,'2013-11-13 21:29:32','2013-11-13 21:29:32',697),(49,697,1975,984583,1,1.00,1.00,NULL,'2013-11-13 21:39:14','2013-11-13 21:39:14',697),(50,697,1975,946237,1,1.00,1.00,NULL,'2013-11-13 21:39:15','2013-11-13 21:39:15',697),(51,697,1976,546347,1,2.00,2.00,NULL,'2013-11-13 21:39:17','2013-11-13 21:39:17',697),(52,697,1976,603967,1,2.00,2.00,NULL,'2013-11-13 21:39:18','2013-11-13 21:39:18',697),(53,697,1,560289,1,1.00,1.00,NULL,'2013-11-13 21:39:37','2013-11-13 21:39:37',697),(54,697,1974,444366,1,12.00,12.00,NULL,'2013-11-13 21:39:40','2013-11-13 21:39:40',697),(55,697,1975,138057,1,1.00,1.00,NULL,'2013-11-13 21:39:44','2013-11-13 21:39:44',697),(56,697,1,926877,1,1.00,1.00,NULL,'2013-11-13 21:39:46','2013-11-13 21:39:46',697),(57,697,1,214758,1,1.00,1.00,NULL,'2013-11-13 21:39:48','2013-11-13 21:39:48',697),(58,697,1973,263219,1,11.00,11.00,NULL,'2013-11-13 21:40:53','2013-11-13 21:40:53',697),(59,697,1973,643803,1,11.00,11.00,NULL,'2013-11-13 21:40:54','2013-11-13 21:40:54',697),(60,697,2,864448,1,12.00,12.00,NULL,'2013-11-13 21:40:58','2013-11-13 21:40:58',697),(61,697,2,453168,1,12.00,12.00,NULL,'2013-11-13 21:40:59','2013-11-13 21:40:59',697),(62,697,2,330158,1,12.00,12.00,NULL,'2013-11-13 21:41:01','2013-11-13 21:41:01',697),(63,697,2,910657,1,12.00,12.00,NULL,'2013-11-13 21:41:02','2013-11-13 21:41:02',697),(64,697,1975,394500,1,1.00,1.00,NULL,'2013-11-13 21:43:08','2013-11-13 21:43:08',697),(65,697,1973,979459,1,11.00,11.00,NULL,'2013-11-13 21:43:09','2013-11-13 21:43:09',697),(66,697,1975,394158,1,1.00,1.00,NULL,'2013-11-13 21:51:45','2013-11-13 21:51:45',697),(67,697,1975,112702,1,1.00,1.00,NULL,'2013-11-13 21:51:46','2013-11-13 21:51:46',697),(68,697,1973,895277,1,11.00,11.00,NULL,'2013-11-13 21:51:48','2013-11-13 21:51:48',697),(69,697,2,156682,1,12.00,12.00,NULL,'2013-11-13 21:55:57','2013-11-13 21:55:57',697),(70,697,1975,771461,1,1.00,1.00,NULL,'2013-11-13 22:04:36','2013-11-13 22:04:36',697),(71,697,1975,117863,1,1.00,1.00,NULL,'2013-11-13 22:04:38','2013-11-13 22:04:38',697),(72,697,2,378004,1,12.00,12.00,NULL,'2013-11-13 22:05:55','2013-11-13 22:05:55',697),(73,697,2,788900,1,12.00,12.00,NULL,'2013-11-13 22:05:56','2013-11-13 22:05:56',697),(74,697,1975,296078,1,1.00,1.00,NULL,'2013-11-13 22:06:01','2013-11-13 22:06:01',697),(75,697,1975,388486,1,1.00,1.00,NULL,'2013-11-13 22:06:02','2013-11-13 22:06:02',697),(76,697,1974,602525,1,12.00,12.00,NULL,'2013-11-13 22:06:03','2013-11-13 22:06:03',697),(77,697,1978,504920,1,2.00,2.00,NULL,'2013-11-14 01:08:08','2013-11-14 01:08:08',697),(78,697,1977,686795,NULL,2.00,2.00,NULL,'2013-11-14 01:08:42','2013-11-14 01:08:42',697),(79,697,1976,920556,1,2.00,2.00,NULL,'2013-11-14 01:08:44','2013-11-14 01:08:44',697),(80,697,1976,539643,1,2.00,2.00,NULL,'2013-11-14 01:08:47','2013-11-14 01:08:47',697),(81,697,1976,657316,1,2.00,2.00,NULL,'2013-11-14 01:08:47','2013-11-14 01:08:47',697),(82,697,1975,354422,1,1.00,1.00,NULL,'2013-11-14 01:08:49','2013-11-14 01:08:49',697),(83,697,1975,106001,1,1.00,1.00,NULL,'2013-11-14 01:08:49','2013-11-14 01:08:49',697),(84,697,1975,283781,1,1.00,1.00,NULL,'2013-11-14 01:08:50','2013-11-14 01:08:50',697),(85,697,1978,573935,1,2.00,2.00,NULL,'2013-11-14 01:09:21','2013-11-14 01:09:21',697),(86,697,1977,372363,NULL,2.00,2.00,NULL,'2013-11-14 01:09:22','2013-11-14 01:09:22',697),(87,697,1977,263678,NULL,2.00,2.00,NULL,'2013-11-14 01:09:23','2013-11-14 01:09:23',697),(88,697,1977,676930,NULL,2.00,2.00,NULL,'2013-11-14 01:09:23','2013-11-14 01:09:23',697),(89,697,1,707292,1,1.00,1.00,NULL,'2013-11-14 01:09:25','2013-11-14 01:09:25',697),(90,697,1977,496295,NULL,2.00,2.00,NULL,'2013-11-14 01:09:30','2013-11-14 01:09:30',697),(91,697,1978,565427,1,2.00,2.00,NULL,'2013-11-14 01:09:31','2013-11-14 01:09:31',697),(92,697,1975,487990,1,1.00,1.00,NULL,'2013-11-14 01:09:33','2013-11-14 01:09:33',697),(93,697,1,920148,1,1.00,1.00,NULL,'2013-11-14 01:09:46','2013-11-14 01:09:46',697),(94,697,1,800878,1,1.00,1.00,NULL,'2013-11-14 01:09:49','2013-11-14 01:09:49',697),(95,697,1,572401,1,1.00,1.00,NULL,'2013-11-14 01:09:51','2013-11-14 01:09:51',697),(96,697,1,805767,1,1.00,1.00,NULL,'2013-11-14 01:09:51','2013-11-14 01:09:51',697),(97,697,1,659189,1,1.00,1.00,NULL,'2013-11-14 01:09:52','2013-11-14 01:09:52',697),(98,697,1,737162,1,1.00,1.00,NULL,'2013-11-14 01:09:53','2013-11-14 01:09:53',697),(99,697,1,559690,1,1.00,1.00,NULL,'2013-11-14 01:09:54','2013-11-14 01:09:54',697),(100,697,1,768362,1,1.00,1.00,NULL,'2013-11-14 01:09:54','2013-11-14 01:09:54',697),(101,697,1,596926,1,1.00,1.00,NULL,'2013-11-15 21:22:36','2013-11-15 21:22:36',697),(102,697,1,809692,1,1.00,1.00,NULL,'2013-11-15 21:23:12','2013-11-15 21:23:12',697),(103,697,1974,586607,1,12.00,12.00,NULL,'2013-11-15 21:24:27','2013-11-15 21:24:27',697),(104,697,1974,406504,1,12.00,12.00,NULL,'2013-11-15 21:25:18','2013-11-15 21:25:18',697),(105,697,2,558017,1,12.00,12.00,NULL,'2013-11-15 21:27:01','2013-11-15 21:27:01',697),(106,697,2,517487,1,12.00,12.00,NULL,'2013-11-15 21:27:36','2013-11-15 21:27:36',697),(107,697,1974,370088,1,12.00,12.00,NULL,'2013-11-15 21:30:44','2013-11-15 21:30:44',697),(108,697,2,472697,1,12.00,12.00,NULL,'2013-11-15 21:31:12','2013-11-15 21:31:12',697),(109,697,2,541457,1,12.00,12.00,NULL,'2013-11-15 21:31:14','2013-11-15 21:31:14',697),(110,697,2,783022,1,12.00,12.00,NULL,'2013-11-15 21:31:16','2013-11-15 21:31:16',697),(111,697,2,401010,1,12.00,12.00,NULL,'2013-11-15 21:31:18','2013-11-15 21:31:18',697),(112,697,2,150549,1,12.00,12.00,NULL,'2013-11-15 21:31:19','2013-11-15 21:31:19',697),(113,697,2,110082,1,12.00,12.00,NULL,'2013-11-15 21:31:20','2013-11-15 21:31:20',697),(114,697,2,252261,1,12.00,12.00,NULL,'2013-11-15 21:31:21','2013-11-15 21:31:21',697),(115,697,2,686245,1,12.00,12.00,NULL,'2013-11-15 21:31:22','2013-11-15 21:31:22',697),(116,697,1,840625,1,1.00,1.00,NULL,'2013-11-18 15:24:28','2013-11-18 15:24:28',697),(117,697,1,390944,1,1.00,1.00,NULL,'2013-11-18 15:24:30','2013-11-18 15:24:30',697),(118,697,1,350147,1,1.00,1.00,NULL,'2013-11-18 15:24:32','2013-11-18 15:24:32',697),(119,697,2,561146,1,12.00,12.00,NULL,'2013-11-18 15:24:34','2013-11-18 15:24:34',697),(120,702,1,880569,1,1.00,1.00,NULL,'2013-11-21 01:19:53','2013-11-21 01:19:53',702),(121,702,1,499462,1,1.00,1.00,NULL,'2013-11-21 01:19:57','2013-11-21 01:19:57',702),(122,702,1,981932,1,1.00,1.00,NULL,'2013-11-21 01:25:59','2013-11-21 01:25:59',702),(123,702,1974,681012,1,12.00,12.00,NULL,'2013-11-21 01:26:04','2013-11-21 01:26:04',702),(124,702,1974,650791,1,12.00,12.00,NULL,'2013-11-21 01:26:05','2013-11-21 01:26:05',702),(125,702,1974,173282,1,12.00,12.00,NULL,'2013-11-21 01:26:06','2013-11-21 01:26:06',702),(126,702,2,690639,1,12.00,12.00,NULL,'2013-11-21 01:33:44','2013-11-21 01:33:44',702),(127,702,1,348776,1,1.00,1.00,NULL,'2013-12-13 21:17:34','2013-12-13 21:17:34',702),(128,702,1,260114,1,1.00,1.00,NULL,'2013-12-13 21:17:36','2013-12-13 21:17:36',702),(129,702,1,600059,1,1.00,1.00,NULL,'2013-12-18 21:00:16','2013-12-18 21:00:16',702),(130,702,1,630782,1,1.00,1.00,NULL,'2013-12-18 21:00:18','2013-12-18 21:00:18',702),(131,702,1,306844,1,1.00,1.00,NULL,'2013-12-18 21:00:19','2013-12-18 21:00:19',702);
+/*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ratings`
+--
+
+DROP TABLE IF EXISTS `ratings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ratings` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `to_entity_id` int(10) unsigned NOT NULL,
+  `to_entity_type` varchar(15) NOT NULL,
+  `rating_value` int(2) unsigned NOT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  `spam_alert` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `spam_check` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `spam_check_by` int(10) unsigned NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ratings`
+--
+
+LOCK TABLES `ratings` WRITE;
+/*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_oauth`
+--
+
+DROP TABLE IF EXISTS `user_oauth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_oauth` (
+  `user_id` int(11) NOT NULL,
+  `provider` varchar(45) NOT NULL,
+  `identifier` varchar(64) NOT NULL,
+  `profile_cache` text,
+  `session_data` text,
+  PRIMARY KEY (`provider`,`identifier`),
+  UNIQUE KEY `unic_user_id_name` (`user_id`,`provider`),
+  KEY `oauth_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_oauth`
+--
+
+LOCK TABLES `user_oauth` WRITE;
+/*!40000 ALTER TABLE `user_oauth` DISABLE KEYS */;
+INSERT INTO `user_oauth` VALUES (702,'Facebook','771557088','a:22:{s:10:\"identifier\";s:9:\"771557088\";s:10:\"webSiteURL\";s:0:\"\";s:10:\"profileURL\";s:37:\"https://www.facebook.com/paolorossi79\";s:8:\"photoURL\";s:65:\"https://graph.facebook.com/771557088/picture?width=150&height=150\";s:11:\"displayName\";s:11:\"Paolo Rossi\";s:11:\"description\";s:149:\"A me ste cose di descrivermi fanno una noia pazzesca... chi mi conosce sa come sono... o almeno lo crede! Nemmeno io so come sono...che vi devo dire!\";s:9:\"firstName\";s:5:\"Paolo\";s:8:\"lastName\";s:5:\"Rossi\";s:6:\"gender\";s:4:\"male\";s:8:\"language\";N;s:3:\"age\";N;s:8:\"birthDay\";i:28;s:10:\"birthMonth\";i:6;s:9:\"birthYear\";i:1979;s:5:\"email\";s:22:\"paolorossi79@gmail.com\";s:13:\"emailVerified\";s:22:\"paolorossi79@gmail.com\";s:5:\"phone\";N;s:7:\"address\";N;s:7:\"country\";N;s:6:\"region\";s:7:\"Legnago\";s:4:\"city\";N;s:3:\"zip\";N;}','a:2:{s:35:\"hauth_session.facebook.is_logged_in\";s:4:\"i:1;\";s:41:\"hauth_session.facebook.token.access_token\";s:206:\"s:197:\"CAAH2rfxs2y8BAA84FZBzgaSbSjmfulZC7LFj1MFspbfhoj6UNcKyl3mitnAwcrWOWl8198IZCNZC8tRjBW3o7ZBv5cIf8X5kbvo1aUDcuhLtwpc8sGrq04bYqh8HIdUhRzl1kNZBUwivjxdruT7zdS7CkC6Mp7r4yUSK7ZBB4xl6T9SDEeNxN0RWdhaTJUrGEIZD\";\";}');
+/*!40000 ALTER TABLE `user_oauth` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `user_type_id` int(2) unsigned NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `ext_source` tinyint(1) DEFAULT '0',
+  `ext_id` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(90) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `cookie_hash` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `cookie_time_modified` datetime NOT NULL,
+  `is_agree_terms_conditions` tinyint(1) NOT NULL,
+  `is_agree_personaldata_management` tinyint(1) DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL,
+  `is_email_confirmed` tinyint(1) NOT NULL,
+  `signup_ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `last_login_ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `last_logged_in_time` datetime NOT NULL,
+  `available_balance_amount` double(10,2) NOT NULL DEFAULT '0.00',
+  `dns` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `wallet_value_bonus` double(10,2) NOT NULL DEFAULT '0.00',
+  `location_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_type_id` (`user_type_id`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=704 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (697,'0000-00-00 00:00:00','0000-00-00 00:00:00',2,'paolo@elot.it','7306b3959fda96d84a567393831d84e0c26d02e9',0,NULL,NULL,'','2013-10-16 18:12:58',1,1,1,1,'127.0.0.1','127.0.0.1','1970-01-01 01:00:00',1233.00,NULL,0.00,NULL),(698,'0000-00-00 00:00:00','0000-00-00 00:00:00',1,'a@a.a','7306b3959fda96d84a567393831d84e0c26d02e9',0,NULL,NULL,'','1970-01-01 01:00:00',1,1,1,1,'127.0.0.1','127.0.0.1','1970-01-01 01:00:00',0.00,NULL,0.00,NULL),(702,'0000-00-00 00:00:00','2013-12-18 21:00:19',1,'paolorossi79@gmail.com','931313395',1,'771557088','Paolo Rossi','','1970-01-01 01:00:00',1,1,1,1,'','127.0.0.1','1970-01-01 01:00:00',994.00,NULL,0.00,19),(703,'2013-12-06 19:31:16','2013-12-06 19:31:16',1,'qwe@qwe.qw','7306b3959fda96d84a567393831d84e0c26d02e9',0,NULL,NULL,'','0000-00-00 00:00:00',1,1,1,1,'127.0.0.1','','0000-00-00 00:00:00',0.00,NULL,0.00,NULL);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `subscriptions`
+--
+
+DROP TABLE IF EXISTS `subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `subscriptions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nl_type` varchar(45) NOT NULL,
+  `nl_type_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `sub_ip` varchar(45) DEFAULT NULL,
+  `sub_dns` varchar(45) DEFAULT NULL,
+  `term_cond` tinyint(1) DEFAULT '0',
+  `privacy_ok` tinyint(1) DEFAULT '0',
+  `n_msg_sent` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subscriptions`
+--
+
+LOCK TABLES `subscriptions` WRITE;
+/*!40000 ALTER TABLE `subscriptions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `subscriptions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lottery_comments`
+--
+
+DROP TABLE IF EXISTS `lottery_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lottery_comments` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `lottery_id` int(10) unsigned NOT NULL,
+  `reply_to_comment_id` int(10) unsigned NOT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  `spam_alert` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `spam_check` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `spam_check_by` int(10) unsigned NOT NULL,
+  `published` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lottery_comments`
+--
+
+LOCK TABLES `lottery_comments` WRITE;
+/*!40000 ALTER TABLE `lottery_comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lottery_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `locations`
+--
+
+DROP TABLE IF EXISTS `locations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `locations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `address` varchar(255) NOT NULL,
+  `addressLat` double NOT NULL,
+  `addressLng` double NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `locations`
+--
+
+LOCK TABLES `locations` WRITE;
+/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
+INSERT INTO `locations` VALUES (16,'Treviso Bresciano, Brescia, Italy',45.712561,10.461509),(17,'Brescia, Italy',45.541188,10.219444),(18,'Treviglio, Bergamo, Italy',45.521151,9.595119),(19,'Montagnana, Padua, Italy',45.230837,11.462409),(20,'Milan, Italy',45.465454,9.186516),(21,'Trebaseleghe, Padua, Italy',45.591806,12.05068),(22,'Treviso, Italy',45.666901,12.243039);
+/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_transactions`
+--
+
+DROP TABLE IF EXISTS `user_transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_transactions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `transaction_type` tinyint(2) NOT NULL,
+  `transaction_ref_id` varchar(45) DEFAULT NULL,
+  `value` double(10,2) NOT NULL,
+  `is_confirmed` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `promotion_id` int(10) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_transactions`
+--
+
+LOCK TABLES `user_transactions` WRITE;
+/*!40000 ALTER TABLE `user_transactions` DISABLE KEYS */;
+INSERT INTO `user_transactions` VALUES (7,697,1,'14',12.00,1,NULL,'2013-11-01 21:11:07','2013-11-01 21:11:07',697),(8,697,1,'15',1.00,1,NULL,'2013-11-01 21:11:48','2013-11-01 21:11:48',697),(9,697,1,'16',1.00,1,NULL,'2013-11-01 21:11:50','2013-11-01 21:11:50',697),(10,697,2,NULL,50.00,1,NULL,'2013-11-06 19:44:19','2013-11-06 19:44:19',697),(11,697,2,NULL,35.00,1,NULL,'2013-11-06 19:46:44','2013-11-06 19:46:44',697),(12,697,2,NULL,34.00,1,NULL,'2013-11-06 20:55:35','2013-11-06 20:55:35',697),(13,697,2,NULL,120.00,1,NULL,'2013-11-06 20:59:18','2013-11-06 20:59:18',697),(14,697,2,NULL,120.00,1,NULL,'2013-11-06 20:59:52','2013-11-06 20:59:52',697),(15,697,2,NULL,500.00,1,NULL,'2013-11-06 21:00:14','2013-11-06 21:00:14',697),(16,697,2,NULL,15.00,1,NULL,'2013-11-06 21:02:15','2013-11-06 21:02:15',697),(17,697,2,NULL,25.00,1,NULL,'2013-11-06 21:02:19','2013-11-06 21:02:19',697),(18,697,1,'17',1.00,1,NULL,'2013-11-06 21:03:38','2013-11-06 21:03:38',697),(19,697,1,'18',11.00,1,NULL,'2013-11-07 17:40:14','2013-11-07 17:40:14',697),(20,697,1,'19',2.00,1,NULL,'2013-11-07 17:40:15','2013-11-07 17:40:15',697),(21,697,1,'20',11.00,1,NULL,'2013-11-07 17:45:05','2013-11-07 17:45:05',697),(22,697,1,'21',11.00,1,NULL,'2013-11-07 17:47:46','2013-11-07 17:47:46',697),(23,697,1,'22',2.00,1,NULL,'2013-11-07 17:48:32','2013-11-07 17:48:32',697),(24,697,1,'23',11.00,1,NULL,'2013-11-07 17:48:35','2013-11-07 17:48:35',697),(25,697,1,'24',2.00,1,NULL,'2013-11-07 17:48:36','2013-11-07 17:48:36',697),(26,697,1,'25',12.00,1,NULL,'2013-11-07 19:38:14','2013-11-07 19:38:14',697),(27,697,1,'26',11.00,1,NULL,'2013-11-07 19:38:15','2013-11-07 19:38:15',697),(28,697,1,'27',1.00,1,NULL,'2013-11-13 20:29:56','2013-11-13 20:29:56',697),(29,697,1,'28',1.00,1,NULL,'2013-11-13 21:19:03','2013-11-13 21:19:03',697),(30,697,1,'29',1.00,1,NULL,'2013-11-13 21:19:05','2013-11-13 21:19:05',697),(31,697,1,'30',1.00,1,NULL,'2013-11-13 21:19:08','2013-11-13 21:19:08',697),(32,697,1,'31',1.00,1,NULL,'2013-11-13 21:19:09','2013-11-13 21:19:09',697),(33,697,1,'32',1.00,1,NULL,'2013-11-13 21:19:11','2013-11-13 21:19:11',697),(34,697,1,'33',1.00,1,NULL,'2013-11-13 21:21:10','2013-11-13 21:21:10',697),(35,697,1,'34',12.00,1,NULL,'2013-11-13 21:21:19','2013-11-13 21:21:19',697),(36,697,1,'35',12.00,1,NULL,'2013-11-13 21:22:37','2013-11-13 21:22:37',697),(37,697,1,'36',11.00,1,NULL,'2013-11-13 21:23:00','2013-11-13 21:23:00',697),(38,697,1,'37',12.00,1,NULL,'2013-11-13 21:24:51','2013-11-13 21:24:51',697),(39,697,1,'38',11.00,1,NULL,'2013-11-13 21:25:30','2013-11-13 21:25:30',697),(40,697,1,'39',12.00,1,NULL,'2013-11-13 21:26:09','2013-11-13 21:26:09',697),(41,697,1,'40',12.00,1,NULL,'2013-11-13 21:27:06','2013-11-13 21:27:06',697),(42,697,1,'41',11.00,1,NULL,'2013-11-13 21:27:42','2013-11-13 21:27:42',697),(43,697,1,'42',12.00,1,NULL,'2013-11-13 21:27:48','2013-11-13 21:27:48',697),(44,697,1,'43',11.00,1,NULL,'2013-11-13 21:29:20','2013-11-13 21:29:20',697),(45,697,1,'44',12.00,1,NULL,'2013-11-13 21:29:29','2013-11-13 21:29:29',697),(46,697,1,'45',1.00,1,NULL,'2013-11-13 21:29:30','2013-11-13 21:29:30',697),(47,697,1,'46',1.00,1,NULL,'2013-11-13 21:29:31','2013-11-13 21:29:31',697),(48,697,1,'47',1.00,1,NULL,'2013-11-13 21:29:32','2013-11-13 21:29:32',697),(49,697,1,'48',1.00,1,NULL,'2013-11-13 21:29:32','2013-11-13 21:29:32',697),(50,697,1,'49',1.00,1,NULL,'2013-11-13 21:39:14','2013-11-13 21:39:14',697),(51,697,1,'50',1.00,1,NULL,'2013-11-13 21:39:15','2013-11-13 21:39:15',697),(52,697,1,'51',2.00,1,NULL,'2013-11-13 21:39:17','2013-11-13 21:39:17',697),(53,697,1,'52',2.00,1,NULL,'2013-11-13 21:39:18','2013-11-13 21:39:18',697),(54,697,1,'53',1.00,1,NULL,'2013-11-13 21:39:37','2013-11-13 21:39:37',697),(55,697,1,'54',12.00,1,NULL,'2013-11-13 21:39:40','2013-11-13 21:39:40',697),(56,697,1,'55',1.00,1,NULL,'2013-11-13 21:39:44','2013-11-13 21:39:44',697),(57,697,1,'56',1.00,1,NULL,'2013-11-13 21:39:46','2013-11-13 21:39:46',697),(58,697,1,'57',1.00,1,NULL,'2013-11-13 21:39:48','2013-11-13 21:39:48',697),(59,697,1,'58',11.00,1,NULL,'2013-11-13 21:40:53','2013-11-13 21:40:53',697),(60,697,1,'59',11.00,1,NULL,'2013-11-13 21:40:54','2013-11-13 21:40:54',697),(61,697,1,'60',12.00,1,NULL,'2013-11-13 21:40:58','2013-11-13 21:40:58',697),(62,697,1,'61',12.00,1,NULL,'2013-11-13 21:41:00','2013-11-13 21:41:00',697),(63,697,1,'62',12.00,1,NULL,'2013-11-13 21:41:01','2013-11-13 21:41:01',697),(64,697,1,'63',12.00,1,NULL,'2013-11-13 21:41:02','2013-11-13 21:41:02',697),(65,697,1,'64',1.00,1,NULL,'2013-11-13 21:43:08','2013-11-13 21:43:08',697),(66,697,1,'65',11.00,1,NULL,'2013-11-13 21:43:09','2013-11-13 21:43:09',697),(67,697,1,'66',1.00,1,NULL,'2013-11-13 21:51:45','2013-11-13 21:51:45',697),(68,697,1,'67',1.00,1,NULL,'2013-11-13 21:51:46','2013-11-13 21:51:46',697),(69,697,1,'68',11.00,1,NULL,'2013-11-13 21:51:48','2013-11-13 21:51:48',697),(70,697,1,'69',12.00,1,NULL,'2013-11-13 21:55:58','2013-11-13 21:55:58',697),(71,697,1,'70',1.00,1,NULL,'2013-11-13 22:04:36','2013-11-13 22:04:36',697),(72,697,1,'71',1.00,1,NULL,'2013-11-13 22:04:38','2013-11-13 22:04:38',697),(73,697,1,'72',12.00,1,NULL,'2013-11-13 22:05:55','2013-11-13 22:05:55',697),(74,697,1,'73',12.00,1,NULL,'2013-11-13 22:05:56','2013-11-13 22:05:56',697),(75,697,1,'74',1.00,1,NULL,'2013-11-13 22:06:01','2013-11-13 22:06:01',697),(76,697,1,'75',1.00,1,NULL,'2013-11-13 22:06:02','2013-11-13 22:06:02',697),(77,697,1,'76',12.00,1,NULL,'2013-11-13 22:06:03','2013-11-13 22:06:03',697),(78,697,1,'77',2.00,1,NULL,'2013-11-14 01:08:08','2013-11-14 01:08:08',697),(79,697,1,'78',2.00,1,NULL,'2013-11-14 01:08:42','2013-11-14 01:08:42',697),(80,697,1,'79',2.00,1,NULL,'2013-11-14 01:08:44','2013-11-14 01:08:44',697),(81,697,1,'80',2.00,1,NULL,'2013-11-14 01:08:47','2013-11-14 01:08:47',697),(82,697,1,'81',2.00,1,NULL,'2013-11-14 01:08:47','2013-11-14 01:08:47',697),(83,697,1,'82',1.00,1,NULL,'2013-11-14 01:08:49','2013-11-14 01:08:49',697),(84,697,1,'83',1.00,1,NULL,'2013-11-14 01:08:49','2013-11-14 01:08:49',697),(85,697,1,'84',1.00,1,NULL,'2013-11-14 01:08:50','2013-11-14 01:08:50',697),(86,697,1,'85',2.00,1,NULL,'2013-11-14 01:09:21','2013-11-14 01:09:21',697),(87,697,1,'86',2.00,1,NULL,'2013-11-14 01:09:22','2013-11-14 01:09:22',697),(88,697,1,'87',2.00,1,NULL,'2013-11-14 01:09:23','2013-11-14 01:09:23',697),(89,697,1,'88',2.00,1,NULL,'2013-11-14 01:09:23','2013-11-14 01:09:23',697),(90,697,1,'89',1.00,1,NULL,'2013-11-14 01:09:25','2013-11-14 01:09:25',697),(91,697,1,'90',2.00,1,NULL,'2013-11-14 01:09:30','2013-11-14 01:09:30',697),(92,697,1,'91',2.00,1,NULL,'2013-11-14 01:09:31','2013-11-14 01:09:31',697),(93,697,1,'92',1.00,1,NULL,'2013-11-14 01:09:33','2013-11-14 01:09:33',697),(94,697,1,'93',1.00,1,NULL,'2013-11-14 01:09:46','2013-11-14 01:09:46',697),(95,697,1,'94',1.00,1,NULL,'2013-11-14 01:09:49','2013-11-14 01:09:49',697),(96,697,1,'95',1.00,1,NULL,'2013-11-14 01:09:51','2013-11-14 01:09:51',697),(97,697,1,'96',1.00,1,NULL,'2013-11-14 01:09:51','2013-11-14 01:09:51',697),(98,697,1,'97',1.00,1,NULL,'2013-11-14 01:09:52','2013-11-14 01:09:52',697),(99,697,1,'98',1.00,1,NULL,'2013-11-14 01:09:53','2013-11-14 01:09:53',697),(100,697,1,'99',1.00,1,NULL,'2013-11-14 01:09:54','2013-11-14 01:09:54',697),(101,697,1,'100',1.00,1,NULL,'2013-11-14 01:09:54','2013-11-14 01:09:54',697),(102,697,1,'101',1.00,1,NULL,'2013-11-15 21:22:36','2013-11-15 21:22:36',697),(103,697,1,'102',1.00,1,NULL,'2013-11-15 21:23:12','2013-11-15 21:23:12',697),(104,697,1,'103',12.00,1,NULL,'2013-11-15 21:24:27','2013-11-15 21:24:27',697),(105,697,1,'104',12.00,1,NULL,'2013-11-15 21:25:18','2013-11-15 21:25:18',697),(106,697,1,'105',12.00,1,NULL,'2013-11-15 21:27:01','2013-11-15 21:27:01',697),(107,697,1,'106',12.00,1,NULL,'2013-11-15 21:27:36','2013-11-15 21:27:36',697),(108,697,1,'107',12.00,1,NULL,'2013-11-15 21:30:44','2013-11-15 21:30:44',697),(109,697,1,'108',12.00,1,NULL,'2013-11-15 21:31:12','2013-11-15 21:31:12',697),(110,697,1,'109',12.00,1,NULL,'2013-11-15 21:31:14','2013-11-15 21:31:14',697),(111,697,1,'110',12.00,1,NULL,'2013-11-15 21:31:16','2013-11-15 21:31:16',697),(112,697,1,'111',12.00,1,NULL,'2013-11-15 21:31:18','2013-11-15 21:31:18',697),(113,697,1,'112',12.00,1,NULL,'2013-11-15 21:31:19','2013-11-15 21:31:19',697),(114,697,1,'113',12.00,1,NULL,'2013-11-15 21:31:20','2013-11-15 21:31:20',697),(115,697,1,'114',12.00,1,NULL,'2013-11-15 21:31:21','2013-11-15 21:31:21',697),(116,697,1,'115',12.00,1,NULL,'2013-11-15 21:31:22','2013-11-15 21:31:22',697),(117,697,1,'116',1.00,1,NULL,'2013-11-18 15:24:28','2013-11-18 15:24:28',697),(118,697,1,'117',1.00,1,NULL,'2013-11-18 15:24:30','2013-11-18 15:24:30',697),(119,697,1,'118',1.00,1,NULL,'2013-11-18 15:24:32','2013-11-18 15:24:32',697),(120,697,1,'119',12.00,1,NULL,'2013-11-18 15:24:34','2013-11-18 15:24:34',697),(121,702,2,NULL,50.00,1,NULL,'2013-11-21 01:19:42','2013-11-21 01:19:42',702),(122,702,2,NULL,1000.00,1,NULL,'2013-11-21 01:19:47','2013-11-21 01:19:47',702),(123,702,1,'120',1.00,1,NULL,'2013-11-21 01:19:53','2013-11-21 01:19:53',702),(124,702,1,'121',1.00,1,NULL,'2013-11-21 01:19:57','2013-11-21 01:19:57',702),(125,702,1,'122',1.00,1,NULL,'2013-11-21 01:25:59','2013-11-21 01:25:59',702),(126,702,1,'123',12.00,1,NULL,'2013-11-21 01:26:04','2013-11-21 01:26:04',702),(127,702,1,'124',12.00,1,NULL,'2013-11-21 01:26:05','2013-11-21 01:26:05',702),(128,702,1,'125',12.00,1,NULL,'2013-11-21 01:26:06','2013-11-21 01:26:06',702),(129,702,1,'126',12.00,1,NULL,'2013-11-21 01:33:44','2013-11-21 01:33:44',702),(130,702,1,'127',1.00,1,NULL,'2013-12-13 21:17:34','2013-12-13 21:17:34',702),(131,702,1,'128',1.00,1,NULL,'2013-12-13 21:17:37','2013-12-13 21:17:37',702),(132,702,1,'129',1.00,1,NULL,'2013-12-18 21:00:16','2013-12-18 21:00:16',702),(133,702,1,'130',1.00,1,NULL,'2013-12-18 21:00:18','2013-12-18 21:00:18',702),(134,702,1,'131',1.00,1,NULL,'2013-12-18 21:00:19','2013-12-18 21:00:19',702);
+/*!40000 ALTER TABLE `user_transactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `lotteries`
+--
+
+DROP TABLE IF EXISTS `lotteries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lotteries` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `owner_id` int(10) unsigned NOT NULL,
+  `lottery_type` tinyint(1) NOT NULL DEFAULT '1',
+  `prize_desc` text NOT NULL,
+  `prize_category` int(10) NOT NULL,
+  `prize_img` varchar(45) DEFAULT NULL,
+  `prize_conditions` varchar(155) DEFAULT NULL,
+  `prize_shipping` varchar(155) DEFAULT NULL,
+  `prize_price` double(10,2) NOT NULL,
+  `min_ticket` int(8) DEFAULT NULL,
+  `max_ticket` int(8) DEFAULT NULL,
+  `ticket_sold` int(12) DEFAULT '0',
+  `ticket_value` double(10,2) NOT NULL,
+  `lottery_start_date` datetime NOT NULL,
+  `lottery_draw_date` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `status` tinyint(1) DEFAULT NULL,
+  `location_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `prize_desc` (`prize_desc`(767))
+) ENGINE=InnoDB AUTO_INCREMENT=1984 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lotteries`
+--
+
+LOCK TABLES `lotteries` WRITE;
+/*!40000 ALTER TABLE `lotteries` DISABLE KEYS */;
+INSERT INTO `lotteries` VALUES (1,'erctyv',697,1,'<p>hgfdhgfdhgfd</p>',2,'dish-base-3.JPG','','sdfsdagtfsd',150.00,12,122,39,1.00,'2013-10-18 20:40:27','2013-10-18 20:40:27','0000-00-00 00:00:00','2013-12-18 21:00:19',702,1,2,NULL),(2,'fgfuygiugu',702,1,'<p>gfgdgd</p>',1,'dish-base-4.JPG','','fdfd',250.00,122,1222,24,12.00,'2013-10-25 10:37:44','2013-10-14 14:26:06','0000-00-00 00:00:00','2013-11-21 01:33:44',702,0,2,NULL),(1973,'gdfsgdsg',697,1,'<p>gdsfgsd</p>',1,NULL,'','gfdsgdfs',3000.00,111,12,15,11.00,'2013-10-17 00:33:20',NULL,'0000-00-00 00:00:00','2013-11-13 21:51:48',697,0,2,NULL),(1974,'fdsafasd',697,1,'<p>fsdafasd</p>',1,'Screenshot from 2013-04-12 15:14:02.png',NULL,'fdsafsda',50.00,122,1222,13,12.00,'2013-10-17 00:37:15',NULL,'0000-00-00 00:00:00','2013-11-21 01:26:06',702,0,3,NULL),(1975,'gdfsgdfs',702,1,'<p>gdfsgfdsgfsd</p>',3,'Screenshot from 2013-05-31 15:36:14.png','gfdsgdfs','gfdsgfdsgfsdg',70.00,100,1000,17,1.00,'2013-11-13 15:59:00','2013-11-28 10:31:38','0000-00-00 00:00:00','2013-11-14 01:09:33',697,0,3,NULL),(1976,'sasd',697,1,'<p>adad</p>',3,NULL,'dadad','ddad',0.00,5,100,8,2.00,'2013-07-11 15:50:19','2013-11-07 15:51:32','0000-00-00 00:00:00','2013-11-14 01:08:47',697,1,2,NULL),(1977,'fdsafsda',697,1,'<p>fdsa</p>',1,NULL,'','',0.00,5,100,5,2.00,'2013-11-07 16:27:38','2013-11-29 00:00:00','0000-00-00 00:00:00','2013-11-14 01:09:30',697,0,1,NULL),(1978,'gfdsgfds',697,1,'<p>gfdsgdfs</p>',1,NULL,'','',0.00,3,3333,3,2.00,'2013-11-28 00:00:00','2013-11-30 00:00:00','0000-00-00 00:00:00','2013-11-14 01:09:31',697,1,2,NULL),(1979,'dffa',702,1,'<p>fdda</p>',1,NULL,'fd','10',10.00,100,111100,0,10.00,'2013-11-28 00:00:00','2013-11-30 00:00:00','0000-00-00 00:00:00','2013-12-20 18:59:36',702,1,2,16),(1980,'fsdagfdsgsdf',702,1,'<p>gfdsgfdsgfg</p>',1,NULL,'gfdsgfassd','sfdfasdafsd',100.00,50,1000,0,1.00,'1970-01-01 01:00:00','1970-01-01 01:00:00','2013-12-18 16:40:52','2013-12-18 16:40:52',702,1,2,20),(1981,'TEstedcv',702,1,'<p>gsdfadfs</p>',1,NULL,'gdfs','',12.00,12,12121,0,12.00,'1970-01-01 01:00:00','1970-01-01 01:00:00','2013-12-20 19:02:00','2013-12-20 19:02:00',702,1,2,21),(1982,'Prova nuova creazfsdgf',702,1,'<p>ghsfhd</p>',2,'Screenshot from 2013-05-31 02:06:51.png','','',12.00,32,433333,0,32.00,'1970-01-01 01:00:00','1970-01-01 01:00:00','0000-00-00 00:00:00','2013-12-20 22:56:14',702,1,2,22),(1983,'gdfsgdfs',702,1,'<p>gfdsgfds</p>',2,NULL,'hfdsgfdsgdfs','gfdsgdfs',12.00,10,1000,0,12.00,'1970-01-01 01:00:00','1970-01-01 01:00:00','2014-01-03 14:04:13','2014-01-03 14:04:13',702,1,2,NULL);
+/*!40000 ALTER TABLE `lotteries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prize_categories`
+--
+
+DROP TABLE IF EXISTS `prize_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `prize_categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(45) NOT NULL,
+  `seo_name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_name_UNIQUE` (`category_name`),
+  KEY `category_name` (`category_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prize_categories`
+--
+
+LOCK TABLES `prize_categories` WRITE;
+/*!40000 ALTER TABLE `prize_categories` DISABLE KEYS */;
+INSERT INTO `prize_categories` VALUES (1,'Abbigliamento','abbigliamento'),(2,'Elettronica','elettronica'),(3,'Automobili','automobili');
+/*!40000 ALTER TABLE `prize_categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_profiles`
+--
+
+DROP TABLE IF EXISTS `user_profiles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_profiles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `lat` varchar(45) DEFAULT NULL,
+  `lng` varchar(45) DEFAULT NULL,
+  `img` varchar(255) DEFAULT NULL,
+  `gender` char(1) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_profiles`
+--
+
+LOCK TABLES `user_profiles` WRITE;
+/*!40000 ALTER TABLE `user_profiles` DISABLE KEYS */;
+INSERT INTO `user_profiles` VALUES (1,697,'Paolo','Rossi',NULL,NULL,NULL,'Screenshot from 2013-05-31 02:06:51.png',NULL,NULL),(4,702,'Paolo','Rossi',NULL,NULL,NULL,'https://graph.facebook.com/771557088/picture?width=150&height=150','m','1970-01-01'),(5,703,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `user_profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_special_offers`
+--
+
+DROP TABLE IF EXISTS `user_special_offers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_special_offers` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `offer_on` varchar(25) NOT NULL,
+  `offer_value` varchar(15) NOT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `times_remaining` int(5) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `last_modified_by` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_special_offers`
+--
+
+LOCK TABLES `user_special_offers` WRITE;
+/*!40000 ALTER TABLE `user_special_offers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_special_offers` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-01-10 17:12:51

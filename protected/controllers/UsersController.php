@@ -291,9 +291,10 @@ class UsersController extends Controller
                 }
                 Yii::import("xupload.models.XUploadForm");
                 $this->upForm = new XUploadForm;
-                $this->render('myProfile',array(
+                $this->renderPartial('_buyCredit',array(
 			'model'=>$model,
-		));
+                        'this'=>$this,
+		),false,true);
 	}
 
 	/**

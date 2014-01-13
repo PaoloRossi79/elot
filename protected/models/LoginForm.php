@@ -50,8 +50,34 @@ class LoginForm extends CFormModel
 		if(!$this->hasErrors())
 		{
 			$this->_identity=new UserIdentity($this->username,$this->password,Yii::app()->params['authExtSource']['site']);
-			if(!$this->_identity->authenticate())
-				$this->addError('password','Incorrect username or password.');
+                        $authRes = $this->_identity->authenticate();
+                        switch ($this->_identity->errorCode) {
+                            case UserIdentity::ERROR_EMAIL_INVALID:
+                                $this->addError('username','Incorrect email');
+                                break;
+                            case UserIdentity::ERROR_USERNAME_INVALID:
+                                $this->addError('username','Incorrect username');
+                                break;
+                            case UserIdentity::ERROR_PASSWORD_INVALID:
+                                $this->addError('password','Incorrect password.');
+                                break;
+                            case UserIdentity::ERROR_STATUS_NOTACTIV:
+                                $this->addError('username','User is not Active');
+                                break;
+                            case UserIdentity::ERROR_STATUS_EMAILCONFIRM:
+                                $this->addError('username','Email not confirmed');
+                                break;
+                            case UserIdentity::ERROR_STATUS_EXTUSERINVALID:
+                                $this->addError('username','Incorrect external user');
+                                break;
+                            case UserIdentity::ERROR_WRONGSOURCE:
+                                $ext = array_search($this->_identity->extSource, Yii::app()->params['authExtSource']);
+                                $this->addError('username','Login with '.$ext);
+                                break;
+                            default:
+                                break;
+                        }
+				
 		}
 	}
 

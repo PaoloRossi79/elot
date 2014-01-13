@@ -13,6 +13,12 @@ $lotteryTypes = array(
     ),
 );
 
+$speditionType = array(
+    array('id'=> 0, 'type' => 'Delivered by a courier'),
+    array('id'=> 1, 'type' => 'Winner colllects'),
+    array('id'=> 2, 'type' => 'To be defined with winner'),
+);
+
 $lotteryStatusConst = array(
     'draft'=>1,
     'upcoming'=>2,
@@ -49,6 +55,9 @@ $authExtSource = array(
     'site'=>0,
     'Facebook'=>1,
     'Twitter'=>2,
+    'Yahoo'=>3,
+    'Google'=>4,
+    'Live'=>5,
 );
 
 $buyCreditOptions = array(

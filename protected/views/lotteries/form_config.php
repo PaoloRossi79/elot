@@ -31,11 +31,11 @@ return array(
                     'size'=>25,
                     'maxlength'=>45
             ),
-            'lottery_type' => array(
+            /*'lottery_type' => array(
                     'label' => Yii::t('clos', 'Lottery Type'),
                     'type' => 'dropdownlist',
                     'items' => CHtml::listData(Yii::app()->params['lotteryTypes'], 'id', 'name')
-            ),
+            ),*/
             'prize_img' => array(
                 'label' => Yii::t('clos', 'Prize Image'),
                 'type' => 'bootstrap.widgets.TbThumbnails',
@@ -56,27 +56,30 @@ return array(
                     'maxlength'=>155
             ),
             'prize_shipping' => array(
-                    'label' => Yii::t('clos', 'prize_shipping'),
-                    'type' => 'text',
-                    'size'=>45,
-                    'maxlength'=>155
+                    'label' => 'Prize Shipping',//Yii::t('clos', 'Section'),
+                    'type' => 'dropdownlist',
+                    'items' => CHtml::listData(Yii::app()->params['speditionType'], 'id', 'type')
             ),
-            'prize_price' => array(
+            /*'prize_price' => array(
                     'label' => Yii::t('clos', 'prize_price'),
                     'type' => 'text'
+            ),*/
+            'prize_price' => array(
+                        'label' => Yii::t('clos', 'Prize Value'),
+                        'type' => 'ext.prizeCalculator.PrizeCalculatorWidget'
             ),
             'ticket_value' => array(
                     'label' => Yii::t('clos', 'ticket_value'),
                     'type' => 'text'
             ),
-            'min_ticket' => array(
+            /*'min_ticket' => array(
                     'label' => Yii::t('clos', 'min_ticket'),
                     'type' => 'text'
             ),
             'max_ticket' => array(
                     'label' => Yii::t('clos', 'max_ticket'),
                     'type' => 'text'
-            ),
+            ),*/
             'lottery_start_date' => array(
                     'label' => 'lottery_start_date start',
                     'type' => 'application.extensions.CJuiDateTimePicker.CJuiDateTimePicker',

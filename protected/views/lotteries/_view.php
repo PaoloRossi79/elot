@@ -143,7 +143,9 @@
             'id' => 'horizontalForm',
             'type' => 'horizontal',
         )
-    ); ?>
+    ); 
+    echo CHtml::hiddenField('lotId', $model->id);
+    ?>
     <div class="modal-body">
         <?php $this->widget(
             'bootstrap.widgets.TbButton',
@@ -151,9 +153,11 @@
                 'type' => 'primary',
                 'buttonType' => 'ajaxLink',
                 'label' => 'Buy for You!',
-                'url' => CController::createUrl('lotteries/buyTicket/'.$data->id), 
+                'url' => CController::createUrl('lotteries/buyTicket'), 
                 'ajaxOptions' => array(
                     'update' => '#data-'.$data->id,
+                    'type' => 'POST', 
+                    'data'=>'js:jQuery(this).parents("form").serialize()',
                 ),
             )
         ); ?>
@@ -169,7 +173,7 @@
                 'type' => 'primary',
                 'buttonType' => 'ajaxSubmit',
                 'label' => 'Buy for a friend!',
-                'url' => CController::createUrl('lotteries/buyTicket/'.$data->id), 
+                'url' => CController::createUrl('lotteries/buyTicket'), 
                 'ajaxOptions' => array(
                     'update' => '#data-'.$data->id,
                     'type' => 'POST', 

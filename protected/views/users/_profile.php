@@ -1,11 +1,3 @@
-<?php
-/* @var $this UserProfilesController */
-/* @var $model UserProfiles */
-/* @var $form CActiveForm */
-?>
-
-<div class="form span4">
-
 <?php 
     $form = $this->beginWidget(
         'bootstrap.widgets.TbActiveForm',
@@ -153,13 +145,3 @@
 	</div>
 
 <?php $this->endWidget(); ?>
-
-</div><!-- form -->
-
-<div class="form span4">
-    <?php $this->renderPartial('_buyCredit', array('model'=>$model)); ?>
-</div>
-
-<div class="form span4">
-    <?php $this->renderPartial('_newsletter', array('model'=>$model)); ?>
-</div>

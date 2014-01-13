@@ -137,5 +137,6 @@ return array(
             'buyCreditOptions' => $buyCreditOptions,
             'authExtSource' => $authExtSource,
             'image_versions' => $image_versions,
+            'speditionType' => $speditionType,
 	),
 );

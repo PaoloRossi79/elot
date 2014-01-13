@@ -57,7 +57,7 @@ class LotteriesController extends Controller
 	 */
 	public function actionView($id)
 	{
-                $this->layout="//layouts/allpage";
+//                $this->layout="//layouts/allpage";
                 if(!Yii::app()->user->isGuest){
                     $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();
                 }
@@ -190,73 +190,69 @@ class LotteriesController extends Controller
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
             // TODO: change this with check of status (commented)
-            //$lot=Lotteries::model()->findByAttributes(array('id'=>$_GET['id']),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
-            $lot=Lotteries::model()->findByAttributes(array('id'=>$_GET['id']));
+            //$lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['id']),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
+            $lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['lotId']));
             $soldTickets=Tickets::model()->findByAttributes(array('lottery_id'=>$lot->id));
             if(!$lot){
                 $data["msg"] = "Lottery in wrong status";
             } else {
-                if($lot->max_ticket > count($soldTickets)){
-                    $user=Users::model()->findByPk(Yii::app()->user->id);
-                    //check if user has credit
-                    if($user->available_balance_amount < $lot->ticket_value){
-                        $data["msg"] = "Not enough credit";
-                    } else {
-                        $ticket=new Tickets;
-                        $ticket->user_id=Yii::app()->user->id;
-                        $ticket->lottery_id=$lot->id; 
-                        $ticket->serial_number=rand(100000,999999); 
-                        // TODO: add serial number uniqueness! find(sameLot, sameNumber)
-                        $checkSerial=true;
-                        while ($checkSerial){
-                            $criteria=new CDbCriteria; 
-                            $criteria->addCondition('lottery_id='.$lot->id);
-                            $criteria->addCondition('serial_number='.$ticket->serial_number);
-                            $existTicket=Tickets::model()->findAll($criteria);
-                            if($existTicket){
-                                $ticket->serial_number=rand(100000,999999); 
-                            } else {
-                                $checkSerial=false;
-                            }
-                        }
-                        // to add promotions mng
-                        $ticket->price=$lot->ticket_value; // change with payed price (value - promotion)
-                        $ticket->value=$lot->ticket_value; 
-                        $ticket->promotion_id=null; 
-                        $lotStatus=array_search($lot->status, Yii::app()->params['lotteryStatusConst']);
-                        if(in_array($lotStatus,array('upcoming','open'))){
-                            $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
-                        }
-                        if($lotStatus === 'active'){
-                            $ticket->status=Yii::app()->params['ticketStatusConst']['active'];
-                        }
-                        $dbTransaction=$ticket->dbConnection->beginTransaction();
-                        if($ticket->save()){
-                            // fund down on user
-                            $user->available_balance_amount-=$ticket->price;
-                            if($user->save()){
-                                //transaction tracking
-                                if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
-                                    $lot->ticket_sold+=1;
-                                    $lot->save();
-                                    $dbTransaction->commit();
-                                    $data["type"] = "alert alert-success";
-                                    $data["result"] = "OK!";
-                                    $data["msg"] = "Best buy!";
-                                } else {
-                                    $dbTransaction->rollback();
-                                    $data["msg"] = "saving user transaction";
-                                }
-                            } else {
-                                $dbTransaction->rollback();
-                                $data["msg"] = "witdrawing to user";
-                            }
+                $user=Users::model()->findByPk(Yii::app()->user->id);
+                //check if user has credit
+                if($user->available_balance_amount < $lot->ticket_value){
+                    $data["msg"] = "Not enough credit";
+                } else {
+                    $ticket=new Tickets;
+                    $ticket->user_id=Yii::app()->user->id;
+                    $ticket->lottery_id=$lot->id; 
+                    $ticket->serial_number=rand(100000,999999); 
+                    // TODO: add serial number uniqueness! find(sameLot, sameNumber)
+                    $checkSerial=true;
+                    while ($checkSerial){
+                        $criteria=new CDbCriteria; 
+                        $criteria->addCondition('lottery_id='.$lot->id);
+                        $criteria->addCondition('serial_number='.$ticket->serial_number);
+                        $existTicket=Tickets::model()->findAll($criteria);
+                        if($existTicket){
+                            $ticket->serial_number=rand(100000,999999); 
                         } else {
-                            $data["msg"] = "creating ticket";
+                            $checkSerial=false;
                         }
                     }
-                } else {
-                    $data["msg"] = "No more ticket to buy";
+                    // to add promotions mng
+                    $ticket->price=$lot->ticket_value; // change with payed price (value - promotion)
+                    $ticket->value=$lot->ticket_value; 
+                    $ticket->promotion_id=null; 
+                    $lotStatus=array_search($lot->status, Yii::app()->params['lotteryStatusConst']);
+                    if(in_array($lotStatus,array('upcoming','open'))){
+                        $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
+                    }
+                    if($lotStatus === 'active'){
+                        $ticket->status=Yii::app()->params['ticketStatusConst']['active'];
+                    }
+                    $dbTransaction=$ticket->dbConnection->beginTransaction();
+                    if($ticket->save()){
+                        // fund down on user
+                        $user->available_balance_amount-=$ticket->price;
+                        if($user->save()){
+                            //transaction tracking
+                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
+                                $lot->ticket_sold+=1;
+                                $lot->save();
+                                $dbTransaction->commit();
+                                $data["type"] = "alert alert-success";
+                                $data["result"] = "OK!";
+                                $data["msg"] = "Best buy!";
+                            } else {
+                                $dbTransaction->rollback();
+                                $data["msg"] = "saving user transaction";
+                            }
+                        } else {
+                            $dbTransaction->rollback();
+                            $data["msg"] = "witdrawing to user";
+                        }
+                    } else {
+                        $data["msg"] = "creating ticket";
+                    }
                 }
             }
             $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();

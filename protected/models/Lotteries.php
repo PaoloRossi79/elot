@@ -26,6 +26,10 @@ class Lotteries extends PActiveRecord
 {
         public $maxPrice;
         public $imgList;
+        
+        const SP_SPEDITION = 0;
+        const SP_HANDTAKE = 1;
+        const SP_TDB = 2;
 	/**
 	 * @return string the associated database table name
 	 */

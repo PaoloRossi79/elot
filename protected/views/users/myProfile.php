@@ -23,4 +23,14 @@ $this->breadcrumbs=array(
     }*/
 ?>
 
-<?php $this->renderPartial('_profile', array('model'=>$model)); ?>
+<div class="form span4">
+    <?php $this->renderPartial('_profile', array('model'=>$model)); ?>
+</div>
+
+<div class="form span4">
+    <?php $this->renderPartial('_buyCredit', array('model'=>$model)); ?>
+</div>
+
+<div class="form span4">
+    <?php $this->renderPartial('_newsletter', array('model'=>$model)); ?>
+</div>

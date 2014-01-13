@@ -18,6 +18,7 @@ class UserIdentity extends CUserIdentity
 	const ERROR_STATUS_NOTACTIV=5;
 	const ERROR_STATUS_EMAILCONFIRM=6;
 	const ERROR_STATUS_EXTUSERINVALID=7;
+	const ERROR_WRONGSOURCE=8;
         
         public function __construct($username,$password,$extSource)
 	{
@@ -50,23 +51,28 @@ class UserIdentity extends CUserIdentity
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
                 } else {
-                    if($this->extSource != null){
-                        if($this->password!=$user->password){
-                            $this->errorCode=self::ERROR_STATUS_EXTUSERINVALID;
-                        } else {
-                            $this->_id=$user->id;
-                            $this->errorCode=self::ERROR_NONE;
+                    if($this->extSource === 0){
+                        if($user->ext_source > 0){
+                            $this->errorCode=self::ERROR_WRONGSOURCE;
+                            $this->extSource = $user->ext_source;
+                        } //if not in this kind of ext sources...
+                        elseif(sha1(Yii::app()->params['hashString'].$this->password)!==$user->password)
+                                $this->errorCode=self::ERROR_PASSWORD_INVALID;
+                        else if($user->is_active!=1)
+                                $this->errorCode=self::ERROR_STATUS_NOTACTIV;
+                        else if($user->is_email_confirmed!=1)
+                                $this->errorCode=self::ERROR_STATUS_EMAILCONFIRM;
+                        else {
+                                $this->_id=$user->id;
+                                $this->errorCode=self::ERROR_NONE;
                         }
-                    } //if not in this kind of ext sources...
-                    elseif(sha1(Yii::app()->params['hashString'].$this->password)!==$user->password)
-                            $this->errorCode=self::ERROR_PASSWORD_INVALID;
-                    else if($user->is_active!=1)
-                            $this->errorCode=self::ERROR_STATUS_NOTACTIV;
-                    else if($user->is_email_confirmed!=1)
-                            $this->errorCode=self::ERROR_STATUS_EMAILCONFIRM;
-                    else {
-                            $this->_id=$user->id;
-                            $this->errorCode=self::ERROR_NONE;
+                    } elseif($this->extSource > 0){
+                        if($this->password!==$user->password)
+                                $this->errorCode=self::ERROR_STATUS_EXTUSERINVALID;
+                        else {
+                                $this->_id=$user->id;
+                                $this->errorCode=self::ERROR_NONE;
+                        }
                     }
                 }
 		return !$this->errorCode;

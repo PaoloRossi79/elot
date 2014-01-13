@@ -129,6 +129,7 @@ class SiteController extends Controller
                         'showLogin' => true,
                     );
                 }
+                $data['model'] = $model;
             }
             $this->renderPartial('login', $data, false, true);
 	}

@@ -1,4 +1,4 @@
-<div class="form" id="loginForm">
+<div class="form login-panel <?php echo ($showLogin ? "show-login" : "hide-login"); ?>" >
     <?php
     $model = new LoginForm;
     if($afterLogin && !$authenticated) {
@@ -13,10 +13,9 @@
         'action' => $this->createUrl('site/login'),
         
     )); 
-
     ?>
 
-	<div class="row">
+	<div class="row" id="loginForm">
 		<?php echo $form->labelEx($model,'username'); ?>
 		<?php echo $form->textField($model,'username'); ?>
 		<?php echo $form->error($model,'username'); ?>
@@ -29,7 +28,6 @@
 		<?php echo $form->hiddenField($model,'originUrl'); ?>
 	</div>
 
-	
 	<div class="row buttons">
 		<?php echo CHtml::ajaxSubmitButton(
                         Yii::t('app', 'Submit'), 
@@ -40,10 +38,6 @@
 	</div>
 <?php $this->endWidget(); ?>
     <div class="">
-        <?php 
-        $imghtml=CHtml::image('/media/icons/facebook.png');
-        //echo CHtml::link($imghtml, CController::createUrl('site/socialLogin'));
-        ?>
         <?php $this->widget('ext.hoauth.widgets.HOAuth'); ?>
     </div>
 </div>

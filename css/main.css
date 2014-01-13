@@ -239,10 +239,18 @@ div.search-form
 }
 
 .login-panel {
-    display: none;
+    /*display: none;*/
     position: absolute;
     background-color: #424242;
     opacity: 0.9;
+}
+
+.show-login {
+    display: block;
+}
+
+.hide-login {
+    display: none;
 }
 
 .login-block {

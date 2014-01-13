@@ -71,7 +71,7 @@ class RegisterForm extends CFormModel
                     return true;
                 } else {
                     $dbTransaction->rollback();
-                    $model->addError('creditValue','Credit value not set or not valid!');
+                    $model->addError('email', $profile->errors);
                 }
             } else {
                 $dbTransaction->rollback();

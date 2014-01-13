@@ -13,7 +13,7 @@
 
 return 
 	array(
-		"base_url" => "http://elot.loc/index.php/site/oauth", 
+		"base_url" => "http://wonlot.loc/index.php/site/oauth", 
 
 		"providers" => array ( 
 			// openid providers

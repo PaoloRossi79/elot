@@ -3,8 +3,8 @@
 $db = array(
         'connectionString' => 'mysql:host=localhost;dbname=elot',
         'emulatePrepare' => true,
-        'username' => 'cupu',
-        'password' => 'Cupuppo!!Reader',
+        'username' => 'root',
+        'password' => 'paolo!!dbroot',
         'charset' => 'utf8',
 );
 

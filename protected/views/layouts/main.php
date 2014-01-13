@@ -99,9 +99,8 @@
                             <td class="login-block cart-label">
                               <!--<a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/login" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>"><i class="icon-signin"></i></a>-->
                               <a id="login-button" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>"><i class="icon-signin"></i></a>
-                              <div class="login-panel">
+                              <div class="">
                                   <?php $this->renderPartial('/site/login'); ?>
-                                  <p>TEST</p>
                               </div>
                             </td>
                             <td class="cart-label">

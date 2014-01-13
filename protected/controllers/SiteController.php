@@ -119,13 +119,14 @@ class SiteController extends Controller
                     $data = array(
                         'authenticated' => true,
                         'redirectUrl' => $_POST['LoginForm']['originUrl'],
-                        "afterLogin" => true,
+                        'afterLogin' => true,
                     );
                 } else {
                     $data = array(
                         'authenticated' => false,
                         'redirectUrl' => Yii::app()->user->returnUrl,
-                        "afterLogin" => true,
+                        'afterLogin' => true,
+                        'showLogin' => true,
                     );
                 }
             }

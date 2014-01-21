@@ -60,15 +60,19 @@
             );*/ ?>
         </div>
     </div>
+        <?php $this->widget(
+            'bootstrap.widgets.TbButton',
+            array(
+                'type' => 'primary',
+                'buttonType' => 'ajaxSubmit',
+                'label' => 'Save',
+                'url' => CController::createUrl('users/editNewsletter'), 
+                'ajaxOptions' => array(
+                    'update' => '#newsForm',
+                    'type' => 'POST', 
+                    'data'=>'js:jQuery(this).parents("form").serialize()',
+                ),
+            )
+        ); ?>
     <?php $this->endWidget(); ?>
-    <?php echo CHtml::ajaxSubmitbutton (
-                    'AjaxEdit', 
-                    CController::createUrl('users/editNewsletter'), 
-                    array (
-                          'type' =>'POST',
-                          'update' => '#newsForm',
-                          'type' => 'POST', 
-                          'data'=>'js:jQuery(this).parents("form").serialize()',
-                    )
-             ); ?>
 </div>

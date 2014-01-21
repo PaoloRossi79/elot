@@ -59,7 +59,7 @@ class LotteriesController extends Controller
 	{
 //                $this->layout="//layouts/allpage";
                 if(!Yii::app()->user->isGuest){
-                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();
+                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                 }
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
@@ -114,10 +114,13 @@ class LotteriesController extends Controller
                 Yii::app()->session['filters'] = $_POST['SearchForm'];
             } else {
                 $_POST['SearchForm'] = Yii::app()->session['filters'];
+                if($_POST['SearchForm']){
+                    $_POST['SearchForm']['status'] = array(3,4);
+                }
             }
             $lotteries=$this->filterLotteries();
             if(!Yii::app()->user->isGuest){
-                $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();
+                $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
             }
             $this->render('index',array(
                 'dataProvider'=>$lotteries['dataProvider'],
@@ -132,7 +135,7 @@ class LotteriesController extends Controller
         public function actionUserIndex()
 	{
             $lotteries=$this->filterLotteries(true);
-            $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();
+            $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
             $this->render('index',array(
                 'dataProvider'=>$lotteries['dataProvider'],
                 'viewType'=>"_box",
@@ -189,10 +192,10 @@ class LotteriesController extends Controller
             $data = array();
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
-            // TODO: change this with check of status (commented)
-            //$lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['id']),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
-            $lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['lotId']));
-            $soldTickets=Tickets::model()->findByAttributes(array('lottery_id'=>$lot->id));
+            $lotId = isset($_POST['lotId']) ? $_POST['lotId'] : null;
+            if($lotId)
+                $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
+//            $lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['lotId']));
             if(!$lot){
                 $data["msg"] = "Lottery in wrong status";
             } else {
@@ -255,9 +258,10 @@ class LotteriesController extends Controller
                     }
                 }
             }
-            $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery();
+            $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($lotId);
             $data["id"] = $lot->id;
             $data["lottery"] = $lot;
+            $data["version"] = 'complete';
             $this->renderPartial('_buyAjax', $data, false, true);
         }
 
@@ -314,7 +318,25 @@ class LotteriesController extends Controller
             $this->renderPartial('_setDefaultImage', $data, false, true);
         }
 
-	/**
+        protected function userCanBuy($lotId){
+            $lot = $this->loadModel($lotId);
+            if(Yii::app()->user->isGuest())
+                return false;
+            if(Yii::app()->user->id === $lot->owner_id)
+                return false;
+            $user = Users::model()->findByPk(Yii::app()->user->id);
+            $userCredit = $user->available_balance_amount;
+            //check for lottery status
+            $lotteryStatusConst = Yii::app()->params['lotteryStatusConst'];
+            if(!in_array($lot->status, array($lotteryStatusConst['open'],$lotteryStatusConst['active'])))
+                return false;
+            //check for credit  TODO: add check for discount (adapt check balance with use of discounts)
+            if($userCredit < $lot->ticket_value)
+                return false;
+            return true;
+        }
+
+        /**
 	 * Performs the AJAX validation.
 	 * @param Lotteries $model the model to be validated
 	 */
@@ -413,6 +435,9 @@ class LotteriesController extends Controller
                     $model->owner_id=Yii::app()->user->id;
                     if(!empty($_POST['isdefault'][0])){
                         $model->prize_img=$_POST['filename'][$_POST['isdefault'][0]];
+                    }
+                    if($_POST['Lotteries']['prize_price']){
+                        $model->max_ticket = ceil($_POST['Lotteries']['prize_price'] / $model->ticket_value);
                     }
                     if($_POST['Locations']){
                         //check if Location exist

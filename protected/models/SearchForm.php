@@ -7,10 +7,13 @@
  */
 class SearchForm extends CFormModel
 {
-	public $searchText;
+	// COMMON
+        public $searchText;
 	public $Categories;
-	public $LotStatus;
 	public $lists;
+        
+        // FOR LOTTERIES ONLY
+        public $LotStatus;
 	public $date;
 	public $searchStartDate;
 	public $searchEndDate;
@@ -24,6 +27,10 @@ class SearchForm extends CFormModel
 	public $maxTicketPriceRange;
 	public $minPrizePriceRange;
 	public $maxPrizePriceRange;
+        
+        // FOR TICKETS ONLY
+	public $lottery;
+        public $TicketStatus;
 
 	/**
 	 * Declares the validation rules.

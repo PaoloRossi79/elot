@@ -110,7 +110,7 @@ class Tickets extends PActiveRecord
 		));
 	}
         
-        public function getMyTicketsNumberByLottery()
+        public function getMyTicketsNumberAllLotteries()
 	{
             $dbCommand = Yii::app()->db->createCommand("
                 SELECT lottery_id,COUNT(*) as count FROM `tickets` WHERE user_id = ".Yii::app()->user->id." GROUP BY `lottery_id`
@@ -122,6 +122,18 @@ class Tickets extends PActiveRecord
                 $reduced[$pair['lottery_id']]=$pair['count'];
             }
             return $reduced;
+        }
+        
+        public function getMyTicketsNumberByLottery($lotId)
+	{
+            $dbCommand = Yii::app()->db->createCommand("
+                SELECT COUNT(*) as count FROM `tickets` 
+                WHERE user_id = ".Yii::app()->user->id." 
+                AND lottery_id = ".$lotId);
+
+            $data = $dbCommand->queryAll();
+            
+            return $data[0]['count'];
         }
 
 	/**

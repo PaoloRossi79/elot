@@ -55,6 +55,7 @@ class UserSpecialOffers extends PActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 		);
 	}
 
@@ -112,6 +113,12 @@ class UserSpecialOffers extends PActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function getTextOfferValue()
+	{
+            $value = $this->offer_value;
+            return $value;
+        }
 
 	/**
 	 * Returns the static model of the specified AR class.

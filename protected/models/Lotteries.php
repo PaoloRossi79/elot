@@ -46,7 +46,7 @@ class Lotteries extends PActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, lottery_type, prize_desc, prize_category, ticket_value, lottery_start_date, prize_price', 'required'),
+			array('name, lottery_type, prize_desc, prize_category, ticket_value, lottery_start_date, lottery_draw_date, prize_price', 'required'),
 			array('lottery_type, prize_category, min_ticket, max_ticket, last_modified_by', 'numerical', 'integerOnly'=>true),
 			array('ticket_value, prize_price', 'numerical'),
 			array('name', 'length', 'max'=>45),
@@ -245,6 +245,19 @@ class Lotteries extends PActiveRecord
             $criteria->select='max(prize_price) AS maxPrice';
             $row = $this->find($criteria);
             return $row['maxPrice'];
+        }
+        
+        public function getBoughtLotMenu(){
+            $criteria=new CDbCriteria;
+            $criteria->addCondition('tickets.user_id = '.Yii::app()->user->id);
+            $criteria->group='tickets.lottery_id';
+            $row = $this->with(array('tickets'))->findAll($criteria);
+            $menu = array();
+            foreach ($row as $l) {
+                $menu[] = array('id' => $l->id, 'name' => $l->name);
+            }
+            
+            return $menu;
         }
 
 	/**

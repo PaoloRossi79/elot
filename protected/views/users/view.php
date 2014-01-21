@@ -27,8 +27,7 @@ $this->menu=array(
 		'user_type_id',
 		'email',
 		'password',
-		'fb_user_id',
-		'twitter_user_id',
+		
 		'cookie_hash',
 		'cookie_time_modified',
 		'is_agree_terms_conditions',

@@ -168,7 +168,9 @@ class Controller extends CController
                     $this->filterModel->lists["Categories"]=$this->catList;
                     break;
                 case "tickets":
+                    $this->filterModel->lists["Categories"]=$this->catList;
                     $this->filterModel->lists["TicketStatus"]=$this->ticketStatusList;
+                    $this->filterModel->lists["Lotteries"]=Lotteries::model()->getBoughtLotMenu();
                     break;
                 case "users":
                     $this->filterModel->lists["Categories"]=$this->catList;

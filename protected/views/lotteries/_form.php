@@ -12,6 +12,9 @@ echo $form->renderBegin();
 <?php
 //echo $form->getActiveFormWidget()->errorSummary(array($form['deal']->model, $form['clone']->model));
 echo $form->renderElements();
+/*foreach($form->getElements() as $k=>$element){
+    echo $element->render();
+}*/
 ?>
     <?php 
     /* http://www.yiiframework.com/extension/egmap/ */

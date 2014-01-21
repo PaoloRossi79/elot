@@ -1,12 +1,13 @@
 <div class="form">
     <?php
     $model = $this->filterModel;
+    $contr = in_array($this->id,array('site')) ? 'lotteries' : $this->id;
     $form=$this->beginWidget('bootstrap.widgets.TbActiveForm',
     array(
         'id' => 'lotSearchForm',
         'htmlOptions' => array('class' => 'well'), // for inset effect
         'enableAjaxValidation'=>true,
-        'action' => $this->createUrl('lotteries/index'),
+        'action' => $this->createUrl($contr.'/index'),
     ));
     echo $form->textFieldRow($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search..."));
     if($this->id == "site"){
@@ -185,6 +186,37 @@
             <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn')); ?>
             <?php echo CHtml::submitButton('Reset', array('name' => 'reset', 'class' => 'btn')); ?>
         </div>        
-    <?php } ?>
+    <?php } elseif($this->id == "tickets") { 
+        $this->widget(
+            'bootstrap.widgets.TbButton',
+            array('buttonType' => 'submit', 'label' => 'Search')
+        );
+        $cat = $model->lists['Categories'];
+        $box = $this->beginWidget(
+            'bootstrap.widgets.TbBox',
+            array(
+                'title' => "<b>Categories</b>",
+                'headerIcon' => 'icon-th-list',
+                'htmlOptions' => array('class' => 'bootstrap-widget-table'),
+            )
+        );
+        foreach($cat as $k=>$item){ 
+            echo "<p>".CHtml::link($item, Yii::app()->createUrl('tickets/index/?cat='.$k), array('label' => false))."</p>";
+        }
+        $this->endWidget();
+        $lots = $model->lists['Lotteries'];
+        $boxLot = $this->beginWidget(
+            'bootstrap.widgets.TbBox',
+            array(
+                'title' => "<b>Lotteries</b>",
+                'headerIcon' => 'icon-th-list',
+                'htmlOptions' => array('class' => 'bootstrap-widget-table'),
+            )
+        );
+        foreach($lots as $k=>$item){ 
+            echo "<p>".CHtml::link($item['name'], Yii::app()->createUrl('tickets/index/?lot='.$item['id']), array('label' => false))."</p>";
+        }
+        $this->endWidget();
+    } ?>
     <?php $this->endWidget(); ?>
 </div>

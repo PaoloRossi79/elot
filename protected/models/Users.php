@@ -90,8 +90,6 @@ class Users extends PActiveRecord
 			'user_type_id' => 'User Type',
 			'email' => 'Email',
 			'password' => 'Password',
-			'fb_user_id' => 'Fb User',
-			'twitter_user_id' => 'Twitter User',
 			'cookie_hash' => 'Cookie Hash',
 			'cookie_time_modified' => 'Cookie Time Modified',
 			'is_agree_terms_conditions' => 'Is Agree Terms Conditions',
@@ -131,8 +129,6 @@ class Users extends PActiveRecord
 		$criteria->compare('user_type_id',$this->user_type_id,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('password',$this->password,true);
-		$criteria->compare('fb_user_id',$this->fb_user_id,true);
-		$criteria->compare('twitter_user_id',$this->twitter_user_id,true);
 		$criteria->compare('cookie_hash',$this->cookie_hash,true);
 		$criteria->compare('cookie_time_modified',$this->cookie_time_modified,true);
 		$criteria->compare('is_agree_terms_conditions',$this->is_agree_terms_conditions);

@@ -13,6 +13,19 @@ $lotteryTypes = array(
     ),
 );
 
+$specialOffers = array(
+    0 =>
+    array(
+        'name'=>'Discount on ticket buy',
+        'desc'=>'Discount on ticket buy'
+    ),
+    1 =>
+    array(
+        'name'=>'Discount on wMoney buy',
+        'desc'=>'Discount on wMoney buy'
+    ),
+);
+
 $speditionType = array(
     array('id'=> 0, 'type' => 'Delivered by a courier'),
     array('id'=> 1, 'type' => 'Winner colllects'),

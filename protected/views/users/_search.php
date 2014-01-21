@@ -36,15 +36,7 @@
 		<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>255)); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'fb_user_id'); ?>
-		<?php echo $form->textField($model,'fb_user_id',array('size'=>20,'maxlength'=>20)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'twitter_user_id'); ?>
-		<?php echo $form->textField($model,'twitter_user_id',array('size'=>60,'maxlength'=>255)); ?>
-	</div>
+	
 
 	<div class="row">
 		<?php echo $form->label($model,'cookie_hash'); ?>

@@ -40,6 +40,7 @@ class PActiveRecord  extends CActiveRecord {
                 } else {
                     $oldCol=$this->$columnName;
 //                    $this->$columnName=Yii::app()->dateFormatter->format('yyyy-MM-dd HH:mm:ss',$oldCol);
+                    $oldCol .= " 00:00:01";
                     $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($oldCol,'dd/MM/yyyy HH:mm:ss'));
                 }
             }

@@ -1,6 +1,6 @@
 <?php
 
-class TicketsController extends Controller
+class UserSpecialOffersController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -51,8 +51,23 @@ class TicketsController extends Controller
 	 */
 	public function actionView($id)
 	{
+                $model = new UserSpecialOffers;
+                if($_POST['form']){
+                    $model->attributes = $_POST['form'];
+                } 
+                $model->user_id = $id;
+                $criteria = new CDbCriteria();
+                $criteria->addCondition('user_id = '.$id);
+                $dataProvider=new CActiveDataProvider('UserSpecialOffers', array(
+                    'pagination'=>array(
+                        'pageSize'=>50,
+                    ),
+                    'criteria'=>$criteria,
+                ));
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'dataProvider'=>$dataProvider,
+                        'userId' => $id,
+                        'model' => $model,
 		));
 	}
 
@@ -62,14 +77,14 @@ class TicketsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Tickets;
+		$model=new UserSpecialOffers;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Tickets']))
+		if(isset($_POST['UserSpecialOffers']))
 		{
-			$model->attributes=$_POST['Tickets'];
+			$model->attributes=$_POST['UserSpecialOffers'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -91,9 +106,9 @@ class TicketsController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Tickets']))
+		if(isset($_POST['UserSpecialOffers']))
 		{
-			$model->attributes=$_POST['Tickets'];
+			$model->attributes=$_POST['UserSpecialOffers'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -122,48 +137,10 @@ class TicketsController extends Controller
 	 */
 	public function actionIndex()
 	{
-                $viewData=array();
-                $criteria=new CDbCriteria; 
-                $criteria->order='lottery.lottery_start_date';
-                $criteria->with="lottery";
-                $criteria->addCondition('user_id='.Yii::app()->user->id);
-                if($_POST['reset']){
-                    $_POST['SearchForm'] = null;
-                    unset(Yii::app()->session['ticketFilters']);
-                } 
-                if($_POST['SearchForm']){
-                    Yii::app()->session['ticketFilters'] = $_POST['SearchForm'];
-                } else {
-                    $_POST['SearchForm'] = Yii::app()->session['ticketFilters'];
-                }
-                if($_GET['ticketStatusConst']){
-                    $criteria->addCondition('t.status='.Yii::app()->params['ticketStatusConst'][$_GET['ticketStatusConst']]);
-                    $viewData=array('showStatus'=>true, 'status'=>$_GET['ticketStatusConst']);
-                }
-                if(isset($_POST['SearchForm']['searchText'])){
-                    $textCriteria=new CDbCriteria;
-                    $textCriteria->addSearchCondition('lottery.name',$_POST['SearchForm']['searchText'],true);
-                    $textCriteria->addSearchCondition('lottery.prize_desc',$_POST['SearchForm']['searchText'],true,'OR');
-                    $criteria->mergeWith($textCriteria);
-                }
-                if(isset($_GET['lot']))
-                    $criteria->addCondition('t.lottery_id = '.$_GET['lot']);
-                if(isset($_GET['cat'])){
-                    $criteria->addCondition('lottery.prize_category = "'.$_GET['cat'].'"');
-                }
-
-                $dataProvider=new CActiveDataProvider('Tickets', array(
-                    'pagination'=>array(
-                        'pageSize'=>50,
-                    ),
-                    'criteria'=>$criteria,
-                ));
-
-                $this->render('index',array(
-                    'dataProvider'=>$dataProvider,
-                    //'viewType'=>"_box"
-                    'viewData'=>$viewData,
-                ));
+		$dataProvider=new CActiveDataProvider('UserSpecialOffers');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
 	}
 
 	/**
@@ -171,10 +148,10 @@ class TicketsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Tickets('search');
+		$model=new UserSpecialOffers('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Tickets']))
-			$model->attributes=$_GET['Tickets'];
+		if(isset($_GET['UserSpecialOffers']))
+			$model->attributes=$_GET['UserSpecialOffers'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -185,12 +162,12 @@ class TicketsController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Tickets the loaded model
+	 * @return UserSpecialOffers the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Tickets::model()->findByPk($id);
+		$model=UserSpecialOffers::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -198,11 +175,11 @@ class TicketsController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Tickets $model the model to be validated
+	 * @param UserSpecialOffers $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='tickets-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='user-special-offers-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

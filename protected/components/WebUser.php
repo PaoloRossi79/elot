@@ -60,7 +60,7 @@ class WebUser extends CWebUser {
 
   function isGuest()
   {
-	if(Yii::app()->user)
+	if(Yii::app()->user->id)
 		return false;
 	return true;
   }

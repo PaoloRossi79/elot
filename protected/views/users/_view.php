@@ -4,6 +4,16 @@
 ?>
 
 <div class="view">
+    
+        <?php $this->widget(
+            'bootstrap.widgets.TbButton',
+            array(
+                'type' => 'primary',
+                'buttonType' => 'link',
+                'label' => 'Special Offers',
+                'url' => CController::createUrl('userSpecialOffers/view/'.$data->id), 
+            )
+        ); ?>
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
@@ -24,15 +34,7 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('email')); ?>:</b>
 	<?php echo CHtml::encode($data->email); ?>
 	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('password')); ?>:</b>
-	<?php echo CHtml::encode($data->password); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('fb_user_id')); ?>:</b>
-	<?php echo CHtml::encode($data->fb_user_id); ?>
-	<br />
-
+	
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('twitter_user_id')); ?>:</b>
 	<?php echo CHtml::encode($data->twitter_user_id); ?>

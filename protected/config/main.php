@@ -138,5 +138,6 @@ return array(
             'authExtSource' => $authExtSource,
             'image_versions' => $image_versions,
             'speditionType' => $speditionType,
+            'specialOffersType' => $specialOffers,
 	),
 );

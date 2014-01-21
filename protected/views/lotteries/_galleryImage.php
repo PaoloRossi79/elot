@@ -1,4 +1,5 @@
-    <?php 
+<div class="span4">
+<?php 
     $dataProvider =  new CActiveDataProvider('Lotteries', array(
         'criteria'=>array(
             'condition'=>'id='.$data->id,
@@ -16,4 +17,7 @@
         'cssFile' => 'elot-skin.css',
     ));
     ?>
+</div>
+<div class="span12">
 <div id="big-gallery-item"><?php echo CHtml::image($this->getImageUrl($data->id,$data->prize_img,"galleryBigThumb"),'Prize image '.$k); ?></div>
+</div>

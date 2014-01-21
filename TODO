@@ -1,17 +1,33 @@
 TODO:
 
-1) RICERCA
-    a) MAIN PAGE: categoria
+1) RICERCA 
+    a) MAIN PAGE: categoria OK (test ulteriori)
                 data (1 sola...estrazioni solo quel giorno)
                 geo: distanza rispetto alla località inserita
-    a) LOT INDEX: categoria
-                data (2 ... range) OK
+    b) LOT INDEX: categoria OK (test ulteriori)
+                data (2 ... range)
                 geo: distanza rispetto alla località inserita
                 ticket price: intervallo (slider o 2 campi) OK
                 buy price: intervallo (slider o 2 campi) OK
                 keyword: free text da usare in ricerca
+    c) TICKET INDEX (MANCA)
+                categoria lotteria
+                keyword: free text da usare in ricerca
+                data acquisto (2 ... range)
+    MANCA: ricerca x località
+           ricerca ticket
+
+2) BUY TICKET: 
+    check per uso sconto in abbinato al check su credito residuo sufficente
+    box x scelta uso sconto nella modal di acquisto
+    calcolo del costo con sconto
+    tracciatura uso sconto
+    calcolo soglia lotteria con sconti
+    aggiungere check di status lotteria alla fien dell'acquisto
+
+3) PROFILO: visualizzazione sconti disponibili
    
-2) registrazione e login via facebook, twitter, g+ OK
+2) registrazione e login via facebook, twitter, g+ (OK FB)
 3) cambio stato delle lotterie
 4) aggiungere check x biglietti rimanenti
 
@@ -23,12 +39,4 @@ TODO:
 6) ANNULLAMENTO Lotteria:
     a) fino a 24 H prima dell'estrazione
 
-7) LOTTERIE:
-    a) Non mostrare totali dei biglietti, ma solo status
-    b) con Data Scad: mostra tempo mancante
-                      no min limit: venditore può annullare se troppo pochi
-    c) Fix Num Lot: inserire cmq una data di scadenza (se non inserita): [param] giorni
-
-8) Invita amici da Facebook (sharer)
-
-9) acquisto ticket: apri box per inviare ad amico e per dare conferma -> OK
+8) Sharer via Facebook, G+, TW

@@ -30,6 +30,9 @@ class Lotteries extends PActiveRecord
         const SP_SPEDITION = 0;
         const SP_HANDTAKE = 1;
         const SP_TDB = 2;
+        
+        const errorCredit = -1;
+        const errorStatus = -2;
 	/**
 	 * @return string the associated database table name
 	 */

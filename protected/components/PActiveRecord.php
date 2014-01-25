@@ -56,13 +56,6 @@ class PActiveRecord  extends CActiveRecord {
 
             if ($column->dbType == 'datetime' || $column->dbType == 'timestamp')
             {
-                /*$this->$columnName = Yii::app()->dateFormatter->formatDateTime(
-                    CDateTimeParser::parse(
-                        $this->$columnName, 
-                        'yyyy-MM-dd hh:mm:ss'
-                    ),
-                    'small','small'
-                );*/
                 $this->$columnName = date('d/m/Y H:i:s', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
             }
         }

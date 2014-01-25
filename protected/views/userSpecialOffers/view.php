@@ -11,9 +11,18 @@ $this->breadcrumbs=array(
 <h1>View UserSpecialOffers </h1>
 
 <?php 
-$this->widget('zii.widgets.grid.CGridView', array(
-    'dataProvider'=>$dataProvider,
-    'columns'=>array(
+
+$this->widget(
+    'bootstrap.widgets.TbExtendedGridView',
+    array(
+//        'filter' => $person,
+        'fixedHeader' => true,
+        'type' => 'striped bordered',
+        'headerOffset' => 40,
+        // 40px is the height of the main navigation at bootstrap
+        'dataProvider' => $dataProvider,
+        'template' => "{items}",
+        'columns'=>array(
         array(            // display 'create_time' using an expression
             'name'=>'offer_on',
             'value'=>'Yii::app()->params["specialOffersType"][$data->offer_on]["name"]',
@@ -23,8 +32,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value'=>'$data->getTextOfferValue()',
         ),
         'times_remaining',
-        'start_date',
-        'end_date',
+        array(            // display 'create_time' using an expression
+            'name'=>'start_date',
+            'value'=>'($data->start_date) ? $data->start_date : ""',
+        ),
+        array(            // display 'create_time' using an expression
+            'name'=>'end_date',
+            'value'=>'($data->end_date) ? $data->end_date : ""',
+        ),
         'comment',
 //        array(            // display 'author.username' using an expression
 //            'name'=>'authorName',
@@ -34,7 +49,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'class'=>'CButtonColumn',
         ),
     ),
-));
+    )
+);
 ?>
 
 <?php $this->renderPartial('_form',array('userId' => $userId, 'model' => $model));

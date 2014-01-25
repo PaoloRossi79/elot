@@ -10,7 +10,7 @@ class LotteriesController extends Controller
         
         public $ticketTotals;
         
-	/**
+        /**
 	 * @return array action filters
 	 */
 	public function filters()
@@ -192,7 +192,7 @@ class LotteriesController extends Controller
             $data = array();
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
-            $lotId = isset($_POST['lotId']) ? $_POST['lotId'] : null;
+            $lotId = isset($_POST['BuyForm']['lotId']) ? $_POST['BuyForm']['lotId'] : null;
             if($lotId)
                 $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
 //            $lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['lotId']));
@@ -200,8 +200,18 @@ class LotteriesController extends Controller
                 $data["msg"] = "Lottery in wrong status";
             } else {
                 $user=Users::model()->findByPk(Yii::app()->user->id);
+                $newPrice = $lot->ticket_value;
+                $promotion = null;
+                // calculate value with discount
+                if($_POST['BuyForm']['offerId']){
+                    $offer = UserSpecialOffers::model()->findByPk($_POST['BuyForm']['offerId']);
+                    if($offer->times_remaining > 0 && $offer->offer_on == UserSpecialOffers::onTicketBuy){
+                        $newPrice = $lot->ticket_value - ($lot->ticket_value * (int)$offer->offer_value / 100);
+                        $promotion = $_POST['BuyForm']['offerId'];
+                    } 
+                }
                 //check if user has credit
-                if($user->available_balance_amount < $lot->ticket_value){
+                if($user->available_balance_amount < $newPrice){
                     $data["msg"] = "Not enough credit";
                 } else {
                     $ticket=new Tickets;
@@ -222,9 +232,9 @@ class LotteriesController extends Controller
                         }
                     }
                     // to add promotions mng
-                    $ticket->price=$lot->ticket_value; // change with payed price (value - promotion)
+                    $ticket->price=$newPrice; // change with payed price (value - promotion)
                     $ticket->value=$lot->ticket_value; 
-                    $ticket->promotion_id=null; 
+                    $ticket->promotion_id=$promotion; 
                     $lotStatus=array_search($lot->status, Yii::app()->params['lotteryStatusConst']);
                     if(in_array($lotStatus,array('upcoming','open'))){
                         $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
@@ -236,22 +246,30 @@ class LotteriesController extends Controller
                     if($ticket->save()){
                         // fund down on user
                         $user->available_balance_amount-=$ticket->price;
-                        if($user->save()){
-                            //transaction tracking
-                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
-                                $lot->ticket_sold+=1;
-                                $lot->save();
-                                $dbTransaction->commit();
-                                $data["type"] = "alert alert-success";
-                                $data["result"] = "OK!";
-                                $data["msg"] = "Best buy!";
+                        if($promotion){
+                            $offer->times_remaining -= 1; 
+                            if($offer->save()){
+                                if($user->save()){
+                                    //transaction tracking
+                                    if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
+                                        $lot->ticket_sold+=1;
+                                        $lot->save();
+                                        $dbTransaction->commit();
+                                        $data["type"] = "alert alert-success";
+                                        $data["result"] = "OK!";
+                                        $data["msg"] = "Best buy!";
+                                    } else {
+                                        $dbTransaction->rollback();
+                                        $data["msg"] = "saving user transaction";
+                                    }
+                                } else {
+                                    $dbTransaction->rollback();
+                                    $data["msg"] = "witdrawing to user";
+                                }
                             } else {
-                                $dbTransaction->rollback();
-                                $data["msg"] = "saving user transaction";
+                               $dbTransaction->rollback(); 
+                               $data["msg"] = "saving user special offer";
                             }
-                        } else {
-                            $dbTransaction->rollback();
-                            $data["msg"] = "witdrawing to user";
                         }
                     } else {
                         $data["msg"] = "creating ticket";
@@ -328,11 +346,13 @@ class LotteriesController extends Controller
             $userCredit = $user->available_balance_amount;
             //check for lottery status
             $lotteryStatusConst = Yii::app()->params['lotteryStatusConst'];
-            if(!in_array($lot->status, array($lotteryStatusConst['open'],$lotteryStatusConst['active'])))
-                return false;
+            if(!in_array($lot->status, array($lotteryStatusConst['open'],$lotteryStatusConst['active']))){
+                return Lotteries::errorStatus;
+            }
             //check for credit  TODO: add check for discount (adapt check balance with use of discounts)
-            if($userCredit < $lot->ticket_value)
-                return false;
+            /*if($userCredit < $lot->ticket_value){
+                return Lotteries::errorCredit;
+            }*/
             return true;
         }
 

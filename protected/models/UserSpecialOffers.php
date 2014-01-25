@@ -18,7 +18,10 @@
  */
 class UserSpecialOffers extends PActiveRecord
 {
-	/**
+        const onTicketBuy = 0;
+        const onMoneyBuy = 0;
+
+    /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -34,7 +37,7 @@ class UserSpecialOffers extends PActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, offer_on, offer_value', 'required'),
+			array('user_id, offer_on, offer_value, times_remaining', 'required'),
 			array('times_remaining, last_modified_by', 'numerical', 'integerOnly'=>true),
 			array('user_id', 'length', 'max'=>10),
 			array('offer_on', 'length', 'max'=>25),
@@ -118,6 +121,28 @@ class UserSpecialOffers extends PActiveRecord
 	{
             $value = $this->offer_value;
             return $value;
+        }
+
+        public function getUserSpecialOffersDropdown()
+	{
+            $criteria = new CDbCriteria();
+            $startDateCriteria = new CDbCriteria();
+            $endDateCriteria = new CDbCriteria();
+            $criteria->addCondition('user_id = '.Yii::app()->user->id);
+            $criteria->addCondition('times_remaining > 0');
+            $startDateCriteria->addCondition('start_date is null','OR');
+            $startDateCriteria->addCondition('start_date < now()','OR');
+            $endDateCriteria->addCondition('end_date is null','OR');
+            $endDateCriteria->addCondition('end_date > now()','OR');
+            $criteria->mergeWith($startDateCriteria);
+            $criteria->mergeWith($endDateCriteria);
+            $offers=$this->findAll($criteria);
+            $list=array();
+            $list[-1] = "";
+            foreach($offers as $of){
+                $list[$of->id] = " - ".$of->offer_value." % on ".Yii::app()->params['specialOffersType'][$of->offer_on]['name']." (".$of->times_remaining." remaining)";
+            }
+            return $list;
         }
 
 	/**

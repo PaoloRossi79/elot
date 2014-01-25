@@ -16,7 +16,7 @@
     <div class="">
         <div><?php echo Yii::t('elot','Newsletter'); ?></div>
         <br/><br/>
-        <div class="span3">Categories:
+        <div class="">Categories:
             <?php  
                 /*foreach($this->categories as $k=>$cat){
                     echo $nlForm->checkBoxRow($formModel, $cat, array('label' => false));
@@ -25,7 +25,7 @@
             ?>
         </div>
         <hr/><br/>
-        <div class="span3">Other newsletters:
+        <div class="">Other newsletters:
             <?php  
                 /*foreach($this->categories as $k=>$cat){
                     echo $nlForm->checkBoxRow($formModel, $cat, array('label' => false));
@@ -34,7 +34,7 @@
             ?>
         </div>
         <br/>
-        <div class="span3">
+        <div class="">
             <?php 
             echo $nlForm->checkBoxRow($formModel, 'privacyOk', array('label' => "Accept privacy policy?"));
 //            echo $nlForm->error($formModel,'privacyOk');

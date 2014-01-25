@@ -56,6 +56,15 @@ class UserSpecialOffersController extends Controller
                     $model->attributes = $_POST['form'];
                 } 
                 $model->user_id = $id;
+                
+                if(isset($_POST['UserSpecialOffers']))
+		{
+			$model->attributes=$_POST['UserSpecialOffers'];
+			$model->save();
+//			if($model->save())
+//				$this->redirect(array('view','id'=>$id));
+		}
+                
                 $criteria = new CDbCriteria();
                 $criteria->addCondition('user_id = '.$id);
                 $dataProvider=new CActiveDataProvider('UserSpecialOffers', array(
@@ -64,6 +73,7 @@ class UserSpecialOffersController extends Controller
                     ),
                     'criteria'=>$criteria,
                 ));
+
 		$this->render('view',array(
 			'dataProvider'=>$dataProvider,
                         'userId' => $id,

@@ -190,7 +190,6 @@ class Lotteries extends PActiveRecord
                 $criteria->addCondition('t.name like "%' .$type['searchText'].'%" OR t.prize_desc like "%' .$type['searchText'].'%"');
             }
 
-
             $dataProvider=new CActiveDataProvider('Lotteries', array(
                 'pagination'=>array(
                     'pageSize'=>20,
@@ -199,6 +198,54 @@ class Lotteries extends PActiveRecord
             ));
                 
             return $dataProvider;
+            
+        }
+        
+        public function checkNewStatus(){
+            if($this->status == Yii::app()->params['lotteryStatusConst']['open']){
+                if($this->ticket_sold_value > $this->prize_price){
+                    $this->status = Yii::app()->params['lotteryStatusConst']['closed'];
+                    if($this->save()){
+                        // send email for lottery closure
+                    } else {
+                        // send error email to ADMIN
+                    }
+                }
+                if($this->lottery_draw_date > new CDbExpression('NOW()')){
+                    $this->status = Yii::app()->params['lotteryStatusConst']['closed'];
+                    if($this->save()){
+                        // send email for lottery closure
+                    } else {
+                        // send error email to ADMIN
+                    }
+                }
+            } elseif($this->status == Yii::app()->params['lotteryStatusConst']['upcoming']){
+                if($this->lottery_start_date > new CDbExpression('NOW()')){
+                    $this->status = Yii::app()->params['lotteryStatusConst']['open'];
+                    if($this->save()){
+                        // do nothing for now
+                    } else {
+                        // send error email to ADMIN
+                    }
+                }
+            } elseif($this->status == Yii::app()->params['lotteryStatusConst']['closed']){
+                // manage extraction...
+                if(false){ // if(has not been extracted yet...) 
+                    // doExtraction
+                    /* 
+                    $extResult = $this->extractLottery(); //track winners -> email to winners
+                    if($extResult){
+                        $this->status = Yii::app()->params['lotteryStatusConst']['extracted'];
+                        // -> update tickets ... maybe use transactions
+                        if($this->save()){
+                            // do nothing for now
+                        } else {
+                            // send error email to ADMIN
+                        }
+                    }
+                    */
+                }
+            }    
             
         }
         

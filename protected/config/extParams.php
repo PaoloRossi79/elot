@@ -36,9 +36,9 @@ $lotteryStatusConst = array(
     'draft'=>1,
     'upcoming'=>2,
     'open'=>3,
-    'active'=>4,
-    'closed'=>5,
-    'extracted'=>6,
+    'closed'=>4,
+    'extracted'=>5,
+    'void'=>6,
 );
 $lotterySearchStatusConst = array(
     'Open only'=>1,
@@ -56,7 +56,8 @@ $ticketStatusConst = array(
     'open'=>1,
     'active'=>2,
     'closed'=>3,
-    'refunded'=>4,
+    'extracted'=>4,
+    'refunded'=>5,
 );
 
 $lotteryTypesConst = array(

@@ -193,9 +193,11 @@ class LotteriesController extends Controller
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
             $lotId = isset($_POST['BuyForm']['lotId']) ? $_POST['BuyForm']['lotId'] : null;
-            if($lotId)
+            if($lotId){
                 $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
-//            $lot=Lotteries::model()->findByAttributes(array('id'=>$_POST['lotId']));
+            } else {
+                $data["msg"] = "Lottery id is missing";
+            }
             if(!$lot){
                 $data["msg"] = "Lottery in wrong status";
             } else {
@@ -253,8 +255,10 @@ class LotteriesController extends Controller
                                     //transaction tracking
                                     if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
                                         $lot->ticket_sold+=1;
+                                        $lot->ticket_sold_value+=$ticket->price;
                                         $lot->save();
                                         $dbTransaction->commit();
+                                        $lot->checkNewStatus();
                                         $data["type"] = "alert alert-success";
                                         $data["result"] = "OK!";
                                         $data["msg"] = "Best buy!";

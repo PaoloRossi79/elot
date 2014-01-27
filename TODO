@@ -1,6 +1,58 @@
 TODO:
 
 1) RICERCA 
+    a) MAIN PAGE: 
+                data (1 sola...estrazioni solo quel giorno)
+                geo: distanza rispetto alla località inserita
+    c) TICKET INDEX (MANCA)
+                keyword: free text da usare in ricerca
+                data acquisto (2 ... range)
+    MANCA: ricerca x località
+
+2) BUY TICKET: 
+    calcolo soglia lotteria con sconti OK
+    aggiungere check di status lotteria alla fine dell'acquisto OK
+
+3) Estrazione lotteria
+    a) calcolo random del vincitore
+    b) tracciatura del biglietto vincente
+    c) mail a vincitore (o a tutti i concorrenti)
+
+3) PROFILO: visualizzazione sconti disponibili
+   
+4) registrazione e login via facebook, twitter, g+ (OK FB)
+
+5) Newsletter: 
+    a) gestire pagina di selezione delle NL OK
+    b) funzione di invio
+    c) possibilità di annuncio sponsorizzato, con commissione più alta
+
+6) ANNULLAMENTO Lotteria:
+    a) fino a 24 H prima dell'estrazione
+
+8) Sharer via Facebook, G+, TW
+
+9) gestione "amicizia" interna, per regalo biglietti:
+    a) following stile twitter
+    b) quando compri un biglietto lo puoi regalare a:   
+        1) email
+        2) social networks (FB, G+, ... )
+        3) utenti WL following
+        4) utenti WL followers
+    c) ricerca amici:
+        1) per username
+        2) per area geografica
+
+10) Nella pagina visualizzazione lotteria propria (my lotteries), mettere un blocco di testo html, copiabile, 
+    per generare un button-link che rimanda a quella lotteria, lasciando la possibilità di inserire la lable personalizzata (un testo ns di default)
+
+11) inserire nella pagina Profilo per ogni utente, un blocco di N immagini (4-5) chiedendo all'utente di scegliere quale gli piace di più -> tracciatura della sua scelta
+
+!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DONE
+
+1) RICERCA 
     a) MAIN PAGE: categoria OK (test ulteriori)
                 data (1 sola...estrazioni solo quel giorno)
                 geo: distanza rispetto alla località inserita
@@ -18,12 +70,17 @@ TODO:
            ricerca ticket
 
 2) BUY TICKET: 
-    check per uso sconto in abbinato al check su credito residuo sufficente
-    box x scelta uso sconto nella modal di acquisto
-    calcolo del costo con sconto
-    tracciatura uso sconto
+    check per uso sconto in abbinato al check su credito residuo sufficente OK
+    box x scelta uso sconto nella modal di acquisto OK
+    calcolo del costo con sconto OK
+    tracciatura uso sconto OK
     calcolo soglia lotteria con sconti
-    aggiungere check di status lotteria alla fien dell'acquisto
+    aggiungere check di status lotteria alla fine dell'acquisto
+
+3) Estrazione lotteria
+    a) calcolo random del vincitore
+    b) tracciatura del biglietto vincente
+    c) mail a vincitore (o a tutti i concorrenti)
 
 3) PROFILO: visualizzazione sconti disponibili
    
@@ -32,7 +89,7 @@ TODO:
 4) aggiungere check x biglietti rimanenti
 
 5) Newsletter: 
-    a) gestire pagina di selezione delle NL
+    a) gestire pagina di selezione delle NL OK
     b) funzione di invio
     c) possibilità di annuncio sponsorizzato, con commissione più alta
 

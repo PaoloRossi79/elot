@@ -21,7 +21,6 @@
 	<![endif]-->
         <?php 
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/boostrap3/css/bootstrap.min.css');
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/main.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/form.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/homepage.css');
@@ -54,64 +53,73 @@
 
 	<div id="header">
 		<div id="fixed-cart">
-                    <table cellpadding="0" cellspacing="0" border="0">
-                       <tr>
-                          <td class="cart-label">
-                              <a href="/">
-                                <i><?php echo CHtml::encode(Yii::app()->name); ?></i>
-                              </a>
-                          </td>
-                          <td style="width:100%;text-align:left;vertical-align:top;">
-                             <div style="position:relative">
-                                <!--<a href="<?php echo Yii::app()->baseUrl; ?>">-->
-                                <a href="/">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "E-Lot",array("class"=>"site-main-logo")); ?>
+                    <div id="header-logo-div">
+                        <a href="/">
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "E-Lot",array("class"=>"site-main-logo")); ?>
+                        </a>
+                    </div>
+                    <div id="header-icons">
+                        <?php if(!Yii::app()->user->isGuest){ ?>
+                            <div class="header-icon">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile" class="tooltip-down" title="<?php echo Yii::t('elot','profile') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile"); ?>
                                 </a>
-                             </div>
-                          </td>
-                          <?php if(!Yii::app()->user->isGuest){ ?>
-                            <td class="cart-label">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile" class="tooltip-down" title="<?php echo Yii::t('elot','profile') ?>"><i class="icon-user"></i></a>
-                            </td>
-                            <td class="cart-label">
-                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>"><i class="icon-ticket"></i></a>
-                            </td>
-                            <td class="cart-label">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex" class="tooltip-down" title="<?php echo Yii::t('elot','my lotteries') ?>"><i class="icon-heart"></i></a>
-                            </td>
-                            <td class="cart-label">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>"><i class="icon-legal"></i></a>
-                            </td>
-                            <td class="cart-label">
-                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>"><i class="icon-question"></i></a>
-                            </td>
-                            <td class="cart-label">
+                            </div>
+                            <div class="header-icon">
+                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>">
+                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-ticket.png", "My Tickets"); ?>
+                               </a>
+                            </div>
+                            <div class="header-icon">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex" class="tooltip-down" title="<?php echo Yii::t('elot','my lotteries') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylot.png", "My Lotteries"); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lot.png", "Lotteries"); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
+                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help"); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
                                 <?php 
                                 $controller = Yii::app()->getController();
                                 $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
                                 ?>
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>" class="tooltip-down" title="<?php echo Yii::t('elot','logout') ?>"><i class="icon-signout"></i></a>
-                            </td>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>" class="tooltip-down" title="<?php echo Yii::t('elot','logout') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout"); ?>
+                                </a>
+                            </div>
                           <?php } else { ?>
-                            <td class="cart-label">
-                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register" class="tooltip-down" title="<?php echo Yii::t('elot','register') ?>"><i class="icon-user"></i></a>
-                            </td>
-                            <td class="login-block cart-label">
-                              <!--<a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/login" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>"><i class="icon-signin"></i></a>-->
-                              <a id="login-button" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>"><i class="icon-signin"></i></a>
+                            <div class="header-icon">
+                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register" class="tooltip-down" title="<?php echo Yii::t('elot','register') ?>">
+                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register"); ?>
+                               </a>
+                            </div>
+                            <div class="login-block header-icon">
+                              <a id="login-button" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>">
+                                  <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login"); ?>
+                              </a>
                               <div class="">
                                   <?php $this->renderPartial('/site/login'); ?>
                               </div>
-                            </td>
-                            <td class="cart-label">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>"><i class="icon-legal"></i></a>
-                            </td>
-                            <td class="cart-label">
-                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>"><i class="icon-question"></i></a>
-                            </td>
+                            </div>
+                            <div class="header-icon">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lot.png", "Lotteries"); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
+                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help"); ?>
+                                </a>
+                            </div>
                           <?php }  ?>
-                       </tr>
-                    </table>
+                    </div>
                  </div>
 	</div><!-- header -->
         

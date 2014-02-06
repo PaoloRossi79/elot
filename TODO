@@ -9,10 +9,6 @@ TODO:
                 data acquisto (2 ... range)
     MANCA: ricerca x località
 
-2) BUY TICKET: 
-    calcolo soglia lotteria con sconti OK
-    aggiungere check di status lotteria alla fine dell'acquisto OK
-
 3) Estrazione lotteria
     a) calcolo random del vincitore
     b) tracciatura del biglietto vincente
@@ -20,7 +16,7 @@ TODO:
 
 3) PROFILO: visualizzazione sconti disponibili
    
-4) registrazione e login via facebook, twitter, g+ (OK FB)
+4) registrazione e login via facebook, twitter, g+ (OK FB, G+)
 
 5) Newsletter: 
     a) gestire pagina di selezione delle NL OK
@@ -76,6 +72,8 @@ DONE
     tracciatura uso sconto OK
     calcolo soglia lotteria con sconti
     aggiungere check di status lotteria alla fine dell'acquisto
+    calcolo soglia lotteria con sconti OK
+    aggiungere check di status lotteria alla fine dell'acquisto OK
 
 3) Estrazione lotteria
     a) calcolo random del vincitore

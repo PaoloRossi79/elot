@@ -42,6 +42,21 @@
         )
     ); ?>
     <div class="clearfix"></div>
+    
+    <?php $this->widget(
+        'bootstrap.widgets.TbButton',
+        array(
+            'type' => 'primary',
+            'buttonType' => 'ajaxLink',
+            'label' => 'Buy for You!',
+            'url' => CController::createUrl('site/socialShare'), 
+            'ajaxOptions' => array(
+                'update' => '.data-'.$data->id,
+                'type' => 'POST', 
+                'data'=>'js:jQuery(this).parents("form").serialize()',
+            ),
+        )
+    ); ?>
     <div class="prize-desc-text">
         <?php echo $model->prize_desc; ?>
     </div>

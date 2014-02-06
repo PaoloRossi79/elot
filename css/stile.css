@@ -20,10 +20,6 @@ body, table, tr, td, input, .tipsy-inner {
    font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
-.main-inserzioni h2, .filter-title, .footer h3, .inserzioni-side h1 {
-   font-family: 'Bitter', Times New Roman, serif;
-}
-
 *:focus {
     outline: 0 !important;
 }
@@ -41,16 +37,6 @@ body, table, tr, td, input, .tipsy-inner {
    color: #505050;
 }
 
-h1, h2, h3, h4, h5, h6 {
-   font-weight: 400;
-   padding: 0;
-   margin: 0;
-}
-
-h2 {
-   font-size: 30px;
-}
-
 a { 
    color: #505050; 
    text-decoration: none;
@@ -60,13 +46,48 @@ a:hover {
    text-decoration: underline;
 }
 
+#page
+{
+	
+	background: white;
+	/*width: 95%;*/
+	
+}
+
+#header-logo-div
+{
+	margin: 0;
+	padding: 0;
+        float: left;
+}
+
+#header-icons {
+    float: right;
+    padding-top: 30px;
+    padding-right: 30px;
+}
+
+.header-icon {
+    float: right;
+}
+
+.header-icon img {
+    height: 50px;
+}
+
+#content
+{
+    padding: 20px;
+    z-index: 1000;
+    max-width: 960px;
+}
+
 .main-width {
    width: 980px;
    padding: 0;
    margin: 0 auto;
    clear: both;
 }
-
 
 .clear {
    clear: both;
@@ -77,38 +98,10 @@ a:hover {
    padding-left: 0.2em;
 }
 
-.left {
-   float:left;
-}
-
-.right {
-   float: right;
-}
-
-.visibility-visible {
-   visibility: visible;
-}
-
-.visibility-hidden {
-   visibility: hidden;
-}
-
-.slimScrollBar {
-   cursor: ns-resize;
-}
-
-
-/* Header */
-
-#fixed-cart {
-    z-index: 9999999999999999999999;
-    margin-bottom: 20px;
-}
-
 .site-main-logo {
-   position:absolute;
-   margin-left: -10px;
-   height: 47px;
+   max-height: 150px;
+   padding-top: 30px;
+   padding-left: 30px;
 }
 
 .gototop-fixed {
@@ -130,70 +123,67 @@ a:hover {
 }
 
 #fixed-cart {
-   top: 0;
-   left: 0;
-   position: fixed;
-   background-color: #424242;
+   background-color: black;
    width: 100%;
-   /*border: 1px solid #CCCCCC;
-   border-bottom-width: 0px;*/
-   box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+   height: 200px;
 }
 
-#fixed-cart table {
-   width: 980px;
-   margin: 0 auto;
+/* Main menù*/
+
+
+#sidebar
+{
+	padding: 20px 20px 20px 0;
 }
 
-#fixed-cart span.cart-elements {
-   padding-left: 2px;
-   font-size: 15px;
+#footer
+{
+	padding: 10px;
+	margin: 10px 20px;
+	font-size: 0.8em;
+	text-align: center;
+	border-top: 1px solid #C9E0ED;
 }
 
-#fixed-cart td {}
-
-#fixed-cart .cart-label {
-   background: #424242;
+#logo
+{
+	padding: 10px 20px;
+	font-size: 200%;
+        float: left;
 }
 
-#fixed-cart .cart-label a {
-   transition: all 0.7s ease;
-   display: block;
-   color: #DDDDDD;
-   text-align: center;
-   line-height: 44px;
-   height: 44px;
-   padding: 0 17px;
-   white-space: nowrap;
-   background-image: none;
+#mainmenu
+{
+	background:white url(bg.gif) repeat-x left top;
 }
 
-#fixed-cart .cart-label a:hover {
-   text-decoration: none;
-   background: #0095cd;
-   background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
-   background: -moz-linear-gradient(top, #00adee, #0078a5);
-   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
-   color: #FFFFFF;
+#mainmenu ul
+{
+	padding:6px 20px 5px 20px;
+	margin:0px;
 }
 
-
-#fixed-cart .cart-label i {
-   font-size: 19px;
-   line-height: 44px;
-   background-image: none;
+#mainmenu ul li
+{
+	display: inline;
 }
 
-/*#fixed-cart .cart-number {
-   background-color: #707070;
-   color: #ffffff;
-   font-size: 13px;
-   line-height: 35px;
-}*/
+#mainmenu ul li a
+{
+	color:#ffffff;
+	background-color:transparent;
+	font-size:12px;
+	font-weight:bold;
+	text-decoration:none;
+	padding:5px 8px;
+}
 
-/*#fixed-cart td span {
-   padding: 0 13px;
-}*/
+#mainmenu ul li a:hover, #mainmenu ul li.active a
+{
+	color: #6399cd;
+	background-color:#EFF4FA;
+	text-decoration:none;
+}
 
 /* Footer */
 
@@ -253,21 +243,6 @@ a:hover {
    
 }
 
-ul.footer-misclinks, ul.footer-misclinks li {
-   margin: 0;
-   padding: 0;
-   list-style-type: none;
-   list-style-position: outside;
-}
-
-ul.footer-misclinks li a {
-   color: #999999;
-   font-size: 12px;
-   padding: 2px 0;
-   display: block;
-   text-align: right;
-}
-
 .red-box {
     background-color: aqua;
 }
@@ -292,4 +267,28 @@ ul.footer-misclinks li a {
 .jcarousel li {
     float: left;
     width: 150px;
+}
+
+
+.login-panel {
+    /*display: none;*/
+    position: absolute;
+    background-color: #424242;
+    opacity: 0.9;
+}
+
+.show-login {
+    display: block;
+}
+
+.hide-login {
+    display: none;
+}
+
+.login-block {
+    
+}
+
+.lot-box {
+ 
 }

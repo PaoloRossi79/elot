@@ -11,8 +11,7 @@ body {
    padding: 0;
    font-weight: 400;
    color: #505050;
-   background: #efefef;
-   background: #dddddd;
+   background: #fceacf;
 }
 
 body, table, tr, td, input, .tipsy-inner {
@@ -48,10 +47,15 @@ a:hover {
 
 #page
 {
-	
-	background: white;
-	/*width: 95%;*/
-	
+    background-color: black;
+}
+
+#body-container {
+    background-image:url('../images/site/background.jpg');
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-position:center;
+    background-color: black;
 }
 
 #header-logo-div
@@ -72,7 +76,7 @@ a:hover {
 }
 
 .header-icon img {
-    height: 50px;
+    /*height: 50px;*/
 }
 
 #content
@@ -80,6 +84,108 @@ a:hover {
     padding: 20px;
     z-index: 1000;
     max-width: 960px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.line-breaker {
+    background-image:url('../images/site/line-break.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    height: 20px;
+}
+
+#slideshow-container {
+    display: none;
+}
+
+#slideshow-container img {
+    
+}
+
+.main-search-grp {
+    margin-left: 30px;
+}
+
+.main-search-btn {
+    background-color: #fceacf!important;
+    /*min-width: 150px;*/
+    width: 150px;
+    margin-top: 25px;
+}
+
+.main-search-grp .input-group {
+    top: 3px;
+}
+
+.main-search-btn .glyphicon {
+    top: 0px;
+}
+
+.main-search-btn input, .main-search-btn span {
+    background-color: #fceacf!important;
+}
+
+.main-search-btn span {
+    margin-left: 7px;
+}
+
+/* SLIDESHOW CONTROLS*/
+.slidesjs-pagination {
+    margin: 6px 0 0;
+    float: right;
+    list-style: none;
+}
+
+.slidesjs-pagination li {
+    float: left;
+    margin: 0 1px;
+}
+
+.slidesjs-pagination li a {
+    display: block;
+    width: 13px;
+    height: 0;
+    padding-top: 13px;
+    background-image: url(../images/site/pagination.png);
+    background-position: 0 0;
+    float: left;
+    overflow: hidden;
+}
+
+.slidesjs-pagination li a.active,
+.slidesjs-pagination li a:hover.active {
+    background-position: 0 -13px
+}
+
+.slidesjs-pagination li a:hover {
+    background-position: 0 -26px
+}
+
+.left-btn-grp {
+    position: absolute;
+    
+    top: 144px;
+    z-index: 1001;
+}
+
+.left-btn {
+    
+}
+
+.left-btn img {
+    width: 200px;   
+    height: 100px;
+    margin-top: 8px;
+}
+/***************/
+.filter-container {
+    width: 100%
+}
+
+.label-find-lot {
+    color: #fceacf;
+    float: left;
 }
 
 .main-width {
@@ -125,7 +231,7 @@ a:hover {
 #fixed-cart {
    background-color: black;
    width: 100%;
-   height: 200px;
+   min-height: 130px;
 }
 
 /* Main menù*/

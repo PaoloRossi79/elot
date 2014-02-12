@@ -14,13 +14,7 @@ $this->breadcrumbs=array(
 <p>Please fill out the following form with your register credentials:</p>
 
 <div class="form">
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'register-form',
-	'enableClientValidation'=>true,
-	'clientOptions'=>array(
-		'validateOnSubmit'=>true,
-	),
-)); ?>
+<?php $form=$this->beginWidget('CActiveForm'); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 

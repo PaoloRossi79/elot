@@ -2,87 +2,93 @@
     <?php
     $model = $this->filterModel;
     $contr = in_array($this->id,array('site')) ? 'lotteries' : $this->id;
-    $form=$this->beginWidget('bootstrap.widgets.TbActiveForm',
-    array(
+    $form = $this->beginWidget('CActiveForm', array(
         'id' => 'lotSearchForm',
         'htmlOptions' => array('class' => 'well'), // for inset effect
         'enableAjaxValidation'=>true,
         'action' => $this->createUrl($contr.'/index'),
     ));
-    echo $form->textFieldRow($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search..."));
+    echo $form->textField($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search..."));
     if($this->id == "site"){
-        $this->widget(
+        /*$this->widget(
             'bootstrap.widgets.TbButton',
             array('buttonType' => 'submit', 'label' => 'Search')
-        );
-        $cat = $model->lists['Categories'];
-        $box = $this->beginWidget(
-            'bootstrap.widgets.TbBox',
-            array(
-                'title' => "<b>Categories</b>",
-                'headerIcon' => 'icon-th-list',
-                'htmlOptions' => array('class' => 'bootstrap-widget-table'),
-            )
-        );
-        foreach($cat as $k=>$item){ 
-            echo "<p>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</p>";
-        }
-        $this->endWidget();
+        );*/
+        ?>
+        <div class="row buttons">
+		<?php echo CHtml::submitButton('Register'); ?>
+	</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><?php echo Yii::t('wonlot','categories');?></h3>
+            </div>
+            <div class="panel-body">
+              <?php foreach($cat as $k=>$item){ 
+                        echo "<p>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</p>";
+                     }?>
+            </div>
+        </div>
+    <?php
     } elseif($this->id == "lotteries") {
-        foreach($model->lists as $title=>$items){ 
-            $box = $this->beginWidget(
-                'bootstrap.widgets.TbBox',
-                array(
-                    'title' => "<b>".$title."</b>",
-                    'headerIcon' => 'icon-th-list',
-                    'htmlOptions' => array('class' => 'bootstrap-widget-table'),
-                )
-            );
-            echo $form->checkBoxListRow($model, $title, $items, array('label' => false));
-            $this->endWidget();
-        }
-        echo $form->labelEx($model,'searchStartDate');
-        $this->widget(
-            'bootstrap.widgets.TbDatePicker',
-            array(
-                'name' => 'startDate',
-                'model' => $model,
-                'attribute' => 'searchStartDate',
-                'htmlOptions' => array(
-                    'class' => 'input-medium',
-                ),
-                'options' => array(
-                    'language' => 'it',
-                    'dateFormat'=>'dd/mm/yy',
-                    //'dateFormat'=>'yy-mm-dd',
-                    'timeFormat'=>'HH:mm:ss',
-                    'showSecond'=>true,
-                    'showTimezone'=>false,
-                    'ampm' => false,
-                )
-            )
-        );
-        echo $form->labelEx($model,'searchEndDate');
-        $this->widget(
-            'bootstrap.widgets.TbDatePicker',
-            array(
-                'name' => 'endDate',
-                'model' => $model,
-                'attribute' => 'searchEndDate',
-                'htmlOptions' => array(
-                    'class' => 'input-medium',
-                ),
-                'options' => array(
-                    'language' => 'it',
-                    'dateFormat'=>'dd/mm/yy',
-                    //'dateFormat'=>'yy-mm-dd',
-                    'timeFormat'=>'HH:mm:ss',
-                    'showSecond'=>true,
-                    'showTimezone'=>false,
-                    'ampm' => false,
-                )
-            )
-        );
+        foreach($model->lists as $title=>$items){ ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><?php echo Yii::t('wonlot',$title);?></h3>
+                </div>
+                <div class="panel-body">
+                  <?php echo $form->checkBoxListRow($model, $title, $items, array('label' => false)); ?>
+                </div>
+            </div>
+    <?php } ?>
+    <div class="row">
+        <?php echo $form->labelEx($model,'searchStartDate'); ?>
+        <?php
+        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'model' => $model,
+            'attribute' => 'searchStartDate',
+            'htmlOptions' => array(
+                'size' => '10',         // textField size
+                'maxlength' => '10',    // textField maxlength
+                'class' => 'input-medium',
+            ),
+            'options' => array(
+                'language' => 'it',
+                'dateFormat'=>'dd/mm/yy',
+                //'dateFormat'=>'yy-mm-dd',
+                'timeFormat'=>'HH:mm:ss',
+                'showSecond'=>true,
+                'showTimezone'=>false,
+                'ampm' => false,
+            ),
+        ));
+        ?>
+        <?php echo $form->error($model,'searchStartDate'); ?>
+    </div>
+    <div class="row">
+        <?php echo $form->labelEx($model,'searchEndDate'); ?>
+        <?php
+        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'model' => $model,
+            'attribute' => 'searchEndDate',
+            'htmlOptions' => array(
+                'size' => '10',         // textField size
+                'maxlength' => '10',    // textField maxlength
+                'class' => 'input-medium',
+            ),
+            'options' => array(
+                'language' => 'it',
+                'dateFormat'=>'dd/mm/yy',
+                //'dateFormat'=>'yy-mm-dd',
+                'timeFormat'=>'HH:mm:ss',
+                'showSecond'=>true,
+                'showTimezone'=>false,
+                'ampm' => false,
+            ),
+        ));
+        ?>
+        <?php echo $form->error($model,'searchEndDate'); ?>
+    </div>
+    <?php
         $maxPrice = Lotteries::model()->getMaxTicketPrice()+0; 
         $model->minTicketPriceRange=$model->minTicketPriceRange+0; // Trick to format decimals
         $model->maxTicketPriceRange=$model->maxTicketPriceRange+0;
@@ -186,7 +192,7 @@
             <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn')); ?>
             <?php echo CHtml::submitButton('Reset', array('name' => 'reset', 'class' => 'btn')); ?>
         </div>        
-    <?php } elseif($this->id == "tickets") { 
+    <?php } /*elseif($this->id == "tickets") { 
         $this->widget(
             'bootstrap.widgets.TbButton',
             array('buttonType' => 'submit', 'label' => 'Search')
@@ -217,6 +223,6 @@
             echo "<p>".CHtml::link($item['name'], Yii::app()->createUrl('tickets/index/?lot='.$item['id']), array('label' => false))."</p>";
         }
         $this->endWidget();
-    } ?>
+    } */?>
     <?php $this->endWidget(); ?>
 </div>

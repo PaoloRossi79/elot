@@ -6,7 +6,7 @@
 
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form = $this->beginWidget('CActiveForm', array(
 	'id'=>'prize-categories-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.

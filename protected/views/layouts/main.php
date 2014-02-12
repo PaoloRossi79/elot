@@ -2,9 +2,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
-
+        
         <?php 
             //Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/screen.css','screen, projection');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/print.css','print');
@@ -20,7 +21,7 @@
         ?>
 	<![endif]-->
         <?php 
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/boostrap3/css/bootstrap.min.css');
+//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/boostrap3/css/bootstrap.min.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/form.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/homepage.css');
@@ -28,9 +29,10 @@
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/main-slider.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/js/tooltip/tipsy.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile-pulsanti.css');
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/geocode.css');
+//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/geocode.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/isotope.css');
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/media/font-awesome/css/font-awesome.min.css','screen');
+//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/media/font-awesome/css/font-awesome.min.css','screen');
+            Yii::app()->getClientScript()->registerCssFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css','screen');
             
             Yii::app()->getClientScript()->registerCoreScript('jquery'); 
             Yii::app()->getClientScript()->registerCoreScript('jquery.ui'); 
@@ -42,6 +44,8 @@
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/main-slider.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/tooltip/tipsy.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.isotope.min.js',CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.slides.min.js',CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js',CClientScript::POS_HEAD);
         ?>
         
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -55,34 +59,34 @@
 		<div id="fixed-cart">
                     <div id="header-logo-div">
                         <a href="/">
-                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "E-Lot",array("class"=>"site-main-logo")); ?>
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "E-Lot", array("class"=>"site-main-logo img-responsive")); ?>
                         </a>
                     </div>
                     <div id="header-icons">
                         <?php if(!Yii::app()->user->isGuest){ ?>
                             <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile" class="tooltip-down" title="<?php echo Yii::t('elot','profile') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile"); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
-                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>">
-                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-ticket.png", "My Tickets"); ?>
+                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index">
+                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-ticket.png", "My Tickets", array("class"=>"img-responsive")); ?>
                                </a>
                             </div>
                             <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex" class="tooltip-down" title="<?php echo Yii::t('elot','my lotteries') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylot.png", "My Lotteries"); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylot.png", "My Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lot.png", "Lotteries"); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
-                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help"); ?>
+                                <a href="#">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
@@ -90,32 +94,32 @@
                                 $controller = Yii::app()->getController();
                                 $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
                                 ?>
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>" class="tooltip-down" title="<?php echo Yii::t('elot','logout') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout"); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                           <?php } else { ?>
                             <div class="header-icon">
-                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register" class="tooltip-down" title="<?php echo Yii::t('elot','register') ?>">
-                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register"); ?>
+                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register">
+                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register", array("class"=>"img-responsive")); ?>
                                </a>
                             </div>
                             <div class="login-block header-icon">
-                              <a id="login-button" class="tooltip-down" title="<?php echo Yii::t('elot','login') ?>">
-                                  <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login"); ?>
+                              <a id="" data-toggle="modal" data-target="#loginModal">
+                                  <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img-responsive")); ?>
                               </a>
                               <div class="">
                                   <?php $this->renderPartial('/site/login'); ?>
                               </div>
                             </div>
                             <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','search lotteries') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lot.png", "Lotteries"); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
-                                <a href="#" class="tooltip-down" title="<?php echo Yii::t('elot','help') ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help"); ?>
+                                <a href="#">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                           <?php }  ?>
@@ -134,14 +138,9 @@
 			),
 		)); */?>
 	</div> mainmenu -->
-
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
-
-	<?php echo $content; ?>
+        <div id="body-container">
+            <?php echo $content; ?>
+        </div>
 
 	<div class="clear"></div>
 

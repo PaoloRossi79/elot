@@ -1,19 +1,13 @@
 <?php /* @var $this Controller */ ?>
 <?php $this->beginContent('//layouts/main'); ?>
-<div class="row-fluid">
-<div class="span12">
-    <div class="span4">
-            <div id="sidebar">
-            <?php
+<div class="row">
+  <div class="col-md-4">
+      <?php
             $this->renderPartial('/site/filters',$this->filterModel);
-            ?>
-            </div><!-- sidebar -->
-    </div>
-    <div class="span8 last">
-            <div id="content">
-                    <?php echo $content; ?>
-            </div><!-- content -->
-    </div>
-</div>
+        ?>
+  </div>
+  <div class="col-md-8">
+      <?php echo $content; ?>
+  </div>
 </div>
 <?php $this->endContent(); ?>

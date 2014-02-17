@@ -41,11 +41,11 @@ $this->pageTitle=Yii::app()->name;
               <?php echo Yii::t('wonlot','Categories'); ?><span class="glyphicon glyphicon-tag"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
+              <?php
+                    $cat = $this->filterModel->lists['Categories'];
+                    foreach($cat as $k=>$item){ ?>
+                    <?php echo "<li>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</li>";?>
+              <?php } ?>
             </ul>
         </div>
         <div class="btn-group main-search-grp">

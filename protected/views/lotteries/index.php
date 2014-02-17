@@ -18,14 +18,7 @@ if($viewData['showCat']){
 }
 echo $h1;
 if(!Yii::app()->user->isGuest){
-    $this->widget(
-        'bootstrap.widgets.TbButton',
-        array(
-            'label' => 'New Lottery',
-            'type' => 'primary',
-            'url' => CController::createUrl('lotteries/create'),
-        )
-    ); 
+    echo CHtml::link("New Lottery",CController::createUrl('lotteries/create'),array('class'=>'btn')); 
 }
 ?>
 

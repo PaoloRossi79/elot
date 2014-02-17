@@ -30,7 +30,7 @@ $boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/
         </div>
     </div>
     <div class="panel-footer">
-        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#<?php echo 'buyModal-'.$data->id;?>">
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="<?php echo 'buyModal-'.$data->id);?>">
             <?php echo Yii::t('wonlot','Buy ticket'); ?>
         </button>
     </div>

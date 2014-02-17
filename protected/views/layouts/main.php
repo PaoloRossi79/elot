@@ -55,7 +55,7 @@
 
 <div class="container" id="page">
 
-	<div id="header">
+	<div id="header" class='row'>
 		<div id="fixed-cart">
                     <div id="header-logo-div">
                         <a href="/">
@@ -108,9 +108,6 @@
                               <a id="" data-toggle="modal" data-target="#loginModal">
                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img-responsive")); ?>
                               </a>
-                              <div class="">
-                                  <?php $this->renderPartial('/site/login'); ?>
-                              </div>
                             </div>
                             <div class="header-icon">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
@@ -126,6 +123,7 @@
                     </div>
                  </div>
 	</div><!-- header -->
+            <?php $this->renderPartial('/site/login'); ?>
         
 <!--        <div id="mainmenu">
 		<?php /*$this->widget('zii.widgets.CMenu',array(

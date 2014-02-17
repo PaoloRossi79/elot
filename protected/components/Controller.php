@@ -245,8 +245,8 @@ class Controller extends CController
         protected function saveLocation($data) {
             // check if already exist
             $locCond = new CDbCriteria();
-            $locCond->addCondition('addressLat='.number_format($data['addressLat'],6));
-            $locCond->addCondition('addressLng='.number_format($data['addressLng'],6));
+            $locCond->addCondition('addressLat='.number_format((float)$data['addressLat'],6));
+            $locCond->addCondition('addressLng='.number_format((float)$data['addressLng'],6));
             $check = Locations::model()->find($locCond);
             if($check){
                 return $check->id;

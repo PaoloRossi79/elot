@@ -1,11 +1,11 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog" id='loginModalContent'>
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Login</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id='loginFormBody'>
         <?php if($authenticated) { ?>
             <script type="text/javascript">
                 window.top.location = "<?php echo Yii::app()->getBaseUrl(true).$this->createUrl($model->originUrl); ?>";
@@ -18,7 +18,13 @@
         }
         ?>
         <div class="form">
-        <?php $form=$this->beginWidget('CActiveForm'); ?>
+        <?php $form=$this->beginWidget('CActiveForm',array(
+            'id'=>'user_login_form',
+            'enableAjaxValidation'=>true,
+            'action' => $this->createUrl('site/login'),
+//            'onsubmit'=>"return false;",/* Disable normal form submit */
+//            'onkeypress'=>" if(event.keyCode == 13){ send(); } " /* Do ajax call when user presses enter key */
+            )); ?>
 
             <?php echo $form->errorSummary($model); ?>
 
@@ -37,13 +43,7 @@
                     <?php echo CHtml::ajaxSubmitButton(
                             Yii::t('app', 'Submit'), 
                             array('site/login'), 
-                            /*array('update'=>'#loginForm', 'success' => 'js:function(data){'
-                                . 'alert(data);'
-                                . 'if(data.authenticated){'
-                                . '     window.location="'.$this->createUrl($model->originUrl).'"'
-                                . '}}'
-                                ), */
-                            array('update'=>'#loginForm'),
+                            array('update'=>'#loginModalContent'), 
                             array("class"=>"btn btn-primary btn-large")
                     );
     //                echo CHtml::Button(Yii::t('app', 'Submit') ,array('onclick'=>'send();'));

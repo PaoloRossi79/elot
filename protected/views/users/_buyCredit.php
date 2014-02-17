@@ -1,7 +1,7 @@
 <div class="" id="buyCreditTarget">
 <?php 
     $creditForm = $this->beginWidget(
-        'bootstrap.widgets.CActiveForm',
+        'CActiveForm',
         array(
             'id' => 'userWallet-form',
 //            'action'=>CController::createUrl('users/buyCredit'),
@@ -39,6 +39,12 @@
                 ),
             )
         ); ?>
+        <?php echo CHtml::ajaxButton ("Buy Credit",
+            CController::createUrl('users/buyCredit'), 
+            array('update' => '#buyCreditTarget',
+                    'type' => 'POST', 
+                    'data'=>'js:jQuery(this).parents("form").serialize()',
+            )); ?>
 	</div>
 <?php $this->endWidget(); ?>
 </div>

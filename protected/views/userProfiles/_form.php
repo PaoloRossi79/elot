@@ -8,7 +8,7 @@
 
 <?php 
     $form = $this->beginWidget(
-        'bootstrap.widgets.TbActiveForm',
+        'CActiveForm',
         array(
             'id' => 'userProfile-form',
             'htmlOptions' => array('class' => 'well','enctype' => 'multipart/form-data'), // for inset effect

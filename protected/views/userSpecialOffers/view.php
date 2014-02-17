@@ -13,7 +13,7 @@ $this->breadcrumbs=array(
 <?php 
 
 $this->widget(
-    'bootstrap.widgets.TbExtendedGridView',
+    'zii.widgets.grid.CGridView',
     array(
 //        'filter' => $person,
         'fixedHeader' => true,

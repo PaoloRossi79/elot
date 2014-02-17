@@ -36,10 +36,10 @@ return array(
                     'type' => 'dropdownlist',
                     'items' => CHtml::listData(Yii::app()->params['lotteryTypes'], 'id', 'name')
             ),*/
-            'prize_img' => array(
+            /*'prize_img' => array(
                 'label' => Yii::t('clos', 'Prize Image'),
                 'type' => 'bootstrap.widgets.TbThumbnails',
-            ),
+            ),*/
             'prize_desc' => array(
                         'label' => Yii::t('clos', 'Prize Description'),
                         'type' => 'ext.imperavi-redactor-widget.ImperaviRedactorWidget'

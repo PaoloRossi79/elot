@@ -2,7 +2,8 @@
     <?php
     $model = $this->filterModel;
     $contr = in_array($this->id,array('site')) ? 'lotteries' : $this->id;
-    $form = $this->beginWidget('CActiveForm', array(
+    $form=$this->beginWidget('CActiveForm',
+    array(
         'id' => 'lotSearchForm',
         'htmlOptions' => array('class' => 'well'), // for inset effect
         'enableAjaxValidation'=>true,
@@ -10,40 +11,35 @@
     ));
     echo $form->textField($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search..."));
     if($this->id == "site"){
-        /*$this->widget(
-            'bootstrap.widgets.TbButton',
-            array('buttonType' => 'submit', 'label' => 'Search')
-        );*/
+        echo CHtml::submitButton("New Lottery",CController::createUrl('lotteries/create'),array('class'=>'btn')); 
+        $cat = $model->lists['Categories'];
         ?>
-        <div class="row buttons">
-		<?php echo CHtml::submitButton('Register'); ?>
-	</div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title"><?php echo Yii::t('wonlot','categories');?></h3>
+        <?php foreach($cat as $k=>$item){ ?>
+            <div class="panel panel-default bootstrap-widget-table isotope-item">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><?php echo Yii::t('wonlot','Categories');?></h3>
+                </div>
+                <div class="panel-body">
+                    <?php echo "<p>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</p>";?>
+                </div>
             </div>
-            <div class="panel-body">
-              <?php foreach($cat as $k=>$item){ 
-                        echo "<p>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</p>";
-                     }?>
-            </div>
-        </div>
-    <?php
+        <?php }
+        
     } elseif($this->id == "lotteries") {
         foreach($model->lists as $title=>$items){ ?>
-            <div class="panel panel-default">
+            <div class="panel panel-default bootstrap-widget-table isotope-item">
                 <div class="panel-heading">
                   <h3 class="panel-title"><?php echo Yii::t('wonlot',$title);?></h3>
                 </div>
                 <div class="panel-body">
-                  <?php echo $form->checkBoxListRow($model, $title, $items, array('label' => false)); ?>
+                    <?php echo $form->checkBoxList($model, $title, $items, array('label' => false)); ?>
                 </div>
             </div>
-    <?php } ?>
-    <div class="row">
-        <?php echo $form->labelEx($model,'searchStartDate'); ?>
         <?php
+        }
+        echo $form->labelEx($model,'searchStartDate');
         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+            'name' => 'startDate',
             'model' => $model,
             'attribute' => 'searchStartDate',
             'htmlOptions' => array(
@@ -59,15 +55,14 @@
                 'showSecond'=>true,
                 'showTimezone'=>false,
                 'ampm' => false,
-            ),
-        ));
-        ?>
-        <?php echo $form->error($model,'searchStartDate'); ?>
-    </div>
-    <div class="row">
-        <?php echo $form->labelEx($model,'searchEndDate'); ?>
-        <?php
-        $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                )
+            )
+        );
+        echo $form->labelEx($model,'searchEndDate');
+        $this->widget(
+            'zii.widgets.jui.CJuiDatePicker',
+            array(
+                'name' => 'endDate',
             'model' => $model,
             'attribute' => 'searchEndDate',
             'htmlOptions' => array(
@@ -83,12 +78,9 @@
                 'showSecond'=>true,
                 'showTimezone'=>false,
                 'ampm' => false,
-            ),
-        ));
-        ?>
-        <?php echo $form->error($model,'searchEndDate'); ?>
-    </div>
-    <?php
+                )
+            )
+        );
         $maxPrice = Lotteries::model()->getMaxTicketPrice()+0; 
         $model->minTicketPriceRange=$model->minTicketPriceRange+0; // Trick to format decimals
         $model->maxTicketPriceRange=$model->maxTicketPriceRange+0;
@@ -192,37 +184,6 @@
             <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn')); ?>
             <?php echo CHtml::submitButton('Reset', array('name' => 'reset', 'class' => 'btn')); ?>
         </div>        
-    <?php } /*elseif($this->id == "tickets") { 
-        $this->widget(
-            'bootstrap.widgets.TbButton',
-            array('buttonType' => 'submit', 'label' => 'Search')
-        );
-        $cat = $model->lists['Categories'];
-        $box = $this->beginWidget(
-            'bootstrap.widgets.TbBox',
-            array(
-                'title' => "<b>Categories</b>",
-                'headerIcon' => 'icon-th-list',
-                'htmlOptions' => array('class' => 'bootstrap-widget-table'),
-            )
-        );
-        foreach($cat as $k=>$item){ 
-            echo "<p>".CHtml::link($item, Yii::app()->createUrl('tickets/index/?cat='.$k), array('label' => false))."</p>";
-        }
-        $this->endWidget();
-        $lots = $model->lists['Lotteries'];
-        $boxLot = $this->beginWidget(
-            'bootstrap.widgets.TbBox',
-            array(
-                'title' => "<b>Lotteries</b>",
-                'headerIcon' => 'icon-th-list',
-                'htmlOptions' => array('class' => 'bootstrap-widget-table'),
-            )
-        );
-        foreach($lots as $k=>$item){ 
-            echo "<p>".CHtml::link($item['name'], Yii::app()->createUrl('tickets/index/?lot='.$item['id']), array('label' => false))."</p>";
-        }
-        $this->endWidget();
-    } */?>
+    <?php } ?>
     <?php $this->endWidget(); ?>
 </div>

@@ -51,7 +51,7 @@ a:hover {
 }
 
 #body-container {
-    background-image:url('../images/site/background.jpg');
+    background-image:url('../images/site/background-big.jpg');
     background-repeat:no-repeat;
     background-attachment:fixed;
     background-position:center;
@@ -83,7 +83,7 @@ a:hover {
 {
     padding: 20px;
     z-index: 1000;
-    max-width: 960px;
+    /* max-width: 960px; */
     margin-left:auto;
     margin-right:auto;
 }

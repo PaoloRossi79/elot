@@ -30,7 +30,7 @@ return array(
 		'application.vendors.*',
 		'application.extensions.*',
 		'application.extensions.EGMap.*',
-//                'application.extensions.yiibooster2.*',
+                'application.extensions.yiibooster2.*',
 	),
     
         'aliases' => array(
@@ -112,10 +112,10 @@ return array(
 				),
 				// uncomment the following to show log messages on web pages
 				
-				array(
+				/*array(
 					'class'=>'CWebLogRoute',
                                         'levels'=>'error, warning, info',
-				),
+				),*/
 				
 			),
 		),

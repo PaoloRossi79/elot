@@ -72,6 +72,8 @@ class LotteriesController extends Controller
 	 */
 	public function actionCreate()
 	{
+                $this->layout='column2l6l4';
+                $this->sideView='createLotteyHelp';
                 $model=new Lotteries;
                 $this->_editLottery($model);
 	}
@@ -110,6 +112,12 @@ class LotteriesController extends Controller
                 $_POST['SearchForm'] = null;
                 unset(Yii::app()->session['filters']);
             } 
+            if($_GET['cat']){
+                $cat = PrizeCategories::model()->findByAttributes(array('category_name'=>$_GET['cat']));
+                if($cat){
+                    $_POST['SearchForm']['Categories']=$cat->id;
+                }
+            }
             if($_POST['SearchForm']){
                 Yii::app()->session['filters'] = $_POST['SearchForm'];
             } else {
@@ -381,6 +389,9 @@ class LotteriesController extends Controller
                 $filter["prizeCategory"]=$_POST['SearchForm']['Categories'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Categories'];
             }
+            if(!empty($_POST['SearchForm']['LotStartStatus'])){
+                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
+            }
             if(!empty($_POST['SearchForm']['LotStatus'])){
                 $statusOptions = $_POST['SearchForm']['LotStatus'];
                 $first = true;
@@ -468,8 +479,10 @@ class LotteriesController extends Controller
                         $model->location_id = $this->saveLocation($_POST['Locations']);
                     }
                     if($_POST['publish']){
-                        $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
+                        $model->status=Yii::app()->params['lotteryStatusConst']['publish'];
                         $model->is_active=1;
+                    } else {
+                        $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
                     }
                     if($model->save()){
                         $this->renameTmpFolder($model->id);

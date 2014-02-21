@@ -65,6 +65,20 @@
                     <div id="header-icons">
                         <?php if(!Yii::app()->user->isGuest){ ?>
                             <div class="header-icon">
+                                <?php 
+                                $controller = Yii::app()->getController();
+                                $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
+                                ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
+                                <a href="#">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile", array("class"=>"img-responsive")); ?>
                                 </a>
@@ -76,7 +90,7 @@
                             </div>
                             <div class="header-icon">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylot.png", "My Lotteries", array("class"=>"img-responsive")); ?>
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylottery.png", "My Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
@@ -84,21 +98,17 @@
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
+                          <?php } else { ?>
                             <div class="header-icon">
                                 <a href="#">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon">
-                                <?php 
-                                $controller = Yii::app()->getController();
-                                $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
-                                ?>
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout", array("class"=>"img-responsive")); ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                          <?php } else { ?>
                             <div class="header-icon">
                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register">
                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register", array("class"=>"img-responsive")); ?>
@@ -109,33 +119,22 @@
                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img-responsive")); ?>
                               </a>
                             </div>
-                            <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
-                                </a>
-                            </div>
-                            <div class="header-icon">
-                                <a href="#">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
-                                </a>
-                            </div>
                           <?php }  ?>
                     </div>
                  </div>
 	</div><!-- header -->
-            <?php $this->renderPartial('/site/login'); ?>
-        
-<!--        <div id="mainmenu">
-		<?php /*$this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Register', 'url'=>array('/site/register'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Lotterie', 'url'=>array('/lotteries'), 'visible'=>!Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
-			),
-		)); */?>
-	</div> mainmenu -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" id='loginModalContent'>
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Login</h4>
+                </div>
+                <?php $this->renderPartial('/site/login'); ?>
+              </div>
+            </div>
+        </div>
+            
         <div id="body-container">
             <?php echo $content; ?>
         </div>

@@ -45,16 +45,17 @@ a:hover {
    text-decoration: underline;
 }
 
-#page
+/*#page
 {
     background-color: black;
-}
+}*/
 
-#body-container {
-    background-image:url('../images/site/background-big.jpg');
+/*#body-container {*/
+#page {
+    background-image:url('../images/site/back1200s.jpg');
     background-repeat:no-repeat;
-    background-attachment:fixed;
-    background-position:center;
+    /*background-attachment:fixed;*/
+    background-position:right top;
     background-color: black;
 }
 
@@ -130,6 +131,10 @@ a:hover {
     margin-left: 7px;
 }
 
+#searchLot-form input {
+	float: left;
+}
+
 /* SLIDESHOW CONTROLS*/
 .slidesjs-pagination {
     margin: 6px 0 0;
@@ -165,7 +170,7 @@ a:hover {
 .left-btn-grp {
     position: absolute;
     
-    top: 144px;
+    top: 240px;
     z-index: 1001;
 }
 
@@ -396,5 +401,77 @@ a:hover {
 }
 
 .lot-box {
- 
+    width: 230px;
+    height: 380px;
+    margin: 10px;
+    float: left;
+    background-color: #fdfae5;
+    text-align: center;
+} 
+
+.lot-box-int {
+    width: 220px;
+    height: 370px;
+    margin: 5px;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.lot-cat {
+    position: relative;
+}
+
+.lot-cat img {
+    width: 50px;
+    height: 80px;
+    position: absolute;
+    top: 0;
+    left: 5px;
+}
+
+.lot-name {
+    margin: 5px 0 5px 0;
+}
+
+.lot-star {
+    background-image:url('../images/site/lot-box-star.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    height: 25px;
+}
+
+.lot-break {
+    background-image:url('../images/site/lot-box-break.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    height: 11px;
+}
+
+.lot-value p {
+    font-size: 40px;
+}
+
+.lot-img {
+    margin-top: 30px;
+    height: 200px;
+}
+
+.lot-wlmoney {
+    background-image:url('../images/site/wl-money.png');
+    background-repeat:no-repeat;
+    background-position:center;
+    width: 50px;
+    height: 50px;
+    float: left;
+    margin-left: 10px;
+}
+
+.winners-container, .main-lot-container {
+    width: 100%;
+}
+
+.winners-banner, .main-lot-banner img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

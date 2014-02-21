@@ -29,7 +29,7 @@
 ?>
     <li class="span3" id="data-<?php echo $data->id; ?>">
         <div class="thumbnail <?php echo $defClass; ?>">
-            <?php echo CHtml::image($this->getImageUrl($data->id,$img->file,"mediumThumb"),'Prize image '.$k); ?>
+            <?php echo CHtml::image($this->getImageUrl($data,"mediumThumb"),'Prize image '.$k); ?>
             <div class="<?php echo $type; ?>" style="<?php echo $displayAlert;?>">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
               <?php echo $msg; ?>

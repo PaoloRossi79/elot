@@ -21,6 +21,7 @@ class Controller extends CController
         public $image_sub_folder;
         public $imgList;
         public $filterModel;
+        public $sideView;
         
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
@@ -87,14 +88,19 @@ class Controller extends CController
             return $check;
         }
         
-        public function getImageUrl($entityId,$imgName,$thumbSize=null){
-            $img_path="/images/".$this->id."/".$entityId."/";
+        public function getImageUrl($entity,$thumbSize=null){
+            $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
             if(!empty($thumbSize)){
-                $fileUrl=$img_path.$thumbSize."/".$imgName;
+                $fileUrl=$img_path.$thumbSize."/".$entity->prize_img;
             } else {
-                $fileUrl=$img_path.$imgName;
+                $fileUrl=$img_path.$entity->prize_img;
             }
-            return $fileUrl;
+            $path = realpath(Yii::app()->getBasePath( )."/..".$fileUrl);
+            if($path){
+                return $fileUrl;
+            } else {
+                return 'images/site/no-image-thumb.png';
+            }
         }
         
         public function getImageList($entityId){

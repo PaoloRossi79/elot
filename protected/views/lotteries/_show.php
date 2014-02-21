@@ -13,7 +13,7 @@ $boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/
     <div class="panel-body">
         <div class="lot-box-img">
             <?php if($data->prize_img){ ?>
-                <div class=""><?php echo CHtml::image($this->getImageUrl($data->id, $data->prize_img,'mediumSquaredThumb'),'Lottery Image'); ?></div>
+                <div class=""><?php echo CHtml::image($this->getImageUrl($data,'mediumSquaredThumb'),'Lottery Image'); ?></div>
             <?php } ?>
         </div>
 

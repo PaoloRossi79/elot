@@ -19,5 +19,5 @@
     ?>
 </div>
 <div class="span12">
-<div id="big-gallery-item"><?php echo CHtml::image($this->getImageUrl($data->id,$data->prize_img,"galleryBigThumb"),'Prize image '.$k); ?></div>
+<div id="big-gallery-item"><?php echo CHtml::image($this->getImageUrl($data,"galleryBigThumb"),'Prize image '.$k); ?></div>
 </div>

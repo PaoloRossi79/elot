@@ -25,20 +25,6 @@
         <?php //echo $creditForm->CMaskedTextField($model, 'creditOption', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
         <?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
         <div class="row buttons">
-		<?php $this->widget(
-            'bootstrap.widgets.TbButton',
-            array(
-                'type' => 'primary',
-                'buttonType' => 'ajaxLink',
-                'label' => 'Buy Credit',
-                'url' => CController::createUrl('users/buyCredit'), 
-                'ajaxOptions' => array(
-                    'update' => '#buyCreditTarget',
-                    'type' => 'POST', 
-                    'data'=>'js:jQuery(this).parents("form").serialize()',
-                ),
-            )
-        ); ?>
         <?php echo CHtml::ajaxButton ("Buy Credit",
             CController::createUrl('users/buyCredit'), 
             array('update' => '#buyCreditTarget',

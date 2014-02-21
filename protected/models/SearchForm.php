@@ -14,6 +14,7 @@ class SearchForm extends CFormModel
         
         // FOR LOTTERIES ONLY
         public $LotStatus;
+        public $LotStartStatus = 1;
 	public $date;
 	public $searchStartDate;
 	public $searchEndDate;

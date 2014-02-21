@@ -1,12 +1,6 @@
 TODO:
 
 1) RICERCA 
-    a) MAIN PAGE: 
-                data (1 sola...estrazioni solo quel giorno)
-                geo: distanza rispetto alla località inserita
-    c) TICKET INDEX (MANCA)
-                keyword: free text da usare in ricerca
-                data acquisto (2 ... range)
     MANCA: ricerca x località
 
 3) Estrazione lotteria

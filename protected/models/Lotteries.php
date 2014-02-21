@@ -144,6 +144,20 @@ class Lotteries extends PActiveRecord
 		));
 	}
         
+        public function getMainLotteries()
+	{
+            $criteria=new CDbCriteria; 
+            $criteria->addInCondition('status',array(3,4));
+            $dataProvider=new CActiveDataProvider('Lotteries', array(
+                'pagination'=>array(
+                    'pageSize'=>8,
+                ),
+                'criteria'=>$criteria,
+            ));
+                
+            return $dataProvider;
+        }
+        
         public function getLotteries($type)
 	{
             $criteria=new CDbCriteria; 

@@ -37,12 +37,12 @@ class Subscriptions extends PActiveRecord
 		// will receive user inputs.
 		return array(
 			array('nl_type, nl_type_id, user_id', 'required'),
-			array('nl_type_id, user_id, last_modified_by, is_active, term_cond, privacy_ok, n_msg_sent', 'numerical', 'integerOnly'=>true),
+			array('nl_type_id, user_id, last_modified_by, is_active, n_msg_sent', 'numerical', 'integerOnly'=>true),
 			array('nl_type, sub_ip, sub_dns', 'length', 'max'=>45),
 			array('created, modified', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nl_type, nl_type_id, user_id, created, modified, last_modified_by, is_active, sub_ip, sub_dns, term_cond, privacy_ok, n_msg_sent', 'safe', 'on'=>'search'),
+			array('id, nl_type, nl_type_id, user_id, created, modified, last_modified_by, is_active, sub_ip, sub_dns, n_msg_sent', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -122,8 +122,6 @@ class Subscriptions extends PActiveRecord
             $sub->nl_type_id = $value;
             $sub->user_id = Yii::app()->user->id;
             $sub->is_active = 1;
-            $sub->term_cond = 1;
-            $sub->privacy_ok = 1;
             $sub->sub_ip = CHttpRequest::getUserHostAddress();
             $sub->sub_dns = CHttpRequest::getUserHost();
             return $sub;

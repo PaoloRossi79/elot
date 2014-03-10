@@ -10,10 +10,9 @@
 // ----------------------------------------------------------------------------------------
 //	HybridAuth Config file: http://hybridauth.sourceforge.net/userguide/Configuration.html
 // ----------------------------------------------------------------------------------------
-
 return 
 	array(
-		"base_url" => "http://wonlotloc.it/index.php/site/oauth", 
+		"base_url" => Yii::app()->getBaseUrl(true)."/index.php/site/oauth", 
 
 		"providers" => array ( 
 			// openid providers

@@ -32,10 +32,11 @@ $(window).bind("load", function() {
               // [number] restart delay on inactive slideshow
           }
    });
-      
-   /*$('body').on('click','.buyButton',function(elem){
-       var id=elem.srcElement.id;
-       var ajaxOptButton={'url':'/index.php/lotteries/buyTicket/'+id,'cache':false,'success':function(html){$("#data-"+id).html(html)}};
-       $.ajax(ajaxOptButton);return false;
-   });*/
+   $('#lot_location').keydown(function (e) {
+        if (e.which == 13){
+            return false;
+        } else {
+            var t=1;
+        }
+   });
 });

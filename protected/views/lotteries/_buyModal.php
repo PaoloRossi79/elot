@@ -10,49 +10,38 @@
                 $checkBuy = $this->userCanBuy($data->id);
                 if($checkBuy){ 
             ?>
-                <?php /** @var TbActiveForm $form */
-                $formModel = new BuyForm;
-                $formModel->lotId = $data->id;
-                $form = $this->beginWidget(
-                    'CActiveForm',
-                    array(
-                        'id' => 'horizontalForm',
-                    )
-                ); 
-                echo $form->hiddenField($formModel,'lotId'); 
-                ?>
                 <div class="modal-body">
-                    <?php echo CHtml::ajaxButton ("Buy for You!",
+                    
+                    <!--<p> OR </p>-->
+                    <?php /*echo CHtml::ajaxButton ("Buy for a friend!",
                               CController::createUrl('lotteries/buyTicket'), 
                               array('update' => '.data-'.$data->id,
                                 'type' => 'POST', 
                                 'data'=>'js:jQuery(this).parents("form").serialize()'
-                              )); ?>
-                    <p> OR </p>
-                    <?php echo CHtml::ajaxButton ("Buy for a friend!",
-                              CController::createUrl('lotteries/buyTicket'), 
-                              array('update' => '.data-'.$data->id,
-                                'type' => 'POST', 
-                                'data'=>'js:jQuery(this).parents("form").serialize()'
-                              )); ?>
-                    <?php echo $form->textField($formModel,'email',array('hint' => 'Your friend email...')); ?>
+                              ));*/ ?>
+                    <?php //echo $form->textField($formModel,'email',array('hint' => 'Your friend email...')); ?>
                     <?php 
-                        $offersType = UserSpecialOffers::model()->getUserSpecialOffersDropdown();
-                        echo $form->dropDownList($formModel,'offerId',$offersType);
-                    ?>
-
+//                            $addData = array('version' => 'complete', 'data' => $data, 'form' => $form, 'formModel' => $formModel);
+                            $addData = array('version' => 'complete', 'data' => $data);
+                            $this->renderPartial('_buyAjax', $addData); 
+                        ?>
+                    <?php echo CHtml::ajaxButton ("Buy for You!",
+                        CController::createUrl('lotteries/buyTicket'), 
+                        array(
+          //                                'update' => '.data-'.$data->id,
+                          'update' => '#data-'.$data->id,
+                          'type' => 'POST', 
+                          'data'=>'js:$("#buyLotteryForm").serialize()'
+                        )); ?>
+                    
                 </div>
-                <?php $this->endWidget(); ?>
-
+                
                 <div class="modal-footer">
 
                     <div class="">
-                        <div class="data-<?php echo $data->id; ?>">
-                            <?php 
-                                $addData = array('version' => 'complete', 'data' => $data);
-                                $this->renderPartial('_buyAjax', $addData); 
-                            ?>
-                        </div>
+                        
+                            
+                       
                     </div>
                 </div>
             <?php } elseif(Yii::app()->user->isGuest()){ ?>

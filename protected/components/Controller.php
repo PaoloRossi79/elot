@@ -23,6 +23,10 @@ class Controller extends CController
         public $filterModel;
         public $sideView;
         
+        public $user;
+        public $userId;
+        
+        
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
@@ -85,22 +89,31 @@ class Controller extends CController
             $model=new $modelName();
             $entity=$model->findByPk($id);
             $check=Yii::app()->user->id==$entity->owner_id;
+            /*if(!$check){
+                $this->render('site/error', array('code'=>"404","message"=> "Non sei il proprietario!"));
+            }*/
             return $check;
         }
         
         public function getImageUrl($entity,$thumbSize=null){
-            $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
-            if(!empty($thumbSize)){
-                $fileUrl=$img_path.$thumbSize."/".$entity->prize_img;
+            if(get_class($entity) == "stdClass"){
+                $file=$entity->file;
+                $img_path="/images/".strtolower($entity->entityType)."/".$entity->entityId."/";
             } else {
-                $fileUrl=$img_path.$entity->prize_img;
+                $file=$entity->prize_img;
+                $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
+            }
+            if(!empty($thumbSize)){
+                $fileUrl=$img_path.$thumbSize."/".$file;
+            } else {
+                $fileUrl=$img_path.$file;
             }
             $path = realpath(Yii::app()->getBasePath( )."/..".$fileUrl);
-            if($path){
+            //if($path){
                 return $fileUrl;
-            } else {
+            /*} else {
                 return 'images/site/no-image-thumb.png';
-            }
+            }*/
         }
         
         public function getImageList($entityId){
@@ -151,6 +164,13 @@ class Controller extends CController
         }
         
         protected function beforeRender($view) {
+            if(Yii::app()->user && Yii::app()->user->id){
+                $this->user=Yii::app()->user;
+                $this->userId=Yii::app()->user->id;
+            } else {
+                $this->user=null;
+                $this->userId=-1;
+            }
             if($view==="error"){
                 return;
             }
@@ -259,8 +279,8 @@ class Controller extends CController
             } else { //new location
                 $newLoc = new Locations;
                 $newLoc->address = $data['address'];
-                $newLoc->addressLat = number_format($data['addressLat'],6);
-                $newLoc->addressLng = number_format($data['addressLng'],6);
+                $newLoc->addressLat = number_format((float)$data['addressLat'],6);
+                $newLoc->addressLng = number_format((float)$data['addressLng'],6);
                 if($newLoc->save()){
                     return $newLoc->id;
                 } else {

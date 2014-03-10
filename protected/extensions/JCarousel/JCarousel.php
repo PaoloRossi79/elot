@@ -552,6 +552,7 @@ class JCarousel extends CBaseListView
 			}
 			
 			$image = '<img src="'.eval('return '.$this->thumbUrl.';').'" alt="'.$altText.'" '.$titleAttr.' />';
+//			$image = '<img src="'.Controller::getImageUrl($data,"smallSquaredThumb").'" alt="'.$altText.'" '.$titleAttr.' />';
 			
 			if (isset($this->target))
 				echo '<li><a href="'.eval('return '.$this->imageUrl.';').'" class="'.eval('return '.$this->linkClass.';').'">'.$image.'</a></li>';

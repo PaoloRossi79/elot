@@ -1,6 +1,6 @@
 <div class="span4">
 <?php 
-    $dataProvider =  new CActiveDataProvider('Lotteries', array(
+    /*$dataProvider =  new CActiveDataProvider('Lotteries', array(
         'criteria'=>array(
             'condition'=>'id='.$data->id,
         ))
@@ -15,9 +15,24 @@
         'imageUrl' => '"/images/lotteries/".$data->entityId."/galleryBigThumb/".$data->file',
         'target' => 'big-gallery-item',
         'cssFile' => 'elot-skin.css',
-    ));
+    ));*/
     ?>
+   
+    
 </div>
 <div class="span12">
-<div id="big-gallery-item"><?php echo CHtml::image($this->getImageUrl($data,"galleryBigThumb"),'Prize image '.$k); ?></div>
+<div id="big-gallery-item"><?php echo CHtml::image($this->getImageUrl($model,"galleryBigThumb"),'Prize image '.$model->name,array('class'=>'big-image-prize')); ?></div>
+<?php
+    $dataProvider =  new MyImageDataProvider($model);
+    $this->widget('ext.JCarousel.JCarousel', array(
+        'dataProvider' => $dataProvider,
+        /*'thumbUrl' => '$this->getImageUrl($data,"mediumSquaredThumb")',
+        'imageUrl' => '$this->getImageUrl($data,"galleryBigThumb")',*/
+        'thumbUrl' => '"/images/".$data->entityType."/".$data->entityId."/mediumSquaredThumb/".$data->file',
+        'imageUrl' => '"/images/".$data->entityType."/".$data->entityId."/gallerySmallThumb/".$data->file',
+        'target' => 'big-gallery-item',
+        'cssFile' => 'elot-skin.css',
+        'altText' => '"Immagine premio ".$data->name',
+    ));
+?>
 </div>

@@ -3,6 +3,7 @@ $buttons = array(
         'save' => array(
                 'type' => 'submit',
                 'label' => 'Save',
+//                'onclick'=>'var sub=1;document.forms["lot-form"].submit();',
         ),
 );
 if($this->model->isNewRecord || $this->model->status==Yii::app()->params['lotteryStatusConst']['draft']){
@@ -23,6 +24,7 @@ return array(
 	'attributes' => array(
 		'enctype' => 'multipart/form-data',
                 'id' => 'lot-form',
+//                'onsubmit' => "if(typeof(sub) == 'undefined'){return false;}"
 	),    
         'elements' => array(
             'name' => array(
@@ -42,7 +44,13 @@ return array(
             ),*/
             'prize_desc' => array(
                         'label' => Yii::t('clos', 'Prize Description'),
-                        'type' => 'ext.imperavi-redactor-widget.ImperaviRedactorWidget'
+                        'type' => 'ext.imperavi-redactor-widget.ImperaviRedactorWidget',
+                        'options' => array(
+                            'buttons' => array('html', 'formatting', // togliere per PRODUZIONE
+                                'bold', 'italic', 'deleted', 'unorderedlist', 
+                                'orderedlist', 'outdent', 'indent','table', 
+                                'alignment', 'horizontalrule')
+                        ),
             ),
             'prize_category' => array(
                         'label' => 'Prize Category',//Yii::t('clos', 'Section'),
@@ -80,7 +88,7 @@ return array(
                     'label' => Yii::t('clos', 'max_ticket'),
                     'type' => 'text'
             ),*/
-            'lottery_start_date' => array(
+            /*'lottery_start_date' => array(
                     'label' => 'lottery_start_date start',
                     'type' => 'application.extensions.CJuiDateTimePicker.CJuiDateTimePicker',
                     'options'=>array(
@@ -93,20 +101,54 @@ return array(
                             'ampm' => false,
                     ),
                     'language' => 'it',
-            ),
-            'lottery_draw_date' => array(
-                    'label' => 'lottery_draw_date end',
-                    'type' => 'application.extensions.CJuiDateTimePicker.CJuiDateTimePicker',
+            ),*/
+            'lottery_start_date' => array(
+                    'id' => 'lot_start',
+                    'label' => 'lottery_start_date start',
+                    'type' => 'zii.widgets.jui.CJuiDatePicker',
                     'options'=>array(
                             'dateFormat'=>'dd/mm/yy',
+                            'minDate'=>date('d/m/Y'),
                             //'dateFormat'=>'yy-mm-dd',
                             'timeFormat'=>'HH:mm:ss',
                             'showSecond'=>true,
                             'showTimezone'=>false,
-                            'language' => 'it'
+                            'language' => 'it',
+                            'ampm' => false,
+                            'showAnim'=>'fold',
+                            'onSelect'=>'js:function(selDate,obj){
+                                $("#lot_end").datepicker("option","minDate",selDate);
+                            }',
                     ),
-                    'language' => 'it'
+                    'language' => 'it',
+                    'htmlOptions'=>array(
+                        
+                    ),
             ),
+            'lottery_draw_date' => array(
+                    'id' => 'lot_end',
+                    'label' => 'lottery_draw_date start',
+                    'type' => 'zii.widgets.jui.CJuiDatePicker',
+                    'options'=>array(
+                            'dateFormat'=>'dd/mm/yy',
+                            'minDate'=>date('d/m/Y'),
+                            //'dateFormat'=>'yy-mm-dd',
+                            'timeFormat'=>'HH:mm:ss',
+                            'showSecond'=>true,
+                            'showTimezone'=>false,
+                            'language' => 'it',
+                            'ampm' => false,
+                            'showAnim'=>'fold',
+                            'onSelect'=>'js:function(selDate,obj){
+                                $("#lot_start").datepicker("option","maxDate",selDate);
+                            }',
+                    ),
+                    'language' => 'it',
+                    'htmlOptions'=>array(
+                        
+                    ),
+            ),
+            
 	),
 	'buttons' => $buttons,
 );

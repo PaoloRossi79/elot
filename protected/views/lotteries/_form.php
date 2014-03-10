@@ -19,7 +19,7 @@
         <!--SAVED IMG SECTION-->
           <div class="">
             <?php if(!empty($form->model->id)){ ?>
-              <?php $this->renderPartial('_setDefaultImage',array('data'=>$form->model,'img'=>$img)); ?>
+              <?php $this->renderPartial('_setDefaultImage',array('data'=>$form->model)); ?>
             <?php } ?>
           </div>
         <?php

@@ -1,20 +1,11 @@
-<?php
-/* @var $this LotteriesController */
-/* @var $dataProvider CActiveDataProvider */
-
-$this->breadcrumbs=array(
-	'Lotteries',
-);
-
-?>
 <?php 
 $h1="<h1>Lotteries</h1>";
 if($viewData['showStatus']){
 //   $h1.=" <h3>(".CHtml::encode(Yii::app()->params['lotteryStatusConst'][$viewData['showStatus']]).")</h3>"; 
-   $h1.=" <h3>(".CHtml::encode($viewData['showStatus']).")</h3>"; 
+   $h1.=" <h3>Status: ".CHtml::encode($viewData['showStatus'])."</h3>"; 
 }
 if($viewData['showCat']){
-   $h1.=" <h3>(".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($viewData['showCat'])).")</h3>"; 
+   $h1.=" <h3>Category: ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($viewData['showCat']))."</h3>"; 
 }
 echo $h1;
 if(!Yii::app()->user->isGuest){
@@ -37,11 +28,18 @@ if(!Yii::app()->user->isGuest){
     );?>
   </ul>
 </div>-->
+<?php
+    $this->widget('zii.widgets.CListView', array(
+        'dataProvider'=>$dataProvider,
+        'itemView'=>'/lotteries/lot-box',
+        'enablePagination'=>false,
+    ));
+    ?>
 
     <?php
-    $this->widget('ext.isotope.Isotope',array(
+    /*$this->widget('ext.isotope.Isotope',array(
         'dataProvider'=>$dataProvider,
-        'itemView'=>$viewType,
+        'itemView'=>'lot-box',
         'viewData'=>$viewData,
         'itemSelectorClass'=>'isotope-item',
         'options'=>array( // options for the isotope jquery
@@ -57,4 +55,6 @@ if(!Yii::app()->user->isGuest){
         'infiniteScroll'=>true, // default to true
         'infiniteOptions'=>array(), // javascript options for infinite scroller
         'id'=>'wall',
-    ));?>
+    ));*/
+     ?>
+     

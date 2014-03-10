@@ -8,8 +8,12 @@
     </div>
     <div class="panel-body">
         <?php if(!empty($model->id)){ ?>
-            <?php $this->renderPartial('_galleryImage',array('data'=>$model,'img'=>$img)); ?>
+            <?php $this->renderPartial('_galleryImage',array('model'=>$model)); ?>
         <?php } ?>
+        <h2><?php echo CHtml::encode($model->name); ?></h2>
+        <div class="prize-desc-text">
+            <?php echo CHtml::encode($model->prize_desc); ?>
+        </div>
         <div class="val-ticket-text">
         <div class="val-ticket-text-label"><?php echo Yii::t('lot','val tickets'); ?>:</div>
             <span class="badge badge-success"><?php echo CHtml::encode($model->ticket_value); ?></span>
@@ -42,9 +46,6 @@
                 <span class="badge badge-success"><?php echo CHtml::encode($model->prize_price); ?></span>
             </div>
         <?php } ?>
-        <div class="prize-desc-text">
-            <?php echo $model->prize_desc; ?>
-        </div>
         <div class="prize-cat-text-label"><?php echo Yii::t('lot','prize category'); ?>:</div>
         <div class="prize-cat-text">
             <?php echo CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($model->prize_category)); ?>
@@ -59,12 +60,15 @@
         <div class="prize-ship-text">
             <?php echo CHtml::encode($model->prize_shipping); ?>
         </div>
-        <?php echo CHtml::ajaxButton ("Buy for You!",
-            CController::createUrl('site/socialShare'), 
-            array('update' => '.data-'.$data->id,
-              'type' => 'POST', 
-              'data'=>'js:jQuery(this).parents("form").serialize()'
-            )); ?>
+        <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#<?php echo 'buyModal-'.$model->id;?>">
+                <?php echo Yii::t('wonlot','Buy ticket'); ?>
+            </button>
+        <?php } elseif(isset($this->userId)) { ?>
+            <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>
+        <?php } ?>
     </div>
 </div>
-<?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
+<?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
+    <?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
+<?php } ?>

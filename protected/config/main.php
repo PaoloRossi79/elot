@@ -30,7 +30,7 @@ return array(
 		'application.vendors.*',
 		'application.extensions.*',
 		'application.extensions.EGMap.*',
-                'application.extensions.yiibooster2.*',
+                'application.extensions.galleria.*'
 	),
     
         'aliases' => array(
@@ -62,7 +62,9 @@ return array(
                             'admin'=>2,
                         ),
 		),
-            
+                /*'request' => array(
+                    'baseUrl' => $localBaseUrl,
+                ),*/
                 'mailer' => array(
                     'class' => 'application.extensions.mailer.EMailer',
                     'pathViews' => 'application.views.emailTemplate',

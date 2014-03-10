@@ -29,7 +29,7 @@
             CController::createUrl('users/buyCredit'), 
             array('update' => '#buyCreditTarget',
                     'type' => 'POST', 
-                    'data'=>'js:jQuery(this).parents("form").serialize()',
+                    'data'=>'js:$("#userWallet-form").serialize()',
             )); ?>
 	</div>
 <?php $this->endWidget(); ?>

@@ -86,7 +86,7 @@ $this->pageTitle=Yii::app()->name;
     </div>
  </div>  
 <div class="clear"></div>
-<div class="winners-container">
+<div class="winners-container" style="display: none;"> 
     <div class="winners-banner">
         <img src="/images/site/left-star.png">
         <img src="/images/site/winners-banner.png">

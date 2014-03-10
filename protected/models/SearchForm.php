@@ -14,7 +14,7 @@ class SearchForm extends CFormModel
         
         // FOR LOTTERIES ONLY
         public $LotStatus;
-        public $LotStartStatus = 1;
+        public $LotStartStatus = 3;
 	public $date;
 	public $searchStartDate;
 	public $searchEndDate;
@@ -68,6 +68,7 @@ class SearchForm extends CFormModel
 		$this->searchText=$data['searchText'];
 		$this->Categories=$data['Categories'];
 		$this->LotStatus=$data['LotStatus'];
+		$this->LotStartStatus=$data['LotStartStatus'];
 		$this->minTicketPriceRange=$data['minTicketPriceRange'];
 		$this->maxTicketPriceRange=$data['maxTicketPriceRange'];
 		$this->minPrizePriceRange=$data['minPrizePriceRange'];

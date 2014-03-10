@@ -91,6 +91,12 @@ $image_versions = array(
         'max_width' => 100,
         'max_height' => 200,
     ),
+    'smallSquaredThumb' => array(
+        'max_width' => 100,
+        'max_height' => 100,
+        'crop_img' => true,
+        'jpeg_quality' => 60,
+    ),
     'mediumSquaredThumb' => array(
         'max_width' => 200,
         'max_height' => 200,

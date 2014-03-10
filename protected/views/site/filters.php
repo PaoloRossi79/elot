@@ -15,7 +15,7 @@
         $cat = $model->lists['Categories'];
         ?>
         <?php foreach($cat as $k=>$item){ ?>
-            <div class="panel panel-default bootstrap-widget-table isotope-item">
+            <div class="panel panel-default bootstrap-widget-table">
                 <div class="panel-heading">
                   <h3 class="panel-title"><?php echo Yii::t('wonlot','Categories');?></h3>
                 </div>
@@ -27,7 +27,7 @@
         
     } elseif($this->id == "lotteries") {
         foreach($model->lists as $title=>$items){ ?>
-            <div class="panel panel-default bootstrap-widget-table isotope-item">
+            <div class="panel panel-default bootstrap-widget-table">
                 <div class="panel-heading">
                   <h3 class="panel-title"><?php echo Yii::t('wonlot',$title);?></h3>
                 </div>
@@ -39,22 +39,25 @@
         }
         echo $form->labelEx($model,'searchStartDate');
         $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-            'name' => 'startDate',
-            'model' => $model,
-            'attribute' => 'searchStartDate',
-            'htmlOptions' => array(
-                'size' => '10',         // textField size
-                'maxlength' => '10',    // textField maxlength
-                'class' => 'input-medium',
-            ),
-            'options' => array(
-                'language' => 'it',
-                'dateFormat'=>'dd/mm/yy',
-                //'dateFormat'=>'yy-mm-dd',
-                'timeFormat'=>'HH:mm:ss',
-                'showSecond'=>true,
-                'showTimezone'=>false,
-                'ampm' => false,
+                'id' => 'search_start',
+                'model' => $model,
+                'attribute' => 'searchStartDate',
+                'htmlOptions' => array(
+                    'size' => '10',         // textField size
+                    'maxlength' => '10',    // textField maxlength
+                    'class' => 'input-medium',
+                ),
+                'options' => array(
+                    'language' => 'it',
+                    'dateFormat'=>'dd/mm/yy',
+                    //'dateFormat'=>'yy-mm-dd',
+                    'timeFormat'=>'HH:mm:ss',
+                    'showSecond'=>true,
+                    'showTimezone'=>false,
+                    'ampm' => false,
+                    'onSelect'=>'js:function(selDate,obj){
+                        $("#search_end").datepicker("option","minDate",selDate);
+                    }',
                 )
             )
         );
@@ -62,22 +65,25 @@
         $this->widget(
             'zii.widgets.jui.CJuiDatePicker',
             array(
-                'name' => 'endDate',
-            'model' => $model,
-            'attribute' => 'searchEndDate',
-            'htmlOptions' => array(
-                'size' => '10',         // textField size
-                'maxlength' => '10',    // textField maxlength
-                'class' => 'input-medium',
-            ),
-            'options' => array(
-                'language' => 'it',
-                'dateFormat'=>'dd/mm/yy',
-                //'dateFormat'=>'yy-mm-dd',
-                'timeFormat'=>'HH:mm:ss',
-                'showSecond'=>true,
-                'showTimezone'=>false,
-                'ampm' => false,
+                'id' => 'search_end',
+                'model' => $model,
+                'attribute' => 'searchEndDate',
+                'htmlOptions' => array(
+                    'size' => '10',         // textField size
+                    'maxlength' => '10',    // textField maxlength
+                    'class' => 'input-medium',
+                ),
+                'options' => array(
+                    'language' => 'it',
+                    'dateFormat'=>'dd/mm/yy',
+                    //'dateFormat'=>'yy-mm-dd',
+                    'timeFormat'=>'HH:mm:ss',
+                    'showSecond'=>true,
+                    'showTimezone'=>false,
+                    'ampm' => false,
+                    'onSelect'=>'js:function(selDate,obj){
+                        $("#search_start").datepicker("option","minDate",selDate);
+                    }',
                 )
             )
         );

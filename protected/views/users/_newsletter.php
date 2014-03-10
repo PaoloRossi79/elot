@@ -16,6 +16,12 @@
     <div class="">
         <div><?php echo Yii::t('elot','Newsletter'); ?></div>
         <br/><br/>
+        <?php 
+            echo $nlForm->label($model, 'privacyOk');
+            echo $nlForm->checkBox($formModel, 'privacyOk');
+            echo $nlForm->label($model, 'termsOk');
+            echo $nlForm->checkBox($formModel, 'termsOk');
+            ?>
         <div class="">Categories:
             <?php  
                 /*foreach($this->categories as $k=>$cat){
@@ -35,13 +41,6 @@
         </div>
         <br/>
         <div class="">
-            <?php 
-            echo $nlForm->checkBox($formModel, 'privacyOk', array('label' => "Accept privacy policy?"));
-//            echo $nlForm->error($formModel,'privacyOk');
-            echo $nlForm->checkBox($formModel, 'termsOk', array('label' => "Accept terms & conditions?"));
-//            echo $t = $nlForm->error($formModel,'termsOk');
-//            echo CHtml::ajaxSubmitButton('Save', CController::createUrl('users/editNewsletter'), array('name' => 'save', 'class' => 'btn')); 
-            ?>
             <?php 
             
             /*$this->widget(
@@ -64,7 +63,7 @@
             CController::createUrl('users/editNewsletter'), 
             array('update' => '#newsForm',
                     'type' => 'POST', 
-                    'data'=>'js:jQuery(this).parents("form").serialize()',
+                    'data'=>'js:$("#newsletter-form").serialize()',
             )); ?>
     <?php $this->endWidget(); ?>
 </div>

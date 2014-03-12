@@ -104,21 +104,23 @@ return array(
 			'errorAction'=>'site/error',
 		),
 		'log'=>array(
-			'class'=>'CLogRouter',
-			'routes'=>array(
-				array(
-					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
-				),
-				// uncomment the following to show log messages on web pages
-				
-				array(
-					'class'=>'CWebLogRoute',
-                                        'levels'=>'error, warning, info',
-				),
-				
-			),
-		),
+                    'class'=>'CLogRouter',
+                    'routes'=>array(
+                        'class'=>'CFileLogRoute',
+                            'logFile'=>'wonlot.log',
+                            'levels'=>'error, warning',
+                        ),
+                            array(
+                        'class'=>'CFileLogRoute',
+                            'logFile'=>'wonlot_trace.log',
+                            'levels'=>'trace',
+                        ),
+                        // uncomment the following to show log messages on web pages	
+                        /*array(
+                            'class'=>'CWebLogRoute',
+                            'levels'=>'error, warning, info',
+                        ),*/	
+                ),
             //'facebook' => $fbconfig,
 	),
 

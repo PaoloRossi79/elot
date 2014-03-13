@@ -163,3 +163,17 @@ div.wide.form .buttons, div.wide.form .hint, div.wide.form .errorMessage
 	clear: left;
 	padding-left: 110px;
 }
+
+div.form .checkbox-container label {
+    display: inline;
+}
+
+div.form .form-block {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.form .form-block-high {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

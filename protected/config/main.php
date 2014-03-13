@@ -110,7 +110,13 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
+                                        'logFile'=>'wonlot.log',
 					'levels'=>'error, warning',
+				),
+				array(
+					'class'=>'CFileLogRoute',
+                                        'logFile'=>'wonlot-trace.log',
+					'levels'=>'trace',
 				),
 				// uncomment the following to show log messages on web pages
 				

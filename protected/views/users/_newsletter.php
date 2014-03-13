@@ -59,11 +59,11 @@
             );*/ ?>
         </div>
     </div>
-        <?php echo CHtml::ajaxButton ("Save",
+        <?php /*echo CHtml::ajaxButton ("Save",
             CController::createUrl('users/editNewsletter'), 
             array('update' => '#newsForm',
                     'type' => 'POST', 
                     'data'=>'js:$("#newsletter-form").serialize()',
-            )); ?>
+            ));*/ ?>
     <?php $this->endWidget(); ?>
 </div>

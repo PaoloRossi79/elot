@@ -51,12 +51,12 @@ $this->breadcrumbs=array(
                         </p>-->
                 </div>
 
-                <div class="row rememberMe">
+                <div class="row rememberMe checkbox-container">
                         <?php echo $form->checkBox($model,'terms'); ?>
                         <?php echo $form->label($model,'Accept terms & cond?'); ?>
                         <?php echo $form->error($model,'terms'); ?>
                 </div>
-                <div class="row rememberMe">
+                <div class="row rememberMe checkbox-container">
                         <?php echo $form->checkBox($model,'persdatamng'); ?>
                         <?php echo $form->label($model,'Accept pers data managment?'); ?>
                         <?php echo $form->error($model,'persdatamng'); ?>

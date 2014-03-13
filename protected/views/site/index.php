@@ -79,7 +79,7 @@ $this->pageTitle=Yii::app()->name;
                 ));
                 ?>
                 <!--<span class="input-group-addon glyphicon glyphicon-map-marker"></span>-->
-                <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn')); ?>
+                <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn btn-success')); ?>
                 <?php $this->endWidget(); ?>
             </div>
         </div>

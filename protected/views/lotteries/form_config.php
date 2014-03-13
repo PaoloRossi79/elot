@@ -11,10 +11,12 @@ if($this->model->isNewRecord || $this->model->status==Yii::app()->params['lotter
         'draft' => array(
                 'type' => 'submit',
                 'label' => 'Save as draft',
+                'class' => 'btn btn-success',
         ),
         'publish' => array(
                 'type' => 'submit',
                 'label' => 'Publish',
+                'class' => 'btn btn-success',
         ),
     );
 }

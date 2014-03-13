@@ -8,7 +8,8 @@ class SiteController extends Controller
 	 */
 	public function actions()
 	{
-		return array(
+            return array_merge(parent::actions(),
+		array(
 			// captcha action renders the CAPTCHA image displayed on the contact page
 			'captcha'=>array(
 				'class'=>'CCaptchaAction',
@@ -67,13 +68,8 @@ class SiteController extends Controller
                               /*'acc_status' => 1,*/
                             ),
                         ),
-                        // this is an admin action that will help you to configure HybridAuth 
-                        // (you must delete this action, when you'll be ready with configuration, or 
-                        // specify rules for admin role. User shouldn't have access to this action!)
-                        'oauthadmin' => array(
-                            'class'=>'ext.hoauth.HOAuthAdminAction',
-                        ),
-		);
+		)
+            );        
 	}
 
 	/**

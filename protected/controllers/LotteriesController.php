@@ -397,17 +397,17 @@ class LotteriesController extends Controller
                 $first = true;
                 $filter['status'] = array();
                 foreach($statusOptions as $opt) {
-                    if($opt === '1'){
+                    if($opt == '1'){
                        $filter['status'] = array_merge($filter['status'],array(3)); 
                        $result['viewData']['showStatus'].=($first?"":", ").array_search(3, Yii::app()->params['lotteryStatusConst']);
                        $first=false;
                     }
-                    if($opt === '2'){
+                    if($opt == '2'){
                        $filter['status'] = array_merge($filter['status'],array(2)); 
                        $result['viewData']['showStatus'].=($first?"":", ").array_search(2, Yii::app()->params['lotteryStatusConst']);
                        $first=false;
                     }
-                    if($opt === '3'){
+                    if($opt == '3'){
                        $filter['status'] = array_merge($filter['status'],array(4,5)); 
                        $result['viewData']['showStatus'].=($first?"":", ").array_search(4, Yii::app()->params['lotteryStatusConst']);
                        $result['viewData']['showStatus'].=", ".array_search(5, Yii::app()->params['lotteryStatusConst']);

@@ -147,6 +147,60 @@ class Controller extends CController
                     'thumbSize' => "smallThumb",
                     'subfolderVar' => (!empty($this->image_sub_folder)) ? $this->image_sub_folder : 'U-'.Yii::app()->user->id,
                 ),
+                'oauth' => array(
+                    // the list of additional properties of this action is below
+                    'class'=>'ext.hoauth.HOAuthAction',
+                    // Yii alias for your user's model, or simply class name, when it already on yii's import path
+                    // default value of this property is: User
+                    'model' => 'Users', 
+                    // map model attributes to attributes of user's social profile
+                    // model attribute => profile attribute
+                    // the list of avaible attributes is below
+                    'attributes' => array(
+                      'email' => 'email',
+                      'ext_id' => 'identifier',
+                      'password' => 'identifier',
+                      'username' => 'displayName',
+                      'profile->first_name' => 'firstName',
+                      'profile->last_name' => 'lastName',
+                      'profile->gender' => 'genderShort',
+                      'profile->birthday' => 'birthDate',
+                      'profile->img' => 'photoURL',
+                      // you can also specify additional values, 
+                      // that will be applied to your model (eg. account activation status)
+                      /*'acc_status' => 1,*/
+                    ),
+                ),
+                'oauthshare' => array(
+                    // the list of additional properties of this action is below
+                    'class'=>'ext.hoauth.HOAuthShare',
+                    // Yii alias for your user's model, or simply class name, when it already on yii's import path
+                    // default value of this property is: User
+                    'model' => 'Users', 
+                    // map model attributes to attributes of user's social profile
+                    // model attribute => profile attribute
+                    // the list of avaible attributes is below
+                    'attributes' => array(
+                      'email' => 'email',
+                      'ext_id' => 'identifier',
+                      'password' => 'identifier',
+                      'username' => 'displayName',
+                      'profile->first_name' => 'firstName',
+                      'profile->last_name' => 'lastName',
+                      'profile->gender' => 'genderShort',
+                      'profile->birthday' => 'birthDate',
+                      'profile->img' => 'photoURL',
+                      // you can also specify additional values, 
+                      // that will be applied to your model (eg. account activation status)
+                      /*'acc_status' => 1,*/
+                    ),
+                ),
+                // this is an admin action that will help you to configure HybridAuth 
+                // (you must delete this action, when you'll be ready with configuration, or 
+                // specify rules for admin role. User shouldn't have access to this action!)
+                /*'oauthadmin' => array(
+                    'class'=>'ext.hoauth.HOAuthAdminAction',
+                ),*/
             );
         }
         

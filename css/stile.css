@@ -108,6 +108,32 @@ a:hover {
     
 }
 
+.max-column {
+    width: auto;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.items {
+    width: auto;
+    height: 100%!important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.show-filter-button{
+    margin: 15px;
+}
+
+#hide-search {
+    display: none;
+}
+
+#search-column {
+    display: none;
+}
+
 .main-search-grp {
     margin-left: 30px;
 }
@@ -404,7 +430,7 @@ a:hover {
 }
 
 .lot-box {
-    width: 230px;
+    width: 232px;
     height: 380px;
     margin: 10px;
     float: left;

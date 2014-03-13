@@ -34,8 +34,22 @@ class PrizeCalculatorWidget extends CInputWidget
     */
     public function registerClientScript()
     {
+            Yii::app()->clientScript->registerScript(__CLASS__."-ready". '#' . $this->id, <<<JS
+        if($("#$this->id").val() > 0){
+            $("#commission-missing").hide();
+            $("#commission-data").show();
+        }
+JS
+            ,CClientScript::POS_READY);
             Yii::app()->clientScript->registerScript(__CLASS__. '#' . $this->id, <<<JS
 jQuery("#$this->id").change(function() {
+        if($("#$this->id").val() > 0){
+            $("#commission-data").show();
+            $("#commission-missing").hide();
+        } else {
+            $("#commission-data").hide();
+            $("#commission-missing").show();
+        }
         var newVal = $("#$this->id").val() - ($("#$this->id").val() * $this->wlPerc / 100);
         $("#userEarning").text(newVal);
 });	

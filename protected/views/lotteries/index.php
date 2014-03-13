@@ -29,15 +29,15 @@ if(!Yii::app()->user->isGuest){
   </ul>
 </div>-->
 <?php
-    $this->widget('zii.widgets.CListView', array(
+    /*$this->widget('zii.widgets.CListView', array(
         'dataProvider'=>$dataProvider,
         'itemView'=>'/lotteries/lot-box',
         'enablePagination'=>false,
-    ));
+    ));*/
     ?>
 
     <?php
-    /*$this->widget('ext.isotope.Isotope',array(
+    $this->widget('ext.isotope.Isotope',array(
         'dataProvider'=>$dataProvider,
         'itemView'=>'lot-box',
         'viewData'=>$viewData,
@@ -45,7 +45,7 @@ if(!Yii::app()->user->isGuest){
         'options'=>array( // options for the isotope jquery
             'layoutMode'=>'masonry',
             'containerStyle' => array(
-                'position' => 'relative', 'overflow' => 'hidden'
+                'position' => 'relative', 'overflow' => 'hidden', 'height' => "100%"
             ),
             'animationEngine'=>'jquery',
             'animationOptions'=>array(
@@ -55,6 +55,6 @@ if(!Yii::app()->user->isGuest){
         'infiniteScroll'=>true, // default to true
         'infiniteOptions'=>array(), // javascript options for infinite scroller
         'id'=>'wall',
-    ));*/
-     ?>
+    ));
+    ?>
      

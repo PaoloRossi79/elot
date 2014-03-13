@@ -1,6 +1,27 @@
 // executed after ALL (also after document.ready !!!)
 $(window).bind("load", function() {
    $('.isotope').isotope('reLayout');
+   $('#show-filter').click(function(){
+       if($('#search-column').css('display') == "none"){
+           $(this).removeClass('glyphicon-zoom-in');
+           $(this).addClass('glyphicon-zoom-out');
+           $('#show-search').fadeOut({
+               complete: function(){
+                   $('#hide-search').fadeIn();
+               }
+           });
+           $('#search-column').fadeIn();
+       } else {
+           $(this).removeClass('glyphicon-zoom-out');
+           $(this).addClass('glyphicon-zoom-in');
+           $('#hide-search').fadeOut({
+               complete: function(){
+                   $('#show-search').fadeIn();
+               }
+           });
+           $('#search-column').fadeOut();
+       }
+   });
    $('#login-button').click(function(){
        $('.login-panel').toggle("fast");
    });

@@ -31,7 +31,7 @@ class HybridAuthIdentity extends CUserIdentity
         require_once $path . '/Hybrid/Auth.php';  //path to the Auth php file within HybridAuth folder
  
         $this->config = array(
-            "base_url" => "http://elot.loc/site/showSocialLogin", 
+//            "base_url" => "http://elot.loc/site/showSocialLogin", 
  
             "providers" => array(
                 "Google" => array(

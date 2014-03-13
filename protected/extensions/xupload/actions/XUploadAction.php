@@ -283,13 +283,20 @@ class XUploadAction extends CAction {
                 chmod($path . $model->{$this->fileNameAttribute}, 0777);
                 //create Thumbnails
                 foreach($this->image_versions as $version => $options) {
-                    if ($this->create_scaled_image($model->{$this->fileNameAttribute}, $version, $options)) {
+                    if($options['crop_img']){
+                        if(!$this->create_scaled_cropped_image($model->{$this->fileNameAttribute}, $version, $options)){
+                            throw new CHttpException(500, "Could not upload file");
+                        }
+                    } else {
+                        if (!$this->create_scaled_image($model->{$this->fileNameAttribute}, $version, $options)) {
+                            throw new CHttpException(500, "Could not upload file");
                         /*if (!empty($version)) {
                             $model->file->{$version} = $this->get_download_url(
                                 $model->{$this->fileNameAttribute},
                                 $version
                             );
                         }*/
+                        }
                     }
                 }
                 $returnValue = $this->beforeReturn();
@@ -496,46 +503,43 @@ class XUploadAction extends CAction {
      * @return bool
      */
     protected function create_scaled_cropped_image($file_name, $version, $options) {
-        $file_path = $this->get_upload_path($file_name);
+        $file_path = $this->getPath();
         if (!empty($version)) {
-            $version_dir = $this->get_upload_path(null, $version);
+            $version_dir = $file_path . $version;
             if (!is_dir($version_dir)) {
-                mkdir($version_dir, $this->options['mkdir_mode'], true);
+                mkdir($version_dir, 0777, true);
             }
             $new_file_path = $version_dir.'/'.$file_name;
         } else {
             $new_file_path = $file_path;
         }
+        $file_path=$file_path.$file_name;
         list($img_width, $img_height) = @getimagesize($file_path);
         if (!$img_width || !$img_height) {
             return false;
         }
         
-        $img_aspect_ratio = $img_width / $img_height;
-        $final_img_aspect_ratio = $options['max_width'] / $options['max_height'];
-        
-        if ($img_aspect_ratio == $final_img_aspect_ratio) {
-           //Image has right aspect ratio, we can just resize it without cropping
-           unset($options['crop_img']);
-           return $this->create_scaled_image($file_name, $version, $options);
-        }
-        
-        //Gestiamo solo i tagli quadrati per ora meglio
-        if ($final_img_aspect_ratio != 1) return false;
-        
-        $scr_square_size = min($img_height,$img_width);
-        if ($img_width > $img_height) {           
-           $src_x = round($img_width/2 - $img_height/2);
-           $src_y = 0;
+        if(!$options['max_width'] && ! $options['max_height']){
+            return false;
+        } elseif(!$options['max_width']) {
+            $scale = $options['max_height'] / $img_height;
+        } elseif(!$options['max_height']) {
+            $scale = $options['max_width'] / $img_width;
         } else {
-           $src_x = 0;
-           $src_y = round($img_height/2 - $img_width/2);
+            $scale = max(
+                $options['max_width'] / $img_width,
+                $options['max_height'] / $img_height
+            );
         }
-        
-        $new_width = $options['max_height'];
-        $new_height = $options['max_width'];
-        
-        $new_img = @imagecreatetruecolor($new_width, $new_height);
+        if ($scale >= 1) {
+            if ($file_path !== $new_file_path) {
+                return copy($file_path, $new_file_path);
+            }
+            return true;
+        }
+        $new_width = $img_width * $scale;
+        $new_height = $img_height * $scale;
+        $new_img_uncrop = @imagecreatetruecolor($new_width, $new_height);
         switch (strtolower(substr(strrchr($file_name, '.'), 1))) {
             case 'jpg':
             case 'jpeg':
@@ -562,20 +566,106 @@ class XUploadAction extends CAction {
             default:
                 $src_img = null;
         }
-        $success = $src_img && @imagecopyresampled(
-            $new_img,
+        @imagecopyresampled(
+            $new_img_uncrop,
             $src_img,
-            0, 0, 
-            $src_x,
-            $src_y,
+            0, 0, 0, 0,
             $new_width,
             $new_height,
-            $scr_square_size,
-            $scr_square_size
-        ) && $write_image($new_img, $new_file_path, $image_quality);
+            $img_width,
+            $img_height
+        );
+        
+        $img_width = $new_width;
+        $img_height = $new_height;
+        
+        $ys = ($img_height - $options['max_height']) / 2;
+        $xs = ($img_width - $options['max_width']) / 2;
+        $dw = $img_width;
+        $dh = $img_height;
+        $new_img = imagecreatetruecolor($options['max_width'], $options['max_height']);
+        imagecopy($new_img, $new_img_uncrop, 0, 0, $xs, $ys, $dw, $dh);
+
+//        $success = $src_img && imagecopy($new_img, $src_img, 0, 0, $xs, $ys, $dw, $dh) && $write_image($new_img, $new_file_path, $image_quality);
+        $success = $src_img && $new_img && $write_image($new_img, $new_file_path, $image_quality);
         // Free up memory (imagedestroy does not delete files):
         @imagedestroy($src_img);
         @imagedestroy($new_img);
         return $success;
     }
+    /*protected function create_scaled_cropped_image($file_name, $version, $options) {
+        
+        $file_path = $this->getPath();
+        if (!empty($version)) {
+            $version_dir = $file_path . $version;
+            if (!is_dir($version_dir)) {
+                mkdir($version_dir, 0777, true);
+            }
+            $new_file_path = $version_dir.'/'.$file_name;
+        } else {
+            $new_file_path = $file_path;
+        }
+        $file_path=$file_path.$file_name;
+        list($img_width, $img_height) = @getimagesize($file_path);
+        if (!$img_width || !$img_height) {
+            return false;
+        }
+        
+        $img_aspect_ratio = $img_width / $img_height;
+        $final_img_aspect_ratio = $options['max_width'] / $options['max_height'];
+        
+        if ($img_aspect_ratio == $final_img_aspect_ratio) {
+           //Image has right aspect ratio, we can just resize it without cropping
+           unset($options['crop_img']);
+           return $this->create_scaled_image($file_name, $version, $options);
+        }
+        
+        //Gestiamo solo i tagli quadrati per ora meglio
+//        if ($final_img_aspect_ratio != 1) return false;
+
+        switch (strtolower(substr(strrchr($file_name, '.'), 1))) {
+            case 'jpg':
+            case 'jpeg':
+                $src_img = @imagecreatefromjpeg($file_path);
+                $write_image = 'imagejpeg';
+                $image_quality = isset($options['jpeg_quality']) ?
+                    $options['jpeg_quality'] : 75;
+                break;
+            case 'gif':
+                @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
+                $src_img = @imagecreatefromgif($file_path);
+                $write_image = 'imagegif';
+                $image_quality = null;
+                break;
+            case 'png':
+                @imagecolortransparent($new_img, @imagecolorallocate($new_img, 0, 0, 0));
+                @imagealphablending($new_img, false);
+                @imagesavealpha($new_img, true);
+                $src_img = @imagecreatefrompng($file_path);
+                $write_image = 'imagepng';
+                $image_quality = isset($options['png_quality']) ?
+                    $options['png_quality'] : 9;
+                break;
+            default:
+                $src_img = null;
+        }
+        
+        if($img_width > $options['max_width'] && $img_height > $options['max_height']){
+            // case 1: image is bigger
+            $ys = ($img_height - $options['max_height']) / 2;
+            $xs = ($img_width - $options['max_width']) / 2;
+            $dw = $img_width;
+            $dh = $img_height;
+            $new_img = imagecreatetruecolor($options['max_width'], $options['max_height']);
+            imagecopy($new_img, $src_img, 0, 0, $xs, $ys, $dw, $dh);
+        } else {
+            
+        }
+        
+        $success = $src_img && $new_img && $write_image($new_img, $new_file_path, $image_quality);
+        // Free up memory (imagedestroy does not delete files):
+        @imagedestroy($src_img);
+        @imagedestroy($new_img);
+        return $success;
+    }*/
 }

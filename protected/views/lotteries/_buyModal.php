@@ -1,105 +1,65 @@
-<?php $this->beginWidget(
-    'bootstrap.widgets.TbModal',
-    array('id' => 'buyModal-'.$data->id)
-); ?>
-
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <h4>Modal header</h4>
-    </div>
-
-    
-    <?php 
-        $checkBuy = $this->userCanBuy($data->id);
-        if($checkBuy){ 
-    ?>
-        <?php /** @var TbActiveForm $form */
-        $formModel = new BuyForm;
-        $formModel->lotId = $data->id;
-        $form = $this->beginWidget(
-            'bootstrap.widgets.TbActiveForm',
-            array(
-                'id' => 'horizontalForm',
-                'type' => 'horizontal',
-            )
-        ); 
-        echo $form->hiddenField($formModel,'lotId'); 
-        ?>
-        <div class="modal-body">
-            <?php $this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'type' => 'primary',
-                    'buttonType' => 'ajaxLink',
-                    'label' => 'Buy for You!',
-                    'url' => CController::createUrl('lotteries/buyTicket'), 
-                    'ajaxOptions' => array(
-                        'update' => '.data-'.$data->id,
-                        'type' => 'POST', 
-                        'data'=>'js:jQuery(this).parents("form").serialize()',
-                    ),
-                )
-            ); ?>
-            <p> OR </p>
-            <?php $this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'type' => 'primary',
-                    'buttonType' => 'ajaxSubmit',
-                    'label' => 'Buy for a friend!',
-                    'url' => CController::createUrl('lotteries/buyTicket'), 
-                    'ajaxOptions' => array(
-                        'update' => '.data-'.$data->id,
-                        'type' => 'POST', 
-                        'data'=>'js:jQuery(this).parents("form").serialize()',
-                    ),
-                )
-            ); ?>
-            <?php echo $form->textFieldRow(
-                $formModel,
-                'email',
-                array('hint' => 'Your friend email...')
-            ); ?>
-            
+<div class="modal fade" id="<?php echo 'buyModal-'.$data->id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Buy Ticket</h4>
+      </div>
+      <div class="modal-body">
             <?php 
-                $offersType = UserSpecialOffers::model()->getUserSpecialOffersDropdown();
-                echo $form->dropDownListRow(
-                    $formModel,
-                    'offerId',
-                    $offersType
-                );
+                $checkBuy = $this->userCanBuy($data->id);
+                if($checkBuy){ 
             ?>
-            
-        </div>
-        <?php $this->endWidget(); ?>
-
-        <div class="modal-footer">
-
-            <div class="">
-                <div class="data-<?php echo $data->id; ?>">
+                <div class="modal-body">
+                    
+                    <!--<p> OR </p>-->
+                    <?php /*echo CHtml::ajaxButton ("Buy for a friend!",
+                              CController::createUrl('lotteries/buyTicket'), 
+                              array('update' => '.data-'.$data->id,
+                                'type' => 'POST', 
+                                'data'=>'js:jQuery(this).parents("form").serialize()'
+                              ));*/ ?>
+                    <?php //echo $form->textField($formModel,'email',array('hint' => 'Your friend email...')); ?>
                     <?php 
-                        $addData = array('version' => 'complete', 'data' => $data);
-                        $this->renderPartial('_buyAjax', $addData); 
-                    ?>
+//                            $addData = array('version' => 'complete', 'data' => $data, 'form' => $form, 'formModel' => $formModel);
+                            $addData = array('version' => 'complete', 'data' => $data);
+                            $this->renderPartial('_buyAjax', $addData); 
+                        ?>
+                    <?php echo CHtml::ajaxButton ("Buy for You!",
+                        CController::createUrl('lotteries/buyTicket'), 
+                        array(
+          //                                'update' => '.data-'.$data->id,
+                          'update' => '#data-'.$data->id,
+                          'type' => 'POST', 
+                          'data'=>'js:$("#buyLotteryForm").serialize()'
+                        )); ?>
+                    
                 </div>
-            </div>
-            <?php $this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'label' => 'Close',
-                    'url' => '#',
-                    'htmlOptions' => array('data-dismiss' => 'modal'),
-                )
-            ); ?>
-        </div>
-    <?php } elseif(Yii::app()->user->isGuest()){ ?>
-        <h4>LOGIN TO BUY!</h4>
-        <?php $this->renderPartial('/site/login',array('showLogin'=>true)); ?>
-    <?php } elseif($data->owner_id == Yii::app()->user->id){ ?>
-        <h4>CANNOT BUY YOUR LOTTERY!</h4>
-    <?php } elseif($checkBuy == Lotteries::errorCredit) { ?>
-        <h4>NOT ENOUGH CREDIT!</h4>
-    <?php } elseif($checkBuy == Lotteries::errorStatus) { ?>
-        <h4>LOTTERY IN WRONG STATUS</h4>
-    <?php } ?>
-<?php $this->endWidget(); ?>
+                
+                <div class="modal-footer">
+
+                    <div class="">
+                        
+                            
+                       
+                    </div>
+                </div>
+            <?php } elseif(Yii::app()->user->isGuest()){ ?>
+                <h4>LOGIN TO BUY!</h4>
+                <?php $this->renderPartial('/site/login',array('showLogin'=>true)); ?>
+            <?php } elseif($data->owner_id == Yii::app()->user->id){ ?>
+                <h4>CANNOT BUY YOUR LOTTERY!</h4>
+            <?php } elseif($checkBuy == Lotteries::errorCredit) { ?>
+                <h4>NOT ENOUGH CREDIT!</h4>
+            <?php } elseif($checkBuy == Lotteries::errorStatus) { ?>
+                <h4>LOTTERY IN WRONG STATUS</h4>
+            <?php } ?>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<!--        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
+    </div>
+  </div>
+</div>

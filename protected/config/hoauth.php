@@ -10,10 +10,9 @@
 // ----------------------------------------------------------------------------------------
 //	HybridAuth Config file: http://hybridauth.sourceforge.net/userguide/Configuration.html
 // ----------------------------------------------------------------------------------------
-
 return 
 	array(
-		"base_url" => "http://wonlot.loc/index.php/site/oauth", 
+		"base_url" => Yii::app()->getBaseUrl(true)."/index.php/site/oauth", 
 
 		"providers" => array ( 
 			// openid providers
@@ -32,7 +31,7 @@ return
 
 			"Google" => array ( 
 				"enabled" => true,
-				"keys"    => array ( "id" => "", "secret" => "" )
+				"keys"    => array ( "id" => "281789908562.apps.googleusercontent.com", "secret" => "1ItCVeo8OWmxN0W0ThAeg0G4" )
 			),
 
 			"Facebook" => array ( 

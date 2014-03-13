@@ -91,6 +91,12 @@ $image_versions = array(
         'max_width' => 100,
         'max_height' => 200,
     ),
+    'smallSquaredThumb' => array(
+        'max_width' => 100,
+        'max_height' => 100,
+        'crop_img' => true,
+        'jpeg_quality' => 60,
+    ),
     'mediumSquaredThumb' => array(
         'max_width' => 200,
         'max_height' => 200,
@@ -105,14 +111,14 @@ $image_versions = array(
         'max_width' => 200,
     ),
     'galleryBigThumb' => array(
-        'max_width' => 700,
-        'max_height' => 2000,
+        'max_width' => 800,
+        'max_height' => 800,
         'crop_img' => true,
         'jpeg_quality' => 100,
     ),
     'gallerySmallThumb' => array(
-        'max_width' => 200,
-        'max_height' => 150,
+        'max_width' => 400,
+        'max_height' => 400,
         'crop_img' => true,
         'jpeg_quality' => 100,
     ),

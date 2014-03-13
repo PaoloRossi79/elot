@@ -35,6 +35,8 @@ class SubscriptionForm extends CFormModel
 		return array(
 			'categories'=>'Categories',
 			'others'=>'Other newsletters',
+			'privacyOk'=>'Accept privacy policy?',
+			'termsOk'=>'Accept terms & conditions?',
 		);
 	}
 
@@ -45,6 +47,9 @@ class SubscriptionForm extends CFormModel
 	 */
         public function __construct($scenario='')
 	{
+                $user = Users::model()->findByPk(Yii::app()->user->id);
+                $this->termsOk = $user->newsletter_terms;
+                $this->privacyOk = $user->newsletter_privacy;
                 $this->categories=PrizeCategories::model()->getPrizeCatCheckbox();
 		$this->others = array(
                     SubscriptionForm::bestseller => 'Best Sellers',

@@ -6,72 +6,34 @@ $boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/
     $boxTitle.=" - ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category));
 }*/
 ?>
-<?php $box = $this->beginWidget(
-    'bootstrap.widgets.TbBox',
-    array(
-        'title' => $boxTitle,
-        'headerIcon' => 'icon-ticket',
-        'htmlOptions' => array('class' => 'bootstrap-widget-table isotope-item lot-box'),
-        'headerButtons' => array(
-            array(
-                'class' => 'bootstrap.widgets.TbButtonGroup',
-                'type' => 'primary',
-                // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
-                /*'buttons' => array(
-                    array(
-                        'label' => 'Buy Ticket', 
-                        'buttonType' => 'button', 
-                        //'url' => CController::createUrl('lotteries/buyTicket/'.$data->id), 
-                        'htmlOptions' => array(
-                            'id' => $data->id, 
-                            'class' => 'buyButton',
-                            'data-toggle' => 'modal',
-                            'data-target' => '#buyModal-'.$data->id,
-                        ),
-                    ),
-                    // this makes it split :)
-                )*/
-            ),
-        )
-    )
-);?>
+<div class="panel panel-default bootstrap-widget-table isotope-item lot-box">
+    <div class="panel-heading">
+      <h3 class="panel-title"><?php echo $boxTitle;?></h3>
+    </div>
+    <div class="panel-body">
+        <div class="lot-box-img">
+            <?php if($data->prize_img){ ?>
+                <div class=""><?php echo CHtml::image($this->getImageUrl($data,'mediumSquaredThumb'),'Lottery Image'); ?></div>
+            <?php } ?>
+        </div>
 
-<div class="lot-box-img">
-    <?php if($data->prize_img){ ?>
-        <div class=""><?php echo CHtml::image($this->getImageUrl($data->id, $data->prize_img,'mediumSquaredThumb'),'Lottery Image'); ?></div>
-    <?php } ?>
-</div>
-
-<div class="lot-box-body">
-    <?php if(!$showCat){ ?>
-        <div class=""><b>Category:</b><?php echo CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category)); ?></div>
-    <?php } ?>
-    <div class=""><?php echo $data->prize_desc; ?></div>
-    <div class="">Value: <?php echo CHtml::encode($data->prize_price); ?> euro</div>
-    <div class="">Ticket Price: <?php echo CHtml::encode($data->ticket_value); ?></div>
-    <?php if($data->lottery_type === Yii::app()->params['lotteryTypesConst']['fixTime']){ ?>
-            <div class=""><b>Lottery draw date:</b><?php echo CHtml::encode($data->lottery_draw_date); ?></div>
-    <?php } ?>
-    <div class="button-div">
-        <?php // echo CHtml::ajaxSubmitButton(Yii::t('app', 'Search')); 
-        
-            $this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'buttonType' => 'submit', 
-                    'label' => 'Buy ticket', 
-                    'htmlOptions' => array(
-                        'id' => $data->id, 
-                        'class' => 'buyButton',
-                        'data-toggle' => 'modal',
-                        'data-target' => '#buyModal-'.$data->id,
-                    ),
-                )
-            );
-        
-        ?>
+        <div class="lot-box-body">
+            <?php if(!$showCat){ ?>
+                <div class=""><b>Category:</b><?php echo CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category)); ?></div>
+            <?php } ?>
+            <div class=""><?php echo $data->prize_desc; ?></div>
+            <div class="">Value: <?php echo CHtml::encode($data->prize_price); ?> euro</div>
+            <div class="">Ticket Price: <?php echo CHtml::encode($data->ticket_value); ?></div>
+            <?php if($data->lottery_type === Yii::app()->params['lotteryTypesConst']['fixTime']){ ?>
+                    <div class=""><b>Lottery draw date:</b><?php echo CHtml::encode($data->lottery_draw_date); ?></div>
+            <?php } ?>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#<?php echo 'buyModal-'.$data->id;?>">
+            <?php echo Yii::t('wonlot','Buy ticket'); ?>
+        </button>
     </div>
 </div>
-<?php $this->endWidget(); ?>
 
 <?php $this->renderPartial('_buyModal',array('data'=>$data, 'addData' => $addData)); ?>

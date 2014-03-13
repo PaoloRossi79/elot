@@ -6,7 +6,7 @@
 
 <?php 
     $form = $this->beginWidget(
-        'bootstrap.widgets.TbActiveForm',
+        'CActiveForm',
         array(
             'id' => 'userOffers-form',
             'htmlOptions' => array('class' => 'well','enctype' => 'multipart/form-data'), // for inset effect
@@ -26,27 +26,27 @@
             foreach(Yii::app()->params['specialOffersType'] as $k=>$ot){
                 $offersType[$k] = $ot['name']; 
             }
-            echo $form->dropDownListRow(
+            echo $form->dropDownList(
                 $model,
                 'offer_on',
                 $offersType
             );
         ?>
-         <?php echo $form->textFieldRow($model,'offer_value', 
+         <?php echo $form->textField($model,'offer_value', 
                  array(
                      'hint' => Yii::t('wonlot','Percentage of discoutn: ie -40%'),
                      'prepend' => ' - ',
                      'append' => ' % ',
                      )); ?>
 
-        <?php echo $form->textFieldRow($model,'comment'); ?>
+        <?php echo $form->textField($model,'comment'); ?>
 
         <?php 
         echo $form->labelEx($model,'start_date');
         $this->widget(
-            'bootstrap.widgets.TbDatePicker',
+            'zii.widgets.jui.CJuiDatePicker',
             array(
-                'name' => 'startDate',
+                'id' => 'offer_start',
                 'model' => $model,
                 'attribute' => 'start_date',
                 'htmlOptions' => array(
@@ -60,6 +60,9 @@
                     'showSecond'=>true,
                     'showTimezone'=>false,
                     'ampm' => false,
+                    'onSelect'=>'js:function(selDate,obj){
+                        $("#offer_end").datepicker("option","minDate",selDate);
+                    }',
                 )
             )
         );
@@ -68,9 +71,9 @@
         <?php 
         echo $form->labelEx($model,'end_date');
         $this->widget(
-            'bootstrap.widgets.TbDatePicker',
+            'zii.widgets.jui.CJuiDatePicker',
             array(
-                'name' => 'endDate',
+                'id' => 'offer_end',
                 'model' => $model,
                 'attribute' => 'end_date',
                 'htmlOptions' => array(
@@ -84,26 +87,19 @@
                     'showSecond'=>true,
                     'showTimezone'=>false,
                     'ampm' => false,
+                    'onSelect'=>'js:function(selDate,obj){
+                        $("#offer_start").datepicker("option","minDate",selDate);
+                    }',
                 )
             )
         );
         ?>
 
-        <?php echo $form->textFieldRow($model,'times_remaining'); ?>
+        <?php echo $form->textField($model,'times_remaining'); ?>
 	
 	<div class="form-actions">
-            <?php $this->widget(
-                'bootstrap.widgets.TbButton',
-                array(
-                    'buttonType' => 'submit',
-                    'type' => 'primary',
-                    'label' => Yii::t('wonlot','Give Offer!'),
-                )
-            ); ?>
-            <?php $this->widget(
-                'bootstrap.widgets.TbButton',
-                array('buttonType' => 'reset', 'label' => 'Reset')
-            ); ?>
+            <?php echo CHtml::submitButton(Yii::t('wonlot','Search'), array('name' => 'search', 'class' => 'btn')); ?>
+            <?php echo CHtml::resetButton(Yii::t('wonlot','Reset')) ?>
         </div>
 </fieldset>
 

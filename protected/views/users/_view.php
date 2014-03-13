@@ -5,15 +5,7 @@
 
 <div class="view">
     
-        <?php $this->widget(
-            'bootstrap.widgets.TbButton',
-            array(
-                'type' => 'primary',
-                'buttonType' => 'link',
-                'label' => 'Special Offers',
-                'url' => CController::createUrl('userSpecialOffers/view/'.$data->id), 
-            )
-        ); ?>
+        <button type="button" class="btn btn-primary"><?php echo CHtml::link('Special Offers', CController::createUrl('userSpecialOffers/view/'.$data->id));?></button>
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>

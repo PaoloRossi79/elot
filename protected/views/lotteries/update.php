@@ -10,6 +10,4 @@ $this->breadcrumbs=array(
 
 ?>
 
-<h1>Edit Lotteries <?php echo $model->id; ?></h1>
-
-<?php echo $this->renderPartial('_form', array('form' => $form)); ?>
+<?php echo $this->renderPartial('_form', array('form' => $form, 'model' => $model)); ?>

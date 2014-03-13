@@ -31,7 +31,7 @@ class BuyForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			
+			'offerId' => 'Offerta speciale'
 		);
 	}
 }

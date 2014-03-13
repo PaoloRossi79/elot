@@ -29,7 +29,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 //        'content:html',   // display the 'content' attribute as purified HTML
         array(            // display 'create_time' using an expression
             'name'=>'lottery.status',
-            'value'=>'$data->lottery->getStatusText()',
+//            'value'=>'$data->lottery->getStatusText()',
+            'value'=>'Lotteries::model()->getStatusText($data->lottery->status)',
         ),
         array(            // display 'create_time' using an expression
             'name'=>'lottery.prize_category',

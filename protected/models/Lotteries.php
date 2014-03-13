@@ -144,6 +144,20 @@ class Lotteries extends PActiveRecord
 		));
 	}
         
+        public function getMainLotteries()
+	{
+            $criteria=new CDbCriteria; 
+            $criteria->addInCondition('status',array(3,4));
+            $dataProvider=new CActiveDataProvider('Lotteries', array(
+                'pagination'=>array(
+                    'pageSize'=>8,
+                ),
+                'criteria'=>$criteria,
+            ));
+                
+            return $dataProvider;
+        }
+        
         public function getLotteries($type)
 	{
             $criteria=new CDbCriteria; 
@@ -273,10 +287,14 @@ class Lotteries extends PActiveRecord
             return $this->lottery_type === Yii::app()->params['lotteryTypeConst']['limTicket'];
         }
         
-        public function getStatusText(){
+        public function getStatusText($status=null){
             $statuses=Yii::app()->params['lotteryStatusConst'];
+            if($status)
+                $checkStatus = (int)$status;
+            else 
+                $checkStatus = (int)$this->status;
             foreach($statuses as $k=>$v){
-                if($v===(int)$this->status){
+                if($v===$checkStatus){
                     return $k;
                 }
             }

@@ -72,6 +72,8 @@ class LotteriesController extends Controller
 	 */
 	public function actionCreate()
 	{
+                $this->layout='column2l6l4';
+                $this->sideView='createLotteyHelp';
                 $model=new Lotteries;
                 $this->_editLottery($model);
 	}
@@ -83,6 +85,8 @@ class LotteriesController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+                $this->layout='column2l6l4';
+                $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
                 $this->_editLottery($model);
 	}
@@ -110,12 +114,18 @@ class LotteriesController extends Controller
                 $_POST['SearchForm'] = null;
                 unset(Yii::app()->session['filters']);
             } 
+            if($_GET['cat']){
+                $cat = PrizeCategories::model()->findByAttributes(array('category_name'=>$_GET['cat']));
+                if($cat){
+                    $_POST['SearchForm']['Categories']=$cat->id;
+                }
+            }
             if($_POST['SearchForm']){
                 Yii::app()->session['filters'] = $_POST['SearchForm'];
             } else {
                 $_POST['SearchForm'] = Yii::app()->session['filters'];
-                if($_POST['SearchForm']){
-                    $_POST['SearchForm']['status'] = array(3,4);
+                if(!$_POST['SearchForm']){
+                    $_POST['SearchForm']['LotStatus'] = array(1);
                 }
             }
             $lotteries=$this->filterLotteries();
@@ -136,7 +146,7 @@ class LotteriesController extends Controller
 	{
             $lotteries=$this->filterLotteries(true);
             $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
-            $this->render('index',array(
+            $this->render('userIndex',array(
                 'dataProvider'=>$lotteries['dataProvider'],
                 'viewType'=>"_box",
                 'viewData'=>$lotteries['viewData'],
@@ -192,6 +202,7 @@ class LotteriesController extends Controller
             $data = array();
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
+            $rollback=false;
             $lotId = isset($_POST['BuyForm']['lotId']) ? $_POST['BuyForm']['lotId'] : null;
             if($lotId){
                 $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
@@ -205,7 +216,7 @@ class LotteriesController extends Controller
                 $newPrice = $lot->ticket_value;
                 $promotion = null;
                 // calculate value with discount
-                if($_POST['BuyForm']['offerId']){
+                if($_POST['BuyForm']['offerId'] > 0){
                     $offer = UserSpecialOffers::model()->findByPk($_POST['BuyForm']['offerId']);
                     if($offer->times_remaining > 0 && $offer->offer_on == UserSpecialOffers::onTicketBuy){
                         $newPrice = $lot->ticket_value - ($lot->ticket_value * (int)$offer->offer_value / 100);
@@ -241,39 +252,36 @@ class LotteriesController extends Controller
                     if(in_array($lotStatus,array('upcoming','open'))){
                         $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
                     }
-                    if($lotStatus === 'active'){
-                        $ticket->status=Yii::app()->params['ticketStatusConst']['active'];
-                    }
                     $dbTransaction=$ticket->dbConnection->beginTransaction();
                     if($ticket->save()){
                         // fund down on user
                         $user->available_balance_amount-=$ticket->price;
                         if($promotion){
                             $offer->times_remaining -= 1; 
-                            if($offer->save()){
-                                if($user->save()){
-                                    //transaction tracking
-                                    if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
-                                        $lot->ticket_sold+=1;
-                                        $lot->ticket_sold_value+=$ticket->price;
-                                        $lot->save();
-                                        $dbTransaction->commit();
-                                        $lot->checkNewStatus();
-                                        $data["type"] = "alert alert-success";
-                                        $data["result"] = "OK!";
-                                        $data["msg"] = "Best buy!";
-                                    } else {
-                                        $dbTransaction->rollback();
-                                        $data["msg"] = "saving user transaction";
-                                    }
-                                } else {
-                                    $dbTransaction->rollback();
-                                    $data["msg"] = "witdrawing to user";
-                                }
-                            } else {
+                            if(!$offer->save()){
                                $dbTransaction->rollback(); 
                                $data["msg"] = "saving user special offer";
+                               $rollback=true;
                             }
+                        }
+                        if($user->save() && !$rollback){
+                            //transaction tracking
+                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
+                                $lot->ticket_sold+=1;
+                                $lot->ticket_sold_value+=$ticket->price;
+                                $lot->save();
+                                $dbTransaction->commit();
+                                $lot->checkNewStatus();
+                                $data["type"] = "alert alert-success";
+                                $data["result"] = "OK!";
+                                $data["msg"] = "Best buy!";
+                            } else {
+                                $dbTransaction->rollback();
+                                $data["msg"] = "saving user transaction";
+                            }
+                        } else {
+                            $dbTransaction->rollback();
+                            $data["msg"] = "witdrawing to user";
                         }
                     } else {
                         $data["msg"] = "creating ticket";
@@ -299,16 +307,16 @@ class LotteriesController extends Controller
                 if($lottery->save()){
                     $data["type"] = "alert alert-success";
                     $data["result"] = "1";
-                    $data["msg"] = "Image set a default";
+                    $data["msg"] = "Image set ";
                 } else {
                     $data["type"] = "alert alert-error";
                     $data["result"] = "0";
-                    $data["msg"] = "Error saving lottery";
+                    $data["msg"] = "Error ";
                 }
             } else {
                 $data["type"] = "alert alert-error";
                 $data["result"] = "0";
-                $data["msg"] = "Not owner of lottery";
+                $data["msg"] = "Not owner";
             }
             $data['data']=$lottery;
             $this->renderPartial('_setDefaultImage', $data, false, true);
@@ -327,13 +335,13 @@ class LotteriesController extends Controller
                         $thumbPath = "images/lotteries/".$_GET['lotId']."/".$version."/".$_GET['img'];
                         $success = unlink($filePath);
                     }
-                    $data["type"] = "alert alert-success";
+//                    $data["type"] = "alert alert-success";
                     $data["result"] = "1";
-                    $data["msg"] = "Image deleted";
+//                    $data["msg"] = "Image deleted";
                 } else {
-                    $data["type"] = "alert alert-error";
+//                    $data["type"] = "alert alert-error";
                     $data["result"] = "0";
-                    $data["msg"] = "Image not deleted";
+//                    $data["msg"] = "Image not deleted";
                 }
             }
             
@@ -381,23 +389,31 @@ class LotteriesController extends Controller
                 $filter["prizeCategory"]=$_POST['SearchForm']['Categories'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Categories'];
             }
+            if(!empty($_POST['SearchForm']['LotStartStatus'])){
+                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
+            }
             if(!empty($_POST['SearchForm']['LotStatus'])){
                 $statusOptions = $_POST['SearchForm']['LotStatus'];
                 $first = true;
                 $filter['status'] = array();
                 foreach($statusOptions as $opt) {
                     if($opt === '1'){
-                       $filter['status'] = array_merge($filter['status'],array(3,4)); 
+                       $filter['status'] = array_merge($filter['status'],array(3)); 
+                       $result['viewData']['showStatus'].=($first?"":", ").array_search(3, Yii::app()->params['lotteryStatusConst']);
+                       $first=false;
                     }
                     if($opt === '2'){
                        $filter['status'] = array_merge($filter['status'],array(2)); 
+                       $result['viewData']['showStatus'].=($first?"":", ").array_search(2, Yii::app()->params['lotteryStatusConst']);
+                       $first=false;
                     }
                     if($opt === '3'){
-                       $filter['status'] = array_merge($filter['status'],array(5,6)); 
+                       $filter['status'] = array_merge($filter['status'],array(4,5)); 
+                       $result['viewData']['showStatus'].=($first?"":", ").array_search(4, Yii::app()->params['lotteryStatusConst']);
+                       $result['viewData']['showStatus'].=", ".array_search(5, Yii::app()->params['lotteryStatusConst']);
+                       $first=false;
                     }
                 }
-                $result['viewData']['showStatus'].=($first?"":", ").array_search($opt, Yii::app()->params['lotteryStatusConst']);
-                $first=false;
             }
             if(!empty($_POST['SearchForm']['searchStartDate'])){
                 $filter["minDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchStartDate']);
@@ -447,7 +463,8 @@ class LotteriesController extends Controller
             $upForm = new XUploadForm;
             $this->upForm=$upForm;
             $this->locationForm=new Locations;
-            if($model->id){
+            $isOld=$model->id;
+            if($isOld){
                 $existLoc=Locations::model()->findByPk($model->location_id);
                 if($existLoc)
                     $this->locationForm=$existLoc;
@@ -457,8 +474,12 @@ class LotteriesController extends Controller
             {
                     $model->attributes=$_POST['Lotteries'];
                     $model->owner_id=Yii::app()->user->id;
-                    if(!empty($_POST['isdefault'][0])){
-                        $model->prize_img=$_POST['filename'][$_POST['isdefault'][0]];
+                    if($_POST['filename'][0]){
+                        if($_POST['isdefault'] && isset($_POST['isdefault'][0])){
+                            $model->prize_img=$_POST['filename'][$_POST['isdefault'][0]];
+                        } else {
+                            $model->prize_img=$_POST['filename'][0];
+                        }
                     }
                     if($_POST['Lotteries']['prize_price']){
                         $model->max_ticket = ceil($_POST['Lotteries']['prize_price'] / $model->ticket_value);
@@ -468,12 +489,18 @@ class LotteriesController extends Controller
                         $model->location_id = $this->saveLocation($_POST['Locations']);
                     }
                     if($_POST['publish']){
-                        $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
+                        $model->status=Yii::app()->params['lotteryStatusConst']['publish'];
                         $model->is_active=1;
+                    } else {
+                        $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
                     }
                     if($model->save()){
                         $this->renameTmpFolder($model->id);
-                        $this->redirect(array('view','id'=>$model->id));
+                        if($isOld){
+                            $this->redirect(array('update','id'=>$model->id));
+                        } else {
+                            $this->redirect(array('view','id'=>$model->id));
+                        }
                     }
             } else {
                 $this->cleanTmpFolder();

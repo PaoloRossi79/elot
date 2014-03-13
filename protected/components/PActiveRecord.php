@@ -56,7 +56,8 @@ class PActiveRecord  extends CActiveRecord {
 
             if ($column->dbType == 'datetime' || $column->dbType == 'timestamp')
             {
-                $this->$columnName = date('d/m/Y H:i:s', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
+//                $this->$columnName = date('d/m/Y H:i:s', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
+                $this->$columnName = date('d/m/Y', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
             }
         }
         return parent::afterFind();

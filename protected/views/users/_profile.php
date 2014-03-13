@@ -1,6 +1,15 @@
 <?php 
+    if($model->ext_source > 1){
+        //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
+        // TODO: get Image from socials
+    } else {
+        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/mediumThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar"));
+    } ?>
+
+
+<?php 
     $form = $this->beginWidget(
-        'bootstrap.widgets.TbActiveForm',
+        'CActiveForm',
         array(
             'id' => 'userProfile-form',
             'htmlOptions' => array('class' => 'well','enctype' => 'multipart/form-data'), // for inset effect
@@ -12,8 +21,8 @@
 	<?php echo $form->errorSummary($profile); ?>
 
 	<div class="row">
-		<?php echo $form->textFieldRow($profile, 'first_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->textFieldRow($profile, 'last_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->textField($profile, 'first_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->textField($profile, 'last_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
                 <?php 
                 /* http://www.yiiframework.com/extension/egmap/ */
                 $this->widget('gmap.EGMapAutocomplete', array(

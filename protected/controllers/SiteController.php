@@ -2,7 +2,7 @@
 
 class SiteController extends Controller
 {
-        public $layout='//layouts/basecolumn';
+        public $layout='//layouts/column1';
 	/**
 	 * Declares class-based actions.
 	 */
@@ -43,6 +43,30 @@ class SiteController extends Controller
                               /*'acc_status' => 1,*/
                             ),
                         ),
+                        'oauthshare' => array(
+                            // the list of additional properties of this action is below
+                            'class'=>'ext.hoauth.HOAuthShare',
+                            // Yii alias for your user's model, or simply class name, when it already on yii's import path
+                            // default value of this property is: User
+                            'model' => 'Users', 
+                            // map model attributes to attributes of user's social profile
+                            // model attribute => profile attribute
+                            // the list of avaible attributes is below
+                            'attributes' => array(
+                              'email' => 'email',
+                              'ext_id' => 'identifier',
+                              'password' => 'identifier',
+                              'username' => 'displayName',
+                              'profile->first_name' => 'firstName',
+                              'profile->last_name' => 'lastName',
+                              'profile->gender' => 'genderShort',
+                              'profile->birthday' => 'birthDate',
+                              'profile->img' => 'photoURL',
+                              // you can also specify additional values, 
+                              // that will be applied to your model (eg. account activation status)
+                              /*'acc_status' => 1,*/
+                            ),
+                        ),
                         // this is an admin action that will help you to configure HybridAuth 
                         // (you must delete this action, when you'll be ready with configuration, or 
                         // specify rules for admin role. User shouldn't have access to this action!)
@@ -60,6 +84,7 @@ class SiteController extends Controller
 	{
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
+                $this->layout='//layouts/index';
 		$this->render('index');
 	}
 
@@ -173,6 +198,16 @@ class SiteController extends Controller
 	{
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
+	}
+        
+	public function actionSocialShare()
+	{
+		$facebook = Yii::app()->hoAuth->getAdapter('Facebook');
+                $facebook->isUserConnected();
+                $user = $facebook->getUserProfile();
+                echo $user->email;
+                echo $user->photoURL;
+                $facebook->api()->api('/me/friends', "post", array(message => "Hi there")); // post 
 	}
         
         /*public function hoauthAfterLogin($user,$newUser) {

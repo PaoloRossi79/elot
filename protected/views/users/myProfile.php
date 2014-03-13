@@ -8,29 +8,19 @@ $this->breadcrumbs=array(
 	'Update',
 );
 ?>
-
-<?php 
-    if($model->ext_source > 0){
-        echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
-    } else {
-        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/mediumThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar"));
-    } ?>
-
 <h1><?php echo Yii::t('elot','My Profile'); ?></h1>
+
 <?php 
-    /*foreach($this->getImageList() as $filename){
-        echo CHtml::image($filename, "User Avatar", array("class"=>"user-avatar")); 
-    }*/
+    $this->widget('zii.widgets.jui.CJuiAccordion',array(
+    'panels'=>array(
+        'Profilo'=>$this->renderPartial('_profile', array('model'=>$model),true),
+        'Conto'=>$this->renderPartial('_buyCredit', array('model'=>$model),true),
+        'Newsletter'=>$this->renderPartial('_newsletter', array('model'=>$model),true),
+    ),
+    // additional javascript options for the accordion plugin
+    'options'=>array(
+        'animated'=>'bounceslide',
+        'heightStyle'=>'content',
+    ),
+));
 ?>
-
-<div class="form span4">
-    <?php $this->renderPartial('_profile', array('model'=>$model)); ?>
-</div>
-
-<div class="form span4">
-    <?php $this->renderPartial('_buyCredit', array('model'=>$model)); ?>
-</div>
-
-<div class="form span4">
-    <?php $this->renderPartial('_newsletter', array('model'=>$model)); ?>
-</div>

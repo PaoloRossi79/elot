@@ -6,7 +6,7 @@ class UsersController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/basecolumn';
+	public $layout='//layouts/column1';
 	public $subscriptionForm;
 
 	/**
@@ -211,52 +211,68 @@ class UsersController extends Controller
                             $this->subscriptionForm->addError('termsOk', 'You must accept terms & conditions!');
                         }
                     } else {
-                        if(isset($_POST['SubscriptionForm']['catSelections'])){
-                            $error['cat'] = array();
-                            $cats = $_POST['SubscriptionForm']['catSelections'];
-                            foreach($cats as $cat){
-                                // check for already subscribed
-                                if(!in_array($cat, $this->subscriptionForm->catSelections)){
-                                    $sub = Subscriptions::createNewSubscription('cat',$cat);
-                                    if($sub->save()){
+                        $user = $this->loadModel(Yii::app()->user->id);
+                        $user->newsletter_terms = $_POST['SubscriptionForm']['termsOk'];
+                        $user->newsletter_privacy = $_POST['SubscriptionForm']['privacyOk'];
+                        if($user->save()){
+                            if(isset($_POST['SubscriptionForm']['catSelections'])){
+                                $error['cat'] = array();
+                                $cats = $_POST['SubscriptionForm']['catSelections'];
+                                foreach($cats as $cat){
+                                    // check for already subscribed
+                                    if(!in_array($cat, $this->subscriptionForm->catSelections)){
+                                        $sub = Subscriptions::createNewSubscription('cat',$cat);
+                                        if($sub->save()){
 
-                                    } else {
-                                        $error['cat'][] = $cat;
+                                        } else {
+                                            $error['cat'][] = $cat;
+                                        }
+                                    }
+                                }
+                                // delete removed
+                                foreach($this->subscriptionForm->catSelections as $selCat){
+                                    if(!in_array($selCat,$cats)){
+                                        $remSub = Subscriptions::model()->find('nl_type = "cat" and nl_type_id = '.$selCat.' and user_id = '.Yii::app()->user->id)->delete();
                                     }
                                 }
                             }
-                            // delete removed
-                            foreach($this->subscriptionForm->catSelections as $selCat){
-                                if(!in_array($selCat,$cats)){
-                                    $remSub = Subscriptions::model()->find('nl_type = "cat" and nl_type_id = '.$selCat.' and user_id = '.Yii::app()->user->id)->delete();
-                                }
-                            }
-                        }
-                        if(isset($_POST['SubscriptionForm']['othSelections'])){
-                            $error['oth'] = array();
-                            $oths = $_POST['SubscriptionForm']['othSelections'];
-                            foreach($oths as $oth){
-                                // check for already subscribed
-                                if(!in_array($oth, $this->subscriptionForm->othSelections)){
-                                    $sub = Subscriptions::createNewSubscription('oth',$oth);
-                                    if($sub->save()){
+                            if(isset($_POST['SubscriptionForm']['othSelections'])){
+                                $error['oth'] = array();
+                                $oths = $_POST['SubscriptionForm']['othSelections'];
+                                foreach($oths as $oth){
+                                    // check for already subscribed
+                                    if(!in_array($oth, $this->subscriptionForm->othSelections)){
+                                        $sub = Subscriptions::createNewSubscription('oth',$oth);
+                                        if($sub->save()){
 
-                                    } else {
-                                        $error['oth'][] = $oth;
+                                        } else {
+                                            $error['oth'][] = $oth;
+                                        }
+                                    }
+                                }
+                                // delete removed
+                                foreach($this->subscriptionForm->othSelections as $selOth){
+                                    if(!in_array($selOth,$oths)){
+                                        $remSub = Subscriptions::model()->find('nl_type = "oth" and nl_type_id = '.$selOth.' and user_id = '.Yii::app()->user->id)->delete();
                                     }
                                 }
                             }
-                            // delete removed
-                            foreach($this->subscriptionForm->othSelections as $selOth){
-                                if(!in_array($selOth,$oths)){
-                                    $remSub = Subscriptions::model()->find('nl_type = "oth" and nl_type_id = '.$selOth.' and user_id = '.Yii::app()->user->id)->delete();
-                                }
-                            }
+                            $this->subscriptionForm = new SubscriptionForm;
+                        } else {
+                            $this->subscriptionForm->addError('privacyOk', 'Error saving user acceptance');
                         }
                     }
                     $data["error"] = $error;
+                    foreach($error['cat'] as $err){
+                        $this->subscriptionForm->addError('catSelections', 'Error saving subscription(s)');
+                    }
+                    foreach($error['oth'] as $err){
+                        $this->subscriptionForm->addError('othSelections', 'Error saving subscription(s)');
+                    }
                 }
             }
+            
+            $data["model"] = $this->loadModel(Yii::app()->user->id);
             $this->renderPartial('_newsletter', $data, false, true);
         }
         

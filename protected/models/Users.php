@@ -59,7 +59,7 @@ class Users extends PActiveRecord
 			array('signup_ip, last_login_ip', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, created, modified, user_type_id, email, password, ext_source, ext_id, cookie_hash, cookie_time_modified, is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed, signup_ip, last_login_ip, last_logged_in_time, available_balance_amount, dns, wallet_value_bonus', 'safe', 'on'=>'search'),
+			array('id, created, modified, user_type_id, email, password, ext_source, ext_id, cookie_hash, cookie_time_modified, is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed, signup_ip, last_login_ip, last_logged_in_time, available_balance_amount, dns, wallet_value_bonus, newsletter_terms, newsletter_privacy', 'safe', 'on'=>'search'),
 		);
 	}
 

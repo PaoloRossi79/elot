@@ -1,73 +1,112 @@
 <?php
 /* @var $this SiteController */
-
 $this->pageTitle=Yii::app()->name;
 ?>
+<div class="slideshow-ext">
+    <div id="slideshow-container">
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover1.jpg", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover2.jpg", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover3.jpg", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover4.jpg", "",array('class'=>'img-responsive')); ?>
+    </div>
+    <div class="left-btn-grp">
+        <span class="left-btn">
+            <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>">
+                <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/left-button-1.png", "My Tickets", array("class"=>"img-responsive")); ?>
+            </a>
+        </span>
+        <span class="left-btn">
+            <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>">
+                <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/left-button-2.png", "My Tickets", array("class"=>"img-responsive")); ?>
+            </a>
+        </span>
+        <span class="left-btn">
+            <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index" class="tooltip-down" title="<?php echo Yii::t('elot','my tickets') ?>">
+                <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/left-button-3.png", "My Tickets", array("class"=>"img-responsive")); ?>
+            </a>
+        </span>
+    </div>
+</div>
 
-   <div class="hidden-top"></div>
-   <div class="main-inserzioni-container">
-      <div class="main-inserzioni">
-         <ul>
-            <li style="background-image: url(<?php echo $this->getImageUrl("lottery","Mercedes-SL63-AMG.jpg",'mediumSquaredThumb'); ?>);">
-               <div class="main-width" align="right">
-                  <div class="main-to-align">
-                     <div class="main-box">
-                        <div class="main-padding">
-                           <h2>Vinci una Mercedes SL!</h2>
-                           <div class="main-box-subtitle">
-                              Lotteria da 5000 biglietti
-                           </div>
-                           <div class="main-box-text">
-                             In premio una splendida Mercedes SL nuova...tutta da vincere!!!
-                           </div>
-                           <div class="main-box-price">Costo: 3 <span class="euro">eeMoney</span></div>
-                           <div class="main-more-details"><a href="#" class="button medium white">Dettagli</a></div>
-                           <div class="clear"></div>
-                        </div>
-                     </div> 
-                  </div>
-               </div>
-              </li>
-          </ul>
-         <a href="#" class="slider-arrow prev icon-chevron-left tooltip-right" title="Inserzione precedente"></a>
-         <a href="#" class="slider-arrow next icon-chevron-right tooltip-left" title="Inserzione successiva"></a>
-      </div>
-   </div>
-   <div class="inserzioni-side main-width">
-         
-         <center>
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Quelli mostrati sono le lotterie più seguite su <i><?php echo CHtml::encode(Yii::app()->name); ?></i>
+<div class="line-breaker"></div>
+<div class="filter-container">
+     <div class="label-find-lot">    
+         <h1>Trova la proposta</h1>
+         <h4>scegli la categoria d'interesse o cerca nella tua città</h4>
+     </div>
+
+    <div class="left">
+        <div class="btn-group main-search-grp">
+            <button type="button" class="btn btn-default dropdown-toggle main-search-btn" data-toggle="dropdown">
+              <?php echo Yii::t('wonlot','Categories'); ?><span class="glyphicon glyphicon-tag"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <?php
+                    $cat = $this->filterModel->lists['Categories'];
+                    foreach($cat as $k=>$item){ ?>
+                    <?php echo "<li>".CHtml::link($item, Yii::app()->createUrl('lotteries/index?cat='.$item), array('label' => false))."</li>";?>
+              <?php } ?>
+            </ul>
+        </div>
+        <div class="btn-group main-search-grp">
+            <div class="input-group main-search-btn">
+                <?php 
+                $form = $this->beginWidget(
+                    'CActiveForm',
+                    array(
+                        'id' => 'searchLot-form',
+                        'action' => CController::createUrl('lotteries/index'),
+                        'htmlOptions' => array('enctype' => 'multipart/form-data'), // for inset effect
+                    )
+                );
+                echo $form->hiddenField($this->filterModel,'LotStartStatus'); 
+                $this->widget('gmap.EGMapAutocomplete', array(
+                    'name' => 'searchCity',
+                    'model' => $this->filterModel,
+                    'value' => $this->filterModel->geo,
+                    'attribute' => 'geo',
+                    'htmlOptions'=>array(
+                        'class'=>'input-medium'
+                    ),
+                    'options' => array(
+                       'types' => array(
+                         '(cities)'
+                       ),
+                       /*'componentRestrictions' => array(
+                          'country' => 'us',
+                        )*/
+                    )
+                ));
+                ?>
+                <!--<span class="input-group-addon glyphicon glyphicon-map-marker"></span>-->
+                <?php echo CHtml::submitButton('Search', array('name' => 'search', 'class' => 'btn')); ?>
+                <?php $this->endWidget(); ?>
             </div>
-         </center>
+        </div>
+    </div>
+ </div>  
+<div class="clear"></div>
+<div class="winners-container" style="display: none;"> 
+    <div class="winners-banner">
+        <img src="/images/site/left-star.png">
+        <img src="/images/site/winners-banner.png">
+        <img src="/images/site/right-star.png">
+    </div>
+    <div class="winners-list">
+        
+    </div>
+</div>
+<div class="line-breaker"></div>
+<div class="clear"></div>
+<div class="main-lot-container">
+    <div class="main-lot-banner">
+        <img src="/images/site/all-lot-banner.png">
+    </div>
+    <div class="main-lot-list">
+        <?php $this->renderPartial('/lotteries/main-lot'); ?>
+    </div>
+</div>
+
+<div class="clear"></div>
          
-         <div class="side-single-box">
-            <div class="inserzioni-margin">
-               <img src="img/prova-side.jpg" alt="Foto Premio" class="side-img"/>
-               <div class="side-fix-height">
-                  <div class="side-box-title">
-                     Camicia "Emporio Armani"
-                  </div>
-                  <div class="side-box-subtitle">
-                     Padova
-                  </div>
-                  <div class="side-box-text">
-                    Camicia da uomo di "Emporio Armani"
-                  </div>
-               </div>
-               <div class="side-box-price">78,00<span class="euro">eeMoney</span></div>
-               <div class="side-more-details"><a href="#" class="button small white">Dettagli</a></div>
-               <div class="clear"></div>
-            </div>
-         </div>
-         
-         <div class="clear"></div>
-         <!--
-         <div class="loading-more-container">
-            <span class="loading-more">Caricamento altre offerte. Per favore attendi...</span>
-         </div>
-         -->
-      </div>
-      
    

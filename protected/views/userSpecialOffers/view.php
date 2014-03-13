@@ -13,12 +13,12 @@ $this->breadcrumbs=array(
 <?php 
 
 $this->widget(
-    'bootstrap.widgets.TbExtendedGridView',
+    'zii.widgets.grid.CGridView',
     array(
 //        'filter' => $person,
-        'fixedHeader' => true,
-        'type' => 'striped bordered',
-        'headerOffset' => 40,
+//        'fixedHeader' => true,
+//        'type' => 'striped bordered',
+//        'headerOffset' => 40,
         // 40px is the height of the main navigation at bootstrap
         'dataProvider' => $dataProvider,
         'template' => "{items}",

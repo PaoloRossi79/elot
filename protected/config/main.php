@@ -30,13 +30,13 @@ return array(
 		'application.vendors.*',
 		'application.extensions.*',
 		'application.extensions.EGMap.*',
-                'application.extensions.yiibooster2.*',
+                'application.extensions.galleria.*'
 	),
     
         'aliases' => array(
             //If you manually installed it
             'xupload' => 'ext.xupload',
-            'booster' => 'ext.yiibooster2',
+//            'booster' => 'ext.yiibooster2',
             'gmap' => 'ext.EGMap',
         ),
 
@@ -62,17 +62,19 @@ return array(
                             'admin'=>2,
                         ),
 		),
-            
+                /*'request' => array(
+                    'baseUrl' => $localBaseUrl,
+                ),*/
                 'mailer' => array(
                     'class' => 'application.extensions.mailer.EMailer',
                     'pathViews' => 'application.views.emailTemplate',
                     'pathLayouts' => 'application.views.emailLayouts'
                  ),
             
-                'bootstrap' => array(
+                /*'bootstrap' => array(
                     'class' => 'booster.components.Bootstrap',
                     'responsiveCss' => true,
-                ),
+                ),*/
 		// uncomment the following to enable URLs in path-format
 		
 		'urlManager'=>array(

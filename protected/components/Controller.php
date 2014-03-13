@@ -21,6 +21,11 @@ class Controller extends CController
         public $image_sub_folder;
         public $imgList;
         public $filterModel;
+        public $sideView;
+        
+        public $user;
+        public $userId;
+        
         
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
@@ -84,17 +89,31 @@ class Controller extends CController
             $model=new $modelName();
             $entity=$model->findByPk($id);
             $check=Yii::app()->user->id==$entity->owner_id;
+            /*if(!$check){
+                $this->render('site/error', array('code'=>"404","message"=> "Non sei il proprietario!"));
+            }*/
             return $check;
         }
         
-        public function getImageUrl($entityId,$imgName,$thumbSize=null){
-            $img_path="/images/".$this->id."/".$entityId."/";
-            if(!empty($thumbSize)){
-                $fileUrl=$img_path.$thumbSize."/".$imgName;
+        public function getImageUrl($entity,$thumbSize=null){
+            if(get_class($entity) == "stdClass"){
+                $file=$entity->file;
+                $img_path="/images/".strtolower($entity->entityType)."/".$entity->entityId."/";
             } else {
-                $fileUrl=$img_path.$imgName;
+                $file=$entity->prize_img;
+                $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
             }
-            return $fileUrl;
+            if(!empty($thumbSize)){
+                $fileUrl=$img_path.$thumbSize."/".$file;
+            } else {
+                $fileUrl=$img_path.$file;
+            }
+            $path = realpath(Yii::app()->getBasePath( )."/..".$fileUrl);
+            //if($path){
+                return $fileUrl;
+            /*} else {
+                return 'images/site/no-image-thumb.png';
+            }*/
         }
         
         public function getImageList($entityId){
@@ -145,6 +164,13 @@ class Controller extends CController
         }
         
         protected function beforeRender($view) {
+            if(Yii::app()->user && Yii::app()->user->id){
+                $this->user=Yii::app()->user;
+                $this->userId=Yii::app()->user->id;
+            } else {
+                $this->user=null;
+                $this->userId=-1;
+            }
             if($view==="error"){
                 return;
             }
@@ -245,16 +271,16 @@ class Controller extends CController
         protected function saveLocation($data) {
             // check if already exist
             $locCond = new CDbCriteria();
-            $locCond->addCondition('addressLat='.number_format($data['addressLat'],6));
-            $locCond->addCondition('addressLng='.number_format($data['addressLng'],6));
+            $locCond->addCondition('addressLat='.number_format((float)$data['addressLat'],6));
+            $locCond->addCondition('addressLng='.number_format((float)$data['addressLng'],6));
             $check = Locations::model()->find($locCond);
             if($check){
                 return $check->id;
             } else { //new location
                 $newLoc = new Locations;
                 $newLoc->address = $data['address'];
-                $newLoc->addressLat = number_format($data['addressLat'],6);
-                $newLoc->addressLng = number_format($data['addressLng'],6);
+                $newLoc->addressLat = number_format((float)$data['addressLat'],6);
+                $newLoc->addressLng = number_format((float)$data['addressLng'],6);
                 if($newLoc->save()){
                     return $newLoc->id;
                 } else {

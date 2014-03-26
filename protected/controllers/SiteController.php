@@ -50,23 +50,6 @@ class SiteController extends Controller
                             // Yii alias for your user's model, or simply class name, when it already on yii's import path
                             // default value of this property is: User
                             'model' => 'Users', 
-                            // map model attributes to attributes of user's social profile
-                            // model attribute => profile attribute
-                            // the list of avaible attributes is below
-                            'attributes' => array(
-                              'email' => 'email',
-                              'ext_id' => 'identifier',
-                              'password' => 'identifier',
-                              'username' => 'displayName',
-                              'profile->first_name' => 'firstName',
-                              'profile->last_name' => 'lastName',
-                              'profile->gender' => 'genderShort',
-                              'profile->birthday' => 'birthDate',
-                              'profile->img' => 'photoURL',
-                              // you can also specify additional values, 
-                              // that will be applied to your model (eg. account activation status)
-                              /*'acc_status' => 1,*/
-                            ),
                         ),
 		)
             );        

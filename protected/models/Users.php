@@ -85,22 +85,8 @@ class Users extends PActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'user_type_id' => 'User Type',
 			'email' => 'Email',
 			'password' => 'Password',
-			'cookie_hash' => 'Cookie Hash',
-			'cookie_time_modified' => 'Cookie Time Modified',
-			'is_agree_terms_conditions' => 'Is Agree Terms Conditions',
-			'is_agree_personaldata_management' => 'Is Agree Personaldata Management',
-			'is_active' => 'Is Active',
-			'is_email_confirmed' => 'Is Email Confirmed',
-			'signup_ip' => 'Signup Ip',
-			'last_login_ip' => 'Last Login Ip',
-			'last_logged_in_time' => 'Last Logged In Time',
-			'available_balance_amount' => 'Available Balance Amount',
-			'dns' => 'Dns',
 			'wallet_value_bonus' => 'Wallet Value Bonus',
 		);
 	}

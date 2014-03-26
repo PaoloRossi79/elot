@@ -3,7 +3,7 @@
         //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
         // TODO: get Image from socials
     } else {
-        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/mediumThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar"));
+        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar img-thumbnail"));
     } ?>
 
 
@@ -12,18 +12,42 @@
         'CActiveForm',
         array(
             'id' => 'userProfile-form',
-            'htmlOptions' => array('class' => 'well','enctype' => 'multipart/form-data'), // for inset effect
+            'htmlOptions' => array('class' => 'form-horizontal','enctype' => 'multipart/form-data'), // for inset effect
         )
     );
     $profile=$model->profile;
 ?>
+        <div class="form-group">
+            <?php if($model->user_type_id == Yii::app()->user->userTypes['admin']){ ?>
+                <p>Sei un <b>ADMIN!</b></p>
+            <?php } else { ?>
+                <?php echo $form->errorSummary($profile); ?>
+                <?php $profileTypes = array(1 => 'Privato', 3 => 'Azienda');
+                echo $form->radioButtonList($model, "user_type_id", $profileTypes); 
+                ?>
+            <?php } ?>
+        </div>
+	<div class="form-group">
+            <?php echo $form->labelEx($profile,'first_name',array('class'=>'col-sm-2 control-label'));?>
+            <?php echo $form->textField($profile, 'first_name', array('class' => 'col-sm-6','size'=>45,'maxlength'=>45)); ?>
+        </div>
 
-	<?php echo $form->errorSummary($profile); ?>
+	<div class="form-group">
+            <?php echo $form->labelEx($profile,'last_name',array('class'=>'col-sm-2 control-label'));?>
+            <?php echo $form->textField($profile, 'last_name', array('class' => 'col-sm-6','size'=>45,'maxlength'=>45)); ?>
+        </div>
+        
+        <div class="form-group">
+            <?php echo $form->errorSummary($profile); ?>
+            <?php $genders = array('M' => 'uomo', 'F' => 'donna');
+            echo $form->radioButtonList($profile, "gender", $genders); 
+            ?>
+        </div>
 
-	<div class="row">
-		<?php echo $form->textField($profile, 'first_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->textField($profile, 'last_name', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
-                <?php 
+	<div class="form-group">
+            <?php echo $form->labelEx($this->locationForm,'address',array('class'=>'col-sm-2 control-label'));?>
+            <div class="col-sm-6">
+            <?php 
                 /* http://www.yiiframework.com/extension/egmap/ */
                 $this->widget('gmap.EGMapAutocomplete', array(
                     'name' => 'lot_location',
@@ -39,28 +63,28 @@
                     )
                 ));
                 ?>
-	</div>
-        
-        <div id="user_img">
-            <?php
-                //echo $form->labelEx($model,'photos');
-                $this->widget( 'xupload.XUpload', array(
-                    'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
-                    //our XUploadForm
-                    'model' => $this->upForm,
-                    //We set this for the widget to be able to target our own form
-                    'htmlOptions' => array('id'=>'userProfile-form'),
-                    'attribute' => 'file',
-                    'multiple' => false,
-                    'showForm' => false,
-                    //Note that we are using a custom view for our widget
-                    //Thats becase the default widget includes the 'form' 
-                    //which we don't want here
-        //            'formView' => 'lot-form',
-                    )    
-                );
-            ?>
+            </div>
         </div>
+	
+        <div class="form-group">
+            <div id="user_img">
+                <?php
+                    //echo $form->labelEx($model,'photos');
+                    $this->widget( 'xupload.XUpload', array(
+                        'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
+                        //our XUploadForm
+                        'model' => $this->upForm,
+                        //We set this for the widget to be able to target our own form
+                        'htmlOptions' => array('id'=>'userProfile-form'),
+                        'attribute' => 'file',
+                        'multiple' => false,
+                        'showForm' => false,
+                        )    
+                    );
+                ?>
+            </div>
+        </div>
+        
 <?php
     //Yii::import('ext.gmap.*');
     $gMap = new EGMap();
@@ -149,8 +173,8 @@
 }
 </style>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+	<div class="form-group buttons">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

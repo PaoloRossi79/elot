@@ -10,18 +10,8 @@
             //Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/screen.css','screen, projection');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/print.css','print');
         ?>
-        <!--[if lt IE 8]>
         <?php 
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/ie.css','screen, projection');
-        ?>
-	<![endif]-->
-        <!--[if IE 7]>
-        <?php 
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/media/font-awesome/css/font-awesome-ie7.min.css');
-        ?>
-	<![endif]-->
-        <?php 
-//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/boostrap3/css/bootstrap.min.css');
+            Yii::app()->getClientScript()->registerCssFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css','screen');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/form.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/homepage.css');
@@ -29,13 +19,11 @@
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/main-slider.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/js/tooltip/tipsy.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile-pulsanti.css');
-//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/geocode.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/isotope.css');
-//            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/media/font-awesome/css/font-awesome.min.css','screen');
-            Yii::app()->getClientScript()->registerCssFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css','screen');
             
             Yii::app()->getClientScript()->registerCoreScript('jquery'); 
             Yii::app()->getClientScript()->registerCoreScript('jquery.ui'); 
+            Yii::app()->getClientScript()->registerScriptFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.galleriffic.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/ie-fade.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/main-js.js',CClientScript::POS_HEAD);
@@ -46,7 +34,6 @@
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.isotope.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.slides.min.js',CClientScript::POS_HEAD);
 //            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/galleria/galleria-1.3.5.min.js',CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js',CClientScript::POS_HEAD);
         ?>
         
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -105,11 +92,11 @@
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+<!--                            <div class="header-icon">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
-                            </div>
+                            </div>-->
                             <div class="header-icon">
                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register">
                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register", array("class"=>"img-responsive")); ?>

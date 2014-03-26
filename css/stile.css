@@ -20,7 +20,9 @@ body {
 
 body, table, tr, td, input, .tipsy-inner {
    font-size: 13px;
-   font-family: 'Roboto', Arial, Helvetica, sans-serif;
+   /*font-family: 'Roboto', Arial, Helvetica, sans-serif;*/
+   font-family: 'Open Sans',Arial,sans-serif!important;
+   
 }
 
 *:focus {
@@ -40,13 +42,14 @@ body, table, tr, td, input, .tipsy-inner {
    color: #505050;
 }
 
-a { 
+/*a { 
    color: #505050; 
-   text-decoration: none;
-}
+   text-decoration: none!important;
+}*/
 
-a:hover {
-   text-decoration: underline;
+a, a:hover, a:focus, a:visited {
+   color: #5B626C;
+   text-decoration: none;
 }
 
 /*#page
@@ -161,8 +164,19 @@ a:hover {
     margin-left: 7px;
 }
 
-#searchLot-form input {
+#searchLot-form {
+    margin-top: 30px;
+}
+#searchLot-form input[type=text] {
 	float: left;
+        width: 80%;
+}
+
+#searchLot-form input[type=submit] {
+	float: left;
+        width: auto;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
 }
 
 /* SLIDESHOW CONTROLS*/
@@ -214,12 +228,14 @@ a:hover {
 }
 /***************/
 .filter-container {
-    width: 100%
+    min-height: 100px;
+    min-width: 500px;
 }
 
 .label-find-lot {
     color: #fceacf;
-    float: left;
+    /*float: left;*/
+    /*width: 40%;*/
 }
 
 .main-width {
@@ -236,6 +252,26 @@ a:hover {
 .euro {
    font-size: 70%;
    padding-left: 0.2em;
+}
+
+button.close {
+   padding: 10px 15px 0 0;
+}
+
+.width-50perc {
+   width: 50% !important;
+}
+
+.width-33perc {
+   width: 33.3333333333% !important;
+}
+
+.width-25perc {
+   width: 25% !important;
+}
+
+.width-20perc {
+   width: 20% !important;
 }
 
 .site-main-logo {
@@ -458,8 +494,44 @@ a:hover {
     left: 5px;
 }
 
+.user-check {
+    position: relative;
+}
+
+.user-check img {
+    width: 50px;
+    height: 80px;
+    position: absolute;
+    top: 0;
+    right: 5px;
+}
+
 .lot-name {
     margin: 5px 0 5px 0;
+    border-bottom: 1px solid black;
+}
+
+.lot-name-cont {
+    width: 90%;
+}
+
+.lot-icons-cont {	
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.jam-round {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background-color: red;
+    float: left;	
+    margin-top: 5px;
+}
+
+.star-cont {
+    float: left;
+    margin-left: 5px;
 }
 
 .lot-star {
@@ -486,13 +558,7 @@ a:hover {
 }
 
 .lot-wlmoney {
-    background-image:url('../images/site/wl-money.png');
-    background-repeat:no-repeat;
-    background-position:center;
-    width: 50px;
-    height: 50px;
-    float: left;
-    margin-left: 10px;
+    height: 40px;
 }
 
 .winners-container, .main-lot-container {
@@ -516,4 +582,188 @@ a:hover {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.main-width {
+   max-width: 980px;
+   margin: 0 auto;
+   position: relative;
+}
+
+#profile-tabs {
+   width: 100%;
+   clear: both;
+   margin-bottom: 30px;
+}
+
+.profile-tab-item {
+   border: 0px;
+   float: left;
+}
+
+.profile-tab-item > button {
+   width: 100% !important;
+}
+
+.profile-tab-item .btn {
+   padding: 8px;
+   margin: 0;
+   border: 0px;
+   border-bottom: 3px solid #bbbbbb;
+   background: transparent;
+   -webkit-border-radius: 0;
+   -moz-border-radius: 0;
+   border-radius: 0;
+   -webkit-box-shadow: none;
+   -moz-box-shadow: none;
+   box-shadow: none;
+   text-shadow: none;
+   text-align: left; 
+   line-height: 29px;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   color: #999999;
+}
+
+.profile-tab-item a {   
+   padding: 8px;
+   margin: 0;
+   border: 0px;
+   border-bottom: 3px solid #bbbbbb;
+   background: transparent;
+   -webkit-border-radius: 0;
+   -moz-border-radius: 0;
+   border-radius: 0;
+   -webkit-box-shadow: none;
+   -moz-box-shadow: none;
+   box-shadow: none;
+   text-shadow: none;
+   text-align: left; 
+   line-height: 29px;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   color: #999999;
+}
+
+.profile-tab-item .btn .badge {
+   background-color: #BBBBBB;
+   color: #ffffff;
+   text-shadow: none;
+   line-height: 29px;
+   text-align: center;
+   width: 29px;
+   height: 29px;
+   overflow: hidden;
+   font-weight: 300;
+   font-size: 13px;
+   -webkit-border-radius: 15px;
+   -moz-border-radius: 15px;
+   border-radius: 15px;
+   padding: 0;
+   position: relative;
+   top: auto;
+   vertical-align: top;
+   margin-right: 2px;
+}
+
+.profile-tab-item .btn .badge em {
+   font-size: 19px;
+   line-height: 29px;
+   text-align: center;
+   display: inline;
+}
+
+.profile-tab-item .btn .badge em.fa-users {
+   font-size: 16px;
+}
+
+.profile-tab-item .btn .badge em.fa-plus {
+   font-size: 18px;
+   line-height: 30px;
+}
+
+.profile-tab-item .btn .badge em.fa-sign-in {
+   margin-left: -1px;
+}
+
+.profile-tab-item .btn .badge em.fa-bars {
+   font-size: 18px;
+   line-height: 30px;
+}
+.profile-tab-item .btn .badge em.fa-info {
+   font-size: 20px;
+   line-height: 30px;
+}
+
+.profile-tab-item .btn .badge em.fa-globe {
+   font-size: 21px;
+   line-height: 30px;
+}
+
+.profile-tab-item  .btn-info {
+   border-color: #6b9d28;
+   color: #E5EBDD;
+}
+
+.profile-tab-item .tab-text {
+   font-family: 'Roboto Slab';
+   font-size: 16px;
+}
+
+.profile-tab-item .btn .badge-new {
+   margin-left: 5px;
+   width: auto;
+   padding: 0 7px;
+   font-size: 11px;
+   background-color: #BBBBBB;
+   color: #ffffff;
+   text-shadow: none;
+   font-weight: 300;
+   -webkit-border-radius: 15px;
+   -moz-border-radius: 15px;
+   border-radius: 15px;
+   padding: 0;
+   vertical-align: top;
+   padding: 2px 5px;
+}
+
+.profile-tab-item .btn-info .badge {
+   background-color: #6b9d28;
+   color: #ffffff;
+   margin-right: 0;
+}
+
+.profile-tab-item .btn-info .badge-new {
+   background-color: #808080;
+   color: #ffffff;
+}
+
+.profile-tab-item.witherror  .btn-info {
+   border-bottom-color: #e4631d;
+   color: #202020;
+}
+
+.profile-tab-item  .btn-info:hover {
+   background: transparent;
+   border-color: #6b9d28;
+}
+
+.profile-tab-item  .btn:hover {
+   background: transparent;
+   border-color: #6b9d28;
+}
+
+.profile-tab-item.witherror .btn-info .badge {
+   background-color: #e4631d;
+   color: #ffffff;
+}
+
+.user-avatar {
+    position: absolute;
+    right: 50px;
+    top: 100px;
+}
+
+.fileupload-buttonbar {
+    float: right;
 }

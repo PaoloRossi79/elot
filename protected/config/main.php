@@ -60,6 +60,7 @@ return array(
                         'userTypes'=>array(
                             'user'=>1,
                             'admin'=>2,
+                            'company'=>3,
                         ),
 		),
                 /*'request' => array(

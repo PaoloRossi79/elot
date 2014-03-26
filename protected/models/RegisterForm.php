@@ -11,6 +11,7 @@ class RegisterForm extends CFormModel
 	public $password;
 	public $confirmEmail;
 	public $confirmPassword;
+	public $username;
 	public $terms;
 	public $persdatamng;
 	
@@ -23,7 +24,7 @@ class RegisterForm extends CFormModel
 	{
 		return array(
 			// username and password are required
-			array('email, confirmEmail, password, confirmPassword', 'required'),
+			array('email, confirmEmail, password, confirmPassword , username', 'required'),
 			array('email', 'email'),
 			array('confirmEmail', 'email'),
                         // flags need to be a boolean
@@ -31,6 +32,7 @@ class RegisterForm extends CFormModel
 			// Confirmation fields need to be the same as originals
                         array('confirmPassword', 'compare', 'compareAttribute'=>'password'),
                         array('confirmEmail', 'compare', 'compareAttribute'=>'email'),
+                        array('username', 'unique'),
 		);
 	}
         
@@ -41,10 +43,19 @@ class RegisterForm extends CFormModel
 	{
 		return array(
 			'rememberMe'=>'Remember me next time',
+//			'username'=>'Username',
 		);
 	}
         
-	/**
+        public function unique($attribute)
+        {
+            $user = Users::model()->find('t.username = "'.$this->$attribute.'"');
+            if($user){
+              $this->addError($attribute, 'Username già usato!');
+            }
+        }
+        
+        /**
 	 * Logs in the user using the given username and password in the model.
 	 * @return boolean whether login is successful
 	 */
@@ -53,6 +64,7 @@ class RegisterForm extends CFormModel
             $model=new Users;
             $model->email=$this->email;
             $model->password=sha1(Yii::app()->params['hashString'].$this->password);
+            $model->username=$this->username;
             $model->user_type_id=Yii::app()->user->userTypes['user'];
             $model->is_agree_terms_conditions=$this->terms;
             $model->is_agree_personaldata_management=$this->persdatamng;

@@ -29,7 +29,7 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','ajaxCheckUsername'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -51,6 +51,17 @@ class UsersController extends Controller
 			),
 		);
 	}
+        
+        public function actionAjaxCheckUsername()
+        {
+            $username = $_POST['RegisterForm']['username'];
+            $user = Users::model()->find('t.username = "'.$username.'"');
+            if($user){
+                return false;
+            } else {
+                return true;
+            }
+        }
 
 	/**
 	 * Displays a particular model.
@@ -181,7 +192,12 @@ class UsersController extends Controller
                         $model->location_id = $this->saveLocation($_POST['Locations']);
                         $model->save();
                     }
+                    if($_POST['Users']['user_type_id']){
+                        $model->user_type_id = $_POST['Users']['user_type_id'];
+                        $model->save();
+                    }
                     $model->profile->attributes=$_POST['UserProfiles'];
+                    $model->profile->gender=$_POST['UserProfiles']['gender'];
                     if($model->profile->save())
                         $this->redirect(array('myProfile'));
 		} 

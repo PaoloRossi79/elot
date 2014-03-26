@@ -144,7 +144,7 @@ class Lotteries extends PActiveRecord
 		));
 	}
         
-        public function getMainLotteries()
+        public static function getMainLotteries()
 	{
             $criteria=new CDbCriteria; 
             $criteria->addInCondition('status',array(3,4));
@@ -173,10 +173,20 @@ class Lotteries extends PActiveRecord
                     $criteria->addCondition('lottery_start_date <='.$dbToday);
                     $criteria->addCondition('lottery_draw_date >='.$dbToday);
                 }*/
-                $criteria->addInCondition('status',$type['status']);
+                if(!is_array($type['status'])){
+                    $status=array($type['status']);
+                } else {
+                    $status=$type['status'];
+                }
+                $criteria->addInCondition('status',$status);
             }
             if(isset($type['prizeCategory'])){
-                $criteria->addInCondition('prize_category',$type['prizeCategory']);
+                if(!is_array($type['prizeCategory'])){
+                    $cat=array($type['prizeCategory']);
+                } else {
+                    $cat=$type['prizeCategory'];
+                }
+                $criteria->addInCondition('prize_category',$cat);
             }
                 
             if(isset($type['tag']))

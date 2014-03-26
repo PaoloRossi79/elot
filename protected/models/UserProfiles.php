@@ -37,7 +37,7 @@ class UserProfiles extends PActiveRecord
 			array('address, img', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, first_name, last_name, address, lat, lng, img, creditOption', 'safe', 'on'=>'search'),
+			array('id, user_id, first_name, last_name, address, lat, lng, img, creditOption, gender', 'safe', 'on'=>'search'),
 //			array('id, user_id, first_name, last_name, address, lat, lng, img', 'safe'),
 		);
 	}
@@ -62,12 +62,9 @@ class UserProfiles extends PActiveRecord
 		return array(
 			'id' => 'ID',
 			'user_id' => 'User',
-			'first_name' => 'First Name',
-			'last_name' => 'Last Name',
-			'address' => 'Address',
-			'lat' => 'Lat',
-			'lng' => 'Lng',
-			'img' => 'Img',
+			'first_name' => 'Nome',
+			'last_name' => 'Cognome',
+			'address' => 'Indirizzo',
 		);
 	}
 

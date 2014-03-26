@@ -18,7 +18,7 @@ $this->breadcrumbs=array(
     </div>
     <div class="panel-body">
         <div class="form">
-        <?php $form=$this->beginWidget('CActiveForm'); ?>
+        <?php $form=$this->beginWidget('CActiveForm',array('id'=>'user_register_form')); ?>
 
                 <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -49,6 +49,36 @@ $this->breadcrumbs=array(
         <!--		<p class="hint">
                                 Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.
                         </p>-->
+                </div>
+                
+                <div class="row">
+                        <?php echo $form->labelEx($model,'username'); ?>
+                        <?php echo $form->textField($model,'username'); ?>
+                        <?php echo $form->error($model,'username'); ?>
+                        <span id="checkUsername" style="display: none;">
+                            <span id="checkUsernameOk" style="display: none;" class="label label-success"><span class="glyphicon glyphicon-ok"></span>Libero!</span>
+                            <span id="checkUsernameKo" style="display: none;" class="label label-danger"><span class="glyphicon glyphicon-remove"></span>Occupato!</span>
+                        </span>
+                        <?php 
+                            echo CHtml::ajaxButton ("Verifica",
+                                CController::createUrl('users/ajaxCheckUsername'), 
+                                array('update' => '#checkUsername',
+                                      'type' => 'POST', 
+                                      'data'=>'js:$("#user_register_form").serialize()',
+                                      'success' => "js:function(data, status)
+                                        {
+                                        alert(data);
+                                           if(data){
+                                                $('#checkUsernameOk').show();
+                                                $('#checkUsernameKo').hide();
+                                           } else {
+                                                $('#checkUsernameKO').show();
+                                                $('#checkUsernameOk').hide();
+                                           }
+                                           $('#checkUsername').fadeIn();
+                                        }",
+                                ));
+                        ?>
                 </div>
 
                 <div class="row rememberMe checkbox-container">

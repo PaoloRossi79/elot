@@ -60,4 +60,8 @@ $(window).bind("load", function() {
             var t=1;
         }
    });
+   $('.cat-list li').click(function(event){
+       $('#cat-sel').text(event.target.id);
+       $('#SearchForm_Category').val(event.target.dataset.id);
+   });
 });

@@ -64,13 +64,5 @@ class WebUser extends CWebUser {
 		return false;
 	return true;
   }
-
-  function isSommelier()
-  {
-	$user = $this->loadUser(Yii::app()->user->id);
-	if($user!==null)
-		return ($user->user_type_id==3);
-	return false;
-  }
 }
 ?>

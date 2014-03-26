@@ -175,6 +175,7 @@ class HOAuthAction extends CAction
 	protected function oAuth( $provider )
 	{
 		try{
+                        $this->controller->layout = "nopage";
 			// trying to authenticate user via social network
 			$oAuth = UserOAuth::model()->authenticate( $provider );
 			$userProfile = $oAuth->profile;

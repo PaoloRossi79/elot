@@ -38,15 +38,16 @@ class LotteriesController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('delete','update'),
-                                'expression' => array('LotteriesController','allowOnlyOwner')
+				'actions'=>array('update','void'),
+                                'expression' => array('LotteriesController','allowOnlyOwner'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin'),
-                                'expression' => array('LotteriesController','isAdmin')
+				'actions'=>array('admin','cronLottery'),
+                                'expression' => array('LotteriesController','isAdmin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
+                            'deniedCallback' => array($this, 'redirectToHome'), 
 			),
 		);
 	}
@@ -55,6 +56,10 @@ class LotteriesController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
+        public function redirectToHome(){
+            $this->redirect(Yii::app()->getBaseUrl(true));
+        }
+        
 	public function actionView($id)
 	{
 //                $this->layout="//layouts/allpage";
@@ -166,6 +171,32 @@ class LotteriesController extends Controller
 			'model'=>$model,
 		));
 	}
+        
+	/**
+	 * Manages all models.
+	 */
+	public function actionCronLottery()
+	{
+                $errors = array();
+                $errors['open'] = Lotteries::model()->checkToOpen($errors);
+                $errors['close'] = Lotteries::model()->checkToClose($errors);
+                $errors['extract'] = Lotteries::model()->checkToExtract($errors);
+                if(count($errors['open'])+
+                    count($errors['close'])+
+                    count($errors['extract']) > 0){
+                    $emailRes=EmailManager::sendCronAdminEmail($errors);
+                    $errors['count'] = count($errors['open'])+count($errors['close'])+count($errors['extract']);
+                }
+		$model=new Lotteries('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Lotteries']))
+			$model->attributes=$_GET['Lotteries'];
+
+		$this->render('admin',array(
+			'model'=>$model,
+			'errors'=>$errors,
+		));
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -230,8 +261,7 @@ class LotteriesController extends Controller
                     $ticket=new Tickets;
                     $ticket->user_id=Yii::app()->user->id;
                     $ticket->lottery_id=$lot->id; 
-                    $ticket->serial_number=rand(100000,999999); 
-                    // TODO: add serial number uniqueness! find(sameLot, sameNumber)
+                    $ticket->serial_number=Lotteries::model()->genRandomTicketSerial(); 
                     $checkSerial=true;
                     while ($checkSerial){
                         $criteria=new CDbCriteria; 
@@ -239,7 +269,7 @@ class LotteriesController extends Controller
                         $criteria->addCondition('serial_number='.$ticket->serial_number);
                         $existTicket=Tickets::model()->findAll($criteria);
                         if($existTicket){
-                            $ticket->serial_number=rand(100000,999999); 
+                            $ticket->serial_number=Lotteries::model()->genRandomTicketSerial(); 
                         } else {
                             $checkSerial=false;
                         }
@@ -271,10 +301,11 @@ class LotteriesController extends Controller
                                 $lot->ticket_sold_value+=$ticket->price;
                                 $lot->save();
                                 $dbTransaction->commit();
-                                $lot->checkNewStatus();
+                                $checkRes=$lot->checkNewStatus();
                                 $data["type"] = "alert alert-success";
                                 $data["result"] = "OK!";
-                                $data["msg"] = "Best buy!";
+                                $data["msg"] = "Il biglietto n° ".$ticket->serial_number." è tuo!";
+                                EmailManager::model()->sendTicket($ticket);
                             } else {
                                 $dbTransaction->rollback();
                                 $data["msg"] = "saving user transaction";
@@ -290,7 +321,9 @@ class LotteriesController extends Controller
             }
             $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($lotId);
             $data["id"] = $lot->id;
+            $data["ticketNumber"] = $ticket->id;
             $data["lottery"] = $lot;
+            $data["canBuyAgain"] = ($checkRes && $checkRes == Yii::app()->params['lotteryStatusConst']['closed']) ? 0 : 1;
             $data["version"] = 'complete';
             $this->renderPartial('_buyAjax', $data, false, true);
         }
@@ -351,9 +384,9 @@ class LotteriesController extends Controller
         protected function userCanBuy($lotId){
             $lot = $this->loadModel($lotId);
             if(Yii::app()->user->isGuest())
-                return false;
+                return Lotteries::errorGuest;
             if(Yii::app()->user->id === $lot->owner_id)
-                return false;
+                return Lotteries::errorOwner;
             $user = Users::model()->findByPk(Yii::app()->user->id);
             $userCredit = $user->available_balance_amount;
             //check for lottery status
@@ -367,7 +400,7 @@ class LotteriesController extends Controller
             }*/
             return true;
         }
-
+        
         /**
 	 * Performs the AJAX validation.
 	 * @param Lotteries $model the model to be validated
@@ -457,8 +490,6 @@ class LotteriesController extends Controller
         }
         
         private function _editLottery($model){
-            $form = new CForm('application.views.lotteries.form_config',$model);
-            $form->showErrorSummary = true;
             Yii::import("xupload.models.XUploadForm");
             $upForm = new XUploadForm;
             $this->upForm=$upForm;
@@ -489,11 +520,8 @@ class LotteriesController extends Controller
                         $model->location_id = $this->saveLocation($_POST['Locations']);
                     }
                     if($_POST['publish']){
-                        $model->status=Yii::app()->params['lotteryStatusConst']['publish'];
-                        $model->is_active=1;
-                    } else {
                         $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
-                    }
+                    } 
                     if($model->save()){
                         $this->renameTmpFolder($model->id);
                         if($isOld){
@@ -507,7 +535,7 @@ class LotteriesController extends Controller
             }
 
             $this->render('update', array(
-                    'form' => $form,
+                    'model' => $model,
             ));
         }
 }

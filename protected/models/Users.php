@@ -52,6 +52,7 @@ class Users extends PActiveRecord
 			array('is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed', 'numerical', 'integerOnly'=>true),
 			array('available_balance_amount, wallet_value_bonus', 'numerical'),
 			array('user_type_id', 'length', 'max'=>2),
+			array('email', 'email'),
 			array('email, dns', 'length', 'max'=>255),
 			array('password', 'length', 'max'=>100),
 			array('cookie_hash', 'length', 'max'=>50),
@@ -72,6 +73,7 @@ class Users extends PActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'profile' => array(self::HAS_ONE, 'UserProfiles', 'user_id'),
+                    'companyProfile' => array(self::HAS_ONE, 'CompanyProfiles', 'user_id'),
                     'tickets' => array(self::HAS_MANY, 'Tickets', 'user_id'),
                     'location' => array(self::BELONGS_TO, 'Locations', 'location_id'),
                     'newsletter' => array(self::HAS_MANY, 'Subscriptions', 'user_id'),
@@ -135,9 +137,6 @@ class Users extends PActiveRecord
         
         public function getMyProfile(){
             $myProfile=$this->findByPk(Yii::app()->user->id);
-            foreach($myProfile->newsletter as $news){
-                $t=$news;
-            }
             return $myProfile;
         }
         

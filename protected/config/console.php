@@ -3,13 +3,28 @@
 // This is the configuration for yiic console application.
 // Any writable CConsoleApplication properties can be configured here.
 include "db.php";
-
+include "extParams.php";
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'My Console Application',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
+    
+        'import'=>array(
+		'application.models.*',
+		'application.components.*',
+                'ext.YiiPhpMailer.YiiMailer',
+	),
+    
+        'params'=>array(
+            // this is used in contact page
+            'adminEmail'=>'webmaster@example.com',
+            'isCron'=>true,
+            'lotteryTypes'=>$lotteryTypes,
+            'lotteryTypesConst'=>$lotteryTypesConst,
+            'lotteryStatusConst'=>$lotteryStatusConst,
+        ),
 
 	// application components
 	'components'=>array(
@@ -29,9 +44,8 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-                                        'logFile'=>'cron.log',
+                                        'logFile'=>'wonlot-cron.log',
 					'levels'=>'error, warning',
-                                        'logFile'=>'cron.log'
 				),
 			),
 		),

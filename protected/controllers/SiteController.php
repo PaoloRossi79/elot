@@ -137,12 +137,15 @@ class SiteController extends Controller
             }
             $this->renderPartial('login', $data, false, true);
 	}
-
+        
 	/**
 	 * Displays the register page
 	 */
 	public function actionRegister()
 	{
+                if(!Yii::app()->user->isGuest()){
+                    $this->redirect(Yii::app()->homeUrl);
+                }
 		$model=new RegisterForm;
 
 		// if it is ajax validation request

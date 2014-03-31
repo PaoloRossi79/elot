@@ -3,12 +3,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Buy Ticket</h4>
+        <h4 class="modal-title" id="myModalLabel">Compra Ticket</h4>
       </div>
       <div class="modal-body">
             <?php 
                 $checkBuy = $this->userCanBuy($data->id);
-                if($checkBuy){ 
+                if($checkBuy === true){ 
             ?>
                 <div class="modal-body">
                     
@@ -28,11 +28,13 @@
                     <?php echo CHtml::ajaxButton ("Buy for You!",
                         CController::createUrl('lotteries/buyTicket'), 
                         array(
-          //                                'update' => '.data-'.$data->id,
                           'update' => '#data-'.$data->id,
                           'type' => 'POST', 
                           'data'=>'js:$("#buyLotteryForm").serialize()'
-                        )); ?>
+                        ),
+                        array('name'=>'buyBtn')
+                        ); ?>
+                    <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa lotteria!</p>
                     
                 </div>
                 
@@ -44,15 +46,15 @@
                        
                     </div>
                 </div>
-            <?php } elseif(Yii::app()->user->isGuest()){ ?>
+            <?php } elseif($checkBuy == Lotteries::errorGuest) { ?>
                 <h4>LOGIN TO BUY!</h4>
                 <?php $this->renderPartial('/site/login',array('showLogin'=>true)); ?>
-            <?php } elseif($data->owner_id == Yii::app()->user->id){ ?>
-                <h4>CANNOT BUY YOUR LOTTERY!</h4>
-            <?php } elseif($checkBuy == Lotteries::errorCredit) { ?>
-                <h4>NOT ENOUGH CREDIT!</h4>
             <?php } elseif($checkBuy == Lotteries::errorStatus) { ?>
                 <h4>LOTTERY IN WRONG STATUS</h4>
+            <?php } elseif($checkBuy == Lotteries::errorCredit) { ?>
+                <h4>NOT ENOUGH CREDIT!</h4>
+            <?php } elseif($checkBuy == Lotteries::errorOwner) { ?>
+                <h4>CANNOT BUY YOUR LOTTERY!</h4>
             <?php } ?>
       </div>
       <div class="modal-footer">

@@ -1,7 +1,7 @@
 <?php
 return array(
     'viewPath' => 'application.extensions.YiiPhpMailer.views.mail',
-    'layoutPath' => 'application.extensions.YiiPhpMailer.layouts',
+    'layoutPath' => 'application.extensions.YiiPhpMailer.views.layouts',
     'baseDirPath' => 'webroot',
     'savePath' => 'application.extensions.YiiPhpMailer.assets.mail',
     'testMode' => false,

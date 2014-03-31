@@ -14,6 +14,7 @@ class RegisterForm extends CFormModel
 	public $username;
 	public $terms;
 	public $persdatamng;
+	public $thirdpartdatamng;
 	
 	/**
 	 * Declares the validation rules.
@@ -42,7 +43,14 @@ class RegisterForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'rememberMe'=>'Remember me next time',
+			'email'=>Yii::t("wonlot","Email"),
+			'confirmEmail'=>Yii::t("wonlot","Conferma Email"),
+			'password'=>Yii::t("wonlot","Password"),
+			'confirmPassword'=>Yii::t("wonlot","Conferma Password"),
+			'username'=>Yii::t("wonlot","Nome utente"),
+			'is_agree_terms_conditions'=>Yii::t("wonlot",""),
+			'is_agree_personaldata_management'=>Yii::t("wonlot",""),
+//			''=>Yii::t("wonlot",""),
 //			'username'=>'Username',
 		);
 	}
@@ -68,6 +76,7 @@ class RegisterForm extends CFormModel
             $model->user_type_id=Yii::app()->user->userTypes['user'];
             $model->is_agree_terms_conditions=$this->terms;
             $model->is_agree_personaldata_management=$this->persdatamng;
+            $model->is_agree_3partdata_management=$this->thirdpartdatamng;
             $model->is_active=1;
             //$model->is_email_confirmed=0; //ATTENTION: for PROD
             $model->is_email_confirmed=1; //ATTENTION: for DEV

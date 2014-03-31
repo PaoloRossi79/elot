@@ -318,7 +318,7 @@ class Controller extends CController
                 }
               }
             }
-            rmdir($source.$file);
+//            rmdir($source.$file);
             return $errCount;
         }
         

@@ -64,4 +64,14 @@ $(window).bind("load", function() {
        $('#cat-sel').text(event.target.id);
        $('#SearchForm_Category').val(event.target.dataset.id);
    });
+   $("[name='Users[user_type_id]']").change(function(event){
+       var userType = $(this).val();
+       if(userType == 3){
+           $('#private-profile').fadeOut();
+           $('#company-profile').fadeIn();
+       } else {
+           $('#company-profile').fadeOut();
+           $('#private-profile').fadeIn();
+       }
+   });
 });

@@ -13,14 +13,14 @@
  * @property string $lng
  * @property string $img
  */
-class UserProfiles extends PActiveRecord
+class CompanyProfiles extends PActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user_profiles';
+		return 'company_profiles';
 	}
 
 	/**
@@ -32,12 +32,16 @@ class UserProfiles extends PActiveRecord
 		// will receive user inputs.
 		return array(
 			array('user_id', 'required'),
-			array('user_id', 'length', 'max'=>10),
-			array('first_name, last_name, cod_fisc', 'length', 'max'=>45),
+			array('user_id, category', 'length', 'max'=>10),
+			array('company_type', 'length', 'max'=>2),
+			array('vat, cod_fisc, ref_name, ref_email', 'length', 'max'=>45),
+			array('legal_name', 'length', 'max'=>100),
+                        array('ref_email', 'email'),
+                        array('category, company_type', 'numerical'),
 			array('img, description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, first_name, last_name, img, creditOption, gender, description, cod_fisc', 'safe', 'on'=>'search'),
+			array('id, user_id, legal_name, img, creditOption, vat, cod_fisc, description, ref_name, ref_email, category, company_type', 'safe', 'on'=>'search'),
 //			array('id, user_id, first_name, last_name, address, lat, lng, img', 'safe'),
 		);
 	}

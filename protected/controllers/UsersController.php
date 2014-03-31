@@ -181,26 +181,58 @@ class UsersController extends Controller
                 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['UserProfiles']))
-		{
-                    if($_POST['filename'][0]){
-                        $_POST['UserProfiles']['img']=$_POST['filename'][0];
+                $toSave = false;
+                $errProfileSave = false;
+                if($_POST['Users']['user_type_id'] == 3){
+                    if(isset($_POST['CompanyProfiles'])){
+                        if(!$model->companyProfile){
+                            $model->companyProfile = new CompanyProfiles();
+                        }
+                        if($_POST['filename'][0]){
+                            $_POST['CompanyProfiles']['img']=$_POST['filename'][0];
+                        }
+                        if(!$model->companyProfile->user_id){
+                            $model->companyProfile->user_id = $model->id;
+                        }
+                        $model->companyProfile->attributes=$_POST['CompanyProfiles'];
+                        if(!$model->companyProfile->save()){
+//                            $this->redirect(array('myProfile'));
+//                            $model->addError('id','Errore nel salvataggio del profilo azienda');
+                            $errProfileSave = true;
+                        }
+                    } 
+                }
+                if($_POST['Users']['user_type_id'] == 1 || !$model->user_type_id){
+                    if(isset($_POST['UserProfiles'])){
+                        if($_POST['filename'][0]){
+                            $_POST['UserProfiles']['img']=$_POST['filename'][0];
+                        }
+                        if(!$model->profile->user_id){
+                            $model->profile->user_id = $model->id;
+                        }
+                        $model->profile->attributes=$_POST['UserProfiles'];
+                        $model->profile->gender=$_POST['UserProfiles']['gender'];
+                        if(!$model->profile->save()){
+//                            $model->addError('id','Errore nel salvataggio del profilo utente');
+                            $errProfileSave = true;
+                        }
+                    } 
+                } 
+                
+                if($_POST['Locations']){
+                    //check if Location exist
+                    $model->location_id = $this->saveLocation($_POST['Locations']);
+                    $toSave = true;
+                }
+                if($_POST['Users']['user_type_id']){
+                    $model->user_type_id = $_POST['Users']['user_type_id'];
+                    $toSave = true;
+                }
+                if($toSave && !$errProfileSave){
+                    if(!$model->save()){
+                        $model->addError('id','Errore nel salvataggio dell\'utente');
                     }
-                    if($_POST['Locations']){
-                        //check if Location exist
-                        $model->location_id = $this->saveLocation($_POST['Locations']);
-                        $model->save();
-                    }
-                    if($_POST['Users']['user_type_id']){
-                        $model->user_type_id = $_POST['Users']['user_type_id'];
-                        $model->save();
-                    }
-                    $model->profile->attributes=$_POST['UserProfiles'];
-                    $model->profile->gender=$_POST['UserProfiles']['gender'];
-                    if($model->profile->save())
-                        $this->redirect(array('myProfile'));
-		} 
+                }
 
 		$this->render('myProfile',array(
 			'model'=>$model,

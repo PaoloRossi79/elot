@@ -35,10 +35,25 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 
 <?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button')); ?>
 <div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
+<?php /*$this->renderPartial('_search',array(
 	'model'=>$model,
-)); ?>
+));*/ ?>
 </div><!-- search-form -->
+
+<div>
+    <a href="/index.php/lotteries/cronLottery" class="btn btn-success">CRON</a>
+</div>
+
+<?php if($errors && $errors['count'] > 0){ ?>
+    <h3>Errori CRON:</h3>
+    <ul>
+    <?php 
+    foreach($errors as $et){ 
+        foreach($et as $e){ 
+            echo "<li>".$e."</li>";
+        }
+    } ?>
+<?php } ?>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'lotteries-grid',

@@ -41,6 +41,7 @@ if(!Yii::app()->user->isGuest){
             
             array(            // display a column with "view", "update" and "delete" buttons
                 'class'=>'CButtonColumn',
+                'template' => '{view}{update}',
             ),
         ),
     ));

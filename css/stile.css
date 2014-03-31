@@ -524,9 +524,28 @@ button.close {
     width: 30px;
     height: 30px;
     border-radius: 15px;
-    background-color: red;
     float: left;	
     margin-top: 5px;
+}
+
+.status-1 {
+    background-color: gray;
+}
+
+.status-2 {
+    background-color: #fedc7f;
+}
+
+.status-3 {
+    background-color: #5bdd3d;
+}
+
+.status-4 {
+    background-color: #fd7c70;
+}
+
+.status-5 {
+    background-color: black;
 }
 
 .star-cont {

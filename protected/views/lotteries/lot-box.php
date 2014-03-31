@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="lot-icons-cont">
-            <div class="jam-round"></div>
+            <div class="jam-round status-<?php echo $data->status?>"></div>
             <div class="star-cont">
                 <button type="button" class="btn btn-default btn-lg" tooltip="Aggiungi ai preferiti!">
                     <span class="glyphicon glyphicon-star"></span>

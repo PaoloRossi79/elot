@@ -3,6 +3,10 @@
   $display="display: none;";  
 } else {
   $display="display: block;";
+  if(!$canBuyAgain){
+      $cs = Yii::app()->clientScript;
+      $cs->registerScript('blockBuy', '$("input[name=buyBtn]").attr("disabled", "disabled").fadeOut();$(".cannot-buy").fadeIn()', CClientScript::POS_READY);
+  } 
 }
 $dataId=0;
 $lot=null;
@@ -38,7 +42,7 @@ if(isset($data->id)){
             }
         ?>
 
-<div class="">You have already bought: <?php echo CHtml::encode(is_array($this->ticketTotals) ? $this->ticketTotals[$dataId] : $this->ticketTotals); ?></div>
+<div class="">Hai già comprato <b><?php echo CHtml::encode(is_array($this->ticketTotals) ? $this->ticketTotals[$dataId] : $this->ticketTotals); ?></b> ticket!</div>
 <?php $this->endWidget(); ?>
 
 </div>

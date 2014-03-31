@@ -35,15 +35,7 @@ return array(
                     'size'=>25,
                     'maxlength'=>45
             ),
-            /*'lottery_type' => array(
-                    'label' => Yii::t('clos', 'Lottery Type'),
-                    'type' => 'dropdownlist',
-                    'items' => CHtml::listData(Yii::app()->params['lotteryTypes'], 'id', 'name')
-            ),*/
-            /*'prize_img' => array(
-                'label' => Yii::t('clos', 'Prize Image'),
-                'type' => 'bootstrap.widgets.TbThumbnails',
-            ),*/
+      
             'prize_desc' => array(
                         'label' => Yii::t('clos', 'Prize Description'),
                         'type' => 'ext.imperavi-redactor-widget.ImperaviRedactorWidget',
@@ -60,20 +52,21 @@ return array(
                         'items' => CHtml::listData(PrizeCategories::model()->getPrizeCatList(), 'id', 'category_name')
             ),
             'prize_conditions' => array(
-                    'label' => Yii::t('clos', 'prize_conditions'),
+                    'label' => Yii::t('clos', 'Prize Conditions'),
+                    'type' => 'dropdownlist',
+                    'items' => CHtml::listData(Yii::app()->params['prizeConditions'], 'id', 'name')
+            ),
+            'prize_condition_text' => array(
+                    'label' => Yii::t('clos', 'Prize Condition Text'),
                     'type' => 'text',
                     'size'=>45,
-                    'maxlength'=>155
+                    'maxlength'=>45
             ),
             'prize_shipping' => array(
                     'label' => 'Prize Shipping',//Yii::t('clos', 'Section'),
                     'type' => 'dropdownlist',
                     'items' => CHtml::listData(Yii::app()->params['speditionType'], 'id', 'type')
             ),
-            /*'prize_price' => array(
-                    'label' => Yii::t('clos', 'prize_price'),
-                    'type' => 'text'
-            ),*/
             'prize_price' => array(
                         'label' => Yii::t('clos', 'Prize Value'),
                         'type' => 'ext.prizeCalculator.PrizeCalculatorWidget'
@@ -82,28 +75,6 @@ return array(
                     'label' => Yii::t('clos', 'ticket_value'),
                     'type' => 'text'
             ),
-            /*'min_ticket' => array(
-                    'label' => Yii::t('clos', 'min_ticket'),
-                    'type' => 'text'
-            ),
-            'max_ticket' => array(
-                    'label' => Yii::t('clos', 'max_ticket'),
-                    'type' => 'text'
-            ),*/
-            /*'lottery_start_date' => array(
-                    'label' => 'lottery_start_date start',
-                    'type' => 'application.extensions.CJuiDateTimePicker.CJuiDateTimePicker',
-                    'options'=>array(
-                            'dateFormat'=>'dd/mm/yy',
-                            //'dateFormat'=>'yy-mm-dd',
-                            'timeFormat'=>'HH:mm:ss',
-                            'showSecond'=>true,
-                            'showTimezone'=>false,
-                            'language' => 'it',
-                            'ampm' => false,
-                    ),
-                    'language' => 'it',
-            ),*/
             'lottery_start_date' => array(
                     'id' => 'lot_start',
                     'label' => 'lottery_start_date start',

@@ -30,7 +30,11 @@ class PActiveRecord  extends CActiveRecord {
                 $this->modified=new CDbExpression('NOW()');
             }
             if($this->hasAttribute('last_modified_by')){
-                $this->last_modified_by=Yii::app()->user->id;
+                if(Yii::app()->params['isCron']){
+                    $this->last_modified_by="CRON";
+                } else {
+                    $this->last_modified_by=Yii::app()->user->id;
+                }
             }
         }
         foreach($this->tableSchema->columns as $columnName => $column){
@@ -39,9 +43,10 @@ class PActiveRecord  extends CActiveRecord {
                     $this->$columnName=null;
                 } else {
                     $oldCol=$this->$columnName;
-//                    $this->$columnName=Yii::app()->dateFormatter->format('yyyy-MM-dd HH:mm:ss',$oldCol);
+                    
                     $oldCol .= " 00:00:01";
                     $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($oldCol,'dd/MM/yyyy HH:mm:ss'));
+
                 }
             }
         }

@@ -30,7 +30,11 @@ return array(
 		'application.vendors.*',
 		'application.extensions.*',
 		'application.extensions.EGMap.*',
-                'application.extensions.galleria.*'
+                'application.extensions.galleria.*',
+                'ext.YiiPhpMailer.YiiMailer',
+                'zii.widgets.jui.CJuiWidget',
+                'zii.widgets.jui.CJuiInputWidget',
+                'zii.widgets.jui.zii.widget.grid.CGridColumn',
 	),
     
         'aliases' => array(
@@ -80,6 +84,7 @@ return array(
 		
 		'urlManager'=>array(
 			'urlFormat'=>'path',
+                        'showScriptName'=>false,
 			'rules'=>array(
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
@@ -148,5 +153,7 @@ return array(
             'image_versions' => $image_versions,
             'speditionType' => $speditionType,
             'specialOffersType' => $specialOffers,
+            'companyTypes' => $companyTypesId,
+            'prizeConditions' => $prizeConditions,
 	),
 );

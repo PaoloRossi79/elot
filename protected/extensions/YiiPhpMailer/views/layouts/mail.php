@@ -1,6 +1,3 @@
-<!--<div><img class="socialcooking-logo" src="img/logo-sc.png"></div>-->
-<!--<div><?php echo $content ?></div>-->
-
 <html>
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type">

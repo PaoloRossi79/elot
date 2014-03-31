@@ -12,6 +12,35 @@ $lotteryTypes = array(
         'desc'=>'Lottery with a limited number of tickets. Draw date is variable: it happens 1 hour after last ticket sold.'
     ),
 );
+$companyTypes = array(
+    0 => array(
+        'name'=>'Produttore',
+        'desc'=>'Produttore',
+    ),
+    1 => array(
+        'name'=>'Ingrosso',
+        'desc'=>'Distributore all\'ingrosso',
+    ),
+    2 => array(
+        'name'=>'Dettaglio',
+        'desc'=>'Distributore al dettaglio'
+    ),
+);
+
+$companyTypesId = array(0=>"Produttore",1=>"Ingrosso",2=>"Dettaglio");
+
+$prizeConditions = array(
+    array(
+        'id'=>1,
+        'name'=>'Nuovo',
+        'desc'=>'Lottery with a pre-fixed draw date. Buying tickets is allowed till 30 minutes before the draw.'
+    ),
+    array(
+        'id'=>2,
+        'name'=>'Usato',
+        'desc'=>'Lottery with a limited number of tickets. Draw date is variable: it happens 1 hour after last ticket sold.'
+    ),
+);
 
 $specialOffers = array(
     0 =>
@@ -41,9 +70,9 @@ $lotteryStatusConst = array(
     'void'=>6,
 );
 $lotterySearchStatusConst = array(
-    'Open only'=>1,
-    'Upcoming'=>2,
-    'Closed'=>3,
+    'In corso'=>1,
+    'In arrivo'=>2,
+    'Estratte'=>3,
 );
 $userTransactionConst = array(
     'buyTicket'=>1,

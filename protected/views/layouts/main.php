@@ -15,10 +15,8 @@
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/form.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/homepage.css');
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/checkbox.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/main-slider.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/js/tooltip/tipsy.css');
-            Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/stile-pulsanti.css');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/isotope.css');
             
             Yii::app()->getClientScript()->registerCoreScript('jquery'); 

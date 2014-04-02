@@ -42,101 +42,6 @@ class Controller extends CController
 	 */
 	public $breadcrumbs=array();
         
-        public function isAdmin(){
-            return Yii::app()->user->isAdmin();
-        }
-        
-        public function getTmpFolderPath(){
-            return $this->getBaseImgFolderPath()."U-".Yii::app()->user->id."/";
-        }
-        
-        public function getBaseImgFolderPath(){
-            return Yii::app()->getBasePath() . "/../images/".$this->id."/";
-        }
-        
-        public function cleanTmpFolder(){
-            //delete old temp folder
-            $tmpPath=$this->getTmpFolderPath();
-            if (is_dir($tmpPath)) {
-                $res=$this->rmdir_recurse($tmpPath);
-            }
-        }
-        
-        public function renameTmpFolder($id){
-            //delete old temp folder
-            $tmpPath=$this->getTmpFolderPath();
-            if (is_dir($tmpPath)) {
-                // Identify directories
-                $source = $tmpPath;
-                $destination = $this->getBaseImgFolderPath().$id."/";
-                $errCount=0;
-                if(is_dir($destination)){
-                    $errCount+=$this->recursiveFileMove($source,$destination);
-                    if($errCount==0){
-                        $delRes=rmdir($tmpPath);
-                    } else {
-                        
-                    }
-                } else {
-                    $res=rename($tmpPath,$this->getBaseImgFolderPath().$id);
-                }
-            }
-        }
-        
-        public function allowOnlyOwner(){
-            $id=$_GET['id'];
-            $modelName=ucFirst(Yii::app()->controller->id);
-            $model=new $modelName();
-            $entity=$model->findByPk($id);
-            $check=Yii::app()->user->id==$entity->owner_id;
-            /*if(!$check){
-                $this->render('site/error', array('code'=>"404","message"=> "Non sei il proprietario!"));
-            }*/
-            return $check;
-        }
-        
-        public function getImageUrl($entity,$thumbSize=null){
-            if(get_class($entity) == "stdClass"){
-                $file=$entity->file;
-                $img_path="/images/".strtolower($entity->entityType)."/".$entity->entityId."/";
-            } else {
-                $file=$entity->prize_img;
-                $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
-            }
-            if(!empty($thumbSize)){
-                $fileUrl=$img_path.$thumbSize."/".$file;
-            } else {
-                $fileUrl=$img_path.$file;
-            }
-            $path = realpath(Yii::app()->getBasePath( )."/..".$fileUrl);
-            //if($path){
-                return $fileUrl;
-            /*} else {
-                return 'images/site/no-image-thumb.png';
-            }*/
-        }
-        
-        public function getImageList($entityId){
-            $subPath="/images/".$this->id."/".$entityId."/";
-            $img_path=Yii::app()->basePath."/..".$subPath;
-            $fileList=array();
-            if(is_dir($img_path)){
-                $dirIter=new DirectoryIterator($img_path);
-                while( $dirIter->valid()) {
-                    if($dirIter->isFile()){
-                        $newFile=new stdClass;
-                        $newFile->file=$dirIter->getFilename();
-                        $newFile->entityId=$entityId;
-                        $newFile->entityType=$this->id;
-                        $fileList[]=$newFile;
-                    }
-                    /*** move to the next element ***/
-                    $dirIter->next();
-                }
-            }
-            return $fileList;
-        }
-        
         public function actions()
         {
             return array(
@@ -204,19 +109,6 @@ class Controller extends CController
             );
         }
         
-        private function rmdir_recurse($path) {
-            $path = rtrim($path, '/').'/';
-            $handle = opendir($path);
-            while(false !== ($file = readdir($handle))) {
-                if($file != '.' and $file != '..' ) {
-                    $fullpath = $path.$file;
-                    if(is_dir($fullpath)) $this->rmdir_recurse($fullpath); else unlink($fullpath);
-                }
-            }
-            closedir($handle);
-            return rmdir($path);
-        }
-        
         protected function beforeRender($view) {
             if(Yii::app()->user && Yii::app()->user->id){
                 $this->user=Yii::app()->user;
@@ -263,6 +155,129 @@ class Controller extends CController
                $this->filterModel->setSeachAttributes($_POST['SearchForm']);
             }
             return parent::beforeRender($view);
+        }
+        
+        public function isAdmin(){
+            return Yii::app()->user->isAdmin();
+        }
+        
+        public function getTmpFolderPath(){
+            return $this->getBaseImgFolderPath()."U-".Yii::app()->user->id."/";
+        }
+        
+        public function getBaseImgFolderPath(){
+            return Yii::app()->getBasePath() . "/../images/".$this->id."/";
+        }
+        
+        public function cleanTmpFolder(){
+            //delete old temp folder
+            $tmpPath=$this->getTmpFolderPath();
+            if (is_dir($tmpPath)) {
+                $res=$this->rmdir_recurse($tmpPath);
+            }
+        }
+        
+        public function renameTmpFolder($id){
+            //delete old temp folder
+            $tmpPath=$this->getTmpFolderPath();
+            if (is_dir($tmpPath)) {
+                // Identify directories
+                $source = $tmpPath;
+                $destination = $this->getBaseImgFolderPath().$id."/";
+                $errCount=0;
+                if(is_dir($destination)){
+                    $errCount+=$this->recursiveFileMove($source,$destination);
+                    if($errCount==0){
+                        $delRes=rmdir($tmpPath);
+                    } else {
+                        
+                    }
+                } else {
+                    $res=rename($tmpPath,$this->getBaseImgFolderPath().$id);
+                }
+            }
+        }
+        
+        public function copyCloneFolder($type,$srcId,$destId){
+            //delete old temp folder
+            $srcPath=$this->getBaseImgFolderPath().$srcId."/";
+            $destPath=$this->getBaseImgFolderPath().$destId."/";
+            if (is_dir($srcPath)) {
+                // Identify directories
+                $errCount=0;
+                if(is_dir($destPath)){
+                    $errCount+=$this->recursiveFileMove($srcPath,$destPath);
+                } else {
+                    $res=copy($srcPath,$destPath);
+                }
+            }
+        }
+        
+        public function allowOnlyOwner(){
+            $id=$_GET['id'];
+            $modelName=ucFirst(Yii::app()->controller->id);
+            $model=new $modelName();
+            $entity=$model->findByPk($id);
+            $check=Yii::app()->user->id==$entity->owner_id;
+            /*if(!$check){
+                $this->render('site/error', array('code'=>"404","message"=> "Non sei il proprietario!"));
+            }*/
+            return $check;
+        }
+        
+        public function getImageUrl($entity,$thumbSize=null){
+            if(get_class($entity) == "stdClass"){
+                $file=$entity->file;
+                $img_path="/images/".strtolower($entity->entityType)."/".$entity->entityId."/";
+            } else {
+                $file=$entity->prize_img;
+                $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";
+            }
+            if(!empty($thumbSize)){
+                $fileUrl=$img_path.$thumbSize."/".$file;
+            } else {
+                $fileUrl=$img_path.$file;
+            }
+            $path = realpath(Yii::app()->getBasePath( )."/..".$fileUrl);
+            //if($path){
+                return $fileUrl;
+            /*} else {
+                return 'images/site/no-image-thumb.png';
+            }*/
+        }
+        
+        public function getImageList($entityId){
+            $subPath="/images/".$this->id."/".$entityId."/";
+            $img_path=Yii::app()->basePath."/..".$subPath;
+            $fileList=array();
+            if(is_dir($img_path)){
+                $dirIter=new DirectoryIterator($img_path);
+                while( $dirIter->valid()) {
+                    if($dirIter->isFile()){
+                        $newFile=new stdClass;
+                        $newFile->file=$dirIter->getFilename();
+                        $newFile->entityId=$entityId;
+                        $newFile->entityType=$this->id;
+                        $fileList[]=$newFile;
+                    }
+                    /*** move to the next element ***/
+                    $dirIter->next();
+                }
+            }
+            return $fileList;
+        }
+        
+        private function rmdir_recurse($path) {
+            $path = rtrim($path, '/').'/';
+            $handle = opendir($path);
+            while(false !== ($file = readdir($handle))) {
+                if($file != '.' and $file != '..' ) {
+                    $fullpath = $path.$file;
+                    if(is_dir($fullpath)) $this->rmdir_recurse($fullpath); else unlink($fullpath);
+                }
+            }
+            closedir($handle);
+            return rmdir($path);
         }
         
         private function generateMenuList($constArrayName,$action="") {
@@ -313,6 +328,27 @@ class Controller extends CController
               } else {
                 if (copy($source.$file, $destination.$file)) {
                     unlink($source.$file);
+                } else {
+                    $errCount+=1;
+                }
+              }
+            }
+//            rmdir($source.$file);
+            return $errCount;
+        }
+        
+        private function recursiveFileCopy($source,$destination) {
+            $files = scandir($source);
+            // Cycle through all source files
+            $errCount=0;
+            foreach ($files as $file) {
+              if (in_array($file, array(".",".."))) continue;
+              // If we copied this successfully, mark it for deletion
+              if(is_dir($source.$file)){
+                  $errCount+=$this->recursiveFileCopy($source.$file."/",$destination.$file."/");
+              } else {
+                if (copy($source.$file, $destination.$file)) {
+                    
                 } else {
                     $errCount+=1;
                 }

@@ -9,7 +9,7 @@ include "db.php";
 include "extParams.php";
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'name'=>'eeLot',
+	'name'=>'WonLot',
 
 	// preloading 'log' component
 	'preload'=>array(

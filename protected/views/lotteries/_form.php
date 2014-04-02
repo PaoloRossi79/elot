@@ -3,11 +3,11 @@
       <h3 class="panel-title">
           <?php
              //disabled="disabled"
-             $disabled="false";
+             $htmlDisabled=array();
              if($model->id){
                   echo Yii::t('wonlot','Edit Lottery') . " " .$model->name;
                   if($model->status >= 3){
-                      $disabled="disabled";
+                      $htmlDisabled = array($disabled=>"disabled");
                   }
              } else {
                   echo Yii::t('wonlot','Create Lottery');
@@ -27,7 +27,7 @@
         )); ?>
         <!--SAVED IMG SECTION-->
           <div class="">
-            <?php if(!empty($model->id)){ ?>
+            <?php if(!empty($model->id) || $model->cloneId){ ?>
               <?php $this->renderPartial('_setDefaultImage',array('data'=>$model)); ?>
             <?php } ?>
           </div>
@@ -59,12 +59,12 @@
             </div>
             <div class="row">
 		<?php echo $form->labelEx($model,'prize_category'); ?>
-		<?php echo $form->dropDownList($model,'prize_category',CHtml::listData(PrizeCategories::model()->getPrizeCatList(), 'id', 'category_name'),array('disabled'=>$disabled)); ?>
+		<?php echo $form->dropDownList($model,'prize_category',CHtml::listData(PrizeCategories::model()->getPrizeCatList(), 'id', 'category_name'),$htmlDisabled); ?>
 		<?php echo $form->error($model,'prize_category'); ?>
             </div>
             <div class="row">
 		<?php echo $form->labelEx($model,'prize_conditions'); ?>
-		<?php echo $form->dropDownList($model,'prize_conditions',CHtml::listData(Yii::app()->params['prizeConditions'], 'id', 'name'),array('disabled'=>$disabled)); ?>
+		<?php echo $form->dropDownList($model,'prize_conditions',CHtml::listData(Yii::app()->params['prizeConditions'], 'id', 'name'),$htmlDisabled); ?>
 		<?php echo $form->error($model,'prize_conditions'); ?>
             </div>
             <div class="row">
@@ -74,7 +74,7 @@
             </div>
             <div class="row">
 		<?php echo $form->labelEx($model,'prize_shipping'); ?>
-		<?php echo $form->dropDownList($model,'prize_shipping',CHtml::listData(Yii::app()->params['speditionType'], 'id', 'type'),array('disabled'=>$disabled)); ?>
+		<?php echo $form->dropDownList($model,'prize_shipping',CHtml::listData(Yii::app()->params['speditionType'], 'id', 'type'),$htmlDisabled); ?>
 		<?php echo $form->error($model,'prize_shipping'); ?>
             </div>
             <div class="row">
@@ -83,13 +83,13 @@
                     $this->widget('ext.prizeCalculator.PrizeCalculatorWidget', array(
                         'model' => $model,
                         'attribute' => 'prize_price',
-                        'htmlOptions' => array('disabled'=>$disabled),
+                        'htmlOptions' => $htmlDisabled,
                     ));
                     ?>
             </div>
             <div class="row">
 		<?php echo $form->labelEx($model,'ticket_value'); ?>
-		<?php echo $form->numberField($model,'ticket_value',array('disabled'=>$disabled)); ?>
+		<?php echo $form->numberField($model,'ticket_value',$htmlDisabled); ?>
 		<?php echo $form->error($model,'ticket_value'); ?>
             </div>
             
@@ -100,7 +100,7 @@
                         'id' => 'lot_start',
                         'model' => $model,
                         'attribute' => 'lottery_start_date',
-                        'htmlOptions' => array('disabled'=>$disabled),
+                        'htmlOptions' => $htmlDisabled,
                         'options'=>array(
                                 'dateFormat'=>'dd/mm/yy',
                                 'minDate'=>date('d/m/Y'),
@@ -127,7 +127,7 @@
                         'id' => 'lot_end',
                         'model' => $model,
                         'attribute' => 'lottery_draw_date',
-                        'htmlOptions' => array('disabled'=>$disabled),
+                        'htmlOptions' => $htmlDisabled,
                         'options'=>array(
                                 'dateFormat'=>'dd/mm/yy',
                                 'minDate'=>date('d/m/Y'),
@@ -153,7 +153,7 @@
                 'name' => 'lot_location',
                 'model' => $this->locationForm,
                 'attribute' => 'address',
-                'htmlOptions' => array('disabled'=>$disabled),
+                'htmlOptions' => $htmlDisabled,
                 'options' => array(
                    'types' => array(
                      '(cities)'

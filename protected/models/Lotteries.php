@@ -26,6 +26,7 @@ class Lotteries extends PActiveRecord
 {
         public $maxPrice;
         public $imgList;
+        public $cloneId;
         
         const SP_SPEDITION = 0;
         const SP_HANDTAKE = 1;
@@ -58,7 +59,8 @@ class Lotteries extends PActiveRecord
 			array('prize_shipping', 'length', 'max'=>155),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
+//			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
+			array('name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, location_id', 'safe',),
 		);
 	}
 
@@ -235,7 +237,7 @@ class Lotteries extends PActiveRecord
                     $this->lottery_close_date = new CDbExpression("NOW()");
                     if($this->saveAttributes(array('status','lottery_close_date'))){
 //                    if($this->save()){
-                        $emailRes=EmailManager::sendCloseLottery($this);
+//                        $emailRes=EmailManager::sendCloseLottery($this);
                         return Yii::app()->params['lotteryStatusConst']['closed'];
                     } else {
                         // send error email to ADMIN
@@ -245,7 +247,7 @@ class Lotteries extends PActiveRecord
                                 Yii::log("Error: ".$e, "error");
                             }
                         }
-                        $emailRes=EmailManager::sendAdminEmail($this,'closing lottery');
+//                        $emailRes=EmailManager::sendAdminEmail($this,'closing lottery');
                     }
                 } else {
                     return false;
@@ -397,6 +399,8 @@ class Lotteries extends PActiveRecord
                 $emailRes=EmailManager::sendOpenLottery($up);
                 if(!$emailRes){
                     Yii::log("Err sending email: ".$emailRes, "error");
+                } else {
+                    $up->is_sent_open = 1;
                 }
                 $up->status = Yii::app()->params['lotteryStatusConst']['open'];
                 $up->is_active = 1;
@@ -422,11 +426,12 @@ class Lotteries extends PActiveRecord
             $closeCriteria->addCondition('t.lottery_draw_date <= '.new CDbExpression("NOW()"));
             $closeChange = Lotteries::model()->findAll($closeCriteria);
             foreach($closeChange as $close){
-                Yii::log("CRON 3", "warning");
                 //send email for opening
                 $emailRes=EmailManager::sendCloseLottery($close);
                 if(!$emailRes){
                     Yii::log("Err sending email: ".$emailRes, "error");
+                } else {
+                    $close->is_sent_close = 1;
                 }
                 $close->status = Yii::app()->params['lotteryStatusConst']['closed'];
                 $close->lottery_close_date = new CDbExpression('NOW()');
@@ -434,6 +439,34 @@ class Lotteries extends PActiveRecord
                     Yii::log("Lottery close: Id=".$close->id.", name=".$close->name, "warning");
                 } else {
                     Yii::log("Lottery not close: Id=".$close->id.", name=".$close->name, "error");
+                    $errors['close'][$close->id]=array();
+                    foreach ($close->getErrors() as $err){
+                        foreach ($err as $e){
+                            Yii::log("Error: ".$e, "error");
+                            $errors['close'][$close->id][]=$e;
+                        }
+                    }
+                }
+            }
+            
+            // check for already closed but not sent email
+            $alCloseCriteria = new CDbCriteria();
+            $alCloseCriteria->addCondition('t.status='.Yii::app()->params['lotteryStatusConst']['closed']);
+            $alCloseCriteria->addCondition('t.is_sent_close = 0');
+            $alCloseChange = Lotteries::model()->findAll($alCloseCriteria);
+            foreach($alCloseChange as $close){
+                Yii::log("CRON Al closed =".$close->id, "warning");
+                //send email for opening
+                $emailRes=EmailManager::sendCloseLottery($close);
+                if(!$emailRes){
+                    Yii::log("Err sending email: ".$emailRes, "error");
+                } else {
+                    $close->is_sent_close = 1;
+                }
+                if($close->save()){
+                    Yii::log("Lottery close EMAIL: Id=".$close->id.", name=".$close->name, "warning");
+                } else {
+                    Yii::log("Lottery not close EMAIL: Id=".$close->id.", name=".$close->name, "error");
                     $errors['close'][$close->id]=array();
                     foreach ($close->getErrors() as $err){
                         foreach ($err as $e){
@@ -488,16 +521,24 @@ class Lotteries extends PActiveRecord
                         $extract->lottery_extract_date = new CDbExpression('NOW()');
                         $extract->winner_id = $winnerTicket->user_id;
                         $extract->winner_ticket_id = $winnerTicket->id;
+                        $extract->is_sent_extracted = 1;
                         if($extract->save()){
                             Yii::log("Lottery extract: Id=".$extract->id.", name=".$extract->name, "warning");
                             //send email for opening
                             $emailRes=EmailManager::sendExtractLotteryToWinner($extract,$winnerTicket);
                             if(!$emailRes){
                                 Yii::log("Err sending email: ".$emailRes, "error");
+                            } else {
+                                $extract->is_sent_extracted *= 2;
                             }
                             $emailRes=EmailManager::sendExtractLotteryToOwner($extract,$winnerTicket);
                             if(!$emailRes){
                                 Yii::log("Err sending email: ".$emailRes, "error");
+                            } else {
+                                $extract->is_sent_extracted *= 3;
+                            }
+                            if($extract->is_sent_extracted > 1){
+                                $extract->save();
                             }
                         } else {
                             Yii::log("Lottery not extract: Id=".$extract->id.", name=".$extract->name, "error");
@@ -531,6 +572,33 @@ class Lotteries extends PActiveRecord
                             Yii::log("Err sending email: ".$emailRes, "error");
                         }
                     }
+                }
+            }
+        }
+        
+        public function sendTicketsEmail(&$errors){
+            $crit = new CDbCriteria();
+            $crit->addCondition('t.status = 1');
+            $crit->addCondition('t.is_sent = 0');
+            $crit->order = "id";
+            $crit->limit = 5;
+            $tickets = Tickets::model()->findAll($crit);
+            foreach($tickets as $ticket){
+                try {
+                    $res=EmailManager::model()->sendTicket($ticket);
+                    if($res){
+                        $ticket->is_sent = 1;
+                        if(!$ticket->save()){
+                            Yii::log("Sending tickets error: ".$ticket->id,'error');
+                            $errors['tickets'][]="Sending tickets error: ".$ticket->id;
+                        }
+                    } else {
+                        Yii::log("Sending tickets error: ".$ticket->id,'error');
+                        $errors['tickets'][]="Sending tickets error: ".$ticket->id;
+                    }
+                } catch (Exception $exc) {
+                    Yii::log($exc->getTraceAsString(),'error');
+                    $errors['tickets'][]="Sending tickets error: ".$ticket->id;
                 }
             }
         }

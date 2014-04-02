@@ -1,7 +1,11 @@
 <div id="defImageBox">
 <?php 
     $lotId=($id) ? $id : $data->id;
-    $this->imgList=$this->getImageList($lotId);   
+    if($data->cloneId){
+        $this->imgList=$this->getImageList($data->cloneId);   
+    } else {
+        $this->imgList=$this->getImageList($lotId);   
+    }
     if(!$data)
         $data=$this->loadModel($lotId);
 ?> 
@@ -35,19 +39,21 @@
               <?php echo $msg; ?>
             </div>
             <div class="caption">
-              <?php echo CHtml::ajaxButton ("Set Default",
-                                CController::createUrl('lotteries/setDefault',array("img"=>$img->file,"lotId"=>$data->id)), 
-                                array('update' => '#defImageBox'),
-                                array('style' => $display,'class'=>'btn btn-green')
-              );?>
-              <?php echo CHtml::ajaxButton ("Delete",
-                                CController::createUrl('lotteries/deleteImg',array("img"=>$img->file,"lotId"=>$data->id)), 
-                                array('update' => '#defImageBox'),
-                                array('style' => $display,'class'=>'btn btn-danger')
-              );?>
-              <?php if($img->file === $data->prize_img){ ?>
-                <div><strong>DEFAULT IMAGE</strong></div>
-              <?php } ?>
+              <?php if($lotId){ ?>
+                    <?php echo CHtml::ajaxButton ("Set Default",
+                                      CController::createUrl('lotteries/setDefault',array("img"=>$img->file,"lotId"=>$data->id)), 
+                                      array('update' => '#defImageBox'),
+                                      array('style' => $display,'class'=>'btn btn-green')
+                    );?>
+                    <?php echo CHtml::ajaxButton ("Delete",
+                                      CController::createUrl('lotteries/deleteImg',array("img"=>$img->file,"lotId"=>$data->id)), 
+                                      array('update' => '#defImageBox'),
+                                      array('style' => $display,'class'=>'btn btn-danger')
+                    );?>
+                    <?php if($img->file === $data->prize_img){ ?>
+                      <div><strong>DEFAULT IMAGE</strong></div>
+                    <?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>

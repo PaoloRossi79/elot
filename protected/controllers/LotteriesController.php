@@ -38,7 +38,7 @@ class LotteriesController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('update','void'),
+				'actions'=>array('update','void','clone'),
                                 'expression' => array('LotteriesController','allowOnlyOwner'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -94,6 +94,25 @@ class LotteriesController extends Controller
                 $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
                 $this->_editLottery($model);
+	}
+	
+        /**
+	 * Clone a particular model.
+	 * If Clone is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionClone($id)
+	{
+                $this->layout='column2l6l4';
+                $this->sideView='createLotteyHelp';
+                $model = $this->loadModel($id);
+                unset($model->id);
+                unset($model->lottery_start_date);
+                unset($model->lottery_draw_date);
+                $newModel = new Lotteries;
+                $newModel->setAttributes($model->attributes);
+                $newModel->cloneId = $id;
+                $this->_editLottery($newModel);
 	}
 
 	/**
@@ -230,6 +249,7 @@ class LotteriesController extends Controller
 	 */
         public function actionBuyTicket()
         {
+            Yii::log('BuyStart','error');
             $data = array();
             $data["type"] = "alert alert-error";
             $data["result"] = "ERROR - ";
@@ -243,6 +263,7 @@ class LotteriesController extends Controller
             if(!$lot){
                 $data["msg"] = "Lottery in wrong status";
             } else {
+                
                 $user=Users::model()->findByPk(Yii::app()->user->id);
                 $newPrice = $lot->ticket_value;
                 $promotion = null;
@@ -254,6 +275,7 @@ class LotteriesController extends Controller
                         $promotion = $_POST['BuyForm']['offerId'];
                     } 
                 }
+                
                 //check if user has credit
                 if($user->available_balance_amount < $newPrice){
                     $data["msg"] = "Not enough credit";
@@ -261,8 +283,10 @@ class LotteriesController extends Controller
                     $ticket=new Tickets;
                     $ticket->user_id=Yii::app()->user->id;
                     $ticket->lottery_id=$lot->id; 
+                    
                     $ticket->serial_number=Lotteries::model()->genRandomTicketSerial(); 
                     $checkSerial=true;
+                    
                     while ($checkSerial){
                         $criteria=new CDbCriteria; 
                         $criteria->addCondition('lottery_id='.$lot->id);
@@ -274,6 +298,7 @@ class LotteriesController extends Controller
                             $checkSerial=false;
                         }
                     }
+                    
                     // to add promotions mng
                     $ticket->price=$newPrice; // change with payed price (value - promotion)
                     $ticket->value=$lot->ticket_value; 
@@ -284,6 +309,7 @@ class LotteriesController extends Controller
                     }
                     $dbTransaction=$ticket->dbConnection->beginTransaction();
                     if($ticket->save()){
+                        
                         // fund down on user
                         $user->available_balance_amount-=$ticket->price;
                         if($promotion){
@@ -295,8 +321,10 @@ class LotteriesController extends Controller
                             }
                         }
                         if($user->save() && !$rollback){
+                            
                             //transaction tracking
                             if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
+                                
                                 $lot->ticket_sold+=1;
                                 $lot->ticket_sold_value+=$ticket->price;
                                 $lot->save();
@@ -305,11 +333,11 @@ class LotteriesController extends Controller
                                 $data["type"] = "alert alert-success";
                                 $data["result"] = "OK!";
                                 $data["msg"] = "Il biglietto n° ".$ticket->serial_number." è tuo!";
-                                EmailManager::model()->sendTicket($ticket);
                             } else {
                                 $dbTransaction->rollback();
                                 $data["msg"] = "saving user transaction";
                             }
+                            
                         } else {
                             $dbTransaction->rollback();
                             $data["msg"] = "witdrawing to user";
@@ -319,12 +347,16 @@ class LotteriesController extends Controller
                     }
                 }
             }
+            
             $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($lotId);
             $data["id"] = $lot->id;
             $data["ticketNumber"] = $ticket->id;
             $data["lottery"] = $lot;
             $data["canBuyAgain"] = ($checkRes && $checkRes == Yii::app()->params['lotteryStatusConst']['closed']) ? 0 : 1;
             $data["version"] = 'complete';
+            
+//            $data=array();
+            Yii::log('BuyEND','error');
             $this->renderPartial('_buyAjax', $data, false, true);
         }
 
@@ -495,7 +527,7 @@ class LotteriesController extends Controller
             $this->upForm=$upForm;
             $this->locationForm=new Locations;
             $isOld=$model->id;
-            if($isOld){
+            if($model->location_id){
                 $existLoc=Locations::model()->findByPk($model->location_id);
                 if($existLoc)
                     $this->locationForm=$existLoc;
@@ -524,6 +556,9 @@ class LotteriesController extends Controller
                     } 
                     if($model->save()){
                         $this->renameTmpFolder($model->id);
+                        if($model->cloneId){
+                            $this->copyCloneFolder('lottery',$model->cloneId,$model->id);
+                        }
                         if($isOld){
                             $this->redirect(array('update','id'=>$model->id));
                         } else {

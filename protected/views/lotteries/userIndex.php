@@ -41,7 +41,34 @@ if(!Yii::app()->user->isGuest){
             
             array(            // display a column with "view", "update" and "delete" buttons
                 'class'=>'CButtonColumn',
-                'template' => '{view}{update}',
+                'template' => '{view}{update}{clone}{void}',
+                'buttons'=>array
+                (
+                    'view' => array
+                    (
+                        'label'=>'<span class="btn btn-success btn-xs"><i class="glyphicon glyphicon-search">Vedi</i></span>',
+                        'imageUrl'=>false,
+                        'url'=>'Yii::app()->createUrl("lotteries/view", array("id"=>$data->id))',
+                    ),
+                    'update' => array
+                    (
+                        'label'=>'<span class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit">Modifica</i></span>',
+                        'imageUrl'=>false,
+                        'url'=>'Yii::app()->createUrl("lotteries/update", array("id"=>$data->id))',
+                    ),
+                    'clone' => array
+                    (
+                        'label'=>'<span class="btn btn-info btn-xs"><i class="glyphicon glyphicon-plus">Clona</i></span>',
+                        'imageUrl'=>false,
+                        'url'=>'Yii::app()->createUrl("lotteries/clone", array("id"=>$data->id))',
+                    ),
+                    'void' => array
+                    (
+                        'label'=>'<span class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove">Annulla</i></span>',
+                        'imageUrl'=>false,
+                        'url'=>'Yii::app()->createUrl("lotteries/void", array("id"=>$data->id))',
+                    ),
+                ),
             ),
         ),
     ));

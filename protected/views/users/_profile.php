@@ -2,6 +2,7 @@
     if($model->ext_source > 1){
         //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
         // TODO: get Image from socials
+        echo "<img src='".$model->profile->img."' style='width:200px;heigth:200px;'/>";
     } else {
         echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar img-thumbnail"));
     } ?>
@@ -136,18 +137,20 @@
         <div class="form-group">
             <div id="user_img">
                 <?php
-                    //echo $form->labelEx($model,'photos');
-                    $this->widget( 'xupload.XUpload', array(
-                        'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
-                        //our XUploadForm
-                        'model' => $this->upForm,
-                        //We set this for the widget to be able to target our own form
-                        'htmlOptions' => array('id'=>'userProfile-form'),
-                        'attribute' => 'file',
-                        'multiple' => false,
-                        'showForm' => false,
-                        )    
-                    );
+                    if($model->ext_source == 1){
+                        //echo $form->labelEx($model,'photos');
+                        $this->widget( 'xupload.XUpload', array(
+                            'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
+                            //our XUploadForm
+                            'model' => $this->upForm,
+                            //We set this for the widget to be able to target our own form
+                            'htmlOptions' => array('id'=>'userProfile-form'),
+                            'attribute' => 'file',
+                            'multiple' => false,
+                            'showForm' => false,
+                            )    
+                        );
+                    }
                 ?>
             </div>
         </div>

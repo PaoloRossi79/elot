@@ -531,12 +531,12 @@ class XUploadAction extends CAction {
                 $options['max_height'] / $img_height
             );
         }
-        if ($scale >= 1) {
+        /*if ($scale >= 1) {
             if ($file_path !== $new_file_path) {
                 return copy($file_path, $new_file_path);
             }
             return true;
-        }
+        }*/
         $new_width = $img_width * $scale;
         $new_height = $img_height * $scale;
         $new_img_uncrop = @imagecreatetruecolor($new_width, $new_height);

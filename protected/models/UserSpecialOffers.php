@@ -138,7 +138,7 @@ class UserSpecialOffers extends PActiveRecord
             $criteria->mergeWith($endDateCriteria);
             $offers=$this->findAll($criteria);
             $list=array();
-            $list[-1] = "";
+//            $list[-1] = "";
             foreach($offers as $of){
                 $list[$of->id] = " - ".$of->offer_value." % on ".Yii::app()->params['specialOffersType'][$of->offer_on]['name']." (".$of->times_remaining." remaining)";
             }

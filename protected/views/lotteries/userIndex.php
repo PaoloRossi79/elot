@@ -11,11 +11,17 @@ echo $h1;
 if(!Yii::app()->user->isGuest){
     echo CHtml::link("New Lottery",CController::createUrl('lotteries/create'),array('class'=>'btn')); 
 }
-?>
 
+?>
+<div class="alert alert-error void-alert" style="display: none;">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong id="void-alert-strong"></strong>
+</div>
 <?php
+
     $this->widget('zii.widgets.grid.CGridView', array(
         'dataProvider'=>$dataProvider,
+        'id'=>'mylot-grid',
 //        'itemView'=>'/lotteries/my-lot-box',
         'enablePagination'=>true,
         'enableSorting'=>true,
@@ -23,6 +29,11 @@ if(!Yii::app()->user->isGuest){
             'name',          // display the 'title' attribute
             'category.category_name',  // display the 'name' attribute of the 'category' relation
             'prize_desc:html',   // display the 'content' attribute as purified HTML
+            array(            // display 'create_time' using an expression
+                'name'=>'status',
+//                'value'=>'date("M j, Y", $data->lottery_start_date)',
+                'value'=>array($dataProvider->model,'getStatusText'), 
+            ),
             array(            // display 'create_time' using an expression
                 'name'=>'lottery_start_date',
 //                'value'=>'date("M j, Y", $data->lottery_start_date)',
@@ -41,7 +52,7 @@ if(!Yii::app()->user->isGuest){
             
             array(            // display a column with "view", "update" and "delete" buttons
                 'class'=>'CButtonColumn',
-                'template' => '{view}{update}{clone}{void}',
+                'template' => '{view}{update}{clone}{void}{delete}',
                 'buttons'=>array
                 (
                     'view' => array
@@ -55,6 +66,7 @@ if(!Yii::app()->user->isGuest){
                         'label'=>'<span class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit">Modifica</i></span>',
                         'imageUrl'=>false,
                         'url'=>'Yii::app()->createUrl("lotteries/update", array("id"=>$data->id))',
+                        'visible'=>'$data->status == 1 || $data->status == 2 || $data->status == 3',
                     ),
                     'clone' => array
                     (
@@ -67,6 +79,36 @@ if(!Yii::app()->user->isGuest){
                         'label'=>'<span class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove">Annulla</i></span>',
                         'imageUrl'=>false,
                         'url'=>'Yii::app()->createUrl("lotteries/void", array("id"=>$data->id))',
+                        'visible'=>'$data->status == 3',
+                        'options' => array( 
+                            'ajax' => array(
+                                'type' => 'post', 
+                                'data' => array('isAjax'=>true),
+                                'url'=>'js:$(this).attr("href")', 
+                                'success' => 'js:function(data) { '
+                                . "alert(data);"
+                                . "if(data != 1){"
+                                . "$('#void-alert-strong').text(data);"
+                                . "$('.void-alert').removeClass('alert-success');"
+                                . "$('.void-alert').addClass('alert-error');"
+                                . "$('.void-alert').fadeIn();"
+                                . "} else {"
+                                . "$('.void-alert').removeClass('alert-success');"
+                                . "$('.void-alert').addClass('alert-error');"
+                                . "$('.void-alert').fadeOut();"
+                                . "}"
+                                . '$.fn.yiiGridView.update("my-grid");'
+                                . '}'
+                            ),
+                            'confirm'=>Yii::t('wonlot','Sei sicuro di voler annullare questa lotteria?'),
+                        )
+                    ),
+                    'delete' => array
+                    (
+                        'label'=>'<span class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove">Elimina</i></span>',
+                        'imageUrl'=>false,
+                        'url'=>'Yii::app()->createUrl("lotteries/delete", array("id"=>$data->id))',
+                        'visible'=>'$data->status <= 2',
                     ),
                 ),
             ),
@@ -75,24 +117,7 @@ if(!Yii::app()->user->isGuest){
     ?>
 
     <?php
-    /*$this->widget('ext.isotope.Isotope',array(
-        'dataProvider'=>$dataProvider,
-        'itemView'=>'lot-box',
-        'viewData'=>$viewData,
-        'itemSelectorClass'=>'isotope-item',
-        'options'=>array( // options for the isotope jquery
-            'layoutMode'=>'masonry',
-            'containerStyle' => array(
-                'position' => 'relative', 'overflow' => 'hidden'
-            ),
-            'animationEngine'=>'jquery',
-            'animationOptions'=>array(
-                    'duration'=>300,
-            ),
-        ), 
-        'infiniteScroll'=>true, // default to true
-        'infiniteOptions'=>array(), // javascript options for infinite scroller
-        'id'=>'wall',
-    ));*/
-     ?>
+//    
+
+    ?>
      

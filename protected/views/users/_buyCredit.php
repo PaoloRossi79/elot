@@ -24,13 +24,5 @@
         <br/>
         <?php //echo $creditForm->CMaskedTextField($model, 'creditOption', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
         <?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
-        <div class="row buttons">
-        <?php echo CHtml::ajaxButton ("Buy Credit",
-            CController::createUrl('users/buyCredit'), 
-            array('update' => '#buyCreditTarget',
-                    'type' => 'POST', 
-                    'data'=>'js:$("#userWallet-form").serialize()',
-            )); ?>
-	</div>
 <?php $this->endWidget(); ?>
 </div>

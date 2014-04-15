@@ -78,7 +78,7 @@ class Controller extends CController
                 ),
                 'oauthshare' => array(
                     // the list of additional properties of this action is below
-                    'class'=>'ext.hoauth.HOAuthShare',
+                    'class'=>'ext.hoauth.HOAuthShareAction',
                     // Yii alias for your user's model, or simply class name, when it already on yii's import path
                     // default value of this property is: User
                     'model' => 'Users', 
@@ -205,12 +205,19 @@ class Controller extends CController
             if (is_dir($srcPath)) {
                 // Identify directories
                 $errCount=0;
-                if(is_dir($destPath)){
-                    $errCount+=$this->recursiveFileMove($srcPath,$destPath);
-                } else {
+                if(!is_dir($destPath)){
+                    mkdir($destPath);
+                }
+                $errCount+=$this->recursiveFileCopy($srcPath,$destPath); 
+            } elseif(is_file($srcPath)) {
+                try{
                     $res=copy($srcPath,$destPath);
+                } catch (Exception $e){
+                    Yii::log("Error clone folder: ".$e->getMessage(),"error");
+                    $errCount+=1;
                 }
             }
+            return $errCount;
         }
         
         public function allowOnlyOwner(){
@@ -325,12 +332,20 @@ class Controller extends CController
               if(is_dir($source.$file)){
                   $errCount+=$this->recursiveFileMove($source.$file."/",$destination.$file."/");
                   rmdir($source.$file);
-              } else {
-                if (copy($source.$file, $destination.$file)) {
-                    unlink($source.$file);
-                } else {
-                    $errCount+=1;
-                }
+              } elseif(is_file($source.$file)) {
+                  if(!is_dir($destination)){
+                      mkdir($destination);
+                  }
+                  try {
+                    if (copy($source.$file, $destination.$file)) {
+                        unlink($source.$file);
+                    } else {
+                        $errCount+=1;
+                    }
+                  } catch (Exception$e){
+                      Yii::log("Error move folder: ".$e->getMessage(),"error");
+                      $errCount+=1;
+                  }
               }
             }
 //            rmdir($source.$file);
@@ -346,12 +361,20 @@ class Controller extends CController
               // If we copied this successfully, mark it for deletion
               if(is_dir($source.$file)){
                   $errCount+=$this->recursiveFileCopy($source.$file."/",$destination.$file."/");
-              } else {
-                if (copy($source.$file, $destination.$file)) {
-                    
-                } else {
-                    $errCount+=1;
-                }
+              } elseif(is_file($source.$file)) {
+                  try{
+                    if(!is_dir($destination)){
+                        mkdir($destination);
+                    }
+                    if (copy($source.$file, $destination.$file)) {
+
+                    } else {
+                        $errCount+=1;
+                    }
+                  } catch(Exception $e) {
+                      Yii::log("Error copy folder: ".$e->getMessage(),"error");
+                      $errCount+=1;
+                  }
               }
             }
 //            rmdir($source.$file);

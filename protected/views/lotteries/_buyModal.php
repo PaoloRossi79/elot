@@ -1,5 +1,5 @@
-<div class="modal fade" id="<?php echo 'buyModal-'.$data->id;?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="buy-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -9,43 +9,36 @@
             <?php 
                 $checkBuy = $this->userCanBuy($data->id);
                 if($checkBuy === true){ 
-            ?>
-                <div class="modal-body">
-                    
-                    <!--<p> OR </p>-->
-                    <?php /*echo CHtml::ajaxButton ("Buy for a friend!",
-                              CController::createUrl('lotteries/buyTicket'), 
-                              array('update' => '.data-'.$data->id,
-                                'type' => 'POST', 
-                                'data'=>'js:jQuery(this).parents("form").serialize()'
-                              ));*/ ?>
-                    <?php //echo $form->textField($formModel,'email',array('hint' => 'Your friend email...')); ?>
-                    <?php 
-//                            $addData = array('version' => 'complete', 'data' => $data, 'form' => $form, 'formModel' => $formModel);
-                            $addData = array('version' => 'complete', 'data' => $data);
-                            $this->renderPartial('_buyAjax', $addData); 
-                        ?>
-                    <?php echo CHtml::ajaxButton ("Buy for You!",
+            ?>                    
+                    <div class="row">
+                    <?php echo CHtml::ajaxButton ("Compra!",
                         CController::createUrl('lotteries/buyTicket'), 
                         array(
                           'update' => '#data-'.$data->id,
                           'type' => 'POST', 
-                          'data'=>'js:$("#buyLotteryForm").serialize()'
+                          'data'=>'js:$("#buyLotteryForm").serialize()',
+                          /*'beforeSend'=>'function(){'
+                            . '$(".gift-box").slideUp(); '
+                            . '$("#ticketGrid").slideDown(); '
+                            . '}',*/
                         ),
-                        array('name'=>'buyBtn')
+                        array('name'=>'buyBtn', 'class'=>'btn btn-primary buy-btn')
                         ); ?>
-                    <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa lotteria!</p>
-                    
-                </div>
-                
-                <div class="modal-footer">
-
-                    <div class="">
-                        
-                            
-                       
+                        <div id="alert-box" class="alert alert-error" style="display: none;">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong id="alert-strong"></strong><span id="alert-msg"></span>
+                        </div>
+                        <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa lotteria!</p>
                     </div>
-                </div>
+                    <div class="row center-float">
+                        <div class="">
+                        <?php 
+                            $addData = array('version' => 'complete', 'data' => $data);
+                            $this->renderPartial('_buyAjax', $addData); 
+                            ?>
+                        </div>
+                    </div>
+                    
             <?php } elseif($checkBuy == Lotteries::errorGuest) { ?>
                 <h4>LOGIN TO BUY!</h4>
                 <?php $this->renderPartial('/site/login',array('showLogin'=>true)); ?>

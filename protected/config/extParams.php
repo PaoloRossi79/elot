@@ -42,6 +42,11 @@ $prizeConditions = array(
     ),
 );
 
+$prizeConditionsId = array(
+    1 => 'Nuovo',
+    2 => 'Usato',
+);
+
 $specialOffers = array(
     0 =>
     array(
@@ -59,6 +64,12 @@ $speditionType = array(
     array('id'=> 0, 'type' => 'Delivered by a courier'),
     array('id'=> 1, 'type' => 'Winner colllects'),
     array('id'=> 2, 'type' => 'To be defined with winner'),
+);
+
+$speditionTypeId = array(
+    0 => 'Delivered by a courier',
+    1 => 'Winner colllects',
+    2 => 'To be defined with winner',
 );
 
 $lotteryStatusConst = array(
@@ -80,6 +91,13 @@ $userTransactionConst = array(
     'refundTicket'=>3,
     'refundCredit'=>4,
     'withdraw'=>5,
+);
+$userTransactionId = array(
+    1=>'Acquisto Ticket',
+    2=>'Acquisto Credito',
+    3=>'Rimborso Ticket',
+    4=>'Rimborso Credito',
+    5=>'Ritiro fondi',
 );
 $ticketStatusConst = array(
     'open'=>1,
@@ -140,8 +158,8 @@ $image_versions = array(
         'max_width' => 200,
     ),
     'galleryBigThumb' => array(
-        'max_width' => 800,
-        'max_height' => 800,
+        'max_width' => 600,
+        'max_height' => 600,
         'crop_img' => true,
         'jpeg_quality' => 100,
     ),

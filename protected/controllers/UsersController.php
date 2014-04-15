@@ -8,6 +8,7 @@ class UsersController extends Controller
 	 */
 	public $layout='//layouts/column1';
 	public $subscriptionForm;
+	public $tickets;
 
 	/**
 	 * @return array action filters
@@ -173,6 +174,7 @@ class UsersController extends Controller
                 $this->upForm = new XUploadForm;
                 $this->locationForm=new Locations;
                 $this->subscriptionForm = new SubscriptionForm;
+                $this->tickets = Tickets::model()->getMyTickets();
                 if($model->id){
                     $existLoc=Locations::model()->findByPk($model->location_id);
                     if($existLoc)

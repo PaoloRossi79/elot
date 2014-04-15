@@ -45,7 +45,7 @@
 		<div id="fixed-cart">
                     <div id="header-logo-div">
                         <a href="/">
-                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "E-Lot", array("class"=>"site-main-logo img-responsive")); ?>
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "WonLot", array("class"=>"site-main-logo img-responsive")); ?>
                         </a>
                     </div>
                     <div id="header-icons">
@@ -69,11 +69,11 @@
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+<!--                            <div class="header-icon">
                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index">
                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-ticket.png", "My Tickets", array("class"=>"img-responsive")); ?>
                                </a>
-                            </div>
+                            </div>-->
                             <div class="header-icon">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylottery.png", "My Lotteries", array("class"=>"img-responsive")); ?>
@@ -121,13 +121,13 @@
             </div>
         </div>
             
-        <div id="body-container">
+        <div id="body-container" class="row">
             <?php echo $content; ?>
         </div>
 
 	<div class="clear"></div>
 
-	<div class="footer row-fluid">
+	<div class="footer row">
          <div class="main-width">
             <div class="footer-left">
                <div class="footer-subtitle" style="float:left;">

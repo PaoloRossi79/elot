@@ -4,10 +4,10 @@ $this->pageTitle=Yii::app()->name;
 ?>
 <div class="slideshow-ext">
     <div id="slideshow-container">
-        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover1.jpg", "",array('class'=>'img-responsive')); ?>
-        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover2.jpg", "",array('class'=>'img-responsive')); ?>
-        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover3.jpg", "",array('class'=>'img-responsive')); ?>
-        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover4.jpg", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover1.png", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover2.png", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover3.png", "",array('class'=>'img-responsive')); ?>
+        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/cover4.png", "",array('class'=>'img-responsive')); ?>
     </div>
 </div>
 

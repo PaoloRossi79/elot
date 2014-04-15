@@ -46,7 +46,7 @@ class SiteController extends Controller
                         ),
                         'oauthshare' => array(
                             // the list of additional properties of this action is below
-                            'class'=>'ext.hoauth.HOAuthShare',
+                            'class'=>'ext.hoauth.HOAuthShareAction',
                             // Yii alias for your user's model, or simply class name, when it already on yii's import path
                             // default value of this property is: User
                             'model' => 'Users', 

@@ -74,4 +74,19 @@ $(window).bind("load", function() {
            $('#private-profile').fadeIn();
        }
    });
+   
+   $('.zocial').click(function(event){
+       $('#labelProvider').text($(this).val());
+       $('.box-spinner').show();
+   });
+   
+   $('#gift-back').click(function(event){
+       $("#gift-modal").modal('hide');
+       $('#buy-modal').modal('show');
+   });
+   
+   $('.lot-item').click(function(event){
+       $(".ticket-lot").fadeOut();
+       $("#ticket-lot-"+this.id).fadeIn();
+   });
 });

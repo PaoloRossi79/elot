@@ -30,15 +30,15 @@ class LotteriesController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','category'),
+				'actions'=>array('index','view','category','delete'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','userIndex','upload','buyTicket','setDefault','deleteImg'),
+				'actions'=>array('create','userIndex','upload','buyTicket','setDefault','deleteImg','gift'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('update','void','clone'),
+				'actions'=>array('update','void','clone','void'),
                                 'expression' => array('LotteriesController','allowOnlyOwner'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -64,7 +64,8 @@ class LotteriesController extends Controller
 	{
 //                $this->layout="//layouts/allpage";
                 if(!Yii::app()->user->isGuest){
-                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
+//                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
+                    $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
                 }
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
@@ -122,11 +123,102 @@ class LotteriesController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-
+//		$this->loadModel($id)->delete();
+                $lot=$this->loadModel($id);
+                
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
+		if(!isset($_GET['ajax'])){
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                }
+	}
+        
+	/**
+	 * Void a lottery.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionVoid($id)
+	{
+                // check for STATUS ( == OPEN 3) and extraction_date (more than 24 hours later)
+                $lot = $this->loadModel($id);
+		if(!$lot->status == Yii::app()->params['lotteryStatusConst']['open']){
+                    echo Yii::t('wonlot','Non puoi annullare questa lotteria: non è aperta');
+                    return;
+                }
+                $lotDate = DateTime::createFromFormat('d/m/yy',$lot->lottery_draw_date);
+                $lotDate->sub(new DateInterval('PT25H'));
+                $now = new DateTime;
+                if($now > $lotDate){
+                    echo Yii::t('wonlot','Non puoi annullare questa lotteria: mancano meno di 24 ore');
+                    return;
+                }
+//                $dbTransaction=$lot->dbConnection->beginTransaction();
+                $lot->status = Yii::app()->params['lotteryStatusConst']['void'];
+                if($lot->save()){
+                    //repay tickets
+                    $allOk=true;
+                    $errors = array();
+                    foreach($lot->validTickets as $vt){
+                        $vt->status = Yii::app()->params['ticketStatusConst']['refunded'];
+                        if($vt->save()){
+                            if($vt->is_gift && $vt->gift_from_id){
+                                $vt->giftFromUser->available_balance_amount += $vt->price;
+                                if($vt->promotion_id){
+                                    foreach($vt->giftFromUser->offers as $off){
+                                        if($off->id == $vt->promotion_id){
+                                            $off->times_remaining += 1;
+                                            if(!$off->save()){
+                                                $allOk=false;
+                                                $errors[$vt->id][] = "Void lottery error: repaing special offer for ticket ".$vt->id;
+                                                Yii::log("Void lottery error: repaing special offer for ticket ".$vt->id);
+                                            }
+                                        }
+                                    }
+                                }
+                                if($vt->giftFromUser->save()){
+                                    UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->giftFromUser->id);
+                                } else {
+                                    $allOk=false;
+                                    Yii::log("Void lottery error: saving gift user. Ticket ".$vt->id);
+                                }
+                            } else {
+                                $vt->user->available_balance_amount += $vt->price;
+                                if($vt->promotion_id){
+                                    foreach($vt->user->offers as $off){
+                                        if($off->id == $vt->promotion_id){
+                                            $off->times_remaining += 1;
+                                            if(!$off->save()){
+                                                $allOk=false;
+                                                $errors[$vt->id][] = "Void lottery error: repaing special offer for ticket ".$vt->id;
+                                                Yii::log("Void lottery error: repaing special offer for ticket ".$vt->id);
+                                            }
+                                        }
+                                    }
+                                }
+                                if($vt->user->save()){
+                                    UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->user->id);
+                                } else {
+                                    $allOk=false;
+                                    $errors[$vt->id][] = "Void lottery error:  saving user. Ticket ".$vt->id;
+                                    Yii::log("Void lottery error: saving user. Ticket ".$vt->id);
+                                }
+                            }
+                        } else {
+                            $allOk=false;
+                            break;
+                        }
+                    }
+                }
+                if(!$allOk){
+                    $emailRes=EmailManager::sendCronAdminEmail($errors);
+                } 
+                
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_POST['isAjax'])){
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                } else {
+                    echo 1;
+                }
 	}
 
 	/**
@@ -247,6 +339,33 @@ class LotteriesController extends Controller
 	 * actionBuyTicket -> buy a ticket for lottery
          * actionSetDefault ->set default image to existing lottery
 	 */
+        public function actionGift(){
+            $params=$_POST;
+            if(!empty($params['provider']) && !empty($params['userId']) && !empty($params['ticketId'])){
+                $ticket = Tickets::model()->findByPk($params['ticketId']);
+                // check for ownership
+                if($ticket->user_id == Yii::app()->user->id){
+                    if($ticket->is_gift != 1){
+                        $ticket->is_gift = 1;
+                        $ticket->gift_from_id = Yii::app()->user->id;
+                        $ticket->gift_provider = trim($params['provider']);
+                        $ticket->gift_ext_user = $params['userId'];
+                        if($ticket->save()){
+                            echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                        } else {
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                        }
+                    } else {
+                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                    }
+                } else {
+                    echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
+                }
+            } else {
+                echo CJSON::encode(array('exit'=>0,'msg'=>"Parametri mancanti"));
+            }
+        }
+        
         public function actionBuyTicket()
         {
             Yii::log('BuyStart','error');
@@ -323,7 +442,7 @@ class LotteriesController extends Controller
                         if($user->save() && !$rollback){
                             
                             //transaction tracking
-                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price)){
+                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price,$promotion)){
                                 
                                 $lot->ticket_sold+=1;
                                 $lot->ticket_sold_value+=$ticket->price;
@@ -348,7 +467,7 @@ class LotteriesController extends Controller
                 }
             }
             
-            $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($lotId);
+            $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($lotId);
             $data["id"] = $lot->id;
             $data["ticketNumber"] = $ticket->id;
             $data["lottery"] = $lot;
@@ -454,9 +573,6 @@ class LotteriesController extends Controller
                 $filter["prizeCategory"]=$_POST['SearchForm']['Categories'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Categories'];
             }
-            if(!empty($_POST['SearchForm']['LotStartStatus'])){
-                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
-            }
             if(!empty($_POST['SearchForm']['LotStatus'])){
                 $statusOptions = $_POST['SearchForm']['LotStatus'];
                 $first = true;
@@ -479,6 +595,9 @@ class LotteriesController extends Controller
                        $first=false;
                     }
                 }
+            }
+            if(empty($_POST['SearchForm']['LotStatus']) && !empty($_POST['SearchForm']['LotStartStatus'])){
+                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
             }
             if(!empty($_POST['SearchForm']['searchStartDate'])){
                 $filter["minDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchStartDate']);
@@ -554,6 +673,9 @@ class LotteriesController extends Controller
                     if($_POST['publish']){
                         $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
                     } 
+                    if(!$model->status) {
+                        $model->status=Yii::app()->params['lotteryStatusConst']['draft'];
+                    }
                     if($model->save()){
                         $this->renameTmpFolder($model->id);
                         if($model->cloneId){
@@ -573,4 +695,20 @@ class LotteriesController extends Controller
                     'model' => $model,
             ));
         }
+        
+        protected function checkGiftStatus($data,$row)
+        {
+             // ... generate the output for the column
+
+             // Params:
+             // $data ... the current row data   
+            // $row ... the row index    
+            $res = "";
+            if($data->is_gift){
+                $res .= '<p class="bg-success">Regalato!</p>';
+            } else {
+                $res .= '<button id="'.$data->id.'" class="btn btn-success btn-xs set-gift"><i class="glyphicon glyphicon-search">Regala</i></button>';
+            }
+            return $res;    
+       }
 }

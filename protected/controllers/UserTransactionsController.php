@@ -28,11 +28,11 @@ class UserTransactionsController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array(),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','userIndex'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -126,6 +126,27 @@ class UserTransactionsController extends Controller
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
+	}
+        
+	/**
+	 * Lists all user transactions.
+	 */
+	public function actionUserIndex()
+	{
+                $this->layout = false;
+                $criteria = new CDbCriteria();
+                $criteria->addCondition('t.user_id='.Yii::app()->user->id);
+                $criteria->order = 'id DESC';
+		$dataProvider=new CActiveDataProvider('UserTransactions', array(
+                    'pagination'=>array(
+                            'pageSize'=>50,
+                        ),
+                    'criteria'=>$criteria,
+                ));
+		$this->renderPartial('_transactions',array(
+			'dataProvider'=>$dataProvider,
+                        
+		), false, true);
 	}
 
 	/**

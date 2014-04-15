@@ -10,6 +10,7 @@ class BuyForm extends CFormModel
 	public $email;
 	public $offerId;
 	public $lotId;
+	public $ticketGiftId;
 	
 	/**
 	 * Declares the validation rules.

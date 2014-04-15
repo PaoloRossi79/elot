@@ -7,7 +7,7 @@
              if($model->id){
                   echo Yii::t('wonlot','Edit Lottery') . " " .$model->name;
                   if($model->status >= 3){
-                      $htmlDisabled = array($disabled=>"disabled");
+                      $htmlDisabled = array("disabled"=>"disabled");
                   }
              } else {
                   echo Yii::t('wonlot','Create Lottery');
@@ -166,6 +166,7 @@
             ?>
 
             <div id="prize_img">
+                <script>var imgCount=0;</script>
             <?php
                 //echo $form->labelEx($model,'photos');
 
@@ -177,20 +178,39 @@
                     'multiple' => true,
                     'showForm' => false,
                     'entityModel' => $model,
-                    )    
-                );
+                    'options'=>array(
+                        'added' => 'js:function(e, data) { '
+                                . "if(imgCount == 0){"
+                                    . "$('.lot-sub-btn').attr('disabled','disabled');"
+                                ."}"
+                                . "imgCount = imgCount + 1;"
+                                ."}",
+                        'completed' => 'js:function(e, data) { '
+                                . "imgCount = imgCount - 1;"
+                                . "if(imgCount == 0){"
+                                    . "$('.lot-sub-btn').attr('disabled',false);"
+                                ."}"
+                                ."}",
+                        'failed' => 'js:function(e, data) { '
+                                . "imgCount = imgCount - 1;"
+                                . "if(imgCount == 0){"
+                                    . "$('.lot-sub-btn').attr('disabled',false);"
+                                ."}"
+                                ."}",
+                    ),
+                ));
             ?>
             </div>
         <?php
         if($model->isNewRecord){
-            echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva come bozza');
-            echo CHtml::submitButton('Pubblica');
+            echo CHtml::submitButton('Salva come bozza',array('name'=>'save','class'=>'btn btn-primary lot-sub-btn'));
+            echo CHtml::submitButton('Pubblica',array('name'=>'publish','class'=>'btn btn-success lot-sub-btn'));
         } else {
             if($model->status==Yii::app()->params['lotteryStatusConst']['draft']){
-                echo CHtml::submitButton('Salva come bozza',array('name'=>'save'));
-                echo CHtml::submitButton('Pubblica',array('name'=>'publish'));
+                echo CHtml::submitButton('Salva come bozza',array('name'=>'save','class'=>'btn btn-primary lot-sub-btn'));
+                echo CHtml::submitButton('Pubblica',array('name'=>'publish','class'=>'btn btn-success lot-sub-btn'));
             } else {
-                echo CHtml::submitButton('Salva',array('name'=>'save'));
+                echo CHtml::submitButton('Salva',array('name'=>'save','class'=>'btn btn-primary lot-sub-btn'));
             }
         }
         ?>

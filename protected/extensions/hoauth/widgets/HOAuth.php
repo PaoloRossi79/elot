@@ -89,7 +89,6 @@ class HOAuth extends CWidget
 					',left=' + left +
 					',top=' + top
 					);
-		 
 				signinWin=window.open(this.href,'Login',options);
 
 				if (window.focus) {signinWin.focus()}

@@ -27,7 +27,7 @@ class CronTicketsCommand extends CConsoleCommand
                 Yii::log("CRON Tickets error:".$exc->getTraceAsString(),'error');
             }
             unlink($file);
-            } else {
+        } else {
             Yii::log("CRON Tickets Busy -> SKIP ", "warning");
         }
     }

@@ -18,6 +18,7 @@ class HConnectedNetworks extends CWidget
 	{
 		require_once(dirname(__FILE__).'/../models/UserOAuth.php');
 		require_once(dirname(__FILE__).'/../HOAuthAction.php');
+//                require_once(dirname(__FILE__).'/../HOAuthShareAction.php');
 
     	// provider delete action
 		if(Yii::app()->request->isPostRequest && isset($_GET['hoauthDelSN']))

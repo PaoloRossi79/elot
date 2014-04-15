@@ -12,6 +12,7 @@ body {
    font-weight: 400;
    color: whitesmoke!important;
    background: #fceacf;
+   min-width: 760px;
 }
 
 #lotSearchForm, .panel, .items , form, .modal {
@@ -101,7 +102,7 @@ a, a:hover, a:focus, a:visited {
     background-repeat:no-repeat;
     background-position:center;
     height: 20px;
-}
+    }
 
 #slideshow-container {
     display: none;
@@ -135,6 +136,8 @@ a, a:hover, a:focus, a:visited {
 
 #search-column {
     display: none;
+    position: absolute;
+    z-index: 9999999;
 }
 
 .main-search-grp {
@@ -255,7 +258,7 @@ a, a:hover, a:focus, a:visited {
 }
 
 button.close {
-   padding: 10px 15px 0 0;
+   /*padding: 10px 15px 0 0;*/
 }
 
 .width-50perc {
@@ -424,7 +427,7 @@ button.close {
 }
 
 #big-gallery-item {
-     min-height: 400px;
+    height: 600px;
     border: 10px solid #fff;
     -webkit-border-radius: 5px;
        -moz-border-radius: 5px;
@@ -520,6 +523,37 @@ button.close {
 	margin-right: 5px;
 }
 
+.lot-panel {
+    
+}
+
+.lot-panel h3 , .lot-panel h4 {
+    background-color: darkgreen;
+    color: white;
+    border-radius: 4px;
+    padding: 5px 20px 5px 20px;
+}
+
+.lot-b-text {
+    font-weight: bold;
+}
+
+.lot-i-text {
+    font-style: italic;
+    font-size: small;
+}
+
+.lot-prize-text {
+    font-size: 4em;
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.cat-icon {
+    width: 20px;
+    height: 20px;
+}
+
 .jam-round {
     width: 30px;
     height: 30px;
@@ -601,6 +635,8 @@ button.close {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
+    height: 100%;
 }
 
 .main-width {
@@ -785,4 +821,57 @@ button.close {
 
 .fileupload-buttonbar {
     float: right;
+}
+
+.ticket-list {
+    width: 100%;
+    min-width: 300px;
+    padding: 50px;
+}
+
+.gift-box {
+    width: 100%;
+    min-width: 300px;
+    padding: 50px;
+}
+
+.buy-btn {
+    margin-left: 30px;
+}
+
+#buyBtn {
+    margin-right: 50px;
+    float: left;
+}
+
+#alert-box {
+    width: 300px;
+    float: left;
+}
+
+.center-float {
+    margin: 0 auto;
+}
+
+.text-block {
+    border: 1px solid #fff;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+       -moz-border-radius: 5px;
+            border-radius: 5px;
+    -webkit-box-shadow: 0 0 2px #999;
+       -moz-box-shadow: 0 0 2px #999;
+            box-shadow: 0 0 2px #999;
+}
+
+/* TICKETS in profile*/
+.list-img {
+    float: left;
+}
+
+.list-text {
+    float: left;
+}
+.ticket-lot {
+    display: none;
 }

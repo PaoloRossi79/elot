@@ -204,6 +204,27 @@ class Hybrid_Providers_Facebook extends Hybrid_Provider_Model
 			throw new Exception( "Update user status failed! {$this->providerId} returned an error: $e" );
 		}
  	}
+	/**
+	* update user status
+	*/
+	/*function feedToFriend( $status )
+	{
+		$parameters = array();
+
+		if( is_array( $status ) ){
+			$parameters = $status;
+		}
+		else{
+			$parameters["message"] = $status; 
+		}
+
+		try{ 
+			$response = $this->api->api( "/feed", "post", $parameters );
+		}
+		catch( FacebookApiException $e ){
+			throw new Exception( "Update user status failed! {$this->providerId} returned an error: $e" );
+		}
+ 	}*/
 
 	/**
 	* load the user latest activity  

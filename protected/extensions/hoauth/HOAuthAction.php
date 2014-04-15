@@ -107,6 +107,7 @@ class HOAuthAction extends CAction
 
 	public function run()
 	{		
+            $t=1;
 		// openId login
 		if($this->enabled)
 		{

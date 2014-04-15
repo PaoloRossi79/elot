@@ -29,7 +29,7 @@
 
 Yii::setPathOfAlias('hoauth', dirname(__FILE__));
 
-class HOAuthShare extends CAction
+class HOAuthShareAction extends CAction
 {
 	/**
 	 * @var boolean $enabled defines whether the ouath functionality is active. Useful for example for CMS, where user can enable or disable oauth functionality in control panel
@@ -111,44 +111,6 @@ class HOAuthShare extends CAction
 		if($this->enabled)
 		{
 			$path = dirname(__FILE__);
-			// checking if we have `yii-user` module (I think that `UWrelBelongsTo` is unique class name from `yii-user`)
-			if($this->useYiiUser || file_exists(Yii::getPathOfAlias('application.modules.user.components') . '/UWrelBelongsTo.php'))
-			{
-				$this->useYiiUser = true;
-				// setting up yii-user's user model
-				Yii::import('application.modules.user.models.*');
-				Yii::import('hoauth.DummyUserIdentity');
-
-				// preparing attributes array for `yii-user` module
-				if(!is_array($this->attributes))
-					$this->attributes = array();
-
-				$this->attributes = CMap::mergeArray($this->attributes, array(
-					'email' => 'email',
-					'username' => 'displayName',
-					'status' => User::STATUS_ACTIVE,
-					));
-
-				$this->usernameAttribute = 'username';
-				$this->_emailAttribute = 'email';
-			}
-			else
-			{
-				Yii::import($this->model, true);
-				$this->model = substr($this->model, strrpos($this->model, '.'));
-
-				if(!method_exists($this->model, 'findByEmail'))
-					throw new Exception("Model '{$this->model}' must implement the 'findByEmail' method");
-
-				$this->_emailAttribute = array_search('email', $this->attributes);
-			}
-
-			if(!isset($this->attributes) || !is_array($this->attributes) || !count($this->attributes))
-				throw new CException('You must specify the model attributes for ' . __CLASS__);
-
-			if(!in_array('email', $this->attributes))
-				throw new CException("You forgot to bind 'email' field in " . __CLASS__ . "::attributes property.");
-
 			if(isset($_GET['provider']))
 			{
 				Yii::import('hoauth.models.*');
@@ -160,8 +122,6 @@ class HOAuthShare extends CAction
 				Yii::app()->end();
 			}
 		}
-
-		Yii::app()->controller->{$this->loginAction}();
 	}
 
 	/**
@@ -177,18 +137,27 @@ class HOAuthShare extends CAction
 		try{
 			// trying to authenticate user via social network
 			$oAuth = UserOAuth::model()->authenticate( $provider );
-			$userProfile = $oAuth->profile;
-
-			// If we already have a user logged in, associate the authenticated 
-			// provider with the logged-in user
-			
-				?>
-				<script>
-					window.opener.location.reload();
-					window.close();
-				</script>
-				<?php
-                                
+                        $adapter = UserOAuth::model()->getAdapter($provider);
+                        $contacts = $adapter->getUserContacts();
+                    ?>
+                    <script>
+                        $(function(){
+                            $('.box-spinner').hide();
+                        });
+                    </script>
+                    <?php    
+                        if($contacts && count($contacts) > 0){
+                            $this->controller->renderPartial(
+                                    '//lotteries/_friendList', 
+                                    array(
+                                        'list'=>$contacts,
+                                        'provider'=>$provider,
+                                        'appId'=>$adapter->config['keys']['id'],
+                                    ), 
+                                    false, true
+                            );
+                            Yii::app()->end();
+                        }
 		}
 		catch( Exception $e ){
 			$error = "";
@@ -216,9 +185,7 @@ class HOAuthShare extends CAction
 				throw $e;
 		}
 		?>
-		<script>
-			window.close();
-		</script>
+		
 		<?php
 	}
 	

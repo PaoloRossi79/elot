@@ -77,6 +77,8 @@ class Users extends PActiveRecord
                     'tickets' => array(self::HAS_MANY, 'Tickets', 'user_id'),
                     'location' => array(self::BELONGS_TO, 'Locations', 'location_id'),
                     'newsletter' => array(self::HAS_MANY, 'Subscriptions', 'user_id'),
+                    'socials' => array(self::HAS_MANY, 'SocialUser', 'user_id'),
+                    'offers' => array(self::HAS_MANY, 'UserSpecialOffers', 'user_id'),
 		);
 	}
 

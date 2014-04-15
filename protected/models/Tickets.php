@@ -53,6 +53,7 @@ class Tickets extends PActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+                    'giftFromUser' => array(self::BELONGS_TO, 'Users', 'gift_from_id'),
                     'lottery' => array(self::BELONGS_TO, 'Lotteries', 'lottery_id'),
 		);
 	}
@@ -134,6 +135,43 @@ class Tickets extends PActiveRecord
             $data = $dbCommand->queryAll();
             
             return $data[0]['count'];
+        }
+        
+        public function getMyTicketsByLottery($lotId)
+	{
+            $criteria=new CDbCriteria; 
+            $criteria->addCondition('t.lottery_id = '.$lotId); 
+            $criteria->addCondition('t.status = 1'); 
+            /*$dataProvider=new CActiveDataProvider('Tickets', array(
+                'pagination'=>array(
+                    'pageSize'=>10,
+                ),
+                'criteria'=>$criteria,
+            ));
+            return $dataProvider;*/
+            return $this->findAll($criteria);
+        }
+        
+        public function getMyTickets(){
+            $viewData=array();
+            $criteria=new CDbCriteria; 
+            if($_POST['lotStatus']){
+                $criteria->addCondition('t.status='.$_POST['lotStatus']);
+                $viewData['lotStatus']=$_POST['lotStatus'];
+            }
+            $criteria->order='t.name';
+            $criteria->with=array("tickets"=>array(
+                // but want to get only users with published posts
+                'joinType'=>'INNER JOIN',
+                'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
+            ));
+            $boughtLotteries = Lotteries::model()->findAll($criteria);
+            return $boughtLotteries;
+//            $this->renderPartial('_tickets',array(
+//                'model'=>$boughtLotteries,
+//                //'viewType'=>"_box"
+//                'viewData'=>$viewData,
+//            ));
         }
 
 	/**

@@ -25,7 +25,7 @@ return
 			),
 
 			"Yahoo" => array ( 
-				"enabled" => true,
+				"enabled" => false,
 				"keys"    => array ( "id" => "", "secret" => "" )
 			),
 
@@ -40,13 +40,13 @@ return
 			),
 
 			"Twitter" => array ( 
-				"enabled" => true,
+				"enabled" => false,
 				"keys"    => array ( "key" => "", "secret" => "" ) 
 			),
 
 			// windows live
 			"Live" => array ( 
-				"enabled" => true,
+				"enabled" => false,
 				"keys"    => array ( "id" => "", "secret" => "" ) 
 			),
 

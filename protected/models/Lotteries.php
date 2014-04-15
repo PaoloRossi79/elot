@@ -60,7 +60,7 @@ class Lotteries extends PActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 //			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
-			array('name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, location_id', 'safe',),
+			array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, location_id', 'safe',),
 		);
 	}
 
@@ -74,6 +74,7 @@ class Lotteries extends PActiveRecord
 		return array(
 			'lotteryComments' => array(self::HAS_MANY, 'LotteryComments', 'lottery_id'),
 			'tickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id'),
+			'validTickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id', 'condition'=>'validTickets.status = 1'),
 			'owner' => array(self::BELONGS_TO, 'Users', 'owner_id'),
 			'category' => array(self::BELONGS_TO, 'PrizeCategories', 'prize_category'),
                         'location' => array(self::BELONGS_TO, 'Locations', 'location_id'),
@@ -219,9 +220,9 @@ class Lotteries extends PActiveRecord
             }
 
             $dataProvider=new CActiveDataProvider('Lotteries', array(
-                'pagination'=>array(
-                    'pageSize'=>20,
-                ),
+//                'pagination'=>array(
+//                    'pageSize'=>20,
+//                ),
                 'criteria'=>$criteria,
             ));
                 
@@ -331,7 +332,11 @@ class Lotteries extends PActiveRecord
         public function getStatusText($status=null){
             $statuses=Yii::app()->params['lotteryStatusConst'];
             if($status != null){
-                $checkStatus = (int)$status;
+                if($status instanceof Lotteries){
+                    $checkStatus = (int)$status->status;
+                } else {
+                    $checkStatus = (int)$status;
+                }
             } else {
                 $checkStatus = (int)$this->status;
             }
@@ -403,7 +408,7 @@ class Lotteries extends PActiveRecord
                     $up->is_sent_open = 1;
                 }
                 $up->status = Yii::app()->params['lotteryStatusConst']['open'];
-                $up->is_active = 1;
+//                $up->is_active = 1;
                 if($up->save()){
                     Yii::log("Lottery open: Id=".$up->id.", name=".$up->name, "warning");
                 } else {
@@ -570,6 +575,37 @@ class Lotteries extends PActiveRecord
                         $emailRes=EmailManager::sendVoidLotteryToOwner($extract);
                         if(!$emailRes){
                             Yii::log("Err sending email: ".$emailRes, "error");
+                        }
+                    }
+                }
+            }
+        }
+        
+        public function checkToVoid(&$errors){
+            // check for already voided but not sent email
+            $voidCriteria = new CDbCriteria();
+            $voidCriteria->addCondition('t.status='.Yii::app()->params['lotteryStatusConst']['void']);
+            $voidCriteria->addCondition('t.is_sent_void = 0');
+            $voidChange = Lotteries::model()->findAll($voidCriteria);
+            foreach($voidChange as $void){
+                Yii::log("CRON Void =".$void->id, "warning");
+                //send email for voided
+                $emailRes=EmailManager::sendVoidLotteryToOwner($void);
+                // TODO: valutare se aggiungere email a singolo utente per rimborso ticket
+                if(!$emailRes){
+                    Yii::log("Err sending email: ".$emailRes, "error");
+                } else {
+                    $void->is_sent_void = 1;
+                }
+                if($void->save()){
+                    Yii::log("Lottery void EMAIL: Id=".$void->id.", name=".$void->name, "warning");
+                } else {
+                    Yii::log("Lottery void EMAIL error: Id=".$void->id.", name=".$void->name, "error");
+                    $errors['void'][$void->id]=array();
+                    foreach ($void->getErrors() as $err){
+                        foreach ($err as $e){
+                            Yii::log("Error: ".$e, "error");
+                            $errors['void'][$void->id][]=$e;
                         }
                     }
                 }

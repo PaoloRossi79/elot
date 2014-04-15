@@ -1,21 +1,29 @@
 TODO:
 
+
 1) RICERCA 
     MANCA: ricerca x località
 
-3) Estrazione lotteria
-    a) calcolo random del vincitore OK
-    b) tracciatura del biglietto vincente OK
-    c) mail a vincitore (o a tutti i concorrenti) OK
+2) Annullamento lotteria (fino a 24 H prima dell'estrazione)
 
-3) PROFILO: visualizzazione sconti disponibili
+    b) mail di comunicazione a OWNER e PATECIPANTI (biglietti già acquistati)
+
+3) Regala biglietto 
+    a) ad email -> link
+    d) funzione di check post registrazione per riscossione biglietto regalo
+
+4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori"
+
+4) Promozioni speciali:
+    a) promozione per vincitore che da consenso
+    b) 
+
+4) PROFILO: visualizzazione sconti disponibili
 
 5) Newsletter: 
     b) funzione di invio
     c) possibilità di annuncio sponsorizzato, con commissione più alta
 
-6) ANNULLAMENTO Lotteria:
-    a) fino a 24 H prima dell'estrazione
 
 8) Sharer via Facebook, G+, TW
 

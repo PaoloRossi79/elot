@@ -53,6 +53,7 @@ class UserTransactions extends PActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'relTickets' => array(self::BELONGS_TO, 'Tickets', 'transaction_ref_id'),
 		);
 	}
 
@@ -109,10 +110,25 @@ class UserTransactions extends PActiveRecord
 		));
 	}
         
-        public function addBuyTicketTrans($ticketId,$ticketValue){
+        public function addBuyTicketTrans($ticketId,$ticketValue,$promotionId=null){
             $trans=new UserTransactions;
             $trans->user_id=Yii::app()->user->id;
             $trans->transaction_type=Yii::app()->params['userTransactionConst']['buyTicket'];
+            $trans->transaction_ref_id=$ticketId;
+            $trans->value= - $ticketValue;
+            $trans->is_confirmed=1;
+            $trans->promotion_id=$promotionId; // TODO: add promotion managment
+            if($trans->save()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        public function addVoidTicketRepay($ticketId,$ticketValue,$userId){
+            $trans=new UserTransactions;
+            $trans->user_id=$userId;
+            $trans->transaction_type=Yii::app()->params['userTransactionConst']['refundTicket'];
             $trans->transaction_ref_id=$ticketId;
             $trans->value=$ticketValue;
             $trans->is_confirmed=1;
@@ -124,7 +140,7 @@ class UserTransactions extends PActiveRecord
             }
         }
         
-        public function addBuyCreditTrans($credit){
+        public function addBuyCreditTrans($credit,$promotionId=null){
             $trans=new UserTransactions;
             $trans->user_id=Yii::app()->user->id;
             $trans->transaction_type=Yii::app()->params['userTransactionConst']['buyCredit'];
@@ -132,12 +148,22 @@ class UserTransactions extends PActiveRecord
             $trans->value=$credit;
             //TODO: add check for paypal transactions confirm
             $trans->is_confirmed=1;
-            $trans->promotion_id=null; // TODO: add promotion managment
+            $trans->promotion_id=$promotionId; // TODO: add promotion managment
             if($trans->save()){
                 return true;
             } else {
                 return false;
             }
+        }
+        
+        public function getLinkedText($model){
+            $msg="";
+            if(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['buyTicket'],Yii::app()->params['userTransactionConst']['refundTicket']))){
+                $msg = "Ticket: ".$model->relTickets->id;
+            } elseif(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['buyCredit'],Yii::app()->params['userTransactionConst']['refundCredit']))){
+                
+            }
+            return $msg;
         }
 
 	/**

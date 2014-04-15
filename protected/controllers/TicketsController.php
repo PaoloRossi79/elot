@@ -122,7 +122,7 @@ class TicketsController extends Controller
 	 */
 	public function actionIndex()
 	{
-                $viewData=array();
+                /*$viewData=array();
                 $criteria=new CDbCriteria; 
                 $criteria->order='lottery.lottery_start_date';
                 $criteria->with="lottery";
@@ -161,6 +161,24 @@ class TicketsController extends Controller
 
                 $this->render('index',array(
                     'dataProvider'=>$dataProvider,
+                    //'viewType'=>"_box"
+                    'viewData'=>$viewData,
+                ));*/
+                $viewData=array();
+                $criteria=new CDbCriteria; 
+                if($_POST['lotStatus']){
+                    $criteria->addCondition('t.status='.$_POST['lotStatus']);
+                    $viewData['lotStatus']=$_POST['lotStatus'];
+                }
+                $criteria->order='t.name';
+                $criteria->with=array("tickets"=>array(
+                    // but want to get only users with published posts
+                    'joinType'=>'INNER JOIN',
+                    'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
+                ));
+                $boughtLotteries = Lotteries::model()->findAll($criteria);
+                $this->renderPartial('_tickets',array(
+                    'model'=>$boughtLotteries,
                     //'viewType'=>"_box"
                     'viewData'=>$viewData,
                 ));

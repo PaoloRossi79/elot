@@ -6,7 +6,7 @@ $boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/
     $boxTitle.=" - ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category));
 }*/
 ?>
-<div class="panel panel-default bootstrap-widget-table isotope-item lot-box">
+<div class="panel panel-default bootstrap-widget-table lot-box">
     <div class="panel-heading">
       <h3 class="panel-title"><?php echo $boxTitle;?></h3>
     </div>

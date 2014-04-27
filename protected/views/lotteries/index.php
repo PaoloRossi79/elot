@@ -41,20 +41,25 @@ if(!Yii::app()->user->isGuest){
         'dataProvider'=>$dataProvider,
         'itemView'=>'lot-box',
         'viewData'=>$viewData,
-        'itemSelectorClass'=>'isotope-item',
+        'itemSelectorClass'=>'lot-box-item',
         'options'=>array( // options for the isotope jquery
             'layoutMode'=>'masonry',
             'containerStyle' => array(
-                'position' => 'relative', 'overflow' => 'hidden', 'height' => "100%"
+                'position' => 'relative', 
+                'overflow' => 'hidden', 
             ),
             'animationEngine'=>'jquery',
             'animationOptions'=>array(
                     'duration'=>300,
             ),
+            'resizesContainer' => true,
         ), 
         'infiniteScroll'=>true, // default to true
-        'infiniteOptions'=>array(), // javascript options for infinite scroller
-        'id'=>'wall',
-    ));
-    ?>
-     
+        'infiniteOptions'=>array(
+            'loading' => array(
+                'msgText' => 'Caricamento ... ',
+                'finishedMsg' => 'Tutte le lotterie sono state caricate!',
+            )
+        ), // javascript options for infinite scroller
+        'id'=>'lot-isotope-1',
+    )); ?>

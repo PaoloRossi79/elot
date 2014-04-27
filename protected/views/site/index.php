@@ -69,7 +69,10 @@ $this->pageTitle=Yii::app()->name;
         <img src="/images/site/all-lot-banner.png">
     </div>
     <div class="main-lot-list">
-        <?php $this->renderPartial('/lotteries/main-lot'); ?>
+        <?php 
+            $this->renderPartial('/lotteries/main-lot'); 
+//        $this->widget('listLotteryWidget');
+        ?>
     </div>
 </div>
 

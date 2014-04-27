@@ -85,7 +85,7 @@ a, a:hover, a:focus, a:visited {
 }
 
 .header-icon img {
-    /*height: 50px;*/
+    height: 50px;
 }
 
 #content
@@ -121,7 +121,7 @@ a, a:hover, a:focus, a:visited {
 
 .items {
     width: auto;
-    height: 100%!important;
+    /*height: 100%!important;*/
     margin-left: auto;
     margin-right: auto;
 }
@@ -259,6 +259,14 @@ a, a:hover, a:focus, a:visited {
 
 button.close {
    /*padding: 10px 15px 0 0;*/
+}
+
+.width-80perc {
+   width: 80% !important;
+}
+
+.width-75perc {
+   width: 75% !important;
 }
 
 .width-50perc {
@@ -468,21 +476,36 @@ button.close {
     
 }
 
-.lot-box {
-    width: 232px;
-    height: 380px;
-    margin: 10px;
+.main-lot-list .summary {
+    /*visibility: hidden;*/
+}
+
+.lot-box-item {
+    width: 250px!important;
+    height: 410px!important;
+    margin: 10px!important;
     float: left;
     background-color: #fdfae5;
     text-align: center;
 } 
 
-.lot-box-int {
-    width: 220px;
-    height: 370px;
+.lot-box-int, .lot-box-hover {
+    width: 240px;
+    height: 400px;
     margin: 5px;
     border: 1px solid black;
     background-color: white;
+}
+
+.lot-box-hover {
+    display: none;
+    opacity: 0.95;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: whitesmoke;
+    color: black;
+    font-size: 50px;
 }
 
 .lot-cat {
@@ -509,9 +532,26 @@ button.close {
     right: 5px;
 }
 
+.lot-box-first-row {
+    min-height: 50px;
+    margin-top: 5px;
+}
+
+.lot-cat img {
+    width: 50px;
+    height: 80px;
+    position: absolute;
+    top: -25px;
+    left: -15px;
+}
+
 .lot-name {
     margin: 5px 0 5px 0;
     border-bottom: 1px solid black;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .lot-name-cont {
@@ -519,8 +559,9 @@ button.close {
 }
 
 .lot-icons-cont {	
-	margin-left: 5px;
-	margin-right: 5px;
+    padding: 10px;
+    width: 100%;
+    min-height: 80px;
 }
 
 .lot-panel {
@@ -587,6 +628,11 @@ button.close {
     margin-left: 5px;
 }
 
+.cocc-cont {
+    float: right;
+    margin-right: 5px;
+}
+
 .lot-star {
     background-image:url('../images/site/lot-box-star.png');
     background-repeat:no-repeat;
@@ -601,17 +647,31 @@ button.close {
     height: 11px;
 }
 
+.lot-value {
+    position: relative;
+    top: -10px;
+    padding-left: 20px;
+}
+
 .lot-value p {
     font-size: 40px;
 }
 
 .lot-img {
-    margin-top: 30px;
+    margin-top: 15px;
     height: 200px;
 }
 
-.lot-wlmoney {
+.lot-wlticket img {
     height: 40px;
+    position: relative;
+    left: -10px;
+}
+
+.lot-wlmoney img {
+    height: 40px;
+    position: relative;
+    left: -10px;
 }
 
 .winners-container, .main-lot-container {
@@ -829,6 +889,39 @@ button.close {
     padding: 50px;
 }
 
+.ticket-block {
+    border: 1px solid black;
+    border-radius: 4px;
+    display: none;
+}
+
+.ticket-lot {
+    background-image:url('../images/site/list-item-ticket.png');
+    background-repeat:no-repeat;
+    /*background-attachment:fixed;*/
+    background-position:right top;
+    background-color: white;
+    width: 120px;
+    height: 65px;
+    float: left;
+    margin: 5px 0px 5px 0px;
+}
+
+.ticket-number-text {
+    color: white;
+    position: relative;
+    top: 30px;
+    left: 30px;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.winner-ban {
+    position: absolute;
+    margin-top: 6px;
+    margin-left: 18px;
+}
+
 .gift-box {
     width: 100%;
     min-width: 300px;
@@ -872,6 +965,21 @@ button.close {
 .list-text {
     float: left;
 }
-.ticket-lot {
-    display: none;
+
+.inline {
+    display: inline;
+}
+
+.upper-label {
+    text-transform: uppercase;
+    font-size: xx-large;
+    color: darkgreen;
+}
+
+#loginModal {
+    /*background-color:*/ 
+}
+
+.favLotBtn {
+    color: green;
 }

@@ -21,6 +21,27 @@ class PActiveRecord  extends CActiveRecord {
         return parent::save($runValidation,$attributes);
     }
     
+    public function getImageList($entityId){
+        $subPath="/images/".lcfirst(get_class($this))."/".$entityId."/";
+        $img_path=Yii::app()->basePath."/..".$subPath;
+        $fileList=array();
+        if(is_dir($img_path)){
+            $dirIter=new DirectoryIterator($img_path);
+            while( $dirIter->valid()) {
+                if($dirIter->isFile()){
+                    $newFile=new stdClass;
+                    $newFile->file=$dirIter->getFilename();
+                    $newFile->entityId=$entityId;
+                    $newFile->entityType=lcfirst(get_class($this));
+                    $fileList[]=$newFile;
+                }
+                /*** move to the next element ***/
+                $dirIter->next();
+            }
+        }
+        return $fileList;
+    }
+    
     protected function beforeSave(){
         if($this->runCustomBeforeSave){
             if($this->hasAttribute('created') && $this->isNewRecord){

@@ -23,14 +23,20 @@
             <?php echo $form->errorSummary($model); ?>
 
             <div class="row">
-		<?php echo $form->textField($model,'username',array('placeholder' => 'email')); ?>
-		<?php echo $form->error($model,'username'); ?>
-		<?php echo $form->passwordField($model,'password',array('placeholder' => 'password')); ?>
-		<?php echo $form->error($model,'password'); ?>
-                <?php echo $form->checkBox($model,'rememberMe'); ?>
-		<?php echo $form->label($model,'rememberMe'); ?>
-		<?php echo $form->error($model,'rememberMe'); ?>
-		<?php echo $form->hiddenField($model,'originUrl'); ?>
+                <div class="form-group">
+                    <?php echo $form->textField($model,'username',array('placeholder' => 'email')); ?>
+                    <?php echo $form->error($model,'username'); ?>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->passwordField($model,'password',array('placeholder' => 'password')); ?>
+                    <?php echo $form->error($model,'password'); ?>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->checkBox($model,'rememberMe'); ?>
+                    <?php echo $form->label($model,'rememberMe'); ?>
+                    <?php echo $form->error($model,'rememberMe'); ?>
+                    <?php echo $form->hiddenField($model,'originUrl'); ?>
+                </div>
             </div>
 
             <div class="row buttons">

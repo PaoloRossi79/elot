@@ -93,7 +93,7 @@ class Hybrid_Provider_Adapter
 	* Hybrid_Provider_Adapter::login(), prepare the user session and the authentication request
 	* for index.php
 	*/
-	function login()
+	function login($actionId)
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Provider_Adapter::login( {$this->id} ) " );
 
@@ -112,7 +112,8 @@ class Hybrid_Provider_Adapter
 		$this->logout();
 
 		# get hybridauth base url
-		$HYBRID_AUTH_URL_BASE = Hybrid_Auth::$config["base_url"];
+//		$HYBRID_AUTH_URL_BASE = Hybrid_Auth::$config["base_url"];
+		$HYBRID_AUTH_URL_BASE = Hybrid_Auth::$config["action_url"][$actionId];
 
 		# we make use of session_id() as storage hash to identify the current user
 		# using session_regenerate_id() will be a problem, but ..

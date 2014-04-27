@@ -9,6 +9,7 @@ class LotteriesController extends Controller
 	public $layout='//layouts/basecolumn';
         
         public $ticketTotals;
+        public $favLots;
         
         /**
 	 * @return array action filters
@@ -34,7 +35,8 @@ class LotteriesController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','userIndex','upload','buyTicket','setDefault','deleteImg','gift'),
+				'actions'=>array('create','userIndex','upload','buyTicket','setDefault',
+                                                 'deleteImg','gift','setFavorite','unsetFavorite'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -244,10 +246,17 @@ class LotteriesController extends Controller
                     $_POST['SearchForm']['LotStatus'] = array(1);
                 }
             }
-            $lotteries=$this->filterLotteries();
+            $lotteries=$this->filterLotteries(false);
             if(!Yii::app()->user->isGuest){
                 $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
+                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
             }
+            /*$this->render('index',array(
+                'lotteries'=>$lotteries['lotteries'],
+                'pages'=>$lotteries['pages'],
+                'viewType'=>'_show',
+                'viewData'=>$lotteries['viewData'],
+            ));*/
             $this->render('index',array(
                 'dataProvider'=>$lotteries['dataProvider'],
                 'viewType'=>'_show',
@@ -268,6 +277,66 @@ class LotteriesController extends Controller
                 'viewData'=>$lotteries['viewData'],
             ));
 	}
+        
+        public function actionSetFavorite(){
+            $lotId=$_POST['lotId'];
+            $res = 0;
+            if($lotId){
+                $userId = Yii::app()->user->id;
+                $checkFav = FavoriteLottery::model()->find('t.lottery_id='.$lotId.' AND t.user_id='.$userId);
+                if($checkFav){
+                    if($checkFav->active != 1){
+                        $checkFav->active = 1;
+                        if($checkFav->save()){
+                            $res = 1;
+                        } else {
+                            $res = 0;
+                        }
+                    } else {
+                        $res = 1;
+                    }
+                } else {
+                    $newFav = new FavoriteLottery;
+                    $newFav->lottery_id = $lotId;
+                    $newFav->user_id = $userId;
+                    $newFav->active = 1;
+                    if($newFav->save()){
+                        $res = 1;
+                    } else {
+                        $res = 0;
+                    }
+                }
+            } else {
+                $res = 0;
+            }
+            
+            echo CJSON::encode($res);
+        }
+        
+        public function actionUnsetFavorite(){
+            $lotId=$_POST['lotId'];
+            $res = 0;
+            if($lotId){
+                $userId = Yii::app()->user->id;
+                $checkFav = FavoriteLottery::model()->find('t.lottery_id='.$lotId.' AND t.user_id='.$userId);
+                if($checkFav){
+                    if($checkFav->active != 0){
+                        $checkFav->active = 0;
+                        if($checkFav->save()){
+                            $res = 1;
+                        } else {
+                            $res = 0;
+                        }
+                    }
+                } else {
+                    $res = 1;
+                }
+            } else {
+                $res = 0;
+            }
+            
+            echo CJSON::encode($res);
+        }
 	/**
 	 * Manages all models.
 	 */
@@ -565,10 +634,14 @@ class LotteriesController extends Controller
 		}
 	}
         
-        private function filterLotteries($my=0) {
+        private function filterLotteries($my=0,$type="dataProvider") {
             $filter=array();
             $result = array();
             $result['viewData']=array();
+            if(!empty($_POST['SearchForm']['Category'])){
+                $filter["prizeCategory"]=$_POST['SearchForm']['Category'];
+                $result['viewData']['showCat']=$_POST['SearchForm']['Category'];
+            }
             if(!empty($_POST['SearchForm']['Categories'])){
                 $filter["prizeCategory"]=$_POST['SearchForm']['Categories'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Categories'];
@@ -635,9 +708,13 @@ class LotteriesController extends Controller
             if($my)
                 $filter["my"]="true";
             
-            
-            $result['dataProvider']=Lotteries::model()->getLotteries($filter);
-            return $result;
+            if($type=="dataProvider"){
+                $result['dataProvider']=Lotteries::model()->getLotteries($filter);
+                return $result;
+            } elseif($type=="activeRecord"){
+                $result=Lotteries::model()->getLotteries($filter,"pager");
+                return $result;
+            }
         }
         
         private function _editLottery($model){

@@ -254,7 +254,9 @@ class Controller extends CController
         }
         
         public function getImageList($entityId){
-            $subPath="/images/".$this->id."/".$entityId."/";
+            $model = new $this->id;
+            return $model->getImageList($entityId);
+            /*$subPath="/images/".$this->id."/".$entityId."/";
             $img_path=Yii::app()->basePath."/..".$subPath;
             $fileList=array();
             if(is_dir($img_path)){
@@ -267,11 +269,10 @@ class Controller extends CController
                         $newFile->entityType=$this->id;
                         $fileList[]=$newFile;
                     }
-                    /*** move to the next element ***/
                     $dirIter->next();
                 }
             }
-            return $fileList;
+            return $fileList;*/
         }
         
         private function rmdir_recurse($path) {

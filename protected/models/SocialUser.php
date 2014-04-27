@@ -33,11 +33,9 @@ class SocialUser extends PActiveRecord
 		return array(
 			array('user_id', 'required'),
 			array('user_id', 'length', 'max'=>10),
-			array('first_name, last_name, cod_fisc', 'length', 'max'=>45),
-			array('img, description', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, first_name, last_name, img, creditOption, gender, description, cod_fisc', 'safe', 'on'=>'search'),
+			array('id, user_id', 'safe', 'on'=>'search'),
 //			array('id, user_id, first_name, last_name, address, lat, lng, img', 'safe'),
 		);
 	}

@@ -136,7 +136,7 @@ class HOAuthShareAction extends CAction
 	{
 		try{
 			// trying to authenticate user via social network
-			$oAuth = UserOAuth::model()->authenticate( $provider );
+			$oAuth = UserOAuth::model()->authenticate( $provider,$this->id );
                         $adapter = UserOAuth::model()->getAdapter($provider);
                         $contacts = $adapter->getUserContacts();
                     ?>

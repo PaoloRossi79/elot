@@ -101,7 +101,7 @@
                                </a>
                             </div>
                             <div class="login-block header-icon">
-                              <a id="" data-toggle="modal" data-target="#loginModal">
+                              <a href="" data-toggle="modal" data-target="#loginModal">
                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img-responsive")); ?>
                               </a>
                             </div>
@@ -109,17 +109,22 @@
                     </div>
                  </div>
 	</div><!-- header -->
+        <?php // if(Yii::app()->user->isGuest) { ?>
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" id='loginModalContent'>
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                  <h4 class="modal-title" id="myModalLabel">Login</h4>
+                  <div class="login-block">
+                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img")); ?>
+                    <div class="modal-title inline upper-label" id="myModalLabel">Login</div>
+                  </div>
                 </div>
                 <?php $this->renderPartial('/site/login'); ?>
               </div>
             </div>
         </div>
+        <?php //} ?>
             
         <div id="body-container" class="row">
             <?php echo $content; ?>

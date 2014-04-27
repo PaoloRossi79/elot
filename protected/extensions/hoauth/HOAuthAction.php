@@ -107,7 +107,6 @@ class HOAuthAction extends CAction
 
 	public function run()
 	{		
-            $t=1;
 		// openId login
 		if($this->enabled)
 		{
@@ -178,7 +177,8 @@ class HOAuthAction extends CAction
 		try{
                         $this->controller->layout = "nopage";
 			// trying to authenticate user via social network
-			$oAuth = UserOAuth::model()->authenticate( $provider );
+                        $t=$this->id;
+			$oAuth = UserOAuth::model()->authenticate( $provider,$this->id );
 			$userProfile = $oAuth->profile;
 
 			// If we already have a user logged in, associate the authenticated 
@@ -195,10 +195,11 @@ class HOAuthAction extends CAction
 				{
 					// this social network account is bond to existing local account
 					Yii::log("Logged in with existing link with '$provider' provider", CLogger::LEVEL_INFO, 'hoauth.'.__CLASS__);
-					if($this->useYiiUser)
+					if($this->useYiiUser){
 						$user = User::model()->findByPk($oAuth->user_id);
-					else
+                                        } else {
 						$user = call_user_func(array($this->model, 'model'))->findByPk($oAuth->user_id);
+                                        }
 				}
 
 				if(!$oAuth->isBond || !$user)
@@ -256,7 +257,7 @@ class HOAuthAction extends CAction
 					// user was successfully logged in
 					// firing callback
 					if(method_exists($this->controller, 'hoauthAfterLogin'))
-						$this->controller->hoauthAfterLogin($user, $newUser);
+						$this->controller->hoauthAfterLogin($user, $newUser, $oAuth);
 				}
 
 				if($accessCode === 2)
@@ -265,6 +266,7 @@ class HOAuthAction extends CAction
 
 			if($accessCode === 1)
 			{
+//                            Yii::app()->controller->redirect('/');
 				?>
 				<script>
 					window.opener.location.reload();

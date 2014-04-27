@@ -86,7 +86,70 @@ $(window).bind("load", function() {
    });
    
    $('.lot-item').click(function(event){
-       $(".ticket-lot").fadeOut();
-       $("#ticket-lot-"+this.id).fadeIn();
+       if(!$("#ticket-lot-"+this.id).is(":visible")){
+            $(".ticket-block").fadeOut();
+            $("#ticket-lot-"+this.id).fadeIn();
+       }
    });
+   
+   $(".small-row-scroll").slimScroll({
+        height: '120px',
+        size: '5px',
+   }); 
+   
+   $(".long-col-scroll").slimScroll({
+        height: '200px',
+        size: '5px',
+   }); 
+   
+   $(".lot-box-int").mouseenter(
+      function(){
+        var hiddenDiv = $(this).parent().children('.lot-box-hover');
+        hiddenDiv.filter(':not(:animated)').fadeIn();
+      // This only fires if the row is not undergoing an animation when you mouseover it
+      }
+   );
+   $(".lot-box-hover").mouseleave(
+       function(){
+        $(this).fadeOut();
+      // This only fires if the row is not undergoing an animation when you mouseover it
+      }
+   );
+   $(".favLotBtn").click(function(event){
+       var btnClick = $(this);
+       var url;
+       if(btnClick.hasClass("unsetFav")){
+           url = "/lotteries/unsetFavorite";
+       } else if(btnClick.hasClass("setFav")){
+           url = "/lotteries/setFavorite";
+       }
+       $.post( url , { lotId: $(this).attr('name')})
+            .done(function( data ) {
+                if(data){
+                    if(btnClick.hasClass("unsetFav")){
+                        btnClick.removeClass("glyphicon-star");
+                        btnClick.addClass("glyphicon-star-empty");
+                        btnClick.removeClass("unsetFav");
+                        btnClick.addClass("setFav");
+                    } else if(btnClick.hasClass("setFav")){
+                        btnClick.removeClass("glyphicon-star-empty");
+                        btnClick.addClass("glyphicon-star");
+                        btnClick.removeClass("setFav");
+                        btnClick.addClass("unsetFav");
+                    }
+                }
+       });
+   });
+   /*$(".unfavLotBtn").click(function(event){
+       var btnClick = $(this);
+       $.post( "lotteries/unsetFavorite", { lotId: $(this).attr('name')})
+            .done(function( data ) {
+                if(data){
+                    btnClick.removeClass("glyphicon-star");
+                    btnClick.addClass("glyphicon-star-empty");
+                    btnClick.removeClass("unfavLotBtn");
+                    btnClick.addClass("favLotBtn");
+                }
+       });
+   });*/
 });

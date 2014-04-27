@@ -3,7 +3,9 @@
 class SiteController extends Controller
 {
         public $layout='//layouts/column1';
-	/**
+        
+        public $favLots;
+        /**
 	 * Declares class-based actions.
 	 */
 	public function actions()
@@ -64,6 +66,7 @@ class SiteController extends Controller
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
                 $this->layout='//layouts/index';
+                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
 		$this->render('index');
 	}
 
@@ -192,9 +195,70 @@ class SiteController extends Controller
                 $facebook->api()->api('/me/friends', "post", array(message => "Hi there")); // post 
 	}
         
-        /*public function hoauthAfterLogin($user,$newUser) {
-            $this->redirect(Yii::app()->user->returnUrl);
-        }*/
+        public function hoauthAfterLogin($user,$newUser,$oAuth) {
+            // check if new User
+            if(!$newUser){
+                if($user->ext_source == 0){
+                    $socialUser = SocialUser::model()->find('t.user_id='.$user->id.' AND t.login_type='.Yii::app()->params['authExtSource'][$oAuth->provider]);
+                    if($socialUser){
+                        if($socialUser->ext_user_id != $oAuth->identifier){ // diff ext user id: maybe new account
+                            $socialUser->ext_user_id = $oAuth->identifier;
+                            $socialUser->linked_on = new CDbExpression('NOW()');
+                            $socialUser->save();
+                        }
+                    } else {
+                        $newSocialUser = new SocialUser();
+                        $newSocialUser->user_id = $user->id;
+                        $newSocialUser->login_type = Yii::app()->params['authExtSource'][$oAuth->provider];
+                        $newSocialUser->ext_user_id = $oAuth->identifier;
+                        $newSocialUser->linked_on = new CDbExpression('NOW()');
+                        $newSocialUser->save();
+                    }
+                }
+            } else {
+                $newSocialUser = new SocialUser();
+                $newSocialUser->user_id = $user->id;
+                $newSocialUser->login_type = Yii::app()->params['authExtSource'][$oAuth->provider];
+                $newSocialUser->ext_user_id = $oAuth->identifier;
+                $newSocialUser->linked_on = new CDbExpression('NOW()');
+                $newSocialUser->save();
+            }
+        }
         
+        public function actionAdminCron(){
+            Yii::log("CRON START!", "warning");
+            // ADD TO CRONTAB: php /path/to/cron.php Cron
+            $busy = file_exists(Yii::app()->basePath."/cron-lottery.lock");
+            if(!$busy){
+                Yii::log("CRON OK!", "warning");
+                $file=Yii::app()->basePath."/cron-lottery.lock";
+                $oFile=fopen($file,"w");
+                fwrite($oFile,"DO");
+                fclose($oFile);
+                try {
+                    $errors = array('open'=>array(),'close'=>array(), 'extract'=>array(),'void'=>array());
+                    Lotteries::model()->checkToOpen($errors);
+                    Yii::log("CRON 1", "warning");
+                    Lotteries::model()->checkToClose($errors);
+                    Yii::log("CRON 2", "warning");
+                    Lotteries::model()->checkToExtract($errors);
+                    Yii::log("CRON 3", "warning");
+                    Lotteries::model()->checkToVoid($errors);
+                    Yii::log("CRON Fine", "warning");
+                    if(count($errors['open'])+
+                       count($errors['close'])+
+                       count($errors['extract'])+
+                       count($errors['void']) > 0){
+                       $emailRes=EmailManager::sendCronAdminEmail($errors);
+                    }
+                } catch (Exception $exc) {
+                    Yii::log("CRON error:".$exc->getTraceAsString(),'error');
+                }
+                unlink($file);
+            } else {
+                Yii::log("CRON Busy -> SKIP ", "warning");
+            }
+            Yii::log("CRON END!", "warning");
+        }
         
 }

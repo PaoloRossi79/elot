@@ -204,7 +204,7 @@ class Hybrid_Auth
 	*        openid_identifier: The OpenID identity provider identifier
 	*           google_service: can be "Users" for Google user accounts service or "Apps" for Google hosted Apps
 	*/
-	public static function authenticate( $providerId, $params = NULL )
+	public static function authenticate( $providerId, $params = NULL , $actionId)
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Auth::authenticate( $providerId )" );
 
@@ -214,7 +214,7 @@ class Hybrid_Auth
 
 			$provider_adapter = Hybrid_Auth::setup( $providerId, $params );
 
-			$provider_adapter->login();
+			$provider_adapter->login($actionId);
 		}
 
 		// else, then return the adapter instance for the given provider
@@ -348,6 +348,7 @@ class Hybrid_Auth
 		Hybrid_Logger::info( "Enter Hybrid_Auth::redirect( $url, $mode )" );
 
 		if( $mode == "PHP" ){
+                        header('Access-Control-Allow-Origin: *');
 			header( "Location: $url" ) ;
 		}
 		elseif( $mode == "JS" ){

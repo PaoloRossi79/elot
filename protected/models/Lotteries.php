@@ -155,29 +155,29 @@ class Lotteries extends PActiveRecord
             $criteria=new CDbCriteria; 
             $criteria->addInCondition('status',array(3,4));
             $dataProvider=new CActiveDataProvider('Lotteries', array(
-                'pagination'=>array(
-                    'pageSize'=>8,
-                ),
+                /*'pagination'=>array(
+//                    'pageSize'=>8,
+                ),*/
                 'criteria'=>$criteria,
             ));
                 
             return $dataProvider;
         }
         
-        public function getLotteries($type)
+        public function getLotteries($type,$returnType="")
 	{
             $criteria=new CDbCriteria; 
             if(isset($type['my'])){
                 $criteria->addCondition('owner_id='.Yii::app()->user->id);
             } 
             if(isset($type['status'])){
-                /*if($type['status']==="active"){
+                if($type['status']==="active"){
                     $dbToday=new CDbExpression('NOW()');
                     $criteria->order='lottery_start_date';
                     $criteria->addCondition('status=`active`');
                     $criteria->addCondition('lottery_start_date <='.$dbToday);
                     $criteria->addCondition('lottery_draw_date >='.$dbToday);
-                }*/
+                }
                 if(!is_array($type['status'])){
                     $status=array($type['status']);
                 } else {
@@ -218,15 +218,27 @@ class Lotteries extends PActiveRecord
             if(isset($type['searchText'])){
                 $criteria->addCondition('t.name like "%' .$type['searchText'].'%" OR t.prize_desc like "%' .$type['searchText'].'%"');
             }
+            
+            if($returnType == "pager"){
+                $total = Lotteries::model()->count($criteria);
 
-            $dataProvider=new CActiveDataProvider('Lotteries', array(
-//                'pagination'=>array(
-//                    'pageSize'=>20,
-//                ),
-                'criteria'=>$criteria,
-            ));
-                
-            return $dataProvider;
+                $pages = new CPagination($total);
+                $pages->pageSize = 5;
+                $pages->applyLimit($criteria);
+
+                $lots = Lotteries::model()->findAll($criteria);
+
+                return array('lotteries'=>$lots,'pages'=>$pages);
+            } else {
+                $dataProvider=new CActiveDataProvider('Lotteries', array(
+                    'pagination'=>array(
+                        'pageSize'=>8,
+                    ),
+                    'criteria'=>$criteria,
+                ));
+
+                return $dataProvider;
+            }
             
         }
         
@@ -638,6 +650,19 @@ class Lotteries extends PActiveRecord
                 }
             }
         }
+        
+        public function getMyFavoriteLotteries(){
+            $userId = Yii::app()->user->id;
+            $crit = new CDbCriteria();
+            $crit->select = 't.lottery_id';
+            $crit->addCondition('t.user_id = '.$userId);
+            $crit->addCondition('t.active = 1');
+            $favLots = FavoriteLottery::model()->findAll($crit);
+//            $favArr = CHtml::listData( $favLots, 'id','lottery_id');
+            $favArr = CHtml::listData( $favLots, 'lottery_id','lottery_id');
+            return $favArr;
+        }
+        
         /*public function checkToExtract(&$errors){
             // check close to extracted
             $extractCriteria = new CDbCriteria();

@@ -31,7 +31,7 @@
                 <div class="panel-heading">
                   <h3 class="panel-title"><?php echo Yii::t('wonlot',$title);?></h3>
                 </div>
-                <div class="panel-body checkbox-container">
+                <div class="panel-body checkbox-container small-row-scroll">
                     <?php echo $form->checkBoxList($model, $title, $items, array('label' => false)); ?>
                 </div>
             </div>

@@ -14,7 +14,7 @@
 /**
  * NOTE: If you want to change the order of button it is better to change this order in HybridAuth config.php file
  */
-class HOAuthShare extends CWidget
+class HOAuth extends CWidget
 {
 	/**
 	 * @var string $route id of module and controller (eg. module/controller) for wich to generate oauth urls
@@ -42,7 +42,7 @@ class HOAuthShare extends CWidget
 			$this->route = $this->controller->module ? $this->controller->module->id . '/' . $this->controller->id : $this->controller->id;
 		
 		require_once(dirname(__FILE__).'/../models/UserOAuth.php');
-                require_once(dirname(__FILE__).'/../HOAuthShareAction.php');
+		require_once(dirname(__FILE__).'/../HOAuthAction.php');
 		$this->registerScripts();
 	}
 
@@ -50,31 +50,47 @@ class HOAuthShare extends CWidget
 	{
 		$config = UserOAuth::getConfig();
 		echo CHtml::openTag('div', array(
-			'id' => 'hoauthShareWidget' . $this->id,
-			'class' => 'hoauthShareWidget social-share-container',
+			'id' => 'hoauthWidget' . $this->id,
+			'class' => 'hoauthWidget',
 			));
-                
+
 		foreach($config['providers'] as $provider => $settings){
 			if($settings['enabled']){
-				$this->render('friends', array(
+				$this->render('link', array(
 					'provider' => $provider,
 				));
                         }
                 }
-		echo '<div class="clearfix"></div>';
 		echo CHtml::closeTag('div');
 	}
 
 	protected function registerScripts()
 	{
 		$assetsUrl = Yii::app()->getAssetManager()->publish(dirname(__FILE__).DIRECTORY_SEPARATOR.'assets',false,-1,YII_DEBUG);
-                $cs = Yii::app()->getClientScript();
+    $cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('jquery'); 
-                $cs->registerCssFile($assetsUrl.'/css/zocial.css');
-                $config = UserOAuth::getConfig();
+    $cs->registerCssFile($assetsUrl.'/css/zocial.css');
     ob_start();
 		?>
-                (function() {
+		$(function() {
+			$('.hoauthWidget a').click(function() {
+                            alert(this.className);
+                            alert(this.className.indexOf("facebook"));
+                            if(this.className.indexOf("facebook") >= 0){
+                                alert("Facebook");
+                                /*FB.api('/me', function(response) {
+                                    alert(JSON.stringify(response));
+                                }*/
+                                FB.login(function(response) {
+                                    alert("LOGIN!");
+                                });
+                            }
+                                
+				
+				return false;
+			});
+		});
+                /*(function() {
                     var po = document.createElement('script');
                     po.type = 'text/javascript'; po.async = true;
                     po.src = 'https://apis.google.com/js/client:plusone.js?onload=render';
@@ -88,7 +104,7 @@ class HOAuthShare extends CWidget
                     js.src = "//connect.facebook.net/en_US/all.js";
                     fjs.parentNode.insertBefore(js, fjs);
                   }(document, 'script', 'facebook-jssdk'));
-                  /*function signinCallback(authResult) {
+                  function signinCallback(authResult) {
                         if (authResult['status']['signed_in']) {
                             gapi.client.load('plus','v1', function(){
                                 if (authResult['access_token']) {
@@ -101,8 +117,8 @@ class HOAuthShare extends CWidget
                           console.log('Sign-in state: ' + authResult['error']);
                           authStatus = false;
                         }
-                  }*/
-                  /*var gpdefaults = {
+                  }
+                  var gpdefaults = {
                         clientid: "<?php echo $config['providers']['Google']['keys']['id'];?>",
                         callback: signinCallback,
                         cookiepolicy: 'single_host_origin',
@@ -114,40 +130,25 @@ class HOAuthShare extends CWidget
                             cookiepolicy: 'single_host_origin',
                             prefilltext: 'Create your Google+ Page too!',
                             calltoactiondeeplinkid: '/pages/create'
-                  };*/
+                  };
                   window.fbAsyncInit = function() {
                     FB.init({
                       appId      : "<?php echo $config['providers']['Facebook']['keys']['id'];?>",
                       status     : true,
-                      xfbml      : true
+                      xfbml      : true,
+                      display    : "popup"
                     });
                   };
-                  var fbScope={scope: 'email,user_birthday'};
-                  $(function() {
-			$('.hoauthShareWidget a').click(function() {
-				var signinWin;
-				var screenX     = window.screenX !== undefined ? window.screenX : window.screenLeft,
-					screenY     = window.screenY !== undefined ? window.screenY : window.screenTop,
-					outerWidth  = window.outerWidth !== undefined ? window.outerWidth : document.body.clientWidth,
-					outerHeight = window.outerHeight !== undefined ? window.outerHeight : (document.body.clientHeight - 22),
-					width       = <?php echo $this->popupWidth?>,
-					height      = <?php echo $this->popupHeight?>,
-					left        = parseInt(screenX + ((outerWidth - width) / 2), 10),
-					top         = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
-					options    = (
-					'width=' + width +
-					',height=' + height +
-					',left=' + left +
-					',top=' + top
-					);
-				signinWin=window.open(this.href,'Login',options);
+                  var fbScope={scope: 'email,user_birthday'};*/
+                  /*function render() {
 
-				if (window.focus) {signinWin.focus()}
+                    // Additional params
+                    var additionalParams = {
+                      'theme' : 'dark'
+                    };
 
-				return false;
-			});
-		});
-		  
+                    gapi.signin.render('googleLoginButton', additionalParams);
+                  }*/
 <?php
     $cs->registerScript(__CLASS__, ob_get_clean());
 	}

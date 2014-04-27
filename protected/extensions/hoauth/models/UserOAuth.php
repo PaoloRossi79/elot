@@ -185,13 +185,13 @@ class UserOAuth extends CActiveRecord
 	 * @access public
 	 * @return void
 	 */
-	public function authenticate($provider)
+	public function authenticate($provider, $actionId)
 	{
 		if(empty($this->provider))
 		{
 			try
 			{
-				$this->_adapter = $this->hybridauth->authenticate($provider);
+				$this->_adapter = $this->hybridauth->authenticate($provider, NULL, $actionId);
 				$this->identifier = $this->profile->identifier;
 				$this->provider = $provider;
 				$oAuth = self::model()->findByPk(array('provider' => $this->provider, 'identifier' => $this->identifier));

@@ -15,12 +15,13 @@ class CronTicketsCommand extends CConsoleCommand
             try {
                 // ADD TO CRONTAB: php /path/to/cron.php CronTickets
                 Yii::log("CRON Tickets OK!", "warning");
-                $errors = array('tickets'=>array());
+                $errors = array('tickets'=>array(),'giftTickets'=>array());
 
                 Lotteries::model()->sendTicketsEmail($errors);
+                Lotteries::model()->sendGiftTicketsEmail($errors);
                 Yii::log("CRON Tickets Fine", "warning");
 
-                if(count($errors['tickets']) > 0){
+                if(count($errors['tickets']) > 0 && count($errors['giftTickets']) > 0){
                     $emailRes=EmailManager::sendCronAdminEmail($errors);
                 }
             } catch (Exception $exc) {

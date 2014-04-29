@@ -24,14 +24,7 @@
                     <div class="row ticket-block" id="ticket-lot-<?php echo $m->id; ?>">
                         <!--<div class="small-row-scroll">--> <!-- for small row scroller inside ticket block -->
                         <div class="">
-                                <?php foreach($m->tickets as $t){ ?>
-                                    <div class="ticket-lot">
-                                        <?php if($m->winner_ticket_id == $t->id){ ?>
-                                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/winner.png", "Winner", array("class"=>"winner-ban")); ?>
-                                        <?php } ?>
-                                        <?php echo CHtml::link($t->serial_number, CController::createUrl('tickets/view/'.$t->id), array('class'=> 'ticket-number-text')); ?>
-                                    </div>
-                                <?php } ?>
+                            <?php $this->widget('ticketsWidget',array('tickets'=>$m->tickets)); ?>
                         </div>
                     </div>
                 </td>
@@ -40,3 +33,4 @@
         </table>
     </div>    
 </div>
+<?php $this->renderPartial('/lotteries/_giftModal'); ?>

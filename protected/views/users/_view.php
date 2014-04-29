@@ -4,8 +4,6 @@
 ?>
 
 <div class="view">
-    
-        <button type="button" class="btn btn-primary"><?php echo CHtml::link('Special Offers', CController::createUrl('userSpecialOffers/view/'.$data->id));?></button>
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>

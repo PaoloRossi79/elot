@@ -7,6 +7,11 @@
 	<meta name="language" content="en" />
         
         <?php 
+        header("Access-Control-Allow-Origin: facebook.com");
+        header("Access-Control-Allow-Origin: google.com");
+        ?>
+        
+        <?php 
             //Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/screen.css','screen, projection');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/print.css','print');
         ?>

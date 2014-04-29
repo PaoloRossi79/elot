@@ -4,7 +4,6 @@ class SiteController extends Controller
 {
         public $layout='//layouts/column1';
         
-        public $favLots;
         /**
 	 * Declares class-based actions.
 	 */
@@ -66,7 +65,6 @@ class SiteController extends Controller
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
                 $this->layout='//layouts/index';
-                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
 		$this->render('index');
 	}
 

@@ -31,52 +31,61 @@
                 <img src="/images/site/icon-ticket.png">
             </div>
             <div class="lot-value col-md-6">
-                <h3><?php echo " = ".$data->ticket_value;?></h3>
+                <h3>= <?php echo Chtml::encode((float)$data->ticket_value+0);?></h3>
             </div>
             <div class="lot-wlmoney col-md-3">
                 <img src="/images/site/wl-money.png">
             </div>
         </div>
+        <?php if($data->max_ticket){ ?>
+            <div class="lot-box-first-row">
+                <p class="text-left pull-left win-perc-text"><?php echo Yii::t('wonlot','Hai 1 possibilità su');?> <span class="win-perc"><?php echo Chtml::encode($data->max_ticket);?></span></p>
+            </div>
+        <?php } ?>
     </div>
     <div class="lot-box-hover">
         <div class="lot-icons-cont">
             <div class="star-cont">
+            <?php if($this->userId != $data->owner->id && !Yii::app()->user->isGuest){ ?>
                 <?php if(!in_array($data->id,$this->favLots)){ ?>
                     <?php 
-                    /*echo CHtml::ajaxLink(
-                        $label = '', 
-                        $url = CController::createUrl('lotteries/setFavorite'),  
-                        $ajaxOptions=array (
-                            'type'=>'POST',
-                            'dataType'=>'json',
-                            'data'=>array('lotId'=>$data->id),
-                            'success'=>'function(data){                                             
-                                alert(data);
-                                alert($(this));
-                                if(data){
-                                    $(this).removeClass("glyphicon-star-empty");
-                                    $(this).addClass("glyphicon-star");
-                                    $(this).click(function(){return false;});
-                                } else {
-                                    //alert("Errore");
-                                }
-                            }'
-                        ), 
-                        $htmlOptions=array('name'=>'favLotBtn-'.$data->id, 'class'=>'btn btn-default btn-lg glyphicon glyphicon-star-empty')
-                    );*/
                     echo CHtml::ajaxLink('', '#',array(),array('id'=>'favLotBtn-'.$data->id,'name'=>$data->id,'class'=>'favLotBtn setFav btn btn-default btn-lg glyphicon glyphicon-star-empty'));
                     ?>
-                
+
                 <?php } else { ?>
                     <?php echo CHtml::ajaxLink('', '#',array(),array('id'=>'unfavLotBtn-'.$data->id,'name'=>$data->id,'class'=>'favLotBtn unsetFav btn btn-default btn-lg glyphicon glyphicon-star'));?>
                 <?php } ?>
+            <?php } ?>
             </div>
             <div class="cocc-cont">
                 <img src="/images/site/coccarda-small.png">
             </div>
         </div>
-        <div>
-            <h2><?php echo $data->prize_desc;?></h2>
+        <div class="prize-desc-over-box">
+            <a href="<?php echo CController::createUrl('lotteries/view/'.$data->id);?>">
+                <div class="prize-desc-over">
+                    <h2><?php echo $data->prize_desc;?></h2>
+                </div>
+            </a>
+        </div>
+        <div class="lot-creator-over">
+            <span class="user-small-vendor-container pull-left">
+                <span class="small-username">Venditore:</span>
+                <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
+                    <span class="small-username"><?php echo CHtml::encode($data->owner->username); ?></span>
+                </a>
+            </span>
+            <span class="user-small-avatar-container pull-right">
+                <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
+                    <?php echo CHtml::image("/images/userProfiles/".$data->owner_id."/smallThumb/".$data->owner->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                </a>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+        
+        <div class="lot-location-over pull-left">
+            <span class="small-username">Località:</span>
+            <span class="small-username"><?php echo CHtml::encode($data->location->address); ?></span>
         </div>
     </div>
 </div>

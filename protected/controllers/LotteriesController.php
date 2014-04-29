@@ -9,7 +9,7 @@ class LotteriesController extends Controller
 	public $layout='//layouts/basecolumn';
         
         public $ticketTotals;
-        public $favLots;
+        public $giftTicketTotals;
         
         /**
 	 * @return array action filters
@@ -68,6 +68,7 @@ class LotteriesController extends Controller
                 if(!Yii::app()->user->isGuest){
 //                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                     $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
+                    $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($id);
                 }
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
@@ -249,7 +250,6 @@ class LotteriesController extends Controller
             $lotteries=$this->filterLotteries(false);
             if(!Yii::app()->user->isGuest){
                 $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
-                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
             }
             /*$this->render('index',array(
                 'lotteries'=>$lotteries['lotteries'],
@@ -430,6 +430,39 @@ class LotteriesController extends Controller
                 } else {
                     echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
                 }
+            } elseif(!empty($params['giftEmail']) && !empty($params['ticketId'])) {
+                $ticket = Tickets::model()->findByPk($params['ticketId']);
+                // check for ownership
+                if($ticket->user_id == Yii::app()->user->id){
+                    if($ticket->is_gift != 1){
+                        $checkExistUserCrit = new CDbCriteria();
+                        $checkExistUserCrit->addCondition('t.email = "'.$params['giftEmail'].'"');
+                        $checkExistUserCrit->addCondition('t.is_active = 1');
+                        $user = Users::model()->find($checkExistUserCrit);
+                        if($user->email == Yii::app()->user->email){
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Non puoi regalare a te stesso!"));
+                            return;
+                        }
+                        if($user){
+                            $ticket->user_id = $user->id;
+                        } else {
+                            $ticket->gift_provider = 'email';
+                            $ticket->gift_ext_user = $params['giftEmail'];
+                        }
+                        $ticket->is_gift = 1;
+                        $ticket->is_sent = 0;
+                        $ticket->gift_from_id = Yii::app()->user->id;
+                        if($ticket->save()){
+                            echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                        } else {
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                        }
+                    } else {
+                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                    }
+                } else {
+                    echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
+                }
             } else {
                 echo CJSON::encode(array('exit'=>0,'msg'=>"Parametri mancanti"));
             }
@@ -437,6 +470,7 @@ class LotteriesController extends Controller
         
         public function actionBuyTicket()
         {
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
             Yii::log('BuyStart','error');
             $data = array();
             $data["type"] = "alert alert-error";
@@ -537,6 +571,7 @@ class LotteriesController extends Controller
             }
             
             $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($lotId);
+            $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($lotId);
             $data["id"] = $lot->id;
             $data["ticketNumber"] = $ticket->id;
             $data["lottery"] = $lot;

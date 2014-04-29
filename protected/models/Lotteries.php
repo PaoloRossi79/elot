@@ -628,6 +628,7 @@ class Lotteries extends PActiveRecord
             $crit = new CDbCriteria();
             $crit->addCondition('t.status = 1');
             $crit->addCondition('t.is_sent = 0');
+            $crit->addCondition('t.is_gift = 0');
             $crit->order = "id";
             $crit->limit = 5;
             $tickets = Tickets::model()->findAll($crit);
@@ -651,8 +652,67 @@ class Lotteries extends PActiveRecord
             }
         }
         
+        public function sendGiftTicketsEmail(&$errors){
+            $crit = new CDbCriteria();
+            $crit->addCondition('t.status = 1');
+            $crit->addCondition('t.is_sent = 0');
+            $crit->addCondition('t.is_gift = 1');
+            $crit->addCondition('t.gift_provider = "email"');
+            $crit->order = "id";
+            $crit->limit = 5;
+            $tickets = Tickets::model()->findAll($crit);
+            foreach($tickets as $ticket){
+                try {
+                    $res=EmailManager::model()->sendGiftTicket($ticket,$ticket->gift_ext_user);
+                    if($res){
+                        $ticket->is_sent = 1;
+                        if(!$ticket->save()){
+                            Yii::log("Sending tickets error: ".$ticket->id,'error');
+                            $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                        }
+                    } else {
+                        Yii::log("Sending tickets error: ".$ticket->id,'error');
+                        $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                    }
+                } catch (Exception $exc) {
+                    Yii::log($exc->getTraceAsString(),'error');
+                    $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                }
+            }
+            $crit = new CDbCriteria();
+            $crit->addCondition('t.status = 1');
+            $crit->addCondition('t.is_sent = 0');
+            $crit->addCondition('t.is_gift = 1');
+            $crit->addCondition('t.gift_provider is null');
+            $crit->addCondition('t.user_id != t.gift_from_id');
+            $crit->order = "id";
+            $crit->limit = 5;
+            $tickets = Tickets::model()->findAll($crit);
+            foreach($tickets as $ticket){
+                try {
+                    $res=EmailManager::model()->sendGiftTicket($ticket,$ticket->user_id);
+                    if($res){
+                        $ticket->is_sent = 1;
+                        if(!$ticket->save()){
+                            Yii::log("Sending tickets error: ".$ticket->id,'error');
+                            $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                        }
+                    } else {
+                        Yii::log("Sending tickets error: ".$ticket->id,'error');
+                        $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                    }
+                } catch (Exception $exc) {
+                    Yii::log($exc->getTraceAsString(),'error');
+                    $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                }
+            }
+        }
+        
         public function getMyFavoriteLotteries(){
             $userId = Yii::app()->user->id;
+            if(!$userId){
+                return array();
+            }
             $crit = new CDbCriteria();
             $crit->select = 't.lottery_id';
             $crit->addCondition('t.user_id = '.$userId);

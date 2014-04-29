@@ -141,14 +141,19 @@ class Tickets extends PActiveRecord
 	{
             $criteria=new CDbCriteria; 
             $criteria->addCondition('t.lottery_id = '.$lotId); 
+            $criteria->addCondition('t.user_id = '.Yii::app()->user->id); 
             $criteria->addCondition('t.status = 1'); 
-            /*$dataProvider=new CActiveDataProvider('Tickets', array(
-                'pagination'=>array(
-                    'pageSize'=>10,
-                ),
-                'criteria'=>$criteria,
-            ));
-            return $dataProvider;*/
+            return $this->findAll($criteria);
+        }
+        
+        public function getMyGiftTicketsByLottery($lotId)
+	{
+            $criteria=new CDbCriteria; 
+            $criteria->addCondition('t.lottery_id = '.$lotId); 
+            $criteria->addCondition('t.user_id = '.Yii::app()->user->id); 
+            $criteria->addCondition('t.is_gift = 1'); 
+            $criteria->addCondition('t.gift_from_id != '.Yii::app()->user->id); 
+            $criteria->addCondition('t.status = 1'); 
             return $this->findAll($criteria);
         }
         

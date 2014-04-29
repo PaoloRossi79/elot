@@ -133,6 +133,18 @@ class EmailManager extends PActiveRecord
             $sendRes=$mail->send();
             return $sendRes;
         }
+        
+	public function sendGiftTicket($ticket,$receiver){
+            $mail = new YiiMailer();
+            $mail->setView('giftTicket');
+            $mail->setData(array('ticket' => $ticket));
+            $mail->setFrom('info@wonlot.com', 'WonLot');
+            $mail->setTo($receiver);
+//            $mail->setTo('paolorossi79@gmail.com');
+            $mail->setSubject('Ti hanno regalato un ticket su WonLot!');
+            $sendRes=$mail->send();
+            return $sendRes;
+        }
 	
 	public function sendExtractLotteryToWinner($lottery,$winner){
             $mail = new YiiMailer();

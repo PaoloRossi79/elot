@@ -3,10 +3,10 @@ class WebUser extends CWebUser {
   private $_model;
   public $userTypes;
  
-  function getFirst_Name()
+  function getEmail()
   {
 	$user = $this->loadUser(Yii::app()->user->id);
-	return $user->UserProfiles->firstname . ' ' . $user->UserProfiles->lastname;
+	return $user->email;
   }
 
   public function getCartItems() {

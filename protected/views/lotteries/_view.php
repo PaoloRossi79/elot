@@ -13,7 +13,7 @@
         <div class="col-md-12">
             <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
             <div class="text-block">
-                <?php echo CHtml::encode($model->prize_desc); ?>
+                <?php echo $model->prize_desc; ?>
             </div>
         </div>
         <div class="col-md-4">
@@ -103,5 +103,5 @@
 </div>
 <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
     <?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
-    <?php $this->renderPartial('_giftModal',array('data'=>$model)); ?>
+    <?php $this->renderPartial('_giftModal',array('isBuy'=>true)); ?>
 <?php } ?>

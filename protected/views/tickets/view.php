@@ -19,6 +19,29 @@
                     </div>
                 </div>
         <?php } ?>
+        <?php if($model->is_gift){ ?>
+            <?php $userId = Yii::app()->user->id; ?>
+                <div class="col-md-12">
+                    <h3><?php echo Yii::t("wonlot","Regalo!"); ?></h3>
+                    <?php if($model->gift_from_id == $userId && $model->user_id == $userId) { ?>
+                        <div class="text-block">
+                            <?php echo Yii::t('wonlot','Ticket regalato a'); ?>&nbsp;
+                            <b><?php echo $model->gift_ext_user; ?></b>&nbsp;
+                            <?php echo Yii::t('wonlot','(in attesa di iscrizione)'); ?>
+                        </div>
+                    <?php } elseif($model->gift_from_id == $userId){ ?>
+                        <div class="text-block">
+                            <?php echo Yii::t('wonlot','Ticket regalato a '); ?>
+                            <b><?php echo $model->giftFromUser->username; ?></b>
+                        </div>
+                    <?php } elseif($model->gift_from_id != $userId && $model->user_id == $userId) { ?>
+                        <div class="text-block">
+                            <?php echo Yii::t('wonlot','Ticket regalato da'); ?>&nbsp;
+                            <b><?php echo $model->giftFromUser->username; ?></b>
+                        </div>
+                    <?php } ?>
+                </div>
+        <?php } ?>
         <?php
             $imgList=Lotteries::model()->getImageList($model->lottery->id);
             if(!empty($imgList)){ ?>
@@ -34,7 +57,7 @@
         <div class="col-md-12">
             <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
             <div class="text-block">
-                <?php echo CHtml::encode($model->lottery->prize_desc); ?>
+                <?php echo $model->lottery->prize_desc; ?>
             </div>
         </div>
         <div class="col-md-4">

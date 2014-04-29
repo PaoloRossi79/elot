@@ -49,7 +49,7 @@ body, table, tr, td, input, .tipsy-inner {
 }*/
 
 a, a:hover, a:focus, a:visited {
-   color: #5B626C;
+   /*color: #5B626C;*/
    text-decoration: none;
 }
 
@@ -482,7 +482,7 @@ button.close {
 
 .lot-box-item {
     width: 250px!important;
-    height: 410px!important;
+    height: 450px!important;
     margin: 10px!important;
     float: left;
     background-color: #fdfae5;
@@ -491,10 +491,14 @@ button.close {
 
 .lot-box-int, .lot-box-hover {
     width: 240px;
-    height: 400px;
+    height: 440px;
     margin: 5px;
     border: 1px solid black;
     background-color: white;
+}
+
+.identity-text {
+    border-radius: 5px;
 }
 
 .lot-box-hover {
@@ -506,6 +510,22 @@ button.close {
     background-color: whitesmoke;
     color: black;
     font-size: 50px;
+    overflow: hidden;
+}
+
+.user-small-thumb {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.user-small-avatar-container {
+    min-width: 80px;
+}
+
+.user-small-vendor-container {
+    max-width: 105px;
+    max-height: 80px;
+    overflow: hidden;
 }
 
 .lot-cat {
@@ -564,6 +584,17 @@ button.close {
     min-height: 80px;
 }
 
+.win-perc {
+    font-size: 24px;
+    color: red;
+}
+
+.win-perc-text {
+    margin: 0 20px 0 20px;
+    font-size: 16px;
+    vertical-align: central;
+}
+
 .lot-panel {
     
 }
@@ -573,6 +604,13 @@ button.close {
     color: white;
     border-radius: 4px;
     padding: 5px 20px 5px 20px;
+}
+
+.lot-box-item h3 , .lot-box-item h4 {
+    background-color: white;
+    color: black;
+    border-radius: 0;
+    padding: 0;
 }
 
 .lot-b-text {
@@ -588,6 +626,36 @@ button.close {
     font-size: 4em;
     vertical-align: middle;
     margin-left: 20px;
+}
+
+.prize-desc-over {
+    border: 1px dotted black;
+    border-radius: 4px;
+    height: 211px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.prize-desc-over-box {
+    height: 220px;
+}
+
+.lot-creator-over {
+    height: 60px;
+}
+
+.lot-creator-over, .lot-creator-over span {
+    z-index: 11;
+}
+
+.lot-location-over, .lot-location-over span {
+    z-index: 9;
+}
+.lot-location-over {
+    height: 0px;
+    position: relative;
+    top: -40px;
+    margin-left: 25px;
 }
 
 .cat-icon {
@@ -608,18 +676,22 @@ button.close {
 }
 
 .status-2 {
-    background-color: #fedc7f;
+    background-color: orange;
 }
 
 .status-3 {
-    background-color: #5bdd3d;
+    background-color: green;
 }
 
 .status-4 {
-    background-color: #fd7c70;
+    background-color: red;
 }
 
 .status-5 {
+    background-color: red;
+}
+
+.status-6 {
     background-color: black;
 }
 
@@ -879,6 +951,11 @@ button.close {
     top: 100px;
 }
 
+.small-username {
+    font-size: small;
+    margin-bottom: 0;
+}
+
 .fileupload-buttonbar {
     float: right;
 }
@@ -926,6 +1003,18 @@ button.close {
     width: 100%;
     min-width: 300px;
     padding: 50px;
+}
+
+.ticket-gift-text {
+    position: relative;
+    top: 44px;
+    left: -26px;
+}
+
+.ticket-gift-btn {
+    position: relative;
+    top: 25px;
+    left: 27px;
 }
 
 .buy-btn {
@@ -982,4 +1071,21 @@ button.close {
 
 .favLotBtn {
     color: green;
+}
+
+.gift-email-box {
+    display: none;
+}
+
+.gift-btn-container {
+    margin: 10px 0 10px 0;
+}
+
+.friends {
+    margin: 10px 0 10px 0;
+    padding: 10px;
+}
+
+#emailErrorText, #emailSuccessText {
+    display: none;
 }

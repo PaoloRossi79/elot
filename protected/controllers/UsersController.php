@@ -34,7 +34,7 @@ class UsersController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('buyCredit','myProfile','editNewsletter'),
+				'actions'=>array('buyCredit','myProfile','editNewsletter','setFavorite','unsetFavorite'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -362,6 +362,66 @@ class UsersController extends Controller
                         'this'=>$this,
 		),false,true);
 	}
+        
+        public function actionSetFavorite(){
+            $userId=$_POST['userId'];
+            $res = 0;
+            if($userId){
+                $myUserId = Yii::app()->user->id;
+                $checkFav = FollowUser::model()->find('t.user_id='.$userId.' AND t.follower_id='.$myUserId);
+                if($checkFav){
+                    if($checkFav->active != 1){
+                        $checkFav->active = 1;
+                        if($checkFav->save()){
+                            $res = 1;
+                        } else {
+                            $res = 0;
+                        }
+                    } else {
+                        $res = 1;
+                    }
+                } else {
+                    $newFav = new FollowUser;
+                    $newFav->user_id = $userId;
+                    $newFav->follower_id = $myUserId;
+                    $newFav->active = 1;
+                    if($newFav->save()){
+                        $res = 1;
+                    } else {
+                        $res = 0;
+                    }
+                }
+            } else {
+                $res = 0;
+            }
+            
+            echo CJSON::encode($res);
+        }
+        
+        public function actionUnsetFavorite(){
+            $userId=$_POST['userId'];
+            $res = 0;
+            if($userId){
+                $myUserId = Yii::app()->user->id;
+                $checkFav = FollowUser::model()->find('t.user_id='.$userId.' AND t.follower_id='.$myUserId);
+                if($checkFav){
+                    if($checkFav->active != 0){
+                        $checkFav->active = 0;
+                        if($checkFav->save()){
+                            $res = 1;
+                        } else {
+                            $res = 0;
+                        }
+                    }
+                } else {
+                    $res = 1;
+                }
+            } else {
+                $res = 0;
+            }
+            
+            echo CJSON::encode($res);
+        }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

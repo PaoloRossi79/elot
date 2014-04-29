@@ -26,6 +26,8 @@ class Controller extends CController
         public $user;
         public $userId;
         
+        public $favLots;
+        
         
 	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
@@ -116,6 +118,11 @@ class Controller extends CController
             } else {
                 $this->user=null;
                 $this->userId=-1;
+            }
+            if(!Yii::app()->user->isGuest()){
+                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
+            } else {
+                $this->favLots = array();
             }
             if($view==="error"){
                 return;

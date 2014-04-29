@@ -30,6 +30,8 @@ class Users extends PActiveRecord
     
         public $creditOption;
         public $creditValue;
+        public $is_guaranted = 0;
+        public $avg_rating = 0;
 //        public $newsletter;
     
 	/**
@@ -79,6 +81,9 @@ class Users extends PActiveRecord
                     'newsletter' => array(self::HAS_MANY, 'Subscriptions', 'user_id'),
                     'socials' => array(self::HAS_MANY, 'SocialUser', 'user_id'),
                     'offers' => array(self::HAS_MANY, 'UserSpecialOffers', 'user_id'),
+                    'lotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id'),
+                    'followers' => array(self::HAS_MANY, 'FollowUser', 'user_id', 'condition' => 'followers.active'),
+                    'followings' => array(self::HAS_MANY, 'FollowUser', 'follower_id', 'condition' => 'followings.active'),
 		);
 	}
 

@@ -80,7 +80,7 @@ $(window).bind("load", function() {
        $('.box-spinner').show();
    });
    
-   $('#gift-back').click(function(event){
+   jQuery('body').on('click','#gift-back',function(event){
        $("#gift-modal").modal('hide');
        $('#buy-modal').modal('show');
    });
@@ -140,16 +140,42 @@ $(window).bind("load", function() {
                 }
        });
    });
-   /*$(".unfavLotBtn").click(function(event){
+   $(".follUserBtn").click(function(event){
        var btnClick = $(this);
-       $.post( "lotteries/unsetFavorite", { lotId: $(this).attr('name')})
+       var url;
+       if(btnClick.hasClass("unsetFav")){
+           url = "/users/unsetFavorite";
+       } else if(btnClick.hasClass("setFav")){
+           url = "/users/setFavorite";
+       }
+       $.post( url , { userId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
-                    btnClick.removeClass("glyphicon-star");
-                    btnClick.addClass("glyphicon-star-empty");
-                    btnClick.removeClass("unfavLotBtn");
-                    btnClick.addClass("favLotBtn");
+                    if(btnClick.hasClass("unsetFav")){
+                        btnClick.removeClass("glyphicon-star");
+                        btnClick.addClass("glyphicon-star-empty");
+                        btnClick.removeClass("unsetFav");
+                        btnClick.addClass("setFav");
+                    } else if(btnClick.hasClass("setFav")){
+                        btnClick.removeClass("glyphicon-star-empty");
+                        btnClick.addClass("glyphicon-star");
+                        btnClick.removeClass("setFav");
+                        btnClick.addClass("unsetFav");
+                    }
                 }
        });
-   });*/
+   });
+   $('.utsel').click(function(){
+        var utid = $(this).attr('id');
+        $('.utsel').removeClass('btn-primary');
+        $('.utsel').removeAttr('disabled');
+        $(this).attr('disabled','disabled');
+        $(this).addClass('btn-primary');
+        $('#Users_user_type_id').val(utid);
+   });
+   $('#gift-email').click(function(){
+       $('.gift-email-box').fadeIn();
+       $('.social-friend-block').fadeOut();
+       $('.box-spinner').fadeOut();
+   });
 });

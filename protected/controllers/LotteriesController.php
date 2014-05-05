@@ -11,6 +11,8 @@ class LotteriesController extends Controller
         public $ticketTotals;
         public $giftTicketTotals;
         
+        public $lotErrors = array();
+        
         /**
 	 * @return array action filters
 	 */
@@ -97,7 +99,25 @@ class LotteriesController extends Controller
                 $this->layout='column2l6l4';
                 $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
-                $this->_editLottery($model);
+                $updatableStatus = array(
+                    Yii::app()->params['lotteryStatusConst']['draft'],
+                    Yii::app()->params['lotteryStatusConst']['upcoming'],
+                    Yii::app()->params['lotteryStatusConst']['open'],
+                );
+                if(in_array($model->status,$updatableStatus)){
+                    $this->_editLottery($model);
+                } else {
+                    $this->lotErrors['update'] = Yii::t('wonlot','Lotteria non modificabile');
+                    if(!Yii::app()->user->isGuest){
+//                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
+                        $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
+                        $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($id);
+                    }
+                    $this->layout='//layouts/basecolumn';
+                    $this->render('view',array(
+                            'model'=>$model,
+                    ));
+                }
 	}
 	
         /**
@@ -409,62 +429,93 @@ class LotteriesController extends Controller
          * actionSetDefault ->set default image to existing lottery
 	 */
         public function actionGift(){
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
             $params=$_POST;
-            if(!empty($params['provider']) && !empty($params['userId']) && !empty($params['ticketId'])){
-                $ticket = Tickets::model()->findByPk($params['ticketId']);
-                // check for ownership
-                if($ticket->user_id == Yii::app()->user->id){
-                    if($ticket->is_gift != 1){
-                        $ticket->is_gift = 1;
-                        $ticket->gift_from_id = Yii::app()->user->id;
-                        $ticket->gift_provider = trim($params['provider']);
-                        $ticket->gift_ext_user = $params['userId'];
-                        if($ticket->save()){
-                            echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
-                        } else {
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
-                        }
-                    } else {
-                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
-                    }
-                } else {
-                    echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
-                }
-            } elseif(!empty($params['giftEmail']) && !empty($params['ticketId'])) {
-                $ticket = Tickets::model()->findByPk($params['ticketId']);
-                // check for ownership
-                if($ticket->user_id == Yii::app()->user->id){
-                    if($ticket->is_gift != 1){
-                        $checkExistUserCrit = new CDbCriteria();
-                        $checkExistUserCrit->addCondition('t.email = "'.$params['giftEmail'].'"');
-                        $checkExistUserCrit->addCondition('t.is_active = 1');
-                        $user = Users::model()->find($checkExistUserCrit);
-                        if($user->email == Yii::app()->user->email){
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Non puoi regalare a te stesso!"));
-                            return;
-                        }
-                        if($user){
-                            $ticket->user_id = $user->id;
-                        } else {
-                            $ticket->gift_provider = 'email';
-                            $ticket->gift_ext_user = $params['giftEmail'];
-                        }
-                        $ticket->is_gift = 1;
-                        $ticket->is_sent = 0;
-                        $ticket->gift_from_id = Yii::app()->user->id;
-                        if($ticket->save()){
-                            echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
-                        } else {
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
-                        }
-                    } else {
-                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
-                    }
-                } else {
-                    echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
-                }
+            parse_str($params['user'], $params['user']);
+            if(empty($params['ticketId'])){
+                echo CJSON::encode(array('exit'=>0,'msg'=>"Numero del Ticket mancante"));
             } else {
-                echo CJSON::encode(array('exit'=>0,'msg'=>"Parametri mancanti"));
+                if(!empty($params['user']['provider']) && !empty($params['user']['userId'])){
+                    $ticket = Tickets::model()->findByPk($params['ticketId']);
+                    // check for ownership
+                    if($ticket->user_id == Yii::app()->user->id){
+                        if($ticket->is_gift != 1){
+                            $ticket->is_gift = 1;
+                            $ticket->gift_from_id = Yii::app()->user->id;
+                            $ticket->gift_provider = trim($params['user']['provider']);
+                            $ticket->gift_ext_user = $params['user']['userId'];
+                            if($ticket->save()){
+                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                            } else {
+                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                            }
+                        } else {
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                        }
+                    } else {
+                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
+                    }
+                } elseif(!empty($params['user']['giftEmail'])) {
+                    $ticket = Tickets::model()->findByPk($params['ticketId']);
+                    // check for ownership
+                    if($ticket->user_id == Yii::app()->user->id){
+                        if($ticket->is_gift != 1){
+                            $checkExistUserCrit = new CDbCriteria();
+                            $checkExistUserCrit->addCondition('t.email = "'.$params['user']['giftEmail'].'"');
+                            $checkExistUserCrit->addCondition('t.is_active = 1');
+                            $user = Users::model()->find($checkExistUserCrit);
+                            if($user->email == Yii::app()->user->email){
+                                echo CJSON::encode(array('exit'=>0,'msg'=>"Non puoi regalare a te stesso!"));
+                                return;
+                            }
+                            if($user){
+                                $ticket->user_id = $user->id;
+                                $sendNotify = true;
+                            } else {
+                                $ticket->gift_provider = 'email';
+                                $ticket->gift_ext_user = $params['user']['giftEmail'];
+                            }
+                            $ticket->is_gift = 1;
+                            $ticket->is_sent = 0;
+                            $ticket->gift_from_id = Yii::app()->user->id;
+                            if($ticket->save()){
+                                if($sendNotify){
+                                    Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$params['user']['gift-userid']);
+                                }
+                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                            } else {
+                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                            }
+                        } else {
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                        }
+                    } else {
+                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
+                    }
+                } elseif(!empty($params['user']['gift-userid'])) {
+                    $ticket = Tickets::model()->findByPk($params['ticketId']);
+                    // check for ownership
+                    if($ticket->user_id == Yii::app()->user->id){
+                        if($ticket->is_gift != 1){
+                            $ticket->user_id = $params['user']['gift-userid'];
+                            $ticket->is_gift = 1;
+                            $ticket->is_sent = 0;
+                            $ticket->gift_from_id = Yii::app()->user->id;
+                            if($ticket->save()){
+                                Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$params['user']['gift-userid']);
+                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                            } else {
+                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                            }
+                        } else {
+                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                        }
+                    } else {
+                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
+                    }
+                } else {
+                    echo CJSON::encode(array('exit'=>0,'msg'=>"Nessun utente selezionato!"));
+                }
             }
         }
         
@@ -725,17 +776,9 @@ class LotteriesController extends Controller
             if(!empty($_POST['SearchForm']['maxPrizePriceRange'])){
                 $filter["maxPrizePriceRange"]=$_POST['SearchForm']['maxPrizePriceRange'];
             }
-            if($_POST['SearchForm']['geo']){
-                $re = Locations::model()->orderByDistance(array('addressLat' => $_POST['SearchForm']['geoLat'],'addressLng' => $_POST['SearchForm']['geoLng']));
-                /*$search_address = 'Czech Republic, Prague, Olivova';
-
-                // Create geocoded address
-                $geocoded_address = new EGMapGeocodedAddress($sample_address);
-                $geocoded_address->geocode($gMap->getGMapClient());
-
-                // Center the map on geocoded address
-                 $gMap->setCenter($geocoded_address->getLat(), $geocoded_address->getLng());*/
-                $filter["tag"]=$_POST['SearchForm']['tag'];
+            if($_POST['SearchForm']['geoLat'] && $_POST['SearchForm']['geoLng']){
+//                $re = Locations::model()->orderByDistance(array('addressLat' => $_POST['SearchForm']['geoLat'],'addressLng' => $_POST['SearchForm']['geoLng']));
+                $filter["geo"]=array('lat'=>$_POST['SearchForm']['geoLat'], 'lng'=>$_POST['SearchForm']['geoLng']);
             }
             if($_POST['SearchForm']['searchText']){
                 $filter["searchText"]=$_POST['SearchForm']['searchText'];

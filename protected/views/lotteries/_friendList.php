@@ -1,3 +1,5 @@
+<?php $user = Users::model()->findByPk(Yii::app()->user->id); ?>
+
 <div class="friends">
     <div class="friends-list">
             <?php if($list) { ?>
@@ -11,7 +13,7 @@
                                 <td><img style="width: 50px; height: 50px;" src="<?php echo $f->photoURL; ?>"></td>
                                 <td><?php echo $f->displayName; ?></td>
                                 <td>
-                                    <button class="btn btn-primary feedShare" id='<?php echo $f->identifier; ?>'>
+                                    <button class="btn btn-primary feedShare" id='<?php echo $f->identifier; ?>' data-provider="<?php echo $provider; ?>">
                                         <?php echo Yii::t('wonlot','Regala'); ?>
                                     </button>
                                     <?php 
@@ -26,21 +28,21 @@
                     </table>
                 </div>
             <?php }  ?>
-            <div class="gift-email-box">
-                <?php $form=$this->beginWidget('CActiveForm',array('id'=>'gift-email-form'),array('role' => 'form')); ?>
+            <div class="gift-ticket-box" name='1'>
+                <?php $formEmail=$this->beginWidget('CActiveForm',array('id'=>'gift-email-form'),array('role' => 'form')); ?>
                 
                     <div id="emailFormGroup" class="form-group">
                       <?php echo CHtml::emailField("giftEmail",'',array('id'=>'giftEmail','placeholder' => "Email", 'class' => 'form-control')); ?>                
-                        <p id="emailErrorText" class="text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
-                        <p id="emailSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
-                      <?php echo CHtml::hiddenField("ticketId",null,array('id'=>'ticketIdForGift')); ?>                
+                        <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
+                        <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
                     </div>
                     <?php echo CHtml::ajaxButton ("Regala!",
                         CController::createUrl('lotteries/gift'), 
                         array(
                           'update' => '#data-'.$data->id,
                           'type' => 'POST', 
-                          'data'=>array('giftEmail'=>'js:$("#giftEmail").val()','ticketId'=>'js:$("#ticketIdForGift").val()'),
+                          'data'=>array('user'=>'js:$("#gift-email-form").serialize()','ticketId'=>'js:$("#ticketIdForGift").val()'),
+//                          'data'=>'js:$("#gift-email-form").serialize()',
                           'beforeSend'=>'function(){
                                if($("#giftEmail").val()){
                                     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -56,68 +58,94 @@
                                }
                            }',
                            'success'=>'function(data){
-                                var res = $.parseJSON(data);
-                                if(res.exit){
-                                    $("#emailFormGroup").removeClass("has-error");
-                                    $("#emailFormGroup").addClass("has-success");
-                                    $("#emailSuccessText").show();
-                                    $("#giftBtn").attr("disabled","disabled");
-                                    $("#ticket-lot-"+$("#ticketIdForGift").val()).append("<span class=\"ticket-gift-text bg-success\">Regalato!</span>");
-                                    $("#"+$("#ticketIdForGift").val()).hide();
-                                    setTimeout(function() {
-                                        $("#gift-back").click();
-                                    }, 3000);
-                                } else {
-                                    $("#emailErrorText").text(res.msg);
-                                    $("#emailErrorText").show();
-                                }
+                                $.updateTicketGift(data);
                             }',
                         ),
-                        array('name'=>'giftBtn', 'class'=>'btn btn-primary buy-btn')
+                        array('name'=>'giftBtn', 'id'=>'gift-btn-1', 'class'=>'btn btn-primary buy-btn')
                         ); ?>
                 <?php $this->endWidget(); ?>
             </div>
+        <div class="gift-ticket-box" name='2'>
+            <?php $formFollow=$this->beginWidget('CActiveForm',array('id'=>'gift-ticket-following-form'),array('role' => 'form')); ?>
+                <div id="followingFormGroup" class="form-group">
+                  <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
+                  <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>        
+                  <?php echo CHtml::hiddenField('gift-userid',null, array()); ?>
+                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('readonly'=>'readonly')); ?></span></p>
+                </div>
+                <?php if(count($user->followings) > 0){ ?>
+                    <div class="">
+                        <h4>Persone che segui</h4>
+                        <?php foreach($user->followings as $fl){ ?>
+                        <div class="user-small-ticket-box">
+                            <input type="hidden" name="id" value="<?php echo $fl->user->id; ?>">
+                            <input type="hidden" name="username" value="<?php echo $fl->user->username; ?>">
+                            <span class="user-small-vendor-container">
+                                <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
+                            </span>
+                            <span class="user-small-avatar-container">                        
+                                <?php echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            </span>
+                        </div>
+                        <?php } ?>
+                    </div>
+                    <?php 
+                        echo CHtml::ajaxButton ("Regala",
+                                CController::createUrl('lotteries/gift'), 
+                                array('update' => '#data-'.$data->id,
+                                        'type' => 'POST', 
+                                        'data'=>array('user'=>'js:$("#gift-ticket-following-form").serialize()','ticketId'=>'js:$("#ticketIdForGift").val()'),
+                                        'success'=>'function(data){
+                                            $.updateTicketGift(data);
+                                        }',
+                                ),array('name'=>'giftBtn', 'id'=>'gift-btn-2', 'class'=>'btn btn-primary buy-btn'));
+                    ?>
+                <?php } ?>
+            <?php $this->endWidget(); ?>
+        </div>
+        <div class="gift-ticket-box" name='3'>
+            <?php $formFollower=$this->beginWidget('CActiveForm',array('id'=>'gift-ticket-follower-form'),array('role' => 'form')); ?>
+                <div id="followingFormGroup" class="form-group">
+                  <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
+                  <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
+                  <?php echo CHtml::hiddenField('gift-userid',null, array()); ?>
+                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('readonly'=>'readonly')); ?></span></p>
+                </div>
+                <?php if(count($user->followers) > 0){ ?>
+                    <div class="">
+                        <h4>Persone che ti seguono</h4>
+                        <?php foreach($user->followers as $fw){ ?>
+                        <div class="user-small-ticket-box">
+                            <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
+                            <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">
+                            <span class="user-small-vendor-container">
+                                <a href="<?php echo CController::createUrl('users/view/'.$fw->follower->id);?>">
+                                    <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
+                                </a>
+                            </span>
+                            <span class="user-small-avatar-container">
+                                <a href="<?php echo CController::createUrl('users/view/'.$fw->follower->id);?>">
+                                    <?php echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                </a>
+                            </span>
+                        </div>
+                        <?php } ?>
+                    </div>
+                    <?php 
+                        echo CHtml::ajaxButton ("Regala",
+                                CController::createUrl('lotteries/gift'), 
+                                array('update' => '#data-'.$data->id,
+                                        'type' => 'POST', 
+                                        'data'=>array('user'=>'js:$("#gift-ticket-follower-form").serialize()','ticketId'=>'js:$("#ticketIdForGift").val()'),
+                                        'success'=>'function(data){
+                                            $.updateTicketGift(data);
+                                        }',
+                                ),array('name'=>'giftBtn', 'id'=>'gift-btn-3', 'class'=>'btn btn-primary buy-btn'));
+                    ?>
+                <?php } ?>
+            <?php $this->endWidget(); ?>
+            
+        </div>
     </div>				
     <div class="clear"></div>
 </div>
-<script> 
-    $('.feedShare').click(function(event) {
-            var button = $(this);
-            
-            FB.ui({method: 'feed',
-                message: 'Ti ho regalato un biglietto su Wonlot.com!',
-                link: '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val(),
-    //                                to: $(this).attr('id');
-                to: '100004725912341'
-            }, function(response){
-                if(!response){
-                    
-                } else {
-                    $.ajax({
-                        'type':'POST',
-                        'url':'/lotteries/gift',
-                        'cache':false,
-                        'data':{'provider': $('#labelProvider').text(), 'userId': button.attr('id'), 'ticketId': $("#ticketIdForGift").val()},
-                        'success':function(result){
-                            var res = JSON.parse(result);
-                            if(res){
-                                if(res.exit == 1){
-                                    $('#alert-box').removeClass('alert-error');
-                                    $('#alert-box').addClass('alert-success');
-                                    $('#alert-strong').text("Regalato ");
-                                    $('#alert-msg').text("il ticket n° "+$("#labelTicketNumber").text());
-                                    $('#alert-box').fadeIn();
-                                    $("#gift-modal").modal('hide');
-                                    $('#buy-modal').modal('show');
-                                    $("#"+res.ticketId).parent().html('<p><span class="bg-success">Regalato!</span></p>');
-                                } else if(res.exit == 0){
-                                    alert(res.msg);
-                                }
-                            }
-                        }
-                    });
-                    
-                }
-            });
-      });
-</script>

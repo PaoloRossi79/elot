@@ -10,6 +10,7 @@ $invitation = "";
 ?>
     <div class="width-33perc pull-left">
         <!--<a href="<?php echo Yii::app()->createUrl('site/oauthshare', array('provider' => $provider)); ?>" class="btn btn-info zocial <?php echo $additionalClass . ' ' . strtolower($provider); ?>"><?php echo "$invitation $provider"; ?></a>-->
+        <input type="hidden" name="href" value="<?php echo Yii::app()->createUrl('site/oauthshare', array('provider' => $provider)); ?>">
         <?php echo CHtml::ajaxButton ("$invitation $provider",
             $this->controller->createUrl('site/oauthshare',array('provider' => $provider)), 
             array(

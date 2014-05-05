@@ -2,6 +2,7 @@
 /* @var $this LotteriesController */
 /* @var $model Lotteries */
 ?>
+
 <div class="lot-panel panel panel-default bootstrap-widget-table">
     <div class="panel-heading">
       <h3 class="panel-title"><?php echo CHtml::encode($model->name); ?></h3>
@@ -9,6 +10,22 @@
     <div class="panel-body">
         <?php if(!empty($model->id)){ ?>
             <?php $this->renderPartial('_galleryImage',array('model'=>$model)); ?>
+        <?php } ?>
+        <?php if($model->owner_id == $this->userId && $model->status == Yii::app()->params['lotteryStatusConst']['extracted']){ ?>
+            <div class="col-md-12">
+                <h3><?php echo Yii::t("wonlot","Richiedi pagamento"); ?></h3>
+                <div class="text-block">
+                    <?php $this->widget(payLotteryInfoWidget,array('model'=>$model,'returnUrl'=>Yii::app()->request->url)); ?>
+                </div>
+            </div>
+        <?php } ?>
+        <?php if($model->winner_id == $this->userId){ ?>
+            <div class="col-md-12">
+                <h3><?php echo Yii::t("wonlot","Hai vinto"); ?></h3>
+                <div class="text-block">
+                    
+                </div>
+            </div>
         <?php } ?>
         <div class="col-md-12">
             <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
@@ -96,7 +113,15 @@
                     <p>Non puoi comprare...la lotteria non è aperta...</p>
                 <?php } ?>
             <?php } elseif(isset($this->userId) && $this->userId==$model->owner_id) { ?>
+                <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
                     <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>
+                <?php } ?>
+                <?php if($this->lotErrors['update']){ ?>
+                    <div class="alert alert-danger">
+                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+                        <?php echo CHtml::encode($this->lotErrors['update']); ?>
+                    </div>
+                <?php } ?>
             <?php } ?>
         </div>
     </div>

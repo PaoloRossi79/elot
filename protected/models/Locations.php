@@ -39,7 +39,7 @@ class Locations extends PActiveRecord
 			array('address', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, address, addressLat, addressLng', 'safe', 'on'=>'search'),
+			array('id, address, addressLat, addressLng, addressCity, addressState, addressCountry', 'safe', 'on'=>'search'),
 		);
 	}
 

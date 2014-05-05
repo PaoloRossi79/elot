@@ -135,12 +135,19 @@ class HOAuthShareAction extends CAction
 	protected function oAuthShare( $provider )
 	{
 		try{
+                        $hybridAuth = UserOAuth::model()->getHybridAuth();
 			// trying to authenticate user via social network
-			$oAuth = UserOAuth::model()->authenticate( $provider,$this->id );
-                        $adapter = UserOAuth::model()->getAdapter($provider);
+//			$oAuth = UserOAuth::model()->authenticate( $provider,$this->id );
+                        $t=Hybrid_Auth::storage()->get( "hauth_session.$providerId.is_logged_in" );
+			$oAuth = $hybridAuth->authenticate( $provider, null, $this->id );
+//			$oAuth = $hybridAuth->authenticate( $provider );
+//                        $adapter = UserOAuth::model()->getAdapter($provider);
+                        $adapter = $hybridAuth->getAdapter($provider);
                         $contacts = $adapter->getUserContacts();
                     ?>
                     <script>
+//                        window.opener.location.reload();
+                        window.close();
                         $(function(){
                             $('.box-spinner').hide();
                         });

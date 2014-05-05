@@ -156,6 +156,38 @@ class UserTransactions extends PActiveRecord
             }
         }
         
+        public function addGiftCreditTransTo($credit,$sender,$receiver){
+            $trans=new UserTransactions;
+            $trans->user_id=$receiver->id;
+            $trans->transaction_type=Yii::app()->params['userTransactionConst']['giftCreditTo'];
+            $trans->transaction_ref_id=$sender->id;
+            //TODO: add tracking for paypal transactions table
+            $trans->value=$credit;
+            //TODO: add check for paypal transactions confirm
+            $trans->is_confirmed=1;
+            if($trans->save()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        public function addGiftCreditTransFrom($credit,$sender,$receiver){
+            $trans=new UserTransactions;
+            $trans->user_id=$sender->id;
+            $trans->transaction_type=Yii::app()->params['userTransactionConst']['giftCreditFrom'];
+            $trans->transaction_ref_id=$receiver->id;
+            //TODO: add tracking for paypal transactions table
+            $trans->value=$credit;
+            //TODO: add check for paypal transactions confirm
+            $trans->is_confirmed=1;
+            if($trans->save()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
         public function getLinkedText($model){
             $msg="";
             if(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['buyTicket'],Yii::app()->params['userTransactionConst']['refundTicket']))){

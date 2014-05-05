@@ -30,6 +30,8 @@ class Users extends PActiveRecord
     
         public $creditOption;
         public $creditValue;
+        public $giftUserid;
+        public $giftUsername;
         public $is_guaranted = 0;
         public $avg_rating = 0;
 //        public $newsletter;

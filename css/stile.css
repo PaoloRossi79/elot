@@ -137,7 +137,11 @@ a, a:hover, a:focus, a:visited {
 #search-column {
     display: none;
     position: absolute;
-    z-index: 9999999;
+    z-index: 9998;
+}
+
+.pac-container{
+    z-index: 9999;
 }
 
 .main-search-grp {
@@ -1027,7 +1031,8 @@ button.close {
 }
 
 #alert-box {
-    width: 300px;
+    /*width: 300px;*/
+    width: 100%;
     float: left;
 }
 
@@ -1073,7 +1078,7 @@ button.close {
     color: green;
 }
 
-.gift-email-box {
+.gift-ticket-box {
     display: none;
 }
 
@@ -1086,6 +1091,44 @@ button.close {
     padding: 10px;
 }
 
-#emailErrorText, #emailSuccessText {
+#emailErrorText, #emailSuccessText, #giftErrorText, #giftSuccessText {
     display: none;
+}
+
+.following-box, follower-box {
+    display: none;
+}
+
+.user-small-box, .user-small-ticket-box {
+    width: 100px;
+    cursor: pointer;
+}
+.selected-box, .selected-box {
+    border: 5px solid yellowgreen;
+    border-radius: 8px;
+}
+#gift-username {
+    border: none;
+    background: none;
+}
+
+.gift-credit-box {
+    min-height: 350px;
+}
+
+.float-circle {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 15px;
+    /*float: left;*/	
+    margin-top: 5px;
+    background-color: red;
+    padding-left: 6px;
+    top: -65px;
+    left: -10px;
+}
+
+.notify-unread {
+    background-color: #fbfec5;
 }

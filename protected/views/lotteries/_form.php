@@ -154,14 +154,11 @@
                 'model' => $this->locationForm,
                 'attribute' => 'address',
                 'htmlOptions' => $htmlDisabled,
-                'options' => array(
+                /*'options' => array(
                    'types' => array(
-                     '(cities)'
+                     '(geocode)'
                    ),
-                   /*'componentRestrictions' => array(
-                      'country' => 'us',
-                    )*/
-                )
+                )*/
             ));
             ?>
 

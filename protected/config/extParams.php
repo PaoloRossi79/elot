@@ -91,6 +91,8 @@ $userTransactionConst = array(
     'refundTicket'=>3,
     'refundCredit'=>4,
     'withdraw'=>5,
+    'giftCreditFrom'=>6,
+    'giftCreditTo'=>7,
 );
 $userTransactionId = array(
     1=>'Acquisto Ticket',
@@ -98,6 +100,21 @@ $userTransactionId = array(
     3=>'Rimborso Ticket',
     4=>'Rimborso Credito',
     5=>'Ritiro fondi',
+    6=>'Credito regalato',
+    7=>'Credito ricevuto',
+);
+$notifyTypeConst = array(
+    'giftTicket'=>1,
+    'giftCredit'=>2,
+    'startFollow'=>3,
+    'stopFollow'=>4,
+);
+$notifyTypeMsg = array(
+    1=>array('fw'=>Yii::t('wonlot','ti ha regalato un Ticket:'),'bw'=>Yii::t('wonlot','hai regalato un Ticket:')), // gift ticket receive
+    2=>array('fw'=>Yii::t('wonlot','ti ha regalato dei WlMoney:'),'bw'=>Yii::t('wonlot','hai regalato dei WlMoney:')), // gift money receive
+    3=>array('fw'=>Yii::t('wonlot','ha iniziato a seguirti.'),'bw'=>Yii::t('wonlot','hai iniziato a seguire:')), // start follow receive
+    4=>array('fw'=>Yii::t('wonlot','ha smesso di seguirti.'),'bw'=>Yii::t('wonlot','hai smesso di seguire:')), // stop follow receive
+    5=>array('fw'=>Yii::t('wonlot','ti è stato rimborsato un Ticket:'),'bw'=>Yii::t('wonlot','hai rimborsato un Ticket:')), // ticket refound receive
 );
 $ticketStatusConst = array(
     'open'=>1,

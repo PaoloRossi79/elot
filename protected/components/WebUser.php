@@ -8,6 +8,12 @@ class WebUser extends CWebUser {
 	$user = $this->loadUser(Yii::app()->user->id);
 	return $user->email;
   }
+  
+  function getPayInfo()
+  {
+      $userPayInfo = UserPaymentInfo::model()->find('t.user_id ='.Yii::app()->user->id);
+      return $userPayInfo;
+  }
 
   public function getCartItems() {
      //Numero di elementi che un utente ha nel carrello

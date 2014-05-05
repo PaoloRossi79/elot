@@ -7,8 +7,9 @@
 	<meta name="language" content="en" />
         
         <?php 
-        header("Access-Control-Allow-Origin: facebook.com");
-        header("Access-Control-Allow-Origin: google.com");
+        /*header("Access-Control-Allow-Origin: facebook.com");
+        header("Access-Control-Allow-Origin: google.com");*/
+        header("Access-Control-Allow-Origin: *");
         ?>
         
         <?php 
@@ -36,6 +37,7 @@
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/tooltip/tipsy.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.isotope.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.slides.min.js',CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/social.js',CClientScript::POS_HEAD);
 //            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/galleria/galleria-1.3.5.min.js',CClientScript::POS_HEAD);
         ?>
         
@@ -43,6 +45,52 @@
 </head>
 
 <body>
+    <!--<iframe id="widget" type="text/html" width="640" height="390" src="https://www.youtube.com/upload_embed" frameborder="0"></iframe>-->
+    <!-- 1. The 'widget' div element will contain the upload widget.
+         The 'player' div element will contain the player IFrame. -->
+    <div id="widget"></div>
+    <div id="player"></div>
+
+    <script>
+      // 2. Asynchronously load the Upload Widget and Player API code.
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. Define global variables for the widget and the player.
+      //    The function loads the widget after the JavaScript code
+      //    has downloaded and defines event handlers for callback
+      //    notifications related to the widget.
+      var widget;
+      var player;
+      function onYouTubeIframeAPIReady() {
+        widget = new YT.UploadWidget('widget', {
+          width: 500,
+          webcamOnly: false,
+          events: {
+            'onUploadSuccess': onUploadSuccess,
+            'onProcessingComplete': onProcessingComplete
+          }
+        });
+      }
+
+      // 4. This function is called when a video has been successfully uploaded.
+      function onUploadSuccess(event) {
+        alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
+      }
+
+      // 5. This function is called when a video has been successfully
+      //    processed.
+      function onProcessingComplete(event) {
+        player = new YT.Player('player', {
+          height: 390,
+          width: 640,
+          videoId: event.data.videoId,
+          events: {}
+        });
+      }
+    </script>
 
 <div class="container" id="page">
 
@@ -89,17 +137,19 @@
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
+                            <div class="header-icon">
+                                <a href="#" data-toggle="modal" data-target="#notifyModal">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-notify.png", "Notifiche", array("class"=>"img-responsive notify-pop-btn")); ?>
+                                </a>
+                                <div class="notify-unread-count float-circle"></div>
+                            </div>
+
                           <?php } else { ?>
                             <div class="header-icon">
                                 <a href="#">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-<!--                            <div class="header-icon">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
-                                </a>
-                            </div>-->
                             <div class="header-icon">
                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register">
                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register", array("class"=>"img-responsive")); ?>
@@ -114,7 +164,7 @@
                     </div>
                  </div>
 	</div><!-- header -->
-        <?php // if(Yii::app()->user->isGuest) { ?>
+        <?php if(Yii::app()->user->isGuest) { ?>
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" id='loginModalContent'>
               <div class="modal-content">
@@ -129,7 +179,20 @@
               </div>
             </div>
         </div>
-        <?php //} ?>
+        <?php } ?>
+        <?php if(!Yii::app()->user->isGuest) { ?>
+        <div class="modal fade" id="notifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" id='loginModalContent'>
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <span><?php echo Yii::t('wonlot','Notifiche:'); ?> </span><span class="notify-unread-count"></span><span> <?php echo Yii::t('wonlot','non lette'); ?></span>
+                </div>
+                <?php $this->renderPartial('/users/notifications'); ?>
+              </div>
+            </div>
+        </div>
+        <?php } ?>
             
         <div id="body-container" class="row">
             <?php echo $content; ?>

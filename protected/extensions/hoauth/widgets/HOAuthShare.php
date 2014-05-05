@@ -102,9 +102,9 @@ class HOAuthShare extends CWidget
                           authStatus = false;
                         }
                   }*/
-                  /*var gpdefaults = {
+                  var gpdefaults = {
                         clientid: "<?php echo $config['providers']['Google']['keys']['id'];?>",
-                        callback: signinCallback,
+                        callback: $.signinCallback,
                         cookiepolicy: 'single_host_origin',
                         requestvisibleactions: 'http://schemas.google.com/AddActivity',
                         scope: 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email',
@@ -114,7 +114,18 @@ class HOAuthShare extends CWidget
                             cookiepolicy: 'single_host_origin',
                             prefilltext: 'Create your Google+ Page too!',
                             calltoactiondeeplinkid: '/pages/create'
-                  };*/
+                  };
+                  $.signinCallback = function(authResult){
+                    gapi.client.load('plus','v1', function(){
+                      if (authResult['access_token']) {
+                        alert("OK");
+                        alert(JSON.stringify(authResult));
+                      } else if (authResult['error']) {
+                        alert("Error");
+                      }
+                      console.log('authResult', authResult);
+                    });
+                  };
                   window.fbAsyncInit = function() {
                     FB.init({
                       appId      : "<?php echo $config['providers']['Facebook']['keys']['id'];?>",
@@ -124,7 +135,7 @@ class HOAuthShare extends CWidget
                   };
                   var fbScope={scope: 'email,user_birthday'};
                   $(function() {
-			$('.hoauthShareWidget a').click(function() {
+			jQuery('body').on('click','.hoauthShareWidget > div > input',function() {
 				var signinWin;
 				var screenX     = window.screenX !== undefined ? window.screenX : window.screenLeft,
 					screenY     = window.screenY !== undefined ? window.screenY : window.screenTop,
@@ -140,8 +151,8 @@ class HOAuthShare extends CWidget
 					',left=' + left +
 					',top=' + top
 					);
-				signinWin=window.open(this.href,'Login',options);
-
+                                        var url = $(this).parent().children('input[name="href"]').val();
+				signinWin=window.open(url,'Login',options);
 				if (window.focus) {signinWin.focus()}
 
 				return false;

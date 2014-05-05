@@ -88,10 +88,16 @@ class EGMapAutocomplete extends CInputWidget {
                     echo CHtml::activeTextField($this->model, $this->attribute.'Lng', array('id'=>$this->htmlOptions['id']."_lng", 'name'=>'SearchForm[geoLng]', 'style'=>'display:none;'));*/
                     echo CHtml::activeTextField($this->model, $this->attribute.'Lat', array('id'=>$this->htmlOptions['id']."_lat", 'style'=>'display:none;'));
                     echo CHtml::activeTextField($this->model, $this->attribute.'Lng', array('id'=>$this->htmlOptions['id']."_lng", 'style'=>'display:none;'));
+                    echo CHtml::activeTextField($this->model, $this->attribute.'City', array('id'=>$this->htmlOptions['id']."_city", 'style'=>'display:none;'));
+                    echo CHtml::activeTextField($this->model, $this->attribute.'State', array('id'=>$this->htmlOptions['id']."_state", 'style'=>'display:none;'));
+                    echo CHtml::activeTextField($this->model, $this->attribute.'Country', array('id'=>$this->htmlOptions['id']."_country", 'style'=>'display:none;'));
                 } else {
                     echo CHtml::textField($name, $this->value, $this->htmlOptions);
                     echo CHtml::hiddenField($name.'Lat',0, array('id'=>$this->htmlOptions['id']."_lat"));
                     echo CHtml::hiddenField($name.'Lng',0, array('id'=>$this->htmlOptions['id']."_lng"));
+                    echo CHtml::hiddenField($name.'City','-', array('id'=>$this->htmlOptions['id']."_city"));
+                    echo CHtml::hiddenField($name.'State','-', array('id'=>$this->htmlOptions['id']."_state"));
+                    echo CHtml::hiddenField($name.'Country','-', array('id'=>$this->htmlOptions['id']."_country"));
                 }
 
                 $this->registerScript();
@@ -118,6 +124,27 @@ google.maps.event.addListener({$this->objectName}, 'place_changed', function() {
         if(place.geometry){
             $('#{$this->htmlOptions['id']}_lat').val(place.geometry.location.lat());
             $('#{$this->htmlOptions['id']}_lng').val(place.geometry.location.lng());
+            var foundCity = "";
+            var state = "";
+            var country = "";
+            console.log(JSON.stringify(place.address_components));
+            $.each( place.address_components, function( k, v ){
+                if(v['types'][0]=="postal_town"){
+                    foundCity=v['long_name'];
+                }
+                if(v['types'][0]=="locality"){
+                    foundCity=v['long_name'];
+                }
+                if(v['types'][0]=="administrative_area_level_1"){
+                    state=v['long_name'];
+                }
+                if(v['types'][0]=="country"){
+                    country=v['long_name'];
+                }
+            });
+            $('#{$this->htmlOptions['id']}_city').val(foundCity);
+            $('#{$this->htmlOptions['id']}_state').val(state);
+            $('#{$this->htmlOptions['id']}_country').val(country);
         }
     }
 });

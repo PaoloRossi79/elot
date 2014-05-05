@@ -1,7 +1,16 @@
 TODO:
 
+1) Notifiche: icona + dropdown + pagina -> OK (manca gestione "read" e layout pagina)
 
-1) RICERCA 
+2) Blocco dati fatturazione -> OK
+
+0) creazione lotteria: blocca a 5 immagini: STOP
+
+1) Bottone codice per link esterno
+
+2) Blocco Youtube
+
+1) RICERCA -> DONE!
     MANCA: ricerca x località
 
 2) Annullamento lotteria (fino a 24 H prima dell'estrazione)
@@ -10,13 +19,14 @@ TODO:
 
 3) Regala biglietto 
     a) ad email -> link OK
+    b) a followers
     d) funzione di check post registrazione per riscossione biglietto regalo
 
 4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori"
 
 4) Promozioni speciali:
     a) promozione per vincitore che da consenso
-    b) 
+    b) in Creazione lotteria: usa offerte speciali (1 pagina, vedi...sito->regolamento->009)
 
 4) PROFILO: visualizzazione sconti disponibili
 
@@ -27,16 +37,7 @@ TODO:
 
 8) Sharer via Facebook, G+, TW
 
-9) gestione "amicizia" interna, per regalo biglietti:
-    a) following stile twitter
-    b) quando compri un biglietto lo puoi regalare a:   
-        1) email
-        2) social networks (FB, G+, ... )
-        3) utenti WL following
-        4) utenti WL followers
-    c) ricerca amici:
-        1) per username
-        2) per area geografica
+
 
 10) Nella pagina visualizzazione lotteria propria (my lotteries), mettere un blocco di testo html, copiabile, 
     per generare un button-link che rimanda a quella lotteria, lasciando la possibilità di inserire la lable personalizzata (un testo ns di default)
@@ -94,3 +95,14 @@ DONE
     a) fino a 24 H prima dell'estrazione
 
 8) Sharer via Facebook, G+, TW
+
+9) gestione "amicizia" interna, per regalo biglietti:
+    a) following stile twitter
+    b) quando compri un biglietto lo puoi regalare a:   
+        1) email
+        2) social networks (FB, G+, ... )
+        3) utenti WL following
+        4) utenti WL followers
+    c) ricerca amici: In ATTESA!!!
+        1) per username
+        2) per area geografica

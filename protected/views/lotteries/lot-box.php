@@ -85,7 +85,10 @@
         
         <div class="lot-location-over pull-left">
             <span class="small-username">Località:</span>
-            <span class="small-username"><?php echo CHtml::encode($data->location->address); ?></span>
+            <span class="small-username"><?php echo CHtml::encode($data->location->addressCity); ?></span>
+            <?php if($data->distance){ ?>
+                <span class="small-username">Distanza:<?php echo CHtml::encode(number_format((float)$data->distance,3)); ?> Km.</span>
+            <?php } ?>
         </div>
     </div>
 </div>

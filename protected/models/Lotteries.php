@@ -27,6 +27,7 @@ class Lotteries extends PActiveRecord
         public $maxPrice;
         public $imgList;
         public $cloneId;
+        public $distance;
         
         const SP_SPEDITION = 0;
         const SP_HANDTAKE = 1;
@@ -76,8 +77,11 @@ class Lotteries extends PActiveRecord
 			'tickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id'),
 			'validTickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id', 'condition'=>'validTickets.status = 1'),
 			'owner' => array(self::BELONGS_TO, 'Users', 'owner_id'),
+			'winner' => array(self::BELONGS_TO, 'Users', 'winner_id'),
+			'winnerTicket' => array(self::BELONGS_TO, 'Tickets', 'winner_ticket_id'),
 			'category' => array(self::BELONGS_TO, 'PrizeCategories', 'prize_category'),
                         'location' => array(self::BELONGS_TO, 'Locations', 'location_id'),
+                        'paidInfo' => array(self::BELONGS_TO, 'LotteryPaymentRequest', 'paid_ref_id'),
 		);
 	}
 
@@ -217,6 +221,12 @@ class Lotteries extends PActiveRecord
             
             if(isset($type['searchText'])){
                 $criteria->addCondition('t.name like "%' .$type['searchText'].'%" OR t.prize_desc like "%' .$type['searchText'].'%"');
+            }
+            if(isset($type['geo'])){
+                $unit = 6371;   
+                $criteria->select = '* ,( '.$unit.' * acos( cos( radians('.$type['geo']['lat'].' )) * cos( radians( location.addressLat ) ) * cos( radians( location.addressLng ) - radians('.$type['geo']['lng'].') ) + sin( radians('.$type['geo']['lat'].') ) * sin( radians( location.addressLat ) ) ) ) AS distance';
+                $criteria->with = array('location');
+                $criteria->order='distance';
             }
             
             if($returnType == "pager"){

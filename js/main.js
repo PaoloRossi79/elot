@@ -80,11 +80,6 @@ $(window).bind("load", function() {
        $('.box-spinner').show();
    });
    
-   jQuery('body').on('click','#gift-back',function(event){
-       $("#gift-modal").modal('hide');
-       $('#buy-modal').modal('show');
-   });
-   
    $('.lot-item').click(function(event){
        if(!$("#ticket-lot-"+this.id).is(":visible")){
             $(".ticket-block").fadeOut();
@@ -167,15 +162,120 @@ $(window).bind("load", function() {
    });
    $('.utsel').click(function(){
         var utid = $(this).attr('id');
+        console.log(utid);
+        console.log($(this).val());
         $('.utsel').removeClass('btn-primary');
         $('.utsel').removeAttr('disabled');
         $(this).attr('disabled','disabled');
         $(this).addClass('btn-primary');
         $('#Users_user_type_id').val(utid);
+        if(utid == 3){
+            $('#private-profile').fadeOut();
+            $('#company-profile').fadeIn();
+        } else {
+            $('#company-profile').fadeOut();
+            $('#private-profile').fadeIn();
+        }
    });
-   $('#gift-email').click(function(){
-       $('.gift-email-box').fadeIn();
+   jQuery('body').on('click','#gift-back',function(event){
+       try {
+            $("#gift-modal").modal('hide');
+       } catch(err) {
+            //Handle errors here
+       }
+       $('#buy-modal').modal('show');
+   });
+   jQuery('body').on('click','.gift-ticket-btn',function(){
+       var boxActive = $(this).attr('name');
+       $('.gift-ticket-box').filter('[name='+boxActive+']').fadeIn();
+       $('.gift-ticket-box').not('[name='+boxActive+']').fadeOut();
        $('.social-friend-block').fadeOut();
        $('.box-spinner').fadeOut();
+   });
+   jQuery('body').on('click','.setFollow',function(event){
+       if($(this).attr('id') == 1){
+           if(!$('.following-box').is(":visible")){
+               $('.following-box').fadeIn();
+               $('.follower-box').fadeOut();
+           }
+       } else if($(this).attr('id') == 2){
+           if(!$('.follower-box').is(":visible")){
+               $('.follower-box').fadeIn();
+               $('.following-box').fadeOut();
+           }
+       }
+   });
+   jQuery('body').on('click','.user-small-box',function(event){
+       var id=$(this).children("input[name=id]").val();
+       var username=$(this).children("input[name=username]").val();
+       $('.user-small-box').removeClass('selected-box');
+       $(this).addClass('selected-box');
+       console.log(id);
+       console.log(username);
+       $('#gift-userid').val(id);
+       $('#gift-username').val(username);
+       $('input[name=ticketId]').val($('#ticketIdForGift').val());
+   });
+   jQuery('body').on('click','.user-small-ticket-box',function(event){
+       var id=$(this).children("input[name=id]").val();
+       var username=$(this).children("input[name=username]").val();
+       $('.user-small-ticket-box').removeClass('selected-box');
+       $(this).addClass('selected-box');
+       console.log(id);
+       console.log(username);
+       $('input[name="gift-userid"]').val(id);
+       $('input[name="gift-username"]').val(username);
+       $('input[name=ticketId]').val($('#ticketIdForGift').val());
+   });
+   
+   
+   $.updateTicketGift = function(data){
+       var res = $.parseJSON(data);
+       if(res.exit){
+            $("#giftSuccessText").show();
+            $("input[name=giftBtn]").attr("disabled","disabled");
+            $(".giftText").append("<span class=\"bg-success\">Regalato!</span>");
+            $("#ticket-lot-"+$("#ticketIdForGift").val()).append("<span class=\"ticket-gift-text bg-success\">Regalato!</span>");
+            $("#"+$("#ticketIdForGift").val()).hide();
+            $("#emailFormGroup").removeClass("has-error");
+            $("#emailFormGroup").addClass("has-success");
+            $("#giftErrorText").hide();
+            $("#giftSuccessText").show();
+            setTimeout(function() {
+//                $("#gift-back").click();
+//                $("#gift-modal").fadeOut();
+                $.resetTicketGift();
+            }, 3000);
+       } else {
+            $("#giftErrorText").text(res.msg);
+            $("#giftErrorText").show();
+       }
+   };
+   $.resetTicketGift = function(){
+       $("#gift-ticket-follower-form").get(0).reset();
+       $("#gift-ticket-following-form").get(0).reset();
+       $('.user-small-ticket-box').removeClass('selected-box');
+       $('.gift-ticket-box').fadeOut();
+       $('input[name="gift-userid"]').val("");
+       $('input[name="gift-username"]').val("");
+       $('input[name=ticketId]').val("");
+       $('#giftEmail').val("");
+       $('#giftSuccessText').hide();
+       $('#giftErrorText').hide();
+       $("input[name=giftBtn]").removeAttr("disabled");
+   };
+   jQuery('body').on('click','.notify-pop-btn',function(event){
+      $('.notify-unread-count').html(0); 
+      $('.float-circle').hide(); 
+   });
+   jQuery('body').on('click','.notify-row',function(event){
+       var sender = $(this);
+       $.post( 'users/markNotifyRead' , { notifyId: $(this).attr('name')})
+            .done(function( data ) {
+                if(data){
+                    sender.removeClass('notify-unread');
+                    sender.addClass('notify-read');
+                }
+       });
    });
 });

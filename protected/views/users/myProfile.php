@@ -27,19 +27,30 @@
                   </div>
                   <div class="tab-pane fade" id="tabProfile2">
                       <?php 
-                        $panel2=$this->renderPartial('_buyCredit', array('model'=>$model),true);
-                        $panel2.=CHtml::ajaxButton ("Buy Credit",
-                            CController::createUrl('users/buyCredit'), 
-                            array('update' => '#buyCreditTarget',
+                        $panel2 =$this->renderPartial('_buyCredit', array('model'=>$model),true);
+                        $panel2 .="<div class='well col-md-12 gift-credit-box'>";
+                        $panel2 .=$this->renderPartial('_giftCredit', array('model'=>$model),true);
+                        $panel2 .="<div class='col-md-12'>";
+                        $panel2 .=CHtml::ajaxButton ("Regala Credito",
+                            CController::createUrl('users/giftCredit'), 
+                            array('update' => '#creditGiftForm',
                                     'type' => 'POST', 
-                                    'data'=>'js:$("#userWallet-form").serialize()',
-                            ));
+                                    'data'=>'js:$("#userCreditGift-form").serialize()',
+                            ),array('class'=>'btn btn-success'));
+                        $panel2 .="</div>";
+                        $panel2 .="</div>";
                         $panel2 .= CHtml::ajaxButton ("Mostra transazioni",
                               CController::createUrl('UserTransactions/userIndex'), 
                               array('update' => '#user-trans'),array('id'=>'show-trans')
                         );
-                        $panel2 .= CHtml::ajaxButton ("Mostra transazioni",'#', 
-                              array('success' => 'js:function(event){$("#user-trans").fadeOut();}'),array('id'=>'reshow-trans')
+                        $panel2 .= CHtml::ajaxButton("Nascondi transazioni",'#',
+                              array('success'=>'js:function(event){
+                                                    $("#user-trans").fadeOut();
+                                                    $("#show-trans").click(function(ev){
+                                                        $("#user-trans").fadeIn();
+                                                    });
+                                                }'
+                              ),array('id'=>'hide-trans')
                         );
                         $panel2 .= $this->renderPartial('_transactionsEmpty', array(),true);
                         echo $panel2;

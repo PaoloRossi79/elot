@@ -34,7 +34,8 @@ class UsersController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('buyCredit','myProfile','editNewsletter','setFavorite','unsetFavorite'),
+				'actions'=>array('buyCredit','giftCredit','myProfile','editNewsletter',
+                                    'setFavorite','unsetFavorite','allNotify','markNotifyRead','savePayInfo'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -73,6 +74,65 @@ class UsersController extends Controller
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
+	}
+        
+	public function actionAllNotify()
+	{
+                $userId = Yii::app()->user->id;
+                $crit = new CDbCriteria();
+                $crit->addCondition('t.from_user_id = '.$userId,'OR');
+                $crit->addCondition('t.to_user_id = '.$userId,'OR');
+                $crit->order = 't.id DESC';
+                /*$allNot = Notifications::model()->findAll($crit);
+		$this->render('allNotify',array(
+                    'model'=>$allNot,
+		));*/
+                $dataProvider=new CActiveDataProvider('Notifications', array(
+                    'pagination'=>array(
+                            'pageSize'=>10,
+                    ),
+                    'sort'=>array(
+                        'attributes'=>array(
+                            'from_user_id'=>array(
+                                'asc'=>'from_user_id',
+                                'desc'=>'from_user_id DESC',
+                            ),
+                            'to_user_id'=>array(
+                                'asc'=>'to_user_id',
+                                'desc'=>'to_user_id DESC',
+                            ),
+                            'message_type'=>array(
+                                'asc'=>'message_type',
+                                'desc'=>'message_type DESC',
+                            ),
+                         ),
+                    ),
+                    'criteria'=>$crit,
+                ));
+                $this->render('allNotify',array(
+                    'dataProvider'=>$dataProvider,
+		));
+	}
+        
+	public function actionMarkNotifyRead()
+	{
+                $userId = Yii::app()->user->id;
+                if(isset($_POST['notifyId'])){
+                    $notifyId = $_POST['notifyId'];
+                    $notify = Notifications::model()->findByPk($notifyId);
+                    if($notify){
+                        if($notify->to_user_id == $userId){
+                            $notify->message_read = 1;
+                            if($notify->save()){
+                                echo CJSON::encode(1);
+                                return;
+                            }
+                        }
+                    }
+                    echo CJSON::encode(0);
+                } else {
+                    echo CJSON::encode(0);
+                }
 	}
 
 	/**
@@ -167,6 +227,79 @@ class UsersController extends Controller
 		));
 	}
         
+	public function actionSavePayInfo()
+	{
+            if(isset($_POST['UserPaymentInfo'])){
+                $userOk = false;
+                $userInfo = $_POST['UserPaymentInfo'];
+                if($userInfo['id']){
+                    $userInfoModel = UserPaymentInfo::model()->findByPk($userInfo['id']);
+                } else {
+                    $userInfoModel = new UserPaymentInfo;
+                    $_POST['UserPaymentInfo']['user_id'] = Yii::app()->user->id;
+                }
+                $userInfoModel->setAttributes($_POST['UserPaymentInfo']);
+                if(!$userInfoModel->vat && !$userInfoModel->fiscal_number){
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
+                    return;
+                } elseif(!$userInfoModel->iban && !$userInfoModel->paypal_account){
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
+                    return;
+                } else {
+                    if($userInfoModel->save()){
+                        $userOk = true;
+                    } else {
+                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
+                        return;
+                    }
+                }
+                if($userOk && isset($_POST['for_profile'])){
+                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>1));
+                    return;
+                }
+                if($userOk && isset($_POST['lot_id'])){
+                    $lottery = Lotteries::model()->findByPk($_POST['lot_id']);
+                    if($lottery){
+                        if($lottery->paidInfo){
+                            if($lottery->paidInfo->is_completed){
+                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria già pagata')));
+                                return;
+                            } else {
+                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria già in attesa di pagamento')));
+                                return;
+                            }
+                        } else {
+                            $payReq = new LotteryPaymentRequest;
+                            $payReq->lottery_id = $lottery->id;
+                            $payReq->from_user_id = Yii::app()->user->id;
+                            $payReq->sent_date = new CDbExpression('NOW()');
+                            if($payReq->save()){
+                                $lottery->paid_ref_id = $payReq->id;
+                                if($lottery->save()){
+                                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di pagamento inviata')));
+                                    return;
+                                } else {
+                                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                    return;
+                                }
+                            } else {
+                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                return;
+                            }
+                        }
+                    } else {
+                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria non trovata')));
+                        return;
+                    }
+                } else {
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria non trovata')));
+                    return;
+                }
+            } else {
+                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+            }
+	}
+        
         public function actionMyProfile()
 	{                
                 $model = Users::model()->getMyProfile();
@@ -228,6 +361,10 @@ class UsersController extends Controller
                 }
                 if($_POST['Users']['user_type_id']){
                     $model->user_type_id = $_POST['Users']['user_type_id'];
+                    $toSave = true;
+                }
+                if($_POST['Users']['username']){
+                    $model->username = $_POST['Users']['username'];
                     $toSave = true;
                 }
                 if($toSave && !$errProfileSave){
@@ -355,10 +492,66 @@ class UsersController extends Controller
 		} else {
                     $model->addError('creditOption','Form error');
                 }
-                Yii::import("xupload.models.XUploadForm");
-                $this->upForm = new XUploadForm;
-                $this->renderPartial('_buyCredit',array(
+                $this->redirect('myProfile',array(
 			'model'=>$model,
+                        'this'=>$this,
+		),false,true);
+	}
+        /**
+	 * Buy credit for user a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionGiftCredit()
+	{       
+                Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+                if(isset($_POST['Users']))
+		{
+                    $myUser=Users::model()->getMyProfile();
+                    if($_POST['Users']['giftUserid']){
+                        $giftUser=Users::model()->findByPk($_POST['Users']['giftUserid']);
+                    }
+                    if(!$giftUser){
+                        $myUser->addError('giftUsername','Nessun utente selezionato');
+                    } else {
+                        if(isset($_POST['Users']['creditOption']) && $_POST['Users']['creditOption'] !== ""){
+                            $credit=(float) Yii::app()->params['buyCreditOptions'][$_POST['Users']['creditOption']];
+                        } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
+                            $credit=(float) $_POST['Users']['creditValue'];
+                        } else {
+                            $myUser->addError('creditOption','Please, select a credit option o insert a credit value');
+                        }
+
+                        if(is_float($credit) and $credit > 0){
+                            //check for credit:
+                            if($myUser->available_balance_amount > $credit){
+                                $dbTransaction=$myUser->dbConnection->beginTransaction();
+                                $myUser->available_balance_amount-=$credit;
+                                $giftUser->available_balance_amount+=$credit;
+                                if($myUser->save() && $giftUser->save()){
+                                    if(UserTransactions::model()->addGiftCreditTransTo($credit,$myUser,$giftUser)
+                                            &&
+                                       UserTransactions::model()->addGiftCreditTransFrom($credit,$myUser,$giftUser)
+                                    ){
+                                        $dbTransaction->commit();
+                                        // TODO: add notifications and email for gift!!!
+                                        Notifications::model()->sendGiftCreditNotify($credit,$myUser->id,$giftUser->id);
+                                        $this->opMessage = Yii::t('wonlot','Hai regalato ').$credit.' WlMoney '.Yii::t('wonlot','a ').$giftUser->username;
+                                    } else {
+                                        $dbTransaction->rollback();
+                                    }
+                                } else {
+                                    $dbTransaction->rollback();
+                                }
+                            }
+                        } else {
+                            $myUser->addError('creditValue','Credit value not set or not valid!');
+                        }
+                    }
+		} else {
+                    $myUser->addError('creditOption','Form error');
+                }
+                $this->renderPartial('_giftCredit',array(
+			'model'=>$myUser,
                         'this'=>$this,
 		),false,true);
 	}
@@ -394,7 +587,9 @@ class UsersController extends Controller
             } else {
                 $res = 0;
             }
-            
+            if($res == 1){
+                Notifications::model()->sendStartFollowNotify($myUserId,$userId);
+            }
             echo CJSON::encode($res);
         }
         
@@ -419,7 +614,9 @@ class UsersController extends Controller
             } else {
                 $res = 0;
             }
-            
+            if($res == 1){
+                Notifications::model()->sendStopFollowNotify($myUserId,$userId);
+            }
             echo CJSON::encode($res);
         }
 

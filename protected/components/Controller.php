@@ -27,6 +27,7 @@ class Controller extends CController
         public $userId;
         
         public $favLots;
+        public $opMessage;
         
         
 	/**
@@ -402,6 +403,9 @@ class Controller extends CController
                 $newLoc->address = $data['address'];
                 $newLoc->addressLat = number_format((float)$data['addressLat'],6);
                 $newLoc->addressLng = number_format((float)$data['addressLng'],6);
+                $newLoc->addressCity = $data['addressCity'];
+                $newLoc->addressState = $data['addressState'];
+                $newLoc->addressCountry = $data['addressCountry'];
                 if($newLoc->save()){
                     return $newLoc->id;
                 } else {

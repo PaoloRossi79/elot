@@ -148,6 +148,8 @@ return array(
             'lotterySearchStatusConst'=>$lotterySearchStatusConst,
             'userTransactionConst'=>$userTransactionConst,
             'userTransactionId'=>$userTransactionId,
+            'notifyTypeConst'=>$notifyTypeConst,
+            'notifyTypeMsg'=>$notifyTypeMsg,
             'ticketStatusConst'=>$ticketStatusConst,
             'buyCreditOptions' => $buyCreditOptions,
             'authExtSource' => $authExtSource,

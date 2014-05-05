@@ -22,6 +22,9 @@ class SearchForm extends CFormModel
 	public $geo;
 	public $geoLat;
 	public $geoLng;
+	public $geoCity;
+	public $geoState;
+	public $geoCountry;
 	public $ticketPrice;
 	public $prizePrice;
 	public $keyword;
@@ -80,5 +83,8 @@ class SearchForm extends CFormModel
 		$this->geo=$data['geo'];
 		$this->geoLat=$data['geoLat'];
 		$this->geoLng=$data['geoLng'];
+		$this->geoCity=$data['geoCity'];
+		$this->geoState=$data['geoState'];
+		$this->geoCountry=$data['geoCountry'];
 	}
 }

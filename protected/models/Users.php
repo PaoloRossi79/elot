@@ -172,4 +172,58 @@ class Users extends PActiveRecord
             $this->is_active = 1;
             $this->is_email_confirmed = 1;
         }
+        
+        public function getGiftTicketsAfterRegister($source){
+            // get gifted tickets suspended
+            $user = Users::model()->findByPk(Yii::app()->user->id);
+            $ticketRes = false;
+            if($source == Yii::app()->params['authExtSource']['Email']){
+                $giftCrit = new CDbCriteria();
+                $giftCrit->addCondition('t.is_gift = 1');
+                $giftCrit->addCondition('t.gift_ext_user = "'.$user->email.'"');
+                $giftCrit->addCondition('t.status = 1');
+//                $ticketRes = Tickets::model()->updateAll(array('user_id' => $user->id),$giftCrit);
+                $ticketList = Tickets::model()->findAll($giftCrit);
+                foreach($ticketRes as $t){
+                    $t->user_id = $user->id;
+                    if($t->save()){
+                        Notifications::model()->sendGiftTicketNotify($t->id,$t->giftFromUser->id,Yii::app()->user->id);
+                    } else {
+//                        $emailRes=EmailManager::sendCronAdminEmail($errors);
+                    }
+                }
+            } elseif($source == Yii::app()->params['authExtSource']['Facebook'] || $source == Yii::app()->params['authExtSource']['Google']){
+                // get socials identities
+                foreach($user->socials as $soc){
+                    if($soc->login_type == $source){
+                        $socExtId = $soc->ext_user_id;
+                    }
+                }
+                $giftCrit = new CDbCriteria();
+                $giftCrit->addCondition('t.is_gift = 1');
+                $giftCrit->addCondition('t.status = 1');
+                if($socExtId){
+                    $giftCrit->addCondition('t.gift_ext_user = "'.$user->email.'"','OR');
+                    $giftCrit->addCondition('t.gift_ext_user = "'.$socExtId.'"','OR');
+                    $giftCrit->addCondition('t.gift_provider = "'.$source.'"','AND');
+                } else {
+                    $giftCrit->addCondition('t.gift_ext_user = "'.$user->email.'"');
+                }
+//                $ticketRes = Tickets::model()->updateAll(array('user_id' => $user->id),$giftCrit);
+                $ticketList = Tickets::model()->findAll($giftCrit);
+                foreach($ticketRes as $t){
+                    $t->user_id = $user->id;
+                    if($t->save()){
+                        Notifications::model()->sendGiftTicketNotify($t->id,$t->giftFromUser->id,Yii::app()->user->id);
+                    } else {
+//                        $emailRes=EmailManager::sendCronAdminEmail($errors);
+                    }
+                }
+            }
+            return $ticketRes;
+        }
+        
+        public function getConfirmLink($user){
+            return Yii::app()->createAbsoluteUrl('users/confirmEmail',array('email'=>$user->email,'id'=>$user->id));
+        }
 }

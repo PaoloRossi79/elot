@@ -9,6 +9,7 @@ class UsersController extends Controller
 	public $layout='//layouts/column1';
 	public $subscriptionForm;
 	public $tickets;
+	public $ticketsProvider;
 
 	/**
 	 * @return array action filters
@@ -30,16 +31,17 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','ajaxCheckUsername'),
+				'actions'=>array('ajaxCheckUsername','confirmEmail'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('buyCredit','giftCredit','myProfile','editNewsletter',
-                                    'setFavorite','unsetFavorite','allNotify','markNotifyRead','savePayInfo'),
+				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
+                                    'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
+                                    'savePayInfo','requestWithdraw'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','admin'),
 				'users'=>array('@'),
                                 'expression' => 'Yii::app()->user->isAdmin()',
 			),
@@ -53,6 +55,34 @@ class UsersController extends Controller
 			),
 		);
 	}
+        
+        public function actionConfirmEmail()
+        {
+            $params = $_GET;
+            if(isset($params['email']) && isset($params['id'])){
+                $user = Users::model()->findByPk($params['id']);
+                if($user && $user->email == $params['email']){
+                    $user->is_active=1;
+                    $user->is_email_confirmed=1;
+                    if($user->save()){
+                        Yii::app()->session['confirmEmail'] = Yii::t('wonlot','Email confermata!');
+                        $identity=new UserIdentity($user->username,$user->password,Yii::app()->params['authExtSource']['site']);
+                        $identity->authenticate();
+                        $duration=3600*24; // 1 day
+                        Yii::app()->user->login($identity,$duration);
+                        // check for gifted tickets waiting
+                        $ticketRes = Users::model()->getGiftTicketsAfterRegister(Yii::app()->params['authExtSource']['Email']);
+                    } else {
+                        Yii::app()->session['confirmEmailError'] = Yii::t('wonlot','Errore nella conferma dell\'email');
+                    }
+                } else {
+                    Yii::app()->session['confirmEmailError'] = Yii::t('wonlot','Link di conferma non valido');
+                }
+            } else {
+                Yii::app()->session['confirmEmailError'] = Yii::t('wonlot','Link di conferma non valido');
+            }
+            $this->redirect('/');
+        }
         
         public function actionAjaxCheckUsername()
         {
@@ -87,26 +117,29 @@ class UsersController extends Controller
 		$this->render('allNotify',array(
                     'model'=>$allNot,
 		));*/
+                if($_GET['Notifications_sort']){
+                    $crit->order = "t.".str_replace('.', ' ', $_GET['Notifications_sort']);
+                }
                 $dataProvider=new CActiveDataProvider('Notifications', array(
                     'pagination'=>array(
                             'pageSize'=>10,
                     ),
-                    'sort'=>array(
-                        'attributes'=>array(
-                            'from_user_id'=>array(
-                                'asc'=>'from_user_id',
-                                'desc'=>'from_user_id DESC',
-                            ),
-                            'to_user_id'=>array(
-                                'asc'=>'to_user_id',
-                                'desc'=>'to_user_id DESC',
-                            ),
-                            'message_type'=>array(
-                                'asc'=>'message_type',
-                                'desc'=>'message_type DESC',
-                            ),
-                         ),
-                    ),
+//                    'sort'=>array(
+//                        'attributes'=>array(
+//                            'from_user_id'=>array(
+//                                'asc'=>'from_user_id',
+//                                'desc'=>'from_user_id DESC',
+//                            ),
+//                            'to_user_id'=>array(
+//                                'asc'=>'to_user_id',
+//                                'desc'=>'to_user_id DESC',
+//                            ),
+//                            'message_type'=>array(
+//                                'asc'=>'message_type',
+//                                'desc'=>'message_type DESC',
+//                            ),
+//                         ),
+//                    ),
                     'criteria'=>$crit,
                 ));
                 $this->render('allNotify',array(
@@ -134,7 +167,17 @@ class UsersController extends Controller
                     echo CJSON::encode(0);
                 }
 	}
-
+        public function actionMarkNewNotifyRead()
+	{
+            $userId = Yii::app()->user->id;
+            // set all to READ after loading
+            try {
+                $updResult = Yii::app()->db->createCommand()->update('notifications',array('message_read'=>1),'to_user_id = '.$userId);
+                echo CJSON::encode(1);
+            } catch (Exception $e){
+                echo CJSON::encode(0);
+            }
+        }
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -242,9 +285,9 @@ class UsersController extends Controller
                 if(!$userInfoModel->vat && !$userInfoModel->fiscal_number){
                     echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
                     return;
-                } elseif(!$userInfoModel->iban && !$userInfoModel->paypal_account){
+                /*} elseif(!$userInfoModel->iban && !$userInfoModel->paypal_account){
                     echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
-                    return;
+                    return;*/
                 } else {
                     if($userInfoModel->save()){
                         $userOk = true;
@@ -253,8 +296,8 @@ class UsersController extends Controller
                         return;
                     }
                 }
-                if($userOk && isset($_POST['for_profile'])){
-                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>1));
+                if($userOk && (isset($_POST['for_profile']) || isset($_POST['for_credit']))){
+                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>$_POST['for_profile'],'isDraw'=>$_POST['for_credit']));
                     return;
                 }
                 if($userOk && isset($_POST['lot_id'])){
@@ -300,6 +343,39 @@ class UsersController extends Controller
             }
 	}
         
+        public function actionRequestWithdraw(){
+            if(isset($_POST['UserWithdraw'])){
+                $withdraw = $_POST['UserWithdraw'];
+                if(isset($withdraw['creditValue'])){
+                    $withdrawVal = (float) $withdraw['creditValue'];
+                    if($withdrawVal && $withdrawVal > 0){
+                        $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.Yii::app()->user->id);
+                        if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
+                            if($withdraw['creditValue'] <= Yii::app()->user->walletValue){
+                                $drawReq = new UserWithdraw;
+                                $drawReq->user_id = Yii::app()->user->id;
+                                $drawReq->value = $withdraw['creditValue'];
+                                $drawReq->status = 1;
+                                if($drawReq->save()){
+                                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di ritiro denaro inviata')));
+                                } else {
+                                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                }
+                            } else {
+                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile')));
+                            }
+                        } else {
+                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+                        }
+                    } else {
+                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+                    }
+                } else {
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+                }
+            }
+        }
+        
         public function actionMyProfile()
 	{                
                 $model = Users::model()->getMyProfile();
@@ -308,6 +384,7 @@ class UsersController extends Controller
                 $this->locationForm=new Locations;
                 $this->subscriptionForm = new SubscriptionForm;
                 $this->tickets = Tickets::model()->getMyTickets();
+                $this->ticketsProvider = Tickets::model()->getMyTicketsProvider();
                 if($model->id){
                     $existLoc=Locations::model()->findByPk($model->location_id);
                     if($existLoc)

@@ -1,3 +1,4 @@
+<div class="text-block">
 <?php 
     if($model->ext_source > 1){
         //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
@@ -189,8 +190,4 @@
 	</div>
 
 <?php $this->endWidget(); ?>
-
-<h3><?php echo Yii::t("wonlot","Inserisci i dati di pagamento"); ?></h3>
-<div class="text-block">
-    <?php $this->widget(payLotteryInfoWidget,array()); ?>
 </div>

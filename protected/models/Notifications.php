@@ -138,4 +138,38 @@ class Notifications extends PActiveRecord
             $notify->sent_date = new CDbExpression('NOW()');
             $notify->save();
         }
+        
+        public function sendExtractLotteryToWinnerNotify($lottery,$ticket){
+            $notify = new Notifications();
+            $notify->from_user_id = 0;
+            $notify->to_user_id = $ticket->user->id;
+            $notify->message_value = $lottery->id;
+            $notify->message_type = Yii::app()->params['notifyTypeConst']['winLottery'];
+            $notify->message_read = 0;
+            $notify->sent_date = new CDbExpression('NOW()');
+            $notify->save();
+        }
+        
+        public function sendExtractLotteryToOwnerNotify($lottery){
+            $notify = new Notifications();
+            $notify->from_user_id = 0;
+            $notify->to_user_id = $lottery->owner->id;
+            $notify->message_value = $lottery->id;
+            $notify->message_type = Yii::app()->params['notifyTypeConst']['extractLottery'];
+            $notify->message_read = 0;
+            $notify->sent_date = new CDbExpression('NOW()');
+            $notify->save();
+        }
+        
+        public function sendRefoundLotteryNotify($lottery,$user){
+            $notify = new Notifications();
+            $notify->from_user_id = $lottery->owner->id;
+            $notify->to_user_id = $user->id;
+            $notify->message_value = $lottery->id;
+            $notify->message_type = Yii::app()->params['notifyTypeConst']['refoundTicket'];
+            $notify->message_read = 0;
+            $notify->sent_date = new CDbExpression('NOW()');
+            $notify->save();
+        }
+        
 }

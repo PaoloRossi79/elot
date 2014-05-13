@@ -1,4 +1,4 @@
 
-<p>Thanks for registering to The MeetNEat!!</p>
+<p><?php echo Yii::t('wonlot','Grazie per esserti registrato a WonLot!'); ?></p>
 
-<p>Click on this link to confirm registration: <a href="<?php echo $confirmLink;?>">Confirm</a></p>
+<p><?php echo Yii::t('wonlot','Clicca qui per confermare la tua email: '); ?><a href="<?php echo $confirmLink;?>"><?php echo Yii::t('wonlot','Conferma'); ?></a></p>

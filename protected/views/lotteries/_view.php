@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <h3><?php echo Yii::t("wonlot","Richiedi pagamento"); ?></h3>
                 <div class="text-block">
-                    <?php $this->widget(payLotteryInfoWidget,array('model'=>$model,'returnUrl'=>Yii::app()->request->url)); ?>
+                    <?php $this->widget(payLotteryInfoWidget,array('model'=>$model,'returnUrl'=>Yii::app()->request->url, 'type'=>'lottery')); ?>
                 </div>
             </div>
         <?php } ?>
@@ -27,12 +27,70 @@
                 </div>
             </div>
         <?php } ?>
-        <div class="col-md-12">
-            <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
-            <div class="text-block">
-                <?php echo $model->prize_desc; ?>
+        <?php if(in_array($model->status,array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
+            <div class="col-md-6">
+                <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
+                <div class="text-block">
+                    <?php echo $model->prize_desc; ?>
+                </div>
             </div>
-        </div>
+            <div class="col-md-6">
+                <h3><?php echo Yii::t("wonlot","Video"); ?></h3>
+                <div class="text-block">
+                    <div id="widget"></div>
+                    <div id="player"></div>
+                    <script>
+                        // 2. Asynchronously load the Upload Widget and Player API code.
+                        var tag = document.createElement('script');
+                        tag.src = "https://www.youtube.com/iframe_api";
+                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                        // 3. Define global variables for the widget and the player.
+                        //    The function loads the widget after the JavaScript code
+                        //    has downloaded and defines event handlers for callback
+                        //    notifications related to the widget.
+                        var widget;
+                        var player;
+                        function onYouTubeIframeAPIReady() {
+                          widget = new YT.UploadWidget('widget', {
+                            width: 450,
+                            webcamOnly: false,
+                            events: {
+                              'onUploadSuccess': onUploadSuccess,
+                              'onProcessingComplete': onProcessingComplete
+                            }
+                          });
+                        }
+
+                        // 4. This function is called when a video has been successfully uploaded.
+                        function onUploadSuccess(event) {
+                            alert(1);
+                          alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
+                        }
+
+                        // 5. This function is called when a video has been successfully
+                        //    processed.
+                        function onProcessingComplete(event) {
+                            alert(2);
+                          /*player = new YT.Player('player', {
+                            height: 390,
+                            width: 640,
+                            videoId: event.data.videoId,
+                            events: {}
+                          });*/
+                        }
+                      </script>
+                </div>
+            </div>
+        <?php } else { ?>
+            <div class="col-md-12">
+                <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
+                <div class="text-block">
+                    <?php echo $model->prize_desc; ?>
+                </div>
+            </div>
+        <?php } ?>
         <div class="col-md-4">
             <h4><?php echo Yii::t("wonlot","Informazioni"); ?></h4>
             <div class="text-block">
@@ -93,12 +151,14 @@
             <div class="col-md-4">
                 <h4><?php echo Yii::t("wonlot","Condividi sul tuo sito!"); ?></h4>
                 <div class="text-block">
-                    <p>
-                        <span class="lot-i-text">
-                            <?php echo ""; ?>
-                            Copia il testo qui in basso per creare un bottone per la tua lotteria sul tuo sito!
-                        </span>
-                    </p>
+                    <?php $btnCode = CHtml::link(CHtml::image(Yii::app()->controller->createAbsoluteUrl('/').'/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id));?>
+                    <?php // $btnCode = '<a href="'.Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id).'"><img src="'.Yii::app()->controller->createAbsoluteUrl('/').'images/site/icon-wl-buy.png" alt="Compra con WonLot"></a>';?>
+                    <?php echo CHtml::hiddenField('lot-txt-copy',$btnCode);?>
+                    <blockquote>
+                        <?php echo CHtml::link(CHtml::image('/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id));?>
+                        <button class="btn btn-sm btn-default lot-btn-copy"><?php echo Yii::t('wonlot','Copia negli appunti'); ?></button>
+                        <footer><?php echo Yii::t('wonlot','Copia il codice negli appunti ed usalo per creare un collegamento con la tua lotteria sul tuo sito!'); ?></footer>
+                    </blockquote>
                 </div>
             </div>
         <?php } ?>

@@ -94,33 +94,6 @@ class UserIdentity extends CUserIdentity
 		return $this->_email;
 	}
         
-        /*public function authenticateFacebook() {
-		$fbconfig = Yii::app()->params['user']['facebookConfig'];
-		if (!$fbconfig || $fbconfig && !is_array($fbconfig))
-			throw new Exception('actionLogout for Facebook was called, but is not activated in application configuration.php');
-
-		Yii::import('application.modules.user.vendors.facebook.*');
-		require_once('Facebook.php');
-		$facebook = new Facebook($fbconfig);
-
-		$fb_uid = $this->username;
-		$profile = YumProfile::model()->findByAttributes(array('facebook_id'=>$fb_uid));
-		$user = ($profile) ? YumUser::model()->findByPk($profile->user_id) : null;
-			if ($user === null)
-				$this->errorCode = self::ERROR_USERNAME_INVALID;
-			else if($user->status == YumUser::STATUS_INACTIVE)
-				$this->errorCode = self::ERROR_STATUS_INACTIVE;
-			else if($user->status == YumUser::STATUS_BANNED)
-				$this->errorCode = self::ERROR_STATUS_BANNED;
-			else
-			{
-				$this->_id = $user->id;
-				$this->username = 'facebook';
-				$this->facebook_id = $fb_uid;
-				//$this->facebook_user = $facebook->api('/me');
-				$this->errorCode = self::ERROR_NONE;
-			}
-	}*/
         
         public function authenticateFacebook() 
         {

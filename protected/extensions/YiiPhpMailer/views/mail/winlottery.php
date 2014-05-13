@@ -6,6 +6,8 @@
 
 <p>Biglietto Vincitore: <?php echo $winner->serial_number; ?></p>
 
-<p>Vincitore UserID: <?php echo $winner->user_id; ?></p>
-
-<p>Richiedi il premio: <?php echo CController::createUrl("tickets/view",array('id'=>$winner->id));?></p>
+<div>
+    <div>Per ricevere il premio mettiti in contatto con il venditore:</div>
+    <div>Venditore: <b><?php echo $lottery->owner->username; ?></b> - Email: <?php echo $lottery->owner->email; ?></div>
+    <div>Se hai segnalazioni o problemi scrivi a: <a href="mailto:help@wonlot.com">help@wonlot.com</a></div>
+</div>

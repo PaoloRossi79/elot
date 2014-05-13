@@ -25,8 +25,40 @@
             </div>
         <?php }
         
-    } elseif($this->id == "lotteries") {
-        foreach($model->lists as $title=>$items){ ?>
+    } elseif($this->id == "lotteries") { ?>
+        <div class="form-block">
+            <?php echo $form->labelEx($model,'favorite');?>
+            <?php echo $form->checkBox($model,'favorite',array('label'=>Yii::t('wonlot','Lotterie Preferite'))); ?>
+            <?php echo $form->labelEx($model,'userGuaranted');?>
+            <?php echo $form->checkBox($model,'userGuaranted',array('label'=>Yii::t('wonlot','Venditori Grantiti'))); ?>
+            <?php echo $form->labelEx($model,'userMinRating');?>
+            <?php echo $form->textField($model,'userMinRating',array('id'=>'userMinRating','disabled'=>'disabled'));?>
+            <!--<input type="text" class="input-medium" id="user-rating-value" value="0" style="border:0; color:#f6931f; font-weight:bold;" />-->
+            <?php
+            $this->widget('zii.widgets.jui.CJuiSliderInput',array(
+                'name'=>'userMinRating',
+                'value'=>0,
+                'model'=>$model,
+//                'attribute' => 'userMinRating',
+                // additional javascript options for the slider plugin
+                'options'=>array(
+                    'min'=>0,
+                    'max'=>100,
+                    'animate'=>true,
+                    'step'=>1,
+                    // on slider change event
+                    /*'slide'=>'js:function(event,ui){
+                        alert(ui.value);
+                        $("#user-rating-value").val(ui.values[0]);
+                    }',*/
+                ),
+                'htmlOptions'=>array(
+                    'class'=>'input-medium'
+                ),
+            ));
+            ?>
+        </div>
+        <?php foreach($model->lists as $title=>$items){ ?>
             <div class="panel panel-default bootstrap-widget-table">
                 <div class="panel-heading">
                   <h3 class="panel-title"><?php echo Yii::t('wonlot',$title);?></h3>

@@ -10,8 +10,9 @@ class CronTicketsCommand extends CConsoleCommand
             Yii::log("CRON OK!", "warning");
             $file=Yii::app()->basePath."/cron-ticket.lock";
             $oFile=fopen($file,"w");
-            fwrite($oFile,"DO");
+            fwrite($oFile,"5");
             fclose($oFile);
+            chmod($file, '777');
             try {
                 // ADD TO CRONTAB: php /path/to/cron.php CronTickets
                 Yii::log("CRON Tickets OK!", "warning");
@@ -30,6 +31,21 @@ class CronTicketsCommand extends CConsoleCommand
             unlink($file);
         } else {
             Yii::log("CRON Tickets Busy -> SKIP ", "warning");
+            $file=Yii::app()->basePath."/cron-ticket.lock";
+            $oFile=fopen($file,"r");
+            $filesize=filesize($file);
+            Yii::log("SIZE=".$filesize, "warning");
+            $last=fread($oFile,$filesize);
+            fclose($oFile); 
+            Yii::log("LAST=".$last, "warning");
+            $newLast=$last-1;
+            if($newLast == 0){
+                unlink($file);
+            } else {
+                $oFile=fopen($file,"w");
+                fwrite($oFile,$newLast);
+                fclose($oFile); 
+            }
         }
     }
 

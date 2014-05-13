@@ -1,0 +1,29 @@
+body {
+    background-color: #e3dbdb;
+    margin: 0px!important;
+}
+
+.main-table{
+    width: 100%;
+}
+
+.logo-row {
+    background-color: black;
+    text-align: center;
+}
+
+.body-row {
+    padding: 30px;
+}
+
+.footer-row {
+    background-color: #514b3e;
+    height: 100px;
+}
+
+.mail-body {
+    margin: 30px 20px 30px 20px;
+    text-align: center;
+    vertical-align: middle;
+    min-height: 300px;
+}

@@ -1,22 +1,29 @@
 <html>
 <head>
 	<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        
+        <link href="<?php echo Yii::app()->params['baseUrl']; ?>css/mail.css" rel="stylesheet" media="screen"  />
 </head>
-<table cellspacing="0" cellpadding="10" style="color:#666;font:13px Arial;line-height:1.4em;width:100%;">
-	<tbody>
-		<tr>
-            <td style="color:#4D90FE;font-size:22px;border-bottom: 2px solid #4D90FE;">
-				<?php echo CHtml::encode(Yii::app()->name); ?>
-            </td>
-		</tr>
-		<tr>
+<table cellspacing="0" cellpadding="10" class="main-table">
+    <tbody>
+        <tr class="logo-row">
             <td>
-				<?php echo $content ?>
+                <a href="<?php echo Yii::app()->params['baseUrl']; ?>"><img src="<?php echo Yii::app()->params['baseUrl']; ?>images/site/logo.png" alt="WonLot"></a>
             </td>
-		</tr>
-		<tr>
-		</tr>
-	</tbody>
+        </tr>
+        <tr class="body-row">
+            <td>
+                <div class="mail-body">
+                    <?php echo $content ?>
+                </div>
+            </td>
+        </tr>
+        <tr class="footer-row">
+            <td>
+                FOOTER
+            </td>
+        </tr>
+    </tbody>
 </table>
 </body>
 </html>

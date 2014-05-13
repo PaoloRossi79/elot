@@ -166,8 +166,10 @@ class SiteController extends Controller
                         } else {
                             $model->attributes=$_POST['RegisterForm'];
                             // validate user input and redirect to the previous page if valid
-                            if($model->validate() && $model->register())
-                                    $this->redirect(Yii::app()->homeUrl);
+                            if($model->validate() && $model->register()){
+                                EmailManager::sendConfirmEmail($model);
+                                $this->redirect(Yii::app()->homeUrl);
+                            }
                         }
 		}
 		// display the login form
@@ -212,6 +214,7 @@ class SiteController extends Controller
                         $newSocialUser->linked_on = new CDbExpression('NOW()');
                         $newSocialUser->save();
                     }
+                    Users::model()->getGiftTicketsAfterRegister($oAuth->identifier);
                 }
             } else {
                 $newSocialUser = new SocialUser();
@@ -220,6 +223,8 @@ class SiteController extends Controller
                 $newSocialUser->ext_user_id = $oAuth->identifier;
                 $newSocialUser->linked_on = new CDbExpression('NOW()');
                 $newSocialUser->save();
+                $ticketRes = Users::model()->getGiftTicketsAfterRegister(Yii::app()->params['authExtSource'][$oAuth->provider]);
+                Users::model()->getGiftTicketsAfterRegister($oAuth->identifier);
             }
         }
         
@@ -258,5 +263,4 @@ class SiteController extends Controller
             }
             Yii::log("CRON END!", "warning");
         }
-        
 }

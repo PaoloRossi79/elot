@@ -24,6 +24,7 @@ return array(
             'lotteryTypes'=>$lotteryTypes,
             'lotteryTypesConst'=>$lotteryTypesConst,
             'lotteryStatusConst'=>$lotteryStatusConst,
+            'baseUrl'=>'http://test.wonlot.com/',
         ),
 
 	// application components

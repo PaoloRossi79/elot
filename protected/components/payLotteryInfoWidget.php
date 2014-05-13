@@ -2,9 +2,13 @@
 class payLotteryInfoWidget extends CWidget
 {
     public $paymentInfo;
+    public $userWithdraw;
     public $lotId;
     public $model;
     public $returnUrl;
+    public $type;
+    public $isComplete = false;
+    public $userCredit;
     public function init()
     {
         $this->registerScripts();
@@ -14,8 +18,14 @@ class payLotteryInfoWidget extends CWidget
     {
         if(!Yii::app()->user->isGuest()){
             $this->paymentInfo = Yii::app()->user->payInfo;
+            $this->userWithdraw = new UserWithdraw;
+            $this->userCredit = Yii::app()->user->walletValue;
             if(!$this->paymentInfo){
                 $this->paymentInfo = new UserPaymentInfo;
+            } else {
+                if(($userInfoModel->vat || $userInfoModel->fiscal_number) && ($userInfoModel->iban || $userInfoModel->paypal_account)){
+                    $this->isComplete = true;
+                }
             }
             $this->renderContent();   
         }
@@ -30,6 +40,7 @@ class payLotteryInfoWidget extends CWidget
                 'winner'=>$this->model->winner,
                 'winnerTicket'=>$this->model->winnerTicket,
                 'returnUrl'=>$this->returnUrl,
+                'type'=>$this->type,
             )
         );
     }   
@@ -46,15 +57,21 @@ class payLotteryInfoWidget extends CWidget
                       $(".success-block").show();
                       $(".error-message").text();
                       $(".error-block").hide();
-                      if(data.isProfile == 1){
+                      /*if(data.isProfile == 1){
                       } else {
                         $("#reqPayBtn").attr("disabled","disabled");
+                      }*/
+                      $('#reqPayBtn').removeAttr('disabled');
+                      if(data.isDraw == 1){
+                        alert("for credit");
                       }
+                      $('.draw-block').fadeIn();
                     } else {
                       $(".error-message").text(data.errMsg);
                       $(".error-block").show();
                       $(".success-message").text();
                       $(".success-block").hide();
+                      $('#reqPayBtn').attr('disabled','disabled');
                     }
                 }
                 <?php

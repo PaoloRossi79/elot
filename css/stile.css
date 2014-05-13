@@ -88,6 +88,12 @@ a, a:hover, a:focus, a:visited {
     height: 50px;
 }
 
+.text-cut {
+    overflow: hidden;
+    white-space: nowrap; /* Don't forget this one */
+    text-overflow: ellipsis;
+}
+
 #content
 {
     padding: 20px;
@@ -1009,6 +1015,18 @@ button.close {
     padding: 50px;
 }
 
+.fb-gift, .fb-share {
+    background-color: blue;
+}
+
+.gp-gift, .gp-share {
+    background-color: #ff001b;
+}
+
+.tw-share {
+    background-color: blue;
+}
+
 .ticket-gift-text {
     position: relative;
     top: 44px;
@@ -1091,7 +1109,7 @@ button.close {
     padding: 10px;
 }
 
-#emailErrorText, #emailSuccessText, #giftErrorText, #giftSuccessText {
+#emailErrorText, #emailSuccessText, .giftErrorText, .giftSuccessText , #retrive-credit-panel, .draw-block {
     display: none;
 }
 
@@ -1099,9 +1117,21 @@ button.close {
     display: none;
 }
 
-.user-small-box, .user-small-ticket-box {
+.user-small-box {
     width: 100px;
     cursor: pointer;
+}
+.user-small-ticket-box {
+    width: 100px;
+    height: 125px;
+    cursor: pointer;
+    float: left;
+    border: 1px #BBBBBB solid;
+    border-radius: 5px;
+    margin: 5px;
+    padding-top: 5px;
+    text-align: center;
+    overflow: hidden;
 }
 .selected-box, .selected-box {
     border: 5px solid yellowgreen;
@@ -1131,4 +1161,9 @@ button.close {
 
 .notify-unread {
     background-color: #fbfec5;
+}
+
+// PROFILE -> GIFT CREDIT
+#retrive-credit-panel {
+    display: none;
 }

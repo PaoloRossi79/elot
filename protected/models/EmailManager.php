@@ -134,12 +134,50 @@ class EmailManager extends PActiveRecord
             return $sendRes;
         }
         
+	public function sendTickets($user){
+            $ticketsOrganized = Tickets::model()->organizeTicketsByLottery($user->tickets);
+            $mail = new YiiMailer();
+            $mail->setView('tickets');
+            $mail->setData(array('tickets' => $ticketsOrganized));
+            $mail->setFrom('info@wonlot.com', 'WonLot');
+            $mail->setTo($user->email);
+//            $mail->setTo('paolorossi79@gmail.com');
+            $mail->setSubject('Hai acquistato dei ticket su WonLot!');
+            $sendRes=$mail->send();
+            return $sendRes;
+        }
+        
 	public function sendGiftTicket($ticket,$receiver){
             $mail = new YiiMailer();
             $mail->setView('giftTicket');
             $mail->setData(array('ticket' => $ticket));
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($receiver);
+//            $mail->setTo('paolorossi79@gmail.com');
+            $mail->setSubject('Ti hanno regalato un ticket su WonLot!');
+            $sendRes=$mail->send();
+            return $sendRes;
+        }
+	
+        public function sendGiftTickets($user){
+            $ticketsOrganized = Tickets::model()->organizeTicketsByLottery($user->tickets);
+            $mail = new YiiMailer();
+            $mail->setView('giftTickets');
+            $mail->setData(array('tickets' => $ticketsOrganized));
+            $mail->setFrom('info@wonlot.com', 'WonLot');
+            $mail->setTo($user->email);
+//            $mail->setTo('paolorossi79@gmail.com');
+            $mail->setSubject('Hai acquistato dei ticket su WonLot!');
+            $sendRes=$mail->send();
+            return $sendRes;
+        }
+        
+	public function sendGiftTicketsToExt($user){
+            $mail = new YiiMailer();
+            $mail->setView('giftTicketsToExt');
+            $mail->setData(array('tickets' => $user['lotteries']));
+            $mail->setFrom('info@wonlot.com', 'WonLot');
+            $mail->setTo($user['email']);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Ti hanno regalato un ticket su WonLot!');
             $sendRes=$mail->send();

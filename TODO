@@ -1,34 +1,30 @@
 TODO:
 
-1) Notifiche: icona + dropdown + pagina -> OK (manca gestione "read" e layout pagina)
+0) creazione lotteria: blocca a 5 immagini: STOP -> in attersa
 
-2) Blocco dati fatturazione -> OK
+2) Blocco Youtube -> sospeso
+    metterlo anche nella pagina di edit x lotterie già salvate
+http://apiblog.youtube.com/2012/02/video-uploads-from-your-sites-community.html
+SOSPESO!!!
 
-0) creazione lotteria: blocca a 5 immagini: STOP
+1) Lot-box: per numeri troppo grandi -> tagliare (non mostrare cifre troppo grande)
 
-1) Bottone codice per link esterno
+3) aggiungere pagina dove lasciare Feedback al Venditore: solo vinctiore? consideriamo come parametro anche il numero di lotterie annullate
 
-2) Blocco Youtube
-
-1) RICERCA -> DONE!
-    MANCA: ricerca x località
-
-2) Annullamento lotteria (fino a 24 H prima dell'estrazione)
-
-    b) mail di comunicazione a OWNER e PATECIPANTI (biglietti già acquistati)
+4) Pagina ADMIN gestione utenti: 
+    a) dove inserire che è "Venditore Garantito"
+    b) dove assegnare promozioni speciali
 
 3) Regala biglietto 
     a) ad email -> link OK
-    b) a followers
+    b) a followers -> OK
     d) funzione di check post registrazione per riscossione biglietto regalo
 
-4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori"
+4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori" -> in sospeso ... usare cmq i dati
 
 4) Promozioni speciali:
     a) promozione per vincitore che da consenso
     b) in Creazione lotteria: usa offerte speciali (1 pagina, vedi...sito->regolamento->009)
-
-4) PROFILO: visualizzazione sconti disponibili
 
 5) Newsletter: 
     b) funzione di invio
@@ -37,16 +33,39 @@ TODO:
 
 8) Sharer via Facebook, G+, TW
 
-
-
-10) Nella pagina visualizzazione lotteria propria (my lotteries), mettere un blocco di testo html, copiabile, 
-    per generare un button-link che rimanda a quella lotteria, lasciando la possibilità di inserire la lable personalizzata (un testo ns di default)
-
-11) inserire nella pagina Profilo per ogni utente, un blocco di N immagini (4-5) chiedendo all'utente di scegliere quale gli piace di più -> tracciatura della sua scelta
+    FB:
+        FB.ui({
+            method: 'share',
+            href: 'https://developers.facebook.com/docs/dialogs/',
+          }, function(response){});
+        
+    G+:
+        <a href='https://plus.google.com/share?url={{shareUrl}}' onclick='javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;'><img src='https://www.gstatic.com/images/icons/gplus-16.png' alt='Share on Google+'/></a>
+        
+    TW: <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://wonlot.com/twitter" data-text="Test 1" data-via="paolorossi79" data-lang="it" data-size="large" data-count="none" data-hashtags="wonlot">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
 !!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
 DONE
+
+1) Bottone codice per link esterno -> OK
+
+2) Annullamento lotteria (fino a 24 H prima dell'estrazione)
+
+    b) mail di comunicazione a OWNER e PATECIPANTI (biglietti già acquistati) -> scelto di fare NOTIFICA
+    c) notifica (generica) a partecipanti -> OK, DONE
+
+4) PROFILO: visualizzazione sconti disponibili -> OK!
+
+1) Notifiche: icona + dropdown + pagina -> OK (manca layout pagina)
+
+2) Blocco dati fatturazione -> OK
+
+1) RICERCA : MANCA: ricerca x località -> DONE!
+
+1) Home-page: lottery box -> x utenti Guest non mostrare il link che rimanda alla pagina utente -> DONE!
+    a) pagina utente visible solo ad utenti registrati -> DONE!
 
 1) RICERCA 
     a) MAIN PAGE: categoria OK (test ulteriori)
@@ -106,3 +125,64 @@ DONE
     c) ricerca amici: In ATTESA!!!
         1) per username
         2) per area geografica
+
+
+2) aggiungere filtro ricerca per lotterie preferite -> OK
+2) aggiungere filtro ricerca per "Venditore garantito" -> OK
+2) aggiungere filtro ricerca per Feedback Venditore -> OK
+
+YOUTUBE:
+
+<!--<iframe id="widget" type="text/html" width="640" height="390" src="https://www.youtube.com/upload_embed" frameborder="0"></iframe>-->
+    <!-- 1. The 'widget' div element will contain the upload widget.
+         The 'player' div element will contain the player IFrame. -->
+    <div id="widget"></div>
+    <div id="player"></div>
+
+    <script>
+      // 2. Asynchronously load the Upload Widget and Player API code.
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. Define global variables for the widget and the player.
+      //    The function loads the widget after the JavaScript code
+      //    has downloaded and defines event handlers for callback
+      //    notifications related to the widget.
+      var widget;
+      var player;
+      function onYouTubeIframeAPIReady() {
+        widget = new YT.UploadWidget('widget', {
+          width: 500,
+          webcamOnly: false,
+          events: {
+            'onUploadSuccess': onUploadSuccess,
+            'onProcessingComplete': onProcessingComplete
+          }
+        });
+      }
+
+      // 4. This function is called when a video has been successfully uploaded.
+      function onUploadSuccess(event) {
+        alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
+      }
+
+      // 5. This function is called when a video has been successfully
+      //    processed.
+      function onProcessingComplete(event) {
+        player = new YT.Player('player', {
+          height: 390,
+          width: 640,
+          videoId: event.data.videoId,
+          events: {}
+        });
+      }
+    </script>
+
+
+SNIPPETS
+
+<?php echo Yii::t('wonlot',''); ?>
+
+Yii::t('wonlot','')

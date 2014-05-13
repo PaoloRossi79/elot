@@ -175,12 +175,13 @@ class LotteriesController extends Controller
                     echo Yii::t('wonlot','Non puoi annullare questa lotteria: mancano meno di 24 ore');
                     return;
                 }
-//                $dbTransaction=$lot->dbConnection->beginTransaction();
+                $dbTransaction=$lot->dbConnection->beginTransaction();
                 $lot->status = Yii::app()->params['lotteryStatusConst']['void'];
                 if($lot->save()){
                     //repay tickets
                     $allOk=true;
                     $errors = array();
+                    $usersRefound = array();
                     foreach($lot->validTickets as $vt){
                         $vt->status = Yii::app()->params['ticketStatusConst']['refunded'];
                         if($vt->save()){
@@ -199,8 +200,13 @@ class LotteriesController extends Controller
                                     }
                                 }
                                 if($vt->giftFromUser->save()){
+                                    $dbTransaction->commit();
+                                    if(!in_array($vt->giftFromUser->id,$usersRefound)){
+                                        $usersRefound[] = $vt->giftFromUser->id;
+                                    }
                                     UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->giftFromUser->id);
                                 } else {
+                                    $dbTransaction->rollback();
                                     $allOk=false;
                                     Yii::log("Void lottery error: saving gift user. Ticket ".$vt->id);
                                 }
@@ -219,14 +225,20 @@ class LotteriesController extends Controller
                                     }
                                 }
                                 if($vt->user->save()){
+                                    $dbTransaction->commit();
+                                    if(!in_array($vt->user->id,$usersRefound)){
+                                        $usersRefound[] = $vt->user->id;
+                                    }
                                     UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->user->id);
                                 } else {
+                                    $dbTransaction->rollback();
                                     $allOk=false;
                                     $errors[$vt->id][] = "Void lottery error:  saving user. Ticket ".$vt->id;
                                     Yii::log("Void lottery error: saving user. Ticket ".$vt->id);
                                 }
                             }
                         } else {
+                            $dbTransaction->rollback();
                             $allOk=false;
                             break;
                         }
@@ -234,7 +246,11 @@ class LotteriesController extends Controller
                 }
                 if(!$allOk){
                     $emailRes=EmailManager::sendCronAdminEmail($errors);
-                } 
+                } else {
+                    foreach($usersRefound as $userRef){
+                        Notifications::model()->sendRefoundLotteryNotify($lot,$userRef);
+                    }
+                }
                 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_POST['isAjax'])){
@@ -435,15 +451,16 @@ class LotteriesController extends Controller
             if(empty($params['ticketId'])){
                 echo CJSON::encode(array('exit'=>0,'msg'=>"Numero del Ticket mancante"));
             } else {
-                if(!empty($params['user']['provider']) && !empty($params['user']['userId'])){
+                if(!empty($params['provider']) && !empty($params['userId'])){
                     $ticket = Tickets::model()->findByPk($params['ticketId']);
                     // check for ownership
                     if($ticket->user_id == Yii::app()->user->id){
                         if($ticket->is_gift != 1){
                             $ticket->is_gift = 1;
                             $ticket->gift_from_id = Yii::app()->user->id;
-                            $ticket->gift_provider = trim($params['user']['provider']);
-                            $ticket->gift_ext_user = $params['user']['userId'];
+                            $ticket->gift_provider = trim($params['provider']);
+                            $ticket->gift_ext_user = $params['userId'];
+                            $ticket->gift_ext_username = $params['userName'];
                             if($ticket->save()){
                                 echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
                             } else {
@@ -474,6 +491,7 @@ class LotteriesController extends Controller
                             } else {
                                 $ticket->gift_provider = 'email';
                                 $ticket->gift_ext_user = $params['user']['giftEmail'];
+                                $ticket->gift_ext_username = $params['user']['giftEmail'];
                             }
                             $ticket->is_gift = 1;
                             $ticket->is_sent = 0;
@@ -757,6 +775,7 @@ class LotteriesController extends Controller
             }
             if(empty($_POST['SearchForm']['LotStatus']) && !empty($_POST['SearchForm']['LotStartStatus'])){
                 $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
+                $filter['status']=array($_POST['SearchForm']['LotStartStatus']);
             }
             if(!empty($_POST['SearchForm']['searchStartDate'])){
                 $filter["minDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchStartDate']);
@@ -782,6 +801,15 @@ class LotteriesController extends Controller
             }
             if($_POST['SearchForm']['searchText']){
                 $filter["searchText"]=$_POST['SearchForm']['searchText'];
+            }
+            if($_POST['SearchForm']['favorite']){
+                $filter["favorite"]=$_POST['SearchForm']['favorite'];
+            }
+            if($_POST['SearchForm']['userGuaranted']){
+                $filter["searchText"]=$_POST['SearchForm']['userGuaranted'];
+            }
+            if($_POST['SearchForm']['userMinRating']){
+                $filter["userMinRating"]=$_POST['SearchForm']['userMinRating'];
             }
             if($my)
                 $filter["my"]="true";

@@ -9,7 +9,7 @@
         <?php 
         /*header("Access-Control-Allow-Origin: facebook.com");
         header("Access-Control-Allow-Origin: google.com");*/
-        header("Access-Control-Allow-Origin: *");
+        echo header("Access-Control-Allow-Origin: *");
         ?>
         
         <?php 
@@ -38,6 +38,7 @@
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.isotope.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.slides.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/social.js',CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.loadTemplate-1.4.3.min.js',CClientScript::POS_HEAD);
 //            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/galleria/galleria-1.3.5.min.js',CClientScript::POS_HEAD);
         ?>
         
@@ -45,52 +46,7 @@
 </head>
 
 <body>
-    <!--<iframe id="widget" type="text/html" width="640" height="390" src="https://www.youtube.com/upload_embed" frameborder="0"></iframe>-->
-    <!-- 1. The 'widget' div element will contain the upload widget.
-         The 'player' div element will contain the player IFrame. -->
-    <div id="widget"></div>
-    <div id="player"></div>
-
-    <script>
-      // 2. Asynchronously load the Upload Widget and Player API code.
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      // 3. Define global variables for the widget and the player.
-      //    The function loads the widget after the JavaScript code
-      //    has downloaded and defines event handlers for callback
-      //    notifications related to the widget.
-      var widget;
-      var player;
-      function onYouTubeIframeAPIReady() {
-        widget = new YT.UploadWidget('widget', {
-          width: 500,
-          webcamOnly: false,
-          events: {
-            'onUploadSuccess': onUploadSuccess,
-            'onProcessingComplete': onProcessingComplete
-          }
-        });
-      }
-
-      // 4. This function is called when a video has been successfully uploaded.
-      function onUploadSuccess(event) {
-        alert('Video ID ' + event.data.videoId + ' was uploaded and is currently being processed.');
-      }
-
-      // 5. This function is called when a video has been successfully
-      //    processed.
-      function onProcessingComplete(event) {
-        player = new YT.Player('player', {
-          height: 390,
-          width: 640,
-          videoId: event.data.videoId,
-          events: {}
-        });
-      }
-    </script>
+    
 
 <div class="container" id="page">
 

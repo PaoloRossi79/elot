@@ -222,6 +222,24 @@ class Lotteries extends PActiveRecord
             if(isset($type['searchText'])){
                 $criteria->addCondition('t.name like "%' .$type['searchText'].'%" OR t.prize_desc like "%' .$type['searchText'].'%"');
             }
+            if(isset($type['favorite'])){
+                $myFavLot = CHtml::listData(FavoriteLottery::model()->findAll('t.user_id ='.Yii::app()->user->id.' AND t.active=1'), 'lottery_id', 'lottery_id');
+                if(!empty($myFavLot)){
+                    $criteria->addInCondition('id',$myFavLot);
+                }
+            }
+            if(isset($type['userGuaranted'])){
+                $guarantedUsers = CHtml::listData(Users::model()->findAll('t.is_guaranted_seller = 1'), 'id', 'id');
+                if(!empty($guarantedUsers)){
+                    $criteria->addInCondition('owner_id',$guarantedUsers);
+                }
+            }
+            if(isset($type['userMinRating'])){
+                $ratedUsers = CHtml::listData(Users::model()->findAll('t.seller_rating >= '.$type['userMinRating']), 'id', 'id');
+                if(!empty($ratedUsers)){
+                    $criteria->addInCondition('owner_id',$ratedUsers);
+                }
+            }
             if(isset($type['geo'])){
                 $unit = 6371;   
                 $criteria->select = '* ,( '.$unit.' * acos( cos( radians('.$type['geo']['lat'].' )) * cos( radians( location.addressLat ) ) * cos( radians( location.addressLng ) - radians('.$type['geo']['lng'].') ) + sin( radians('.$type['geo']['lat'].') ) * sin( radians( location.addressLat ) ) ) ) AS distance';
@@ -553,12 +571,14 @@ class Lotteries extends PActiveRecord
                             Yii::log("Lottery extract: Id=".$extract->id.", name=".$extract->name, "warning");
                             //send email for opening
                             $emailRes=EmailManager::sendExtractLotteryToWinner($extract,$winnerTicket);
+                            Notifications::model()->sendExtractLotteryToWinnerNotify($extract,$winnerTicket);
                             if(!$emailRes){
                                 Yii::log("Err sending email: ".$emailRes, "error");
                             } else {
                                 $extract->is_sent_extracted *= 2;
                             }
                             $emailRes=EmailManager::sendExtractLotteryToOwner($extract,$winnerTicket);
+                            Notifications::model()->sendExtractLotteryToOwnerNotify($extract);
                             if(!$emailRes){
                                 Yii::log("Err sending email: ".$emailRes, "error");
                             } else {
@@ -636,28 +656,34 @@ class Lotteries extends PActiveRecord
         
         public function sendTicketsEmail(&$errors){
             $crit = new CDbCriteria();
-            $crit->addCondition('t.status = 1');
-            $crit->addCondition('t.is_sent = 0');
-            $crit->addCondition('t.is_gift = 0');
-            $crit->order = "id";
-            $crit->limit = 5;
-            $tickets = Tickets::model()->findAll($crit);
-            foreach($tickets as $ticket){
+            $crit->with=array("tickets"=>array(
+                // but want to get only users with published posts
+                'joinType'=>'INNER JOIN',
+                'condition'=>'tickets.status = 1 AND tickets.is_sent = 0 AND tickets.is_gift is null',
+            ));
+            $usersTickets = Users::model()->findAll($crit);
+            $usersTickets = array_slice($usersTickets, 0, 10);
+            foreach($usersTickets as $user){
                 try {
-                    $res=EmailManager::model()->sendTicket($ticket);
-                    if($res){
-                        $ticket->is_sent = 1;
-                        if(!$ticket->save()){
+                    Yii::log("Ticket to send: ".count($user->tickets)." to: ".$user->email,"warning");
+                    if(count($user->tickets) > 0){
+                        $res=EmailManager::model()->sendTickets($user);
+                        if($res){
+                            foreach($user->tickets as $ticket){
+                                $ticket->is_sent = 1;
+                                if(!$ticket->save()){
+                                    Yii::log("UPD Sending tickets error: ".$ticket->id,'error');
+                                    $errors['tickets'][]="UPD after Sending tickets error: ".$ticket->id;
+                                }
+                            }
+                        } else {
                             Yii::log("Sending tickets error: ".$ticket->id,'error');
-                            $errors['tickets'][]="Sending tickets error: ".$ticket->id;
+                            $errors['tickets'][]="Sending tickets error: user ".$user->id;
                         }
-                    } else {
-                        Yii::log("Sending tickets error: ".$ticket->id,'error');
-                        $errors['tickets'][]="Sending tickets error: ".$ticket->id;
                     }
                 } catch (Exception $exc) {
                     Yii::log($exc->getTraceAsString(),'error');
-                    $errors['tickets'][]="Sending tickets error: ".$ticket->id;
+                    $errors['tickets'][]="Sending tickets error: user ".$user->id;
                 }
             }
         }
@@ -668,52 +694,59 @@ class Lotteries extends PActiveRecord
             $crit->addCondition('t.is_sent = 0');
             $crit->addCondition('t.is_gift = 1');
             $crit->addCondition('t.gift_provider = "email"');
-            $crit->order = "id";
-            $crit->limit = 5;
             $tickets = Tickets::model()->findAll($crit);
-            foreach($tickets as $ticket){
+            $groupTicket = Tickets::model()->organizeTicketsByEmail($tickets);
+            foreach($groupTicket as $gt){
                 try {
-                    $res=EmailManager::model()->sendGiftTicket($ticket,$ticket->gift_ext_user);
+                    $res=EmailManager::model()->sendGiftTicketsToExt($gt);
                     if($res){
-                        $ticket->is_sent = 1;
-                        if(!$ticket->save()){
-                            Yii::log("Sending tickets error: ".$ticket->id,'error');
-                            $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                        foreach($gt['lotteries'] as $lot){
+                            foreach($lot['tickets'] as $ticket){
+                                $ticket->is_sent = 1;
+                                if(!$ticket->save()){
+                                    Yii::log("UPD Sending tickets error: ".$ticket->id,'error');
+                                    $errors['giftTickets'][]="UPD after Sending giftTickets error: ".$ticket->id;
+                                }
+                            }
                         }
                     } else {
                         Yii::log("Sending tickets error: ".$ticket->id,'error');
-                        $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                        $errors['giftTickets'][]="Sending giftTickets error: user ".$gt['email'];
                     }
                 } catch (Exception $exc) {
                     Yii::log($exc->getTraceAsString(),'error');
-                    $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                    $errors['giftTickets'][]="Sending giftTickets error: user ".$gt['email'];
                 }
             }
+            $usersTickets = null;
             $crit = new CDbCriteria();
-            $crit->addCondition('t.status = 1');
-            $crit->addCondition('t.is_sent = 0');
-            $crit->addCondition('t.is_gift = 1');
-            $crit->addCondition('t.gift_provider is null');
-            $crit->addCondition('t.user_id != t.gift_from_id');
-            $crit->order = "id";
-            $crit->limit = 5;
-            $tickets = Tickets::model()->findAll($crit);
-            foreach($tickets as $ticket){
+            $crit->with=array("tickets"=>array(
+                // but want to get only users with published posts
+                'joinType'=>'INNER JOIN',
+                'condition'=>'tickets.status = 1 AND tickets.is_sent = 0 AND tickets.is_gift = 1 AND tickets.user_id != tickets.gift_from_id',
+            ));
+            $usersTickets = Users::model()->findAll($crit);
+            $usersTickets = array_slice($usersTickets, 0, 10);
+            foreach($usersTickets as $user){
                 try {
-                    $res=EmailManager::model()->sendGiftTicket($ticket,$ticket->user_id);
-                    if($res){
-                        $ticket->is_sent = 1;
-                        if(!$ticket->save()){
+                    if(count($user->tickets) > 0){
+                        $res=EmailManager::model()->sendGiftTickets($user);
+                        if($res){
+                            foreach($user->tickets as $ticket){
+                                $ticket->is_sent = 1;
+                                if(!$ticket->save()){
+                                    Yii::log("UPD Sending tickets error: ".$ticket->id,'error');
+                                    $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                                }
+                            }
+                        } else {
                             Yii::log("Sending tickets error: ".$ticket->id,'error');
-                            $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                            $errors['giftTickets'][]="Sending giftTickets error: user ".$user->id;
                         }
-                    } else {
-                        Yii::log("Sending tickets error: ".$ticket->id,'error');
-                        $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
                     }
                 } catch (Exception $exc) {
                     Yii::log($exc->getTraceAsString(),'error');
-                    $errors['giftTickets'][]="Sending giftTickets error: ".$ticket->id;
+                    $errors['giftTickets'][]="Sending giftTickets error: user ".$user->id;
                 }
             }
         }

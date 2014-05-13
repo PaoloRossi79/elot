@@ -2,39 +2,17 @@
 
 <div class="friends">
     <div class="friends-list">
-            <?php if($list) { ?>
-                <div class="social-friend-block">
-                    <script>
-                        $('.box-spinner').hide();
-                    </script>
-                    <table>
-                        <?php foreach ($list as $f) { ?>
-                            <tr>
-                                <td><img style="width: 50px; height: 50px;" src="<?php echo $f->photoURL; ?>"></td>
-                                <td><?php echo $f->displayName; ?></td>
-                                <td>
-                                    <button class="btn btn-primary feedShare" id='<?php echo $f->identifier; ?>' data-provider="<?php echo $provider; ?>">
-                                        <?php echo Yii::t('wonlot','Regala'); ?>
-                                    </button>
-                                    <?php 
-                                    $msg = urlencode("Ti ho regalato un biglietto su Wonlot.com!");
-                                    $baseUrl = Yii::app()->getBaseUrl(true);
-                                    $url = "https://www.facebook.com/dialog/feed?app_id=$appId&display=popup&caption=$msg&link=$baseUrl&redirect_uri=$baseUrl/lotteries/gift";
-                                    ?>
-                                    <!--<a class="feedShare">Regala!</a>-->
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </table>
-                </div>
-            <?php }  ?>
+            
+            <div class="gift-ticket-box" name='0'>
+              <?php $this->renderPartial('/lotteries/_socialFriendList'); ?>
+            </div>
             <div class="gift-ticket-box" name='1'>
                 <?php $formEmail=$this->beginWidget('CActiveForm',array('id'=>'gift-email-form'),array('role' => 'form')); ?>
                 
                     <div id="emailFormGroup" class="form-group">
                       <?php echo CHtml::emailField("giftEmail",'',array('id'=>'giftEmail','placeholder' => "Email", 'class' => 'form-control')); ?>                
-                        <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
-                        <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
+                        <p class="giftErrorText text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
+                        <p class="giftSuccessText text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
                     </div>
                     <?php echo CHtml::ajaxButton ("Regala!",
                         CController::createUrl('lotteries/gift'), 
@@ -48,18 +26,18 @@
                                     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
                                     if(!regex.test($("#giftEmail").val())){
                                         $("#emailFormGroup").addClass("has-error");
-                                        $("#emailErrorText").show();
+                                        $(".giftErrorText").show();
                                         return false;
                                     } 
                                } else {
                                         $("#emailFormGroup").addClass("has-error");
-                                        $("#emailErrorText").show();
+                                        $(".giftErrorText").show();
                                         return false;
                                }
                            }',
                            'success'=>'function(data){
                                 $.updateTicketGift(data);
-                            }',
+                           }',
                         ),
                         array('name'=>'giftBtn', 'id'=>'gift-btn-1', 'class'=>'btn btn-primary buy-btn')
                         ); ?>
@@ -68,10 +46,10 @@
         <div class="gift-ticket-box" name='2'>
             <?php $formFollow=$this->beginWidget('CActiveForm',array('id'=>'gift-ticket-following-form'),array('role' => 'form')); ?>
                 <div id="followingFormGroup" class="form-group">
-                  <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
-                  <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>        
-                  <?php echo CHtml::hiddenField('gift-userid',null, array()); ?>
-                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('readonly'=>'readonly')); ?></span></p>
+                  <p class="giftErrorText text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
+                  <p class="giftSuccessText text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>        
+                  <?php echo CHtml::hiddenField('gift-userid',null, array('name'=>'gift-userid')); ?>
+                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('name'=>'gift-username','readonly'=>'readonly')); ?></span></p>
                 </div>
                 <?php if(count($user->followings) > 0){ ?>
                     <div class="">
@@ -106,10 +84,10 @@
         <div class="gift-ticket-box" name='3'>
             <?php $formFollower=$this->beginWidget('CActiveForm',array('id'=>'gift-ticket-follower-form'),array('role' => 'form')); ?>
                 <div id="followingFormGroup" class="form-group">
-                  <p id="giftErrorText" class="text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
-                  <p id="giftSuccessText" class="text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
-                  <?php echo CHtml::hiddenField('gift-userid',null, array()); ?>
-                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('readonly'=>'readonly')); ?></span></p>
+                  <p class="giftErrorText text-danger"><?php echo Yii::t('wonlot','Errore di invio regalo'); ?></p>
+                  <p class="giftSuccessText text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
+                  <?php echo CHtml::hiddenField('gift-userid',null, array('name'=>'gift-userid')); ?>
+                  <p>Regala il biglietto a: <span><?php echo CHtml::textField('gift-username',null, array('name'=>'gift-username','readonly'=>'readonly')); ?></span></p>
                 </div>
                 <?php if(count($user->followers) > 0){ ?>
                     <div class="">

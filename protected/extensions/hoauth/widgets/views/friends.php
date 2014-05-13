@@ -11,13 +11,16 @@ $invitation = "";
     <div class="width-33perc pull-left">
         <!--<a href="<?php echo Yii::app()->createUrl('site/oauthshare', array('provider' => $provider)); ?>" class="btn btn-info zocial <?php echo $additionalClass . ' ' . strtolower($provider); ?>"><?php echo "$invitation $provider"; ?></a>-->
         <input type="hidden" name="href" value="<?php echo Yii::app()->createUrl('site/oauthshare', array('provider' => $provider)); ?>">
-        <?php echo CHtml::ajaxButton ("$invitation $provider",
+        <?php echo CHtml::ajaxButton("$invitation $provider",
             $this->controller->createUrl('site/oauthshare',array('provider' => $provider)), 
             array(
-              'update' => '.friends',
+              'update' => '#social-friend-list',
               'type' => 'POST', 
+//              'success' => 'function(data){
+//                    $.updateSocialFriends(data);
+//              }',
             ),
             array(
-                'class' => "btn btn-info zocial". $additionalClass . " " . strtolower($provider))
-            ); ?>
+                'class' => "btn btn-info gift-ticket-social-btn zocial". $additionalClass . " " . strtolower($provider),
+            )); ?>
     </div>

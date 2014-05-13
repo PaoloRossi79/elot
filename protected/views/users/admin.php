@@ -2,6 +2,9 @@
 /* @var $this UsersController */
 /* @var $model Users */
 
+/* TEST ONLY */
+$errors = array('tickets'=>array(),'giftTickets'=>array());
+$t=  Lotteries::model()->sendTicketsEmail($errors);
 $this->breadcrumbs=array(
 	'Users'=>array('index'),
 	'Manage',

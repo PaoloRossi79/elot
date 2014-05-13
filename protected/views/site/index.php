@@ -1,6 +1,13 @@
 <?php
 /* @var $this SiteController */
 $this->pageTitle=Yii::app()->name;
+if(Yii::app()->session['confirmEmail']){
+    alert(Yii::app()->session['confirmEmail']);
+} elseif(Yii::app()->session['confirmEmailError']){
+    alert(Yii::app()->session['confirmEmailError']);
+}
+unset(Yii::app()->session['confirmEmail']);
+unset(Yii::app()->session['confirmEmailError']);
 ?>
 <div class="slideshow-ext">
     <div id="slideshow-container">

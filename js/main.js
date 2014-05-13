@@ -76,7 +76,7 @@ $(window).bind("load", function() {
    });
    
    $('.zocial').click(function(event){
-       $('#labelProvider').text($(this).val());
+       $('.labelProvider').text($(this).val());
        $('.box-spinner').show();
    });
    
@@ -177,20 +177,21 @@ $(window).bind("load", function() {
             $('#private-profile').fadeIn();
         }
    });
-   jQuery('body').on('click','#gift-back',function(event){
-       try {
-            $("#gift-modal").modal('hide');
-       } catch(err) {
-            //Handle errors here
-       }
-       $('#buy-modal').modal('show');
-   });
+   
    jQuery('body').on('click','.gift-ticket-btn',function(){
        var boxActive = $(this).attr('name');
+       $('.labelProvider').text($(this).val());
        $('.gift-ticket-box').filter('[name='+boxActive+']').fadeIn();
        $('.gift-ticket-box').not('[name='+boxActive+']').fadeOut();
-       $('.social-friend-block').fadeOut();
-       $('.box-spinner').fadeOut();
+       $('.box-spinner').hide();
+   });
+   jQuery('body').on('click','.gift-ticket-social-btn',function(){
+       var boxActive = $(this).attr('name');
+       $('.labelProvider').text($(this).val());
+       $('input[name=gift-provider]').val($(this).val());
+       $('.gift-ticket-box').not('[name=0]').fadeOut();
+       $('.gift-ticket-box').filter('[name=0]').fadeIn();   
+       $('.box-spinner').show();
    });
    jQuery('body').on('click','.setFollow',function(event){
        if($(this).attr('id') == 1){
@@ -212,8 +213,10 @@ $(window).bind("load", function() {
        $(this).addClass('selected-box');
        console.log(id);
        console.log(username);
-       $('#gift-userid').val(id);
-       $('#gift-username').val(username);
+       /*$('#gift-userid').val(id);
+       $('#gift-username').val(username);*/
+       $('input[name="gift-userid"]').val(id);
+       $('input[name="gift-username"]').val(username);
        $('input[name=ticketId]').val($('#ticketIdForGift').val());
    });
    jQuery('body').on('click','.user-small-ticket-box',function(event){
@@ -232,23 +235,24 @@ $(window).bind("load", function() {
    $.updateTicketGift = function(data){
        var res = $.parseJSON(data);
        if(res.exit){
-            $("#giftSuccessText").show();
+            $(".giftSuccessText").show();
             $("input[name=giftBtn]").attr("disabled","disabled");
+            $(".feedShare").attr("disabled","disabled");
             $(".giftText").append("<span class=\"bg-success\">Regalato!</span>");
             $("#ticket-lot-"+$("#ticketIdForGift").val()).append("<span class=\"ticket-gift-text bg-success\">Regalato!</span>");
             $("#"+$("#ticketIdForGift").val()).hide();
             $("#emailFormGroup").removeClass("has-error");
             $("#emailFormGroup").addClass("has-success");
-            $("#giftErrorText").hide();
-            $("#giftSuccessText").show();
+            $(".giftErrorText").hide();
+            $(".giftSuccessText").show();
             setTimeout(function() {
-//                $("#gift-back").click();
-//                $("#gift-modal").fadeOut();
+                $("#gift-modal").modal('hide');
+                $("#buy-modal").modal('show');
                 $.resetTicketGift();
             }, 3000);
        } else {
-            $("#giftErrorText").text(res.msg);
-            $("#giftErrorText").show();
+            $(".giftErrorText").text(res.msg);
+            $(".giftErrorText").show();
        }
    };
    $.resetTicketGift = function(){
@@ -260,13 +264,18 @@ $(window).bind("load", function() {
        $('input[name="gift-username"]').val("");
        $('input[name=ticketId]').val("");
        $('#giftEmail').val("");
-       $('#giftSuccessText').hide();
-       $('#giftErrorText').hide();
-       $("input[name=giftBtn]").removeAttr("disabled");
+       $('.giftSuccessText').hide();
+       $('.giftErrorText').hide();
    };
+   
    jQuery('body').on('click','.notify-pop-btn',function(event){
-      $('.notify-unread-count').html(0); 
-      $('.float-circle').hide(); 
+      $.post( 'users/markNewNotifyRead' , { notifyId: $(this).attr('name')})
+            .done(function( data ) {
+                if(data){
+                    $('.notify-unread-count').html(0); 
+                    $('.float-circle').hide(); 
+                }
+       });
    });
    jQuery('body').on('click','.notify-row',function(event){
        var sender = $(this);
@@ -277,5 +286,180 @@ $(window).bind("load", function() {
                     sender.addClass('notify-read');
                 }
        });
+   });
+   jQuery('body').on('click','#gift-back',function(event){
+       try {
+            $("#gift-modal").modal('hide');
+       } catch(err) {
+            //Handle errors here
+       }
+       $('#buy-modal').modal('show');
+   });
+   jQuery('body').on('click','.feedShare',function(){
+        var button = $(this);
+        var provider = $('input[name=gift-provider]').val();
+        if(!$('input[name=gift-userid]').val()){
+            $(".giftErrorText").text(noUserErrorMsg);
+            $(".giftErrorText").show();
+            return false;
+        } else {
+            $(".giftErrorText").hide();
+        }
+        if(provider == "Facebook"){
+            FB.ui({method: 'feed',
+                message: 'Ti ho regalato un biglietto su Wonlot.com!',
+                //link: '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val(),
+                link: baseTicketUrl+$("#ticketIdForGift").val(),
+    //                                to: $(this).attr('id');
+                to: '100004725912341'
+            }, function(response){
+                if(!response){
+                    return false;
+                } else if(response.error_code){
+                    alert(response.error_msg);
+                    return false;
+                } else {
+                    $.ajax({
+                        'type':'POST',
+                        'url':'/lotteries/gift',
+                        'cache':false,
+                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 'ticketId': $("#ticketIdForGift").val()},
+                        'success':function(result){
+                            $.updateTicketGift(result);
+                        }
+                    });
+                }
+            });
+        } else if(provider == "Google"){
+//            var shareLink = '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val();
+            var shareLink = baseTicketUrl+$("#ticketIdForGift").val();
+//            var baseLink = '<?php echo $this->createAbsoluteUrl(''); ?>';
+            var baseLink = baseUrl;
+            var shareMsg = "Ecco un Ticket in regalo per te su WonLot!";
+            gpInviteBtnOptions.recipients=$('input[name="gift-userid"]').val();
+            gpInviteBtnOptions.prefilltext=shareMsg;
+            gpInviteBtnOptions.contenturl=baseLink;
+            gpInviteBtnOptions.calltoactionurl=shareLink;
+            gpInviteBtnOptions.gapiattached=true;
+            gpInviteBtnOptions.class="g-interactivepost";
+            gpInviteBtnOptions.onshare=function(response){
+                if(response.status=="completed" && response.action=="cancelled"){
+                    
+                } else if(response.status=="completed" && response.action=="shared"){
+                    $.ajax({
+                        'type':'POST',
+                        'url':'/lotteries/gift',
+                        'cache':false,
+                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 'ticketId': $("#ticketIdForGift").val()},
+                        'success':function(result){
+                            $.updateTicketGift(result);
+                        }
+                    });
+                }
+            };
+//            gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
+            gapi.interactivepost.render('gpshare-gift', gpInviteBtnOptions); 
+//            gapi.plus.render('gpshare-'+entityType+'-'+entityId, gpShareBtnOptions);
+            setTimeout(function(){
+                $('#gpshare-gift').click();
+            },300);
+        }
+   });
+    
+   jQuery('body').on('click','.gp-gift',function() {
+        var newParams = $.extend(gpdefaults, {'callback': $.gpGetFriends});
+        gapi.auth.signIn(gpdefaults);
+   });
+   
+   $.gpGetFriends = function(authResult){
+       gapi.client.load('plus','v1', function(){
+        if (authResult['access_token']) {
+          var request = gapi.client.plus.people.list({
+                'userId': 'me',
+                'collection': 'visible'
+            });
+            request.execute(function(data) {
+                console.log('gp-People', data);
+                $('#social-friend-box').loadTemplate($("#gp-template"),data.items);
+                $('.box-spinner').hide();
+            });
+        } else if (authResult['error']) {
+          alert("Error Google Login");
+        }
+        console.log('authResult', authResult);
+      });
+   }
+    
+   jQuery('body').on('click','.gp-share',function() {
+        gapi.auth.signIn(gpdefaults);
+        /*var shareLink = baseTicketUrl;
+        var baseLink = baseUrl;
+        var shareMsg = baseGiftMsg;
+        gpInviteBtnOptions.prefilltext=shareMsg;
+        gpInviteBtnOptions.contenturl=baseLink;
+        gpInviteBtnOptions.calltoactionurl=shareLink;
+        gpInviteBtnOptions.gapiattached=true;
+        gpInviteBtnOptions.class="g-interactivepost";
+        gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
+        $timeout(function(){
+            $('#gpshare-'+$("#ticketIdForGift").val()).click();
+        },300);
+        */
+   });
+   
+   
+   
+   jQuery('body').on('click','.fb-gift',function() {
+       FB.getLoginStatus(function(response) {
+            var shareLink = baseTicketUrl;
+            var shareMsg = baseGiftMsg;
+            if (response.status === 'connected') {
+                $.fbGetFriends();
+            } else {
+                //user is not connected.
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        $.fbGetFriends();
+                    } else {
+                        alert("Facebook Error");
+                    }
+                },fbScope);
+            }
+        });
+   });
+   
+   $.fbGetFriends = function(){
+       FB.api('/me/friends',function(response) {
+           if (response && !response.error) {
+               $.addTemplateFormatter("FbImageFormatter",
+                    function(value, template) {
+                        return "https://graph.facebook.com/"+value+"/picture";
+               });
+               $('#social-friend-box').loadTemplate($("#fb-template"),response.data);
+               $('.box-spinner').hide();
+           }
+       });
+   }   
+   
+   $.fbShare = function(link, msg){
+       FB.ui({
+            method: 'feed',
+            link: link,
+            caption: msg,
+//                    actions: {'name': 'test', 'link': 'http://www.google.it'},
+        }, function(response){
+            alert('ok');
+            alert(JSON.stringify(response));
+        });
+   }
+   
+   jQuery('body').on('click','.lot-btn-copy',function() {
+       window.prompt("Copia negli appunti: Ctrl+C", $('#lot-txt-copy').val());
+   });
+   
+   // PROFILE -> GIFT CREDIT
+   $('#retrive-credit-show').click(function(event){
+       $('#retrive-credit-panel').fadeIn();
+       $('#retrive-credit-show').hide();
    });
 });

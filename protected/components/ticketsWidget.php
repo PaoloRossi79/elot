@@ -3,6 +3,8 @@ class ticketsWidget extends CWidget
 {
     public $ticket;
     public $tickets;
+    public $userId;
+    
     public function init()
     {
         $this->registerScripts();
@@ -10,6 +12,7 @@ class ticketsWidget extends CWidget
  
     public function run()
     {
+        $this->userId = Yii::app()->user->id;
         $this->renderContent();   
     }
  
@@ -24,6 +27,7 @@ class ticketsWidget extends CWidget
         ob_start();
 		?>
 		jQuery('body').on('click','.set-gift',function(event) {
+                        $("input[name=giftBtn]").removeAttr("disabled");
                         $("#ticketIdForGift").val($(this).attr("id"));
                         $(".gift-box").slideDown(); 
                         $("#labelTicketNumber").text($(this).parent().children().first().text()); 
@@ -35,6 +39,7 @@ class ticketsWidget extends CWidget
                         $("#emailSuccessText").hide();
                         $("#emailErrorText").hide();
                         $("#giftBtn").removeAttr("disabled");
+                        $(".feedShare").removeAttr("disabled");
                         return false;
                    });
                 <?php

@@ -71,9 +71,13 @@
         <div class="lot-creator-over">
             <span class="user-small-vendor-container pull-left">
                 <span class="small-username">Venditore:</span>
-                <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
+                <?php if(!Yii::app()->user->isGuest){ ?>
+                    <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
+                        <span class="small-username"><?php echo CHtml::encode($data->owner->username); ?></span>
+                    </a>
+                <?php } else { ?>
                     <span class="small-username"><?php echo CHtml::encode($data->owner->username); ?></span>
-                </a>
+                <?php } ?>
             </span>
             <span class="user-small-avatar-container pull-right">
                 <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">

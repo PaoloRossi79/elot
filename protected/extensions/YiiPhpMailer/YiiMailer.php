@@ -54,7 +54,7 @@ class YiiMailer extends PHPMailer {
 	 */
 	private $viewPath='application.extensions.YiiPhpMailer.views.mail';
 	
-	private $layoutPath='application.extensions.YiiPhpMailer.views.mail.layouts';
+	private $layoutPath='application.extensions.YiiPhpMailer.views.layouts';
 	
 	private $baseDirPath='webroot.images.mail';
 
@@ -95,7 +95,11 @@ class YiiMailer extends PHPMailer {
 		//set data
 		$this->setData($data);
 		//set layout
-		$this->setLayout($layout);
+                if(!empty($layout)){
+                    $this->setLayout($layout);
+                } else {
+                    $this->setLayout('mail');
+                }
 	}
 	
 	/**
@@ -489,7 +493,7 @@ class YiiMailer extends PHPMailer {
 		}
 	}
 	
-	/**
+	/** 
 	 * Render HTML email message with layout
 	 * @param string $message Email message
 	 * @param string $basedir Path for images to embed in message

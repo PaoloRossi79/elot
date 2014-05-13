@@ -32,6 +32,9 @@ class SearchForm extends CFormModel
 	public $maxTicketPriceRange;
 	public $minPrizePriceRange;
 	public $maxPrizePriceRange;
+	public $favorite;
+	public $userGuaranted;
+	public $userMinRating;
         
         // FOR TICKETS ONLY
 	public $lottery;
@@ -53,12 +56,16 @@ class SearchForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'searchText'=>'Search...',
-			'searchStartDate'=>'Start Date',
-			'searchEndDate'=>'End Date',
-			'geo'=>'Location',
-			'ticketPrice'=>'Ticket Price',
-			'prizePrice'=>'Prize Price',
+			'searchText'=>Yii::t('wonlot','Cerca...'),
+			'searchStartDate'=>Yii::t('wonlot','Data di apertura'),
+			'searchEndDate'=>Yii::t('wonlot','Data di estrazione'),
+			'geo'=>Yii::t('wonlot','Località'),
+			'ticketPrice'=>Yii::t('wonlot','Prezzo del Ticket'),
+			'prizePrice'=>Yii::t('wonlot','Valore del premio'),
+			'userMinRating'=>Yii::t('wonlot','Affidabilità venditore'),
+			'favorite'=>Yii::t('wonlot','Solo preferite'),
+			'userGuaranted'=>Yii::t('wonlot','Venditore garantito'),
+			//''=>Yii::t('wonlot',''),
 		);
 	}
 
@@ -86,5 +93,8 @@ class SearchForm extends CFormModel
 		$this->geoCity=$data['geoCity'];
 		$this->geoState=$data['geoState'];
 		$this->geoCountry=$data['geoCountry'];
+		$this->favorite=$data['favorite'];
+		$this->userGuaranted=$data['userGuaranted'];
+		$this->userMinRating=$data['userMinRating'];
 	}
 }

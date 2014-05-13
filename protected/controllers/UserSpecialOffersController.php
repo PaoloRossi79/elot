@@ -32,7 +32,7 @@ class UserSpecialOffersController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','userIndex'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -152,6 +152,25 @@ class UserSpecialOffersController extends Controller
 			'dataProvider'=>$dataProvider,
 		));
 	}
+        
+        public function actionUserIndex()
+	{
+                $this->layout = false;
+                $criteria = new CDbCriteria();
+                $criteria->addCondition('t.user_id='.Yii::app()->user->id);
+                $criteria->order = 'id DESC';
+		$dataProvider=new CActiveDataProvider('UserSpecialOffers', array(
+                    'pagination'=>array(
+                            'pageSize'=>50,
+                        ),
+                    'criteria'=>$criteria,
+                ));
+		$this->renderPartial('_promotions',array(
+			'dataProvider'=>$dataProvider,
+                        
+		), false, true);
+	}
+
 
 	/**
 	 * Manages all models.

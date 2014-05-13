@@ -108,13 +108,18 @@ $notifyTypeConst = array(
     'giftCredit'=>2,
     'startFollow'=>3,
     'stopFollow'=>4,
+    'winLottery'=>5,
+    'extractLottery'=>6,
+    'refoundTicket'=>7,
 );
 $notifyTypeMsg = array(
     1=>array('fw'=>Yii::t('wonlot','ti ha regalato un Ticket:'),'bw'=>Yii::t('wonlot','hai regalato un Ticket:')), // gift ticket receive
     2=>array('fw'=>Yii::t('wonlot','ti ha regalato dei WlMoney:'),'bw'=>Yii::t('wonlot','hai regalato dei WlMoney:')), // gift money receive
     3=>array('fw'=>Yii::t('wonlot','ha iniziato a seguirti.'),'bw'=>Yii::t('wonlot','hai iniziato a seguire:')), // start follow receive
     4=>array('fw'=>Yii::t('wonlot','ha smesso di seguirti.'),'bw'=>Yii::t('wonlot','hai smesso di seguire:')), // stop follow receive
-    5=>array('fw'=>Yii::t('wonlot','ti è stato rimborsato un Ticket:'),'bw'=>Yii::t('wonlot','hai rimborsato un Ticket:')), // ticket refound receive
+    5=>array('fw'=>Yii::t('wonlot','hai vinto una lotteria:'),'bw'=>''), // lottery won receive
+    6=>array('fw'=>Yii::t('wonlot','una tua lotteria è stata estratta:'),'bw'=>''), // lottery extracted receive
+    7=>array('fw'=>Yii::t('wonlot','ti sono stati rimborsati dei Ticket:'),'bw'=>Yii::t('wonlot','hai rimborsato dei Ticket:')), // ticket refound receive
 );
 $ticketStatusConst = array(
     'open'=>1,
@@ -136,6 +141,7 @@ $authExtSource = array(
     'Yahoo'=>3,
     'Google'=>4,
     'Live'=>5,
+    'Email'=>6,
 );
 
 $buyCreditOptions = array(

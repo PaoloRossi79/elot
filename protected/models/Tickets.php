@@ -140,9 +140,10 @@ class Tickets extends PActiveRecord
         public function getMyTicketsByLottery($lotId)
 	{
             $criteria=new CDbCriteria; 
-            $criteria->addCondition('t.lottery_id = '.$lotId); 
-            $criteria->addCondition('t.user_id = '.Yii::app()->user->id); 
-            $criteria->addCondition('t.status = 1'); 
+            $criteria->addCondition('t.user_id = '.Yii::app()->user->id,'OR'); 
+            $criteria->addCondition('t.gift_from_id = '.Yii::app()->user->id,'OR'); 
+            $criteria->addCondition('t.lottery_id = '.$lotId,'AND'); 
+            $criteria->addCondition('t.status = 1','AND'); 
             return $this->findAll($criteria);
         }
         
@@ -177,6 +178,64 @@ class Tickets extends PActiveRecord
 //                //'viewType'=>"_box"
 //                'viewData'=>$viewData,
 //            ));
+        }
+        
+        public function getMyTicketsProvider(){
+            $criteria=new CDbCriteria; 
+            if($_POST['lotStatus']){
+                $criteria->addCondition('t.status='.$_POST['lotStatus']);
+                $viewData['lotStatus']=$_POST['lotStatus'];
+            }
+            $criteria->order='t.name';
+            $criteria->with=array("tickets"=>array(
+                // but want to get only users with published posts
+                'joinType'=>'INNER JOIN',
+                'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
+            ));
+            $boughtLotteries = Lotteries::model()->findAll($criteria);
+            return new CActiveDataProvider('Lotteries', array(
+                'criteria'=>$criteria,
+            ));
+//            $this->renderPartial('_tickets',array(
+//                'model'=>$boughtLotteries,
+//                //'viewType'=>"_box"
+//                'viewData'=>$viewData,
+//            ));
+        }
+        
+        public function organizeTicketsByLottery($tickets){
+            $res = array();
+            foreach ($tickets as $ticket) {
+                if(isset($res[$ticket->lottery->id])){
+                    $res[$ticket->lottery->id]['tickets'][] = $ticket;
+                } else {
+                    $res[$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
+                    $res[$ticket->lottery->id]['tickets'][] = $ticket;
+                }
+            }
+            return $res;
+        }
+        
+        public function organizeTicketsByEmail($tickets){
+            $res = array();
+            foreach ($tickets as $ticket) {
+                if($ticket->is_gift == 1 && $ticket->gift_provider == "email" && $ticket->gift_ext_user){
+                    if(isset($res[$ticket->gift_ext_user])){
+                        if(isset($res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id])){
+                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                        } else {
+                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
+                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                        }
+                    } else {
+                        $res[$ticket->gift_ext_user] = array('email'=>$ticket->gift_ext_user,'lotteries'=>array());
+                        
+                        $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
+                        $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                    }
+                }
+            }
+            return $res;
         }
 
 	/**

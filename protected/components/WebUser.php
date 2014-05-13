@@ -5,14 +5,19 @@ class WebUser extends CWebUser {
  
   function getEmail()
   {
-	$user = $this->loadUser(Yii::app()->user->id);
+        $user = $this->loadUser(Yii::app()->user->id);
 	return $user->email;
   }
   
   function getPayInfo()
   {
-      $userPayInfo = UserPaymentInfo::model()->find('t.user_id ='.Yii::app()->user->id);
-      return $userPayInfo;
+        $userPayInfo = UserPaymentInfo::model()->find('t.user_id ='.Yii::app()->user->id);
+        return $userPayInfo;
+  }
+  
+  function getWalletValue(){
+        $user = $this->loadUser(Yii::app()->user->id);
+        return $user->available_balance_amount;
   }
 
   public function getCartItems() {

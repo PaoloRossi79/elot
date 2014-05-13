@@ -1,7 +1,9 @@
 <?php
 class UserPaymentInfo extends PActiveRecord
 {
-	/**
+        public $creditOption;
+        public $creditValue;
+    /**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -19,11 +21,11 @@ class UserPaymentInfo extends PActiveRecord
 		return array(
                         array('user_id, address, legal_name', 'required'),
 			array('user_id', 'length', 'max'=>10),
-			array('legal_name, vat, fiscal_number, iban, paypal_account', 'length', 'max'=>45),
+			array('legal_name, vat, fiscal_number, iban, paypal_account, creditOption, creditValue', 'length', 'max'=>45),
 			array('address', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, category_name, seo_name', 'safe', 'on'=>'search'),
+			array('user_id, address, legal_name, vat, fiscal_number, iban, paypal_account, creditOption, creditValue', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,5 +94,6 @@ class UserPaymentInfo extends PActiveRecord
 	{
 		return parent::model($className);
 	}
+        
 }
 ?>

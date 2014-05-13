@@ -142,28 +142,35 @@ class HOAuthShareAction extends CAction
 			$oAuth = $hybridAuth->authenticate( $provider, null, $this->id );
 //			$oAuth = $hybridAuth->authenticate( $provider );
 //                        $adapter = UserOAuth::model()->getAdapter($provider);
-                        $adapter = $hybridAuth->getAdapter($provider);
-                        $contacts = $adapter->getUserContacts();
-                    ?>
-                    <script>
-//                        window.opener.location.reload();
-                        window.close();
-                        $(function(){
-                            $('.box-spinner').hide();
-                        });
-                    </script>
-                    <?php    
-                        if($contacts && count($contacts) > 0){
-                            $this->controller->renderPartial(
-                                    '//lotteries/_friendList', 
-                                    array(
-                                        'list'=>$contacts,
-                                        'provider'=>$provider,
-                                        'appId'=>$adapter->config['keys']['id'],
-                                    ), 
-                                    false, true
-                            );
-                            Yii::app()->end();
+                        if($oAuth){
+                            $adapter = $hybridAuth->getAdapter($provider);
+                            $contacts = $oAuth->getUserContacts();
+                        ?>
+                        <script>
+                            $(function(){
+                                $('.box-spinner').hide();
+                            });
+                        </script>
+                        <?php    
+//                            if($contacts && count($contacts) > 0){
+                                Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+                                /*$res = array(
+                                    'list'=>$contacts,
+                                    'provider'=>$provider,
+                                    'appId'=>$adapter->config['keys']['id'],
+                                );
+                                echo CJSON::encode($res);*/
+                                $this->controller->renderPartial(
+                                        '//lotteries/_socialFriendList', 
+                                        array(
+                                            'list'=>$contacts,
+                                            'provider'=>$provider,
+                                            'appId'=>$adapter->config['keys']['id'],
+                                        ), 
+                                        false, true
+                                );
+                                Yii::app()->end();
+//                            }
                         }
 		}
 		catch( Exception $e ){

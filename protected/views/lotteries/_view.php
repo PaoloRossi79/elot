@@ -37,8 +37,8 @@
             <div class="col-md-6">
                 <h3><?php echo Yii::t("wonlot","Video"); ?></h3>
                 <div class="text-block">
-                    <div id="widget"></div>
-                    <div id="player"></div>
+<!--                    <div id="widget"></div>
+                    <div id="player"></div>-->
                     <script>
                         // 2. Asynchronously load the Upload Widget and Player API code.
                         var tag = document.createElement('script');

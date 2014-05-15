@@ -26,6 +26,7 @@
                     </div>
                     <?php $this->widget('ext.hoauth.widgets.HOAuthShare'); ?>
                 </div>
+                <div class="clearfix"></div>
                 <hr/>
                 <div class="friend-scroll">
                     <div class="box-spinner" style="display: none;">

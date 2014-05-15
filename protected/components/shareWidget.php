@@ -1,16 +1,22 @@
 <?php
 class shareWidget extends CWidget
 {
+    public $model;
+    public $link;
+    
     public function init()
     {
+        Yii::import('ext.hoauth.models.UserOAuth');
         $this->registerScripts();
     }
  
     public function run()
     {
         if(!Yii::app()->user->isGuest()){
-            
-            $this->renderContent();   
+            if($this->model){
+                $this->link = Yii::app()->createAbsoluteUrl('/'.  lcfirst(get_class($this->model)).'/view/'.$this->model->id);
+                $this->renderContent();   
+            }
         }
     }
  
@@ -18,7 +24,7 @@ class shareWidget extends CWidget
     {
         $this->render('share',
             array(
-                
+                'config' => UserOAuth::getConfig(),
             )
         );
     }   
@@ -28,7 +34,7 @@ class shareWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		
+                
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());
     }

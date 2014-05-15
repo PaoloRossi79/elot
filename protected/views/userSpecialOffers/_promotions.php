@@ -6,23 +6,31 @@ if($dataProvider){
             'dataProvider'=>$dataProvider,
             'columns'=>array(
                 'id',
-                'user_id',
-                /*array(            
-                    'name'=>'Tipo transazione',
-                    'value'=>'Yii::app()->params["userTransactionId"][$data->transaction_type]', 
+                array(            
+                    'name'=>Yii::t('wonlot','Tipo promozione'),
+                    'value'=>'Yii::app()->params["specialOffersType"][$data->offer_on]["desc"]', 
                     'sortable'=>true,
                 ),
                 array(            
-                    'name'=>'Collegata a',
-                    'value'=>array($dataProvider->model,'getLinkedText'), 
+                    'name'=>Yii::t('wonlot','Valore promozione'),
+                    'value'=>'$data->offer_value ."%"', 
                     'sortable'=>true,
                 ),
                 array(            
-                    'name'=>'Importo',
-                    'value'=>'$data->value', 
+                    'name'=>Yii::t('wonlot','Utilizzi rimanenti'),
+                    'value'=>'$data->times_remaining', 
                     'sortable'=>true,
-                    'cssClassExpression'=>'($data->value < 0) ? "red-trans" : "green-trans"'
-                ),*/
+                ),
+                array(            
+                    'name'=>Yii::t('wonlot','Validità'),
+                    'value'=>array($dataProvider->model,'getValidityText'), 
+                    'sortable'=>true,
+                ),
+                array(            
+                    'name'=>'Data',
+                    'value'=>'$data->created', 
+                    'sortable'=>true,
+                ),
             ),
     )); 
 }

@@ -50,35 +50,35 @@ $prizeConditionsId = array(
 $specialOffers = array(
     0 =>
     array(
-        'name'=>'Discount on ticket buy',
-        'desc'=>'Discount on ticket buy'
+        'name'=>Yii::t('wonlot','Sconto su acquisto Ticket'),
+        'desc'=>Yii::t('wonlot','Sconto su acquisto Ticket')
     ),
     1 =>
     array(
-        'name'=>'Discount on wMoney buy',
-        'desc'=>'Discount on wMoney buy'
+        'name'=>Yii::t('wonlot','Sconto su acquisto credito'),
+        'desc'=>Yii::t('wonlot','Sconto su acquisto credito')
     ),
 );
 
 $speditionType = array(
-    array('id'=> 0, 'type' => 'Delivered by a courier'),
-    array('id'=> 1, 'type' => 'Winner colllects'),
-    array('id'=> 2, 'type' => 'To be defined with winner'),
+    array('id'=> 0, 'type' => Yii::t('wonlot','Consegnato via corriere')),
+    array('id'=> 1, 'type' => Yii::t('wonlot','Ritiro a carico del vincitore')),
+    array('id'=> 2, 'type' => Yii::t('wonlot','Da definire col vincitore')),
 );
 
 $speditionTypeId = array(
-    0 => 'Delivered by a courier',
-    1 => 'Winner colllects',
-    2 => 'To be defined with winner',
+    0 => Yii::t('wonlot','Consegnato via corriere'),
+    1 => Yii::t('wonlot','Ritiro a carico del vincitore'),
+    2 => Yii::t('wonlot','Da definire col vincitore'),
 );
 
 $lotteryStatusConst = array(
-    'draft'=>1,
-    'upcoming'=>2,
-    'open'=>3,
-    'closed'=>4,
-    'extracted'=>5,
-    'void'=>6,
+    Yii::t('wonlot','draft')=>1,
+    Yii::t('wonlot','upcoming')=>2,
+    Yii::t('wonlot','open')=>3,
+    Yii::t('wonlot','closed')=>4,
+    Yii::t('wonlot','extracted')=>5,
+    Yii::t('wonlot','void')=>6,
 );
 $lotterySearchStatusConst = array(
     'In corso'=>1,
@@ -100,8 +100,8 @@ $userTransactionId = array(
     3=>'Rimborso Ticket',
     4=>'Rimborso Credito',
     5=>'Ritiro fondi',
-    6=>'Credito regalato',
-    7=>'Credito ricevuto',
+    6=>'Credito ricevuto',
+    7=>'Credito regalato',
 );
 $notifyTypeConst = array(
     'giftTicket'=>1,
@@ -111,6 +111,8 @@ $notifyTypeConst = array(
     'winLottery'=>5,
     'extractLottery'=>6,
     'refoundTicket'=>7,
+    'widthdrawSent'=>8,
+    'widthdrawComplete'=>9,
 );
 $notifyTypeMsg = array(
     1=>array('fw'=>Yii::t('wonlot','ti ha regalato un Ticket:'),'bw'=>Yii::t('wonlot','hai regalato un Ticket:')), // gift ticket receive
@@ -120,6 +122,8 @@ $notifyTypeMsg = array(
     5=>array('fw'=>Yii::t('wonlot','hai vinto una lotteria:'),'bw'=>''), // lottery won receive
     6=>array('fw'=>Yii::t('wonlot','una tua lotteria è stata estratta:'),'bw'=>''), // lottery extracted receive
     7=>array('fw'=>Yii::t('wonlot','ti sono stati rimborsati dei Ticket:'),'bw'=>Yii::t('wonlot','hai rimborsato dei Ticket:')), // ticket refound receive
+    8=>array('fw'=>Yii::t('wonlot','la tua richietsa di ritiro denaro è stata inviata: '),'bw'=>Yii::t('wonlot','')), // withdraw request sent
+    9=>array('fw'=>Yii::t('wonlot','la tua richietsa di ritiro denaro è stata eseguita: '),'bw'=>Yii::t('wonlot','')), // withdraw request complete
 );
 $ticketStatusConst = array(
     'open'=>1,

@@ -39,6 +39,7 @@ class UserSpecialOffers extends PActiveRecord
 		return array(
 			array('user_id, offer_on, offer_value, times_remaining', 'required'),
 			array('times_remaining, last_modified_by', 'numerical', 'integerOnly'=>true),
+			array('offer_value', 'numerical', 'integerOnly'=>true, 'min'=>1, 'max'=>100),
 			array('user_id', 'length', 'max'=>10),
 			array('offer_on', 'length', 'max'=>25),
 			array('offer_value', 'length', 'max'=>15),
@@ -68,17 +69,17 @@ class UserSpecialOffers extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'offer_on' => 'Offer On',
-			'offer_value' => 'Offer Value',
-			'comment' => 'Comment',
-			'start_date' => 'Start Date',
-			'end_date' => 'End Date',
-			'times_remaining' => 'Times Remaining',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','Utente'),
+			'offer_on' => Yii::t('wonlot','Offerta su'),
+			'offer_value' => Yii::t('wonlot','Valore offerta'),
+			'comment' => Yii::t('wonlot','Commento'),
+			'start_date' => Yii::t('wonlot','Data d\'inizio'),
+			'end_date' => Yii::t('wonlot','Data di scadenza'),
+			'times_remaining' => Yii::t('wonlot','Numero di volte'),
+			'created' => Yii::t('wonlot','Creato'),
+			'modified' => Yii::t('wonlot','Modificato'),
+			'last_modified_by' => Yii::t('wonlot','Ultima modifica di'),
 		);
 	}
 
@@ -143,6 +144,20 @@ class UserSpecialOffers extends PActiveRecord
                 $list[$of->id] = " - ".$of->offer_value." % on ".Yii::app()->params['specialOffersType'][$of->offer_on]['name']." (".$of->times_remaining." remaining)";
             }
             return $list;
+        }
+        
+        public function getValidityText($model){
+            $msg="";
+            if($model->start_date){
+                $msg .= Yii::t('wonlot','dal ').$model->start_date;
+            } 
+            if($model->end_date){
+                $msg .= Yii::t('wonlot',' al ').$model->end_date;
+            }
+            if(empty($msg)){
+                $msg .= Yii::t('wonlot','Sempre');
+            }
+            return $msg;
         }
 
 	/**

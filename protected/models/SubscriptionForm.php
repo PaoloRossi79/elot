@@ -33,10 +33,10 @@ class SubscriptionForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'categories'=>'Categories',
-			'others'=>'Other newsletters',
-			'privacyOk'=>'Accept privacy policy?',
-			'termsOk'=>'Accept terms & conditions?',
+			'categories'=> Yii::t('wonlot','Categories'),
+			'others'=> Yii::t('wonlot','Other newsletters'),
+			'privacyOk'=> Yii::t('wonlot','Accept privacy policy?'),
+			'termsOk'=> Yii::t('wonlot','Accept terms & conditions?'),
 		);
 	}
 
@@ -52,9 +52,9 @@ class SubscriptionForm extends CFormModel
                 $this->privacyOk = $user->newsletter_privacy;
                 $this->categories=PrizeCategories::model()->getPrizeCatCheckbox();
 		$this->others = array(
-                    SubscriptionForm::bestseller => 'Best Sellers',
-                    SubscriptionForm::nearest => 'Nearest to you',
-                    SubscriptionForm::newest => 'Newest lottery',
+                    SubscriptionForm::bestseller => Yii::t('wonlot','Best Sellers'),
+                    SubscriptionForm::nearest => Yii::t('wonlot','Nearest to you'),
+                    SubscriptionForm::newest => Yii::t('wonlot','Newest lottery'),
                 );
                 $this->catSelections = array();
                 $this->othSelections = array();

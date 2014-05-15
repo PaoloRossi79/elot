@@ -59,41 +59,36 @@
                     </div>
                     <div id="header-icons">
                         <?php if(!Yii::app()->user->isGuest){ ?>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Logout'); ?>">
                                 <?php 
                                 $controller = Yii::app()->getController();
                                 $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
                                 ?>
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-logout.png", "Logout", array("class"=>"img-responsive")); ?>
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Logout", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
                                 <a href="#">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Il tuo Profilo'); ?>">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/users/myProfile">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-profile.png", "My Profile", array("class"=>"img-responsive")); ?>
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "My Profile", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-<!--                            <div class="header-icon">
-                               <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/tickets/index">
-                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-ticket.png", "My Tickets", array("class"=>"img-responsive")); ?>
-                               </a>
-                            </div>-->
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Le tue lotterie'); ?>">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylottery.png", "My Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Lotterie'); ?>">
                                 <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Notifiche'); ?>">
                                 <a href="#" data-toggle="modal" data-target="#notifyModal">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-notify.png", "Notifiche", array("class"=>"img-responsive notify-pop-btn")); ?>
                                 </a>
@@ -101,22 +96,35 @@
                             </div>
 
                           <?php } else { ?>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
                                 <a href="#">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon">
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Registrati'); ?>">
                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/register">
                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "Register", array("class"=>"img-responsive")); ?>
                                </a>
                             </div>
-                            <div class="login-block header-icon">
+                            <div class="login-block header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Login'); ?>">
                               <a href="" data-toggle="modal" data-target="#loginModal">
                                   <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Login", array("class"=>"img-responsive")); ?>
                               </a>
                             </div>
                           <?php }  ?>
+                    </div>
+                    <div id="header-icons">
+                        <?php if(!Yii::app()->user->isGuest){ ?>
+                        <div class="welcome-block">
+                            <div class="welcome-text">
+                                <?php echo Yii::t('wonlot','Bentornato ').Yii::app()->user->username;?>
+                            </div>
+                            <?php echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/smallThumb/".Yii::app()->user->avatar, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        </div>
+                        <?php }  ?>
+                        <?php if(Yii::app()->user->isAdmin){ ?>
+                        <div class="admin-text"><a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/admin"><?php echo Yii::t('wonlot','Vai all\'amministrazione');?></a></div>
+                        <?php }  ?>
                     </div>
                  </div>
 	</div><!-- header -->

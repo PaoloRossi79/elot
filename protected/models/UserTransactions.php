@@ -54,6 +54,7 @@ class UserTransactions extends PActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'relTickets' => array(self::BELONGS_TO, 'Tickets', 'transaction_ref_id'),
+                    'relUser' => array(self::BELONGS_TO, 'Users', 'transaction_ref_id'),
 		);
 	}
 
@@ -63,16 +64,16 @@ class UserTransactions extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'transaction_type' => 'Transaction Type',
-			'transaction_ref_id' => 'Transaction Ref',
-			'value' => 'Value',
-			'is_confirmed' => 'Is Confirmed',
-			'promotion_id' => 'Promotion',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','User'),
+			'transaction_type' => Yii::t('wonlot','Transaction Type'),
+			'transaction_ref_id' => Yii::t('wonlot','Transaction Ref'),
+			'value' => Yii::t('wonlot','Value'),
+			'is_confirmed' => Yii::t('wonlot','Is Confirmed'),
+			'promotion_id' => Yii::t('wonlot','Promotion'),
+			'created' => Yii::t('wonlot','Created'),
+			'modified' => Yii::t('wonlot','Modified'),
+			'last_modified_by' => Yii::t('wonlot','Last Modified By'),
 		);
 	}
 
@@ -158,8 +159,24 @@ class UserTransactions extends PActiveRecord
         
         public function addGiftCreditTransTo($credit,$sender,$receiver){
             $trans=new UserTransactions;
-            $trans->user_id=$receiver->id;
+            $trans->user_id=$sender->id;
             $trans->transaction_type=Yii::app()->params['userTransactionConst']['giftCreditTo'];
+            $trans->transaction_ref_id=$receiver->id;
+            //TODO: add tracking for paypal transactions table
+            $trans->value=-$credit;
+            //TODO: add check for paypal transactions confirm
+            $trans->is_confirmed=1;
+            if($trans->save()){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        public function addGiftCreditTransFrom($credit,$sender,$receiver){
+            $trans=new UserTransactions;
+            $trans->user_id=$receiver->id;
+            $trans->transaction_type=Yii::app()->params['userTransactionConst']['giftCreditFrom'];
             $trans->transaction_ref_id=$sender->id;
             //TODO: add tracking for paypal transactions table
             $trans->value=$credit;
@@ -172,15 +189,15 @@ class UserTransactions extends PActiveRecord
             }
         }
         
-        public function addGiftCreditTransFrom($credit,$sender,$receiver){
+        public function addDrawCreditTrans($credit,$user,$drawReq){
             $trans=new UserTransactions;
-            $trans->user_id=$sender->id;
-            $trans->transaction_type=Yii::app()->params['userTransactionConst']['giftCreditFrom'];
-            $trans->transaction_ref_id=$receiver->id;
+            $trans->user_id=$user->id;
+            $trans->transaction_type=Yii::app()->params['userTransactionConst']['withdraw'];
+            $trans->transaction_ref_id=$drawReq->id;
             //TODO: add tracking for paypal transactions table
             $trans->value=$credit;
             //TODO: add check for paypal transactions confirm
-            $trans->is_confirmed=1;
+            $trans->is_confirmed=0;
             if($trans->save()){
                 return true;
             } else {
@@ -190,10 +207,19 @@ class UserTransactions extends PActiveRecord
         
         public function getLinkedText($model){
             $msg="";
-            if(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['buyTicket'],Yii::app()->params['userTransactionConst']['refundTicket']))){
-                $msg = "Ticket: ".$model->relTickets->id;
-            } elseif(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['buyCredit'],Yii::app()->params['userTransactionConst']['refundCredit']))){
+            if(in_array(
+                    $model->transaction_type,
+                    array(
+                        Yii::app()->params['userTransactionConst']['buyTicket'],
+                        Yii::app()->params['userTransactionConst']['refundTicket']
+                    ))){
+                $msg = "Ticket: ".$model->relTickets->serial_number;
+            } elseif(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['refundCredit']))){
                 
+            } elseif(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['giftCreditFrom']))){
+                $msg = Yii::t('wonlot','Regalato da').": ".$model->relUser->username;
+            } elseif(in_array($model->transaction_type,array(Yii::app()->params['userTransactionConst']['giftCreditTo']))){
+                $msg = Yii::t('wonlot','Regalato a').": ".$model->relUser->username;
             }
             return $msg;
         }

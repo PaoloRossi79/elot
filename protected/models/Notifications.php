@@ -172,4 +172,15 @@ class Notifications extends PActiveRecord
             $notify->save();
         }
         
+        public function sendDrawCreditNotify($credit,$user,$drawReq){
+            $notify = new Notifications();
+            $notify->from_user_id = 0;
+            $notify->to_user_id = $user->id;
+            $notify->message_value = $drawReq->id;
+            $notify->message_type = Yii::app()->params['notifyTypeConst']['widthdrawSent'];
+            $notify->message_read = 1;
+            $notify->sent_date = new CDbExpression('NOW()');
+            $notify->save();
+        }
+        
 }

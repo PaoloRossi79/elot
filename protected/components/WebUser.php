@@ -9,6 +9,12 @@ class WebUser extends CWebUser {
 	return $user->email;
   }
   
+  function getUsername()
+  {
+        $user = $this->loadUser(Yii::app()->user->id);
+	return $user->username;
+  }
+  
   function getPayInfo()
   {
         $userPayInfo = UserPaymentInfo::model()->find('t.user_id ='.Yii::app()->user->id);
@@ -20,12 +26,32 @@ class WebUser extends CWebUser {
         return $user->available_balance_amount;
   }
 
-  public function getCartItems() {
-     //Numero di elementi che un utente ha nel carrello
-      if (Yii::app()->user->isGuest) return 0;
-      else {
-         return 1;
-      }
+  function getAvatar()
+  {
+	$user = $this->loadUser(Yii::app()->user->id);
+	if($user!==null){
+            $img = $user->profile->img;
+            if($img){
+                return $user->profile->img;
+            }
+        }
+	return "";
+  }
+  
+  function getIsAdmin()
+  {
+	$user = $this->loadUser(Yii::app()->user->id);
+	if($user!==null)
+		return ($user->user_type_id==$this->userTypes['admin']);
+	return false;
+  }
+  
+  function isAdmin()
+  {
+	$user = $this->loadUser(Yii::app()->user->id);
+	if($user!==null)
+		return ($user->user_type_id==$this->userTypes['admin']);
+	return false;
   }
   
   public function login($identity,$duration=0)
@@ -61,13 +87,7 @@ class WebUser extends CWebUser {
         return $this->_model;
   }
  
-  function isAdmin()
-  {
-	$user = $this->loadUser(Yii::app()->user->id);
-	if($user!==null)
-		return ($user->user_type_id==$this->userTypes['admin']);
-	return false;
-  }
+  
 
   function isGuest()
   {

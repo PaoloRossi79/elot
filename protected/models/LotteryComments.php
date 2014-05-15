@@ -63,18 +63,18 @@ class LotteryComments extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'lottery_id' => 'Lottery',
-			'reply_to_comment_id' => 'Reply To Comment',
-			'comment' => 'Comment',
-			'spam_alert' => 'Spam Alert',
-			'spam_check' => 'Spam Check',
-			'spam_check_by' => 'Spam Check By',
-			'published' => 'Published',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','User'),
+			'lottery_id' => Yii::t('wonlot','Lottery'),
+			'reply_to_comment_id' => Yii::t('wonlot','Reply To Comment'),
+			'comment' => Yii::t('wonlot','Comment'),
+			'spam_alert' => Yii::t('wonlot','Spam Alert'),
+			'spam_check' => Yii::t('wonlot','Spam Check'),
+			'spam_check_by' => Yii::t('wonlot','Spam Check By'),
+			'published' => Yii::t('wonlot','Published'),
+			'created' => Yii::t('wonlot','Created'),
+			'modified' => Yii::t('wonlot','Modified'),
+			'last_modified_by' => Yii::t('wonlot','Last Modified By'),
 		);
 	}
 

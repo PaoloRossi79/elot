@@ -1,21 +1,18 @@
 <?php
 /* @var $this UsersController */
 /* @var $model Users */
-
-$this->breadcrumbs=array(
-	'Users'=>array('index'),
-	$model->id=>array('view','id'=>$model->id),
-	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List Users', 'url'=>array('index')),
-	array('label'=>'Create Users', 'url'=>array('create')),
-	array('label'=>'View Users', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Users', 'url'=>array('admin')),
-);
 ?>
 
-<h1>Update Users <?php echo $model->id; ?></h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+
+<div class="main-width">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1><?php echo $model->username; ?></h1>
+            <h3>(id: <?php echo $model->id; ?>)</h3>
+        </div>
+        <div class="panel-body">
+        <?php $this->renderPartial('_form', array('model'=>$model)); ?>
+        </div>
+    </div>
+</div>

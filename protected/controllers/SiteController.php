@@ -56,6 +56,27 @@ class SiteController extends Controller
             );        
 	}
 
+        public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','error','login','register','contact','socialShare'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('logout',''),
+				'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','adminCron'),
+				'users'=>array('@'),
+                                'expression' => 'Yii::app()->user->isAdmin()',
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
 	/**
 	 * This is the default 'index' action that is invoked
 	 * when an action is not explicitly requested by users.
@@ -66,6 +87,14 @@ class SiteController extends Controller
 		// using the default layout 'protected/views/layouts/main.php'
                 $this->layout='//layouts/index';
 		$this->render('index');
+	}
+	
+        public function actionAdmin()
+	{
+		// renders the view file 'protected/views/site/index.php'
+		// using the default layout 'protected/views/layouts/main.php'
+                $this->layout='//layouts/index';
+		$this->render('admin');
 	}
 
 	/**

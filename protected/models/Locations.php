@@ -60,10 +60,10 @@ class Locations extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'address' => 'Address',
-			'addressLat' => 'Latitude',
-			'addressLng' => 'Longitude',
+			'id' => Yii::t('wonlot','ID'),
+			'address' => Yii::t('wonlot','Address'),
+			'addressLat' => Yii::t('wonlot','Latitude'),
+			'addressLng' => Yii::t('wonlot','Longitude'),
 		);
 	}
 

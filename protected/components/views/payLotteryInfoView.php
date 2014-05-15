@@ -141,7 +141,7 @@ $form = $this->beginWidget(
         )
     );
     ?>
-    <div class="form-group draw-block">
+    <div class="form-group <?php echo ($model ? "" : "draw-block") ?>">
         <div class="col-sm-12">
             <?php 
             /*$opt=array('template'=>'{input} {beginLabel}{labelTitle} euro{endLabel}');

@@ -1,5 +1,22 @@
 // executed after ALL (also after document.ready !!!)
 $(window).bind("load", function() {
+    
+   //Bootstrap Tabs-Url Trick 
+   var url = document.location.toString();
+   if (url.match('#')) {
+        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+//        window.scrollTo(0, 0);
+   } 
+
+   // Change hash for page-reload
+   $('.nav-tabs a').on('click', function (e) {
+        $(this).tab('show');
+        var scrollmem = $('body').scrollTop();
+        window.location.hash = this.hash;
+        $('html,body').scrollTop(scrollmem);
+   })
+   //end Bootstrap Tabs-Url Trick 
+    
    $('.isotope').isotope('reLayout');
    $('#show-filter').click(function(){
        if($('#search-column').css('display') == "none"){
@@ -217,6 +234,8 @@ $(window).bind("load", function() {
        $('#gift-username').val(username);*/
        $('input[name="gift-userid"]').val(id);
        $('input[name="gift-username"]').val(username);
+       $('#gift-userid').val(id);
+       $('#gift-username').val(username);
        $('input[name=ticketId]').val($('#ticketIdForGift').val());
    });
    jQuery('body').on('click','.user-small-ticket-box',function(event){
@@ -389,25 +408,6 @@ $(window).bind("load", function() {
         console.log('authResult', authResult);
       });
    }
-    
-   jQuery('body').on('click','.gp-share',function() {
-        gapi.auth.signIn(gpdefaults);
-        /*var shareLink = baseTicketUrl;
-        var baseLink = baseUrl;
-        var shareMsg = baseGiftMsg;
-        gpInviteBtnOptions.prefilltext=shareMsg;
-        gpInviteBtnOptions.contenturl=baseLink;
-        gpInviteBtnOptions.calltoactionurl=shareLink;
-        gpInviteBtnOptions.gapiattached=true;
-        gpInviteBtnOptions.class="g-interactivepost";
-        gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
-        $timeout(function(){
-            $('#gpshare-'+$("#ticketIdForGift").val()).click();
-        },300);
-        */
-   });
-   
-   
    
    jQuery('body').on('click','.fb-gift',function() {
        FB.getLoginStatus(function(response) {
@@ -441,7 +441,7 @@ $(window).bind("load", function() {
        });
    }   
    
-   $.fbShare = function(link, msg){
+   $.fbShare = function(){
        FB.ui({
             method: 'feed',
             link: link,
@@ -461,5 +461,35 @@ $(window).bind("load", function() {
    $('#retrive-credit-show').click(function(event){
        $('#retrive-credit-panel').fadeIn();
        $('#retrive-credit-show').hide();
+   });
+   
+   // share 
+   jQuery('body').on('click','.fb-share',function(event) {
+        FB.ui({
+            method: 'feed',
+            link: $('input[name=link]').val(),
+        });
+   });
+   jQuery('body').on('click','.gp-share',function(event) {
+        gapi.client.load('plus','v1', function(){
+            var shareLink = $('input[name=link]').val();
+            var baseLink = baseUrl;
+            var shareMsg = "Vinci con WonLot!";
+            gpInviteBtnOptions.prefilltext=shareMsg;
+            gpInviteBtnOptions.contenturl=baseLink;
+            gpInviteBtnOptions.calltoactionurl=shareLink;
+            gpInviteBtnOptions.gapiattached=true;
+            gpInviteBtnOptions.class="g-interactivepost";
+            gapi.interactivepost.render('gpshare-lot', gpInviteBtnOptions); 
+            setTimeout(function(){
+                $('#gpshare-lot').click();
+            },300); 
+        });
+   });
+   jQuery('body').on('click','.tw-share',function(event) {
+        FB.ui({
+            method: 'feed',
+            link: $('input[name=link]').val(),
+        });
    });
 });

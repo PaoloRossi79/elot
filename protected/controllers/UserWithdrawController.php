@@ -1,12 +1,12 @@
 <?php
 
-class UserSpecialOffersController extends Controller
+class UserWithdrawController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/basecolumn';
+	public $layout='//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -32,13 +32,12 @@ class UserSpecialOffersController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update','userIndex'),
+				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('@'),
-                                'expression' => 'Yii::app()->user->isAdmin()',
+				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -52,33 +51,8 @@ class UserSpecialOffersController extends Controller
 	 */
 	public function actionView($id)
 	{
-                $model = new UserSpecialOffers;
-                if($_POST['form']){
-                    $model->attributes = $_POST['form'];
-                } 
-                $model->user_id = $id;
-                
-                if(isset($_POST['UserSpecialOffers']))
-		{
-			$model->attributes=$_POST['UserSpecialOffers'];
-			$model->save();
-//			if($model->save())
-//				$this->redirect(array('view','id'=>$id));
-		}
-                
-                $criteria = new CDbCriteria();
-                $criteria->addCondition('user_id = '.$id);
-                $dataProvider=new CActiveDataProvider('UserSpecialOffers', array(
-                    'pagination'=>array(
-                        'pageSize'=>50,
-                    ),
-                    'criteria'=>$criteria,
-                ));
-
 		$this->render('view',array(
-			'dataProvider'=>$dataProvider,
-                        'userId' => $id,
-                        'model' => $model,
+			'model'=>$this->loadModel($id),
 		));
 	}
 
@@ -86,23 +60,22 @@ class UserSpecialOffersController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate($userId)
+	public function actionCreate()
 	{
-		$model=new UserSpecialOffers;
-                $user = Users::model()->findByPk($userId);
+		$model=new UserWithdraw;
+
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['UserSpecialOffers']))
+		if(isset($_POST['UserWithdraw']))
 		{
-			$model->attributes=$_POST['UserSpecialOffers'];
+			$model->attributes=$_POST['UserWithdraw'];
 			if($model->save())
-				$this->redirect('/users/update/'.$model->user_id);
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('create',array(
-			'model' => $model,
-                        'user' => $user
+			'model'=>$model,
 		));
 	}
 
@@ -118,9 +91,9 @@ class UserSpecialOffersController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['UserSpecialOffers']))
+		if(isset($_POST['UserWithdraw']))
 		{
-			$model->attributes=$_POST['UserSpecialOffers'];
+			$model->attributes=$_POST['UserWithdraw'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -149,40 +122,21 @@ class UserSpecialOffersController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('UserSpecialOffers');
+		$dataProvider=new CActiveDataProvider('UserWithdraw');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
-        
-        public function actionUserIndex()
-	{
-                $this->layout = false;
-                $criteria = new CDbCriteria();
-                $criteria->addCondition('t.user_id='.Yii::app()->user->id);
-                $criteria->order = 'id DESC';
-		$dataProvider=new CActiveDataProvider('UserSpecialOffers', array(
-                    'pagination'=>array(
-                            'pageSize'=>50,
-                        ),
-                    'criteria'=>$criteria,
-                ));
-		$this->renderPartial('_promotions',array(
-			'dataProvider'=>$dataProvider,
-                        
-		), false, true);
-	}
-
 
 	/**
 	 * Manages all models.
 	 */
 	public function actionAdmin()
 	{
-		$model=new UserSpecialOffers('search');
+		$model=new UserWithdraw('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['UserSpecialOffers']))
-			$model->attributes=$_GET['UserSpecialOffers'];
+		if(isset($_GET['UserWithdraw']))
+			$model->attributes=$_GET['UserWithdraw'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -193,12 +147,12 @@ class UserSpecialOffersController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return UserSpecialOffers the loaded model
+	 * @return UserWithdraw the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=UserSpecialOffers::model()->findByPk($id);
+		$model=UserWithdraw::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -206,11 +160,11 @@ class UserSpecialOffersController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param UserSpecialOffers $model the model to be validated
+	 * @param UserWithdraw $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='user-special-offers-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='user-withdraw-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

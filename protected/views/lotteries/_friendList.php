@@ -97,14 +97,10 @@
                             <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
                             <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">
                             <span class="user-small-vendor-container">
-                                <a href="<?php echo CController::createUrl('users/view/'.$fw->follower->id);?>">
-                                    <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
-                                </a>
+                                <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
                             </span>
                             <span class="user-small-avatar-container">
-                                <a href="<?php echo CController::createUrl('users/view/'.$fw->follower->id);?>">
-                                    <?php echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
-                                </a>
+                                <?php echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
                             </span>
                         </div>
                         <?php } ?>

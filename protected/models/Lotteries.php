@@ -91,24 +91,23 @@ class Lotteries extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'lottery_type' => 'Lottery Type',
-			'prize_desc' => 'Prize Desc',
-			'prize_category' => 'Prize Category',
-			'prize_conditions' => 'Prize Conditions',
-			'prize_condition_text' => 'Prize Condition Text',
-			'prize_shipping' => 'Prize Shipping',
-			'prize_price' => 'Prize Value',
-			'ticket_value' => 'Ticket Value',
-			'min_ticket' => 'Min Ticket',
-			'max_ticket' => 'Max Ticket',
-			'ticket_value' => 'Ticket Value',
-			'lottery_start_date' => 'Lottery Start Date',
-			'lottery_draw_date' => 'Lottery Draw Date',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'name' => Yii::t('wonlot','Nome'),
+			'lottery_type' => Yii::t('wonlot','Tipo di lotteria'),
+			'prize_desc' => Yii::t('wonlot','Descrizione del premio'),
+			'prize_category' => Yii::t('wonlot','Categoria del premio'),
+			'prize_conditions' => Yii::t('wonlot','Condizioni del premio'),
+			'prize_condition_text' => Yii::t('wonlot','Testo Condizioni del premio'),
+			'prize_shipping' => Yii::t('wonlot','Spedizione del premio'),
+			'prize_price' => Yii::t('wonlot','Valore del premio'),
+			'ticket_value' => Yii::t('wonlot','Valore del ticket'),
+			'min_ticket' => Yii::t('wonlot','Min Ticket'),
+			'max_ticket' => Yii::t('wonlot','Max Ticket'),
+			'lottery_start_date' => Yii::t('wonlot','Data di inizio della lotteria'),
+			'lottery_draw_date' => Yii::t('wonlot','Data di estrazione della lotteria'),
+			'created' => Yii::t('wonlot','Creata'),
+			'modified' => Yii::t('wonlot','Modificata'),
+			'last_modified_by' => Yii::t('wonlot','Ultima modifica di'),
 		);
 	}
 
@@ -188,6 +187,8 @@ class Lotteries extends PActiveRecord
                     $status=$type['status'];
                 }
                 $criteria->addInCondition('status',$status);
+            } else {
+                $criteria->addNotInCondition('status',array(Yii::app()->params['lotteryStatusConst']['void']));
             }
             if(isset($type['prizeCategory'])){
                 if(!is_array($type['prizeCategory'])){

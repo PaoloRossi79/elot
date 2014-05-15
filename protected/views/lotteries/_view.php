@@ -162,8 +162,9 @@
                 </div>
             </div>
         <?php } ?>
-        
-        <div class="col-md-12">
+        <?php $this->widget('shareWidget',array('model'=>$model)); ?>
+        <div class="clearfix"></div>
+        <div class="col-md-8">
             <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
                 <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
                     <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#buy-modal">

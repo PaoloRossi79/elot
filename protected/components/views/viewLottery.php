@@ -98,6 +98,7 @@
             <?php } elseif(isset($this->lotController->userId) && $this->lotController->userId==$model->owner_id) { ?>
                     <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>
             <?php } ?>
+            <?php $this->lotController->widget('shareWidget',array('model'=>$model)); ?>
         </div>
     </div>
 </div>

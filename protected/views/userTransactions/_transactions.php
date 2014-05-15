@@ -22,6 +22,11 @@ if($dataProvider){
                     'sortable'=>true,
                     'cssClassExpression'=>'($data->value < 0) ? "red-trans" : "green-trans"'
                 ),
+                array(            
+                    'name'=>'Data',
+                    'value'=>'$data->modified', 
+                    'sortable'=>true,
+                ),
             ),
     )); 
 }

@@ -1,18 +1,9 @@
 <?php
 /* @var $this UserSpecialOffersController */
 /* @var $model UserSpecialOffers */
-
-$this->breadcrumbs=array(
-	'User Special Offers'=>array('index'),
-	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List UserSpecialOffers', 'url'=>array('index')),
-	array('label'=>'Manage UserSpecialOffers', 'url'=>array('admin')),
-);
-?>
-
-<h1>Create UserSpecialOffers</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+if($user){
+    $model->user_id = $user->id;
+    $this->renderPartial('_form', array('model'=>$model,'user'=>$user)); 
+} else { ?>
+    <h2><span class="text-danger"><?php echo Yii::t('wonlot','Errore: nessun utente selezionato'); ?></span></h2>
+<?php } ?>

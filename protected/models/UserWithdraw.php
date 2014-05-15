@@ -41,11 +41,11 @@ class UserWithdraw extends PActiveRecord
         public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'first_name' => 'Nome',
-			'last_name' => 'Cognome',
-			'address' => 'Indirizzo',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','User'),
+			'first_name' => Yii::t('wonlot','Nome'),
+			'last_name' => Yii::t('wonlot','Cognome'),
+			'address' => Yii::t('wonlot','Indirizzo'),
 		);
 	}
 

@@ -64,16 +64,16 @@ class Tickets extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'lottery_id' => 'Lottery',
-			'serial_number' => 'Serial Number',
-			'price' => 'Price',
-			'value' => 'Value',
-			'promotion_id' => 'Promotion',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','User'),
+			'lottery_id' => Yii::t('wonlot','Lottery'),
+			'serial_number' => Yii::t('wonlot','Serial Number'),
+			'price' => Yii::t('wonlot','Price'),
+			'value' => Yii::t('wonlot','Value'),
+			'promotion_id' => Yii::t('wonlot','Promotion'),
+			'created' => Yii::t('wonlot','Created'),
+			'modified' => Yii::t('wonlot','Modified'),
+			'last_modified_by' => Yii::t('wonlot','Last Modified By'),
 		);
 	}
 

@@ -55,7 +55,7 @@ class Users extends PActiveRecord
 			array('user_type_id, email, password, is_agree_terms_conditions, is_active, is_email_confirmed', 'required'),
 			array('is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed', 'numerical', 'integerOnly'=>true),
 			array('available_balance_amount, wallet_value_bonus', 'numerical'),
-			array('user_type_id', 'length', 'max'=>2),
+			array('user_type_id, is_guaranted_seller', 'length', 'max'=>2),
 			array('email', 'email'),
 			array('email, dns', 'length', 'max'=>255),
 			array('password', 'length', 'max'=>100),
@@ -64,7 +64,7 @@ class Users extends PActiveRecord
 			array('signup_ip, last_login_ip', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, created, modified, user_type_id, email, password, ext_source, ext_id, cookie_hash, cookie_time_modified, is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed, signup_ip, last_login_ip, last_logged_in_time, available_balance_amount, dns, wallet_value_bonus, newsletter_terms, newsletter_privacy', 'safe', 'on'=>'search'),
+			array('id, created, modified, user_type_id, email, password, ext_source, ext_id, cookie_hash, cookie_time_modified, is_agree_terms_conditions, is_agree_personaldata_management, is_active, is_email_confirmed, signup_ip, last_login_ip, last_logged_in_time, available_balance_amount, dns, wallet_value_bonus, newsletter_terms, newsletter_privacy, is_guaranted_seller', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,10 +95,10 @@ class Users extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'email' => 'Email',
-			'password' => 'Password',
-			'wallet_value_bonus' => 'Wallet Value Bonus',
+			'id' => Yii::t('wonlot','ID'),
+			'email' => Yii::t('wonlot','Email'),
+			'password' => Yii::t('wonlot','Password'),
+			'wallet_value_bonus' => Yii::t('wonlot','Wallet Value Bonus'),
 		);
 	}
 

@@ -221,8 +221,8 @@ class UsersController extends Controller
 		if(isset($_POST['Users']))
 		{
 			$model->attributes=$_POST['Users'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			$model->save();
+//				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('update',array(
@@ -282,20 +282,27 @@ class UsersController extends Controller
                     $_POST['UserPaymentInfo']['user_id'] = Yii::app()->user->id;
                 }
                 $userInfoModel->setAttributes($_POST['UserPaymentInfo']);
+                if(!$userInfoModel->legal_name || !$userInfoModel->address){
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Nome e Indirizzo sono obbligatori')));
+                    return;
+                }
                 if(!$userInfoModel->vat && !$userInfoModel->fiscal_number){
                     echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
                     return;
-                /*} elseif(!$userInfoModel->iban && !$userInfoModel->paypal_account){
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
-                    return;*/
-                } else {
-                    if($userInfoModel->save()){
-                        $userOk = true;
-                    } else {
-                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
+                }
+                if($_POST['for_credit']){
+                    if(!$userInfoModel->iban && !$userInfoModel->paypal_account){
+                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
                         return;
                     }
                 }
+                if($userInfoModel->save()){
+                    $userOk = true;
+                } else {
+                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
+                    return;
+                }
+
                 if($userOk && (isset($_POST['for_profile']) || isset($_POST['for_credit']))){
                     echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>$_POST['for_profile'],'isDraw'=>$_POST['for_credit']));
                     return;
@@ -345,21 +352,36 @@ class UsersController extends Controller
         
         public function actionRequestWithdraw(){
             if(isset($_POST['UserWithdraw'])){
+                $user = Yii::app()->user->loadUser();
                 $withdraw = $_POST['UserWithdraw'];
                 if(isset($withdraw['creditValue'])){
                     $withdrawVal = (float) $withdraw['creditValue'];
                     if($withdrawVal && $withdrawVal > 0){
-                        $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.Yii::app()->user->id);
+                        $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.$user->id);
                         if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
                             if($withdraw['creditValue'] <= Yii::app()->user->walletValue){
                                 $drawReq = new UserWithdraw;
-                                $drawReq->user_id = Yii::app()->user->id;
+                                $drawReq->user_id = $user->id;
                                 $drawReq->value = $withdraw['creditValue'];
                                 $drawReq->status = 1;
-                                if($drawReq->save()){
-                                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di ritiro denaro inviata')));
+                                
+                                $dbTransaction=$user->dbConnection->beginTransaction();
+                                $user->available_balance_amount-=$drawReq->value;
+                                if($user->save()){
+                                    if($drawReq->save()){
+                                        if(UserTransactions::model()->addDrawCreditTrans($credit,$user,$drawReq)){
+                                            $dbTransaction->commit();
+                                            Notifications::model()->sendDrawCreditNotify($credit,$user,$drawReq);
+                                            echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di ritiro denaro inviata')));
+                                        } else {
+                                            $dbTransaction->rollback();
+                                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                        }
+                                    } else {
+                                        $dbTransaction->rollback();
+                                    }
                                 } else {
-                                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                    $dbTransaction->rollback();
                                 }
                             } else {
                                 echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile')));
@@ -414,7 +436,7 @@ class UsersController extends Controller
                         }
                     } 
                 }
-                if($_POST['Users']['user_type_id'] == 1 || !$model->user_type_id){
+                if($_POST['Users']['user_type_id'] == 1 || $_POST['Users']['user_type_id'] == 2 || !$model->user_type_id){
                     if(isset($_POST['UserProfiles'])){
                         if($_POST['filename'][0]){
                             $_POST['UserProfiles']['img']=$_POST['filename'][0];
@@ -569,7 +591,7 @@ class UsersController extends Controller
 		} else {
                     $model->addError('creditOption','Form error');
                 }
-                $this->redirect('myProfile',array(
+                $this->redirect('myProfile#tabProfile2',array(
 			'model'=>$model,
                         'this'=>$this,
 		),false,true);

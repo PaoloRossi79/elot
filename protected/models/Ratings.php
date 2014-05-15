@@ -66,19 +66,19 @@ class Ratings extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'user_id' => 'User',
-			'to_entity_id' => 'To Entity',
-			'to_entity_type' => 'To Entity Type',
-			'rating_value' => 'Rating Value',
-			'comment' => 'Comment',
-			'spam_alert' => 'Spam Alert',
-			'spam_check' => 'Spam Check',
-			'spam_check_by' => 'Spam Check By',
-			'published' => 'Published',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
+			'id' => Yii::t('wonlot','ID'),
+			'user_id' => Yii::t('wonlot','User'),
+			'to_entity_id' => Yii::t('wonlot','To Entity'),
+			'to_entity_type' => Yii::t('wonlot','To Entity Type'),
+			'rating_value' => Yii::t('wonlot','Rating Value'),
+			'comment' => Yii::t('wonlot','Comment'),
+			'spam_alert' => Yii::t('wonlot','Spam Alert'),
+			'spam_check' => Yii::t('wonlot','Spam Check'),
+			'spam_check_by' => Yii::t('wonlot','Spam Check By'),
+			'published' => Yii::t('wonlot','Published'),
+			'created' => Yii::t('wonlot','Created'),
+			'modified' => Yii::t('wonlot','Modified'),
+			'last_modified_by' => Yii::t('wonlot','Last Modified By'),
 		);
 	}
 

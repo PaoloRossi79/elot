@@ -75,8 +75,7 @@ class HOAuthShare extends CWidget
                 $config = UserOAuth::getConfig();
     ob_start();
 		?>
-                
-		  
+   		  
 <?php
     $cs->registerScript(__CLASS__, ob_get_clean());
 	}

@@ -62,16 +62,13 @@ class payLotteryInfoWidget extends CWidget
                         $("#reqPayBtn").attr("disabled","disabled");
                       }*/
                       $('#reqPayBtn').removeAttr('disabled');
-                      if(data.isDraw == 1){
-                        alert("for credit");
-                      }
                       $('.draw-block').fadeIn();
                     } else {
                       $(".error-message").text(data.errMsg);
                       $(".error-block").show();
                       $(".success-message").text();
                       $(".success-block").hide();
-                      $('#reqPayBtn').attr('disabled','disabled');
+                      //$('#reqPayBtn').attr('disabled','disabled');
                     }
                 }
                 <?php

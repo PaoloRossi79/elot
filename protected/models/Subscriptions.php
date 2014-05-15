@@ -63,19 +63,19 @@ class Subscriptions extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'nl_type' => 'Nl Type',
-			'nl_type_id' => 'Nl Type',
-			'user_id' => 'User',
-			'created' => 'Created',
-			'modified' => 'Modified',
-			'last_modified_by' => 'Last Modified By',
-			'is_active' => 'Is Active',
-			'sub_ip' => 'Sub Ip',
-			'sub_dns' => 'Sub Dns',
-			'term_cond' => 'Term Cond',
-			'privacy_ok' => 'Privacy Ok',
-			'n_msg_sent' => 'N Msg Sent',
+			'id' => Yii::t('wonlot','ID'),
+			'nl_type' => Yii::t('wonlot','Nl Type'),
+			'nl_type_id' => Yii::t('wonlot','Nl Type'),
+			'user_id' => Yii::t('wonlot','User'),
+			'created' => Yii::t('wonlot','Created'),
+			'modified' => Yii::t('wonlot','Modified'),
+			'last_modified_by' => Yii::t('wonlot','Last Modified By'),
+			'is_active' => Yii::t('wonlot','Is Active'),
+			'sub_ip' => Yii::t('wonlot','Sub Ip'),
+			'sub_dns' => Yii::t('wonlot','Sub Dns'),
+			'term_cond' => Yii::t('wonlot','Term Cond'),
+			'privacy_ok' => Yii::t('wonlot','Privacy Ok'),
+			'n_msg_sent' => Yii::t('wonlot','N Msg Sent'),
 		);
 	}
 

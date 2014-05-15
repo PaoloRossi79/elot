@@ -51,9 +51,9 @@ class PrizeCategories extends PActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'category_name' => 'Category Name',
-			'seo_name' => 'Seo Name',
+			'id' => Yii::t('wonlot','ID'),
+			'category_name' => Yii::t('wonlot','Category Name'),
+			'seo_name' => Yii::t('wonlot','Seo Name'),
 		);
 	}
 

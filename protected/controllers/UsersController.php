@@ -37,17 +37,12 @@ class UsersController extends Controller
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
                                     'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
-                                    'savePayInfo','requestWithdraw'),
+                                    'savePayInfo','requestWithdraw','getNumUnreadNotifications'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','update','admin'),
 				'users'=>array('@'),
-                                'expression' => 'Yii::app()->user->isAdmin()',
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
                                 'expression' => 'Yii::app()->user->isAdmin()',
 			),
 			array('deny',  // deny all users
@@ -99,6 +94,11 @@ class UsersController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
+	public function actionGetNumUnreadNotifications(){
+            $unreadNotifyCount = Notifications::model()->getCountUnreadNotifications();
+            echo $unreadNotifyCount;
+        }
+        
 	public function actionView($id)
 	{
 		$this->render('view',array(

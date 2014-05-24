@@ -85,6 +85,10 @@ $lotterySearchStatusConst = array(
     'In arrivo'=>2,
     'Estratte'=>3,
 );
+$payStatusConst = array(
+    1 => Yii::t('wonlot','Richiesto'),
+    2 => Yii::t('wonlot','Eseguito'),
+);
 $userTransactionConst = array(
     'buyTicket'=>1,
     'buyCredit'=>2,

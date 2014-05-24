@@ -37,23 +37,26 @@
     }
     ?>
     <div class="ticket-lot" id="ticket-lot-<?php echo $ticket->id; ?>" name="<?php echo $selection; ?>">
-        <?php if($m->winner_ticket_id == $ticket->id){ ?>
+        <?php if($ticket->lottery->winner_ticket_id == $ticket->id){ ?>
             <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/winner.png", "Winner", array("class"=>"winner-ban")); ?>
         <?php } ?>
         <?php echo CHtml::link($ticket->serial_number, Yii::app()->createAbsoluteUrl('tickets/view/'.$ticket->id), array('class'=> 'ticket-number-text')); ?>
         <?php if($ticket->is_gift == 1){ ?>
             <?php if($ticket->gift_from_id != $this->userId){ ?>
                 <?php $giftText = Yii::t('wonlot','Regalato da ').$ticket->giftFromUser->username; ?>
+                <span class="ticket-gift-text bg-success" data-toggle="tooltip" data-placement="bottom" title="<?php echo $giftText; ?>"><?php echo Yii::t('wonlot','In regalo!'); ?></span>
             <?php } else { ?>
                 <?php if($ticket->user_id == $this->userId){ ?>
                     <?php $giftText = Yii::t('wonlot','Regalato a ').$ticket->gift_ext_username; ?>
                 <?php } else { ?>
                     <?php $giftText = Yii::t('wonlot','Regalato a ').$ticket->user->username; ?>
                 <?php } ?>
+                <span class="ticket-gift-text bg-success" data-toggle="tooltip" data-placement="bottom" title="<?php echo $giftText; ?>"><?php echo Yii::t('wonlot','Regalato!'); ?></span>
             <?php } ?>
-            <span class="ticket-gift-text bg-success" data-toggle="tooltip" data-placement="bottom" title="<?php echo $giftText; ?>"><?php echo Yii::t('wonlot','Regalato!'); ?></span>
         <?php } else { ?>
-            <button id="<?php echo $ticket->id; ?>" class="btn btn-success btn-xs set-gift ticket-gift-btn"><i class="glyphicon glyphicon-search">Regala</i></button> 
+            <?php if($ticket->lottery->status == Yii::app()->params['lotteryStatusConst']['open']){ ?>
+                <button id="<?php echo $ticket->id; ?>" class="btn btn-success btn-xs set-gift ticket-gift-btn"><i class="glyphicon glyphicon-search">Regala</i></button> 
+            <?php } ?>
         <?php } ?>
     </div>
 <?php } ?>

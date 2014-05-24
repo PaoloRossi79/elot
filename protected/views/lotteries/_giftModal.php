@@ -24,6 +24,9 @@
                     <div class="col-md-2 pull-left">
                         <input class="btn btn-info gift-ticket-social-btn gp-gift" type="button" value="Google" >    
                     </div>
+                    <div class="clearfix"></div>
+                    <div class="em"><?php echo Yii::t('wonlot','Per regalare via social network occorre abilitare i pop-up.'); ?></div>
+                    <div class="em"><?php echo Yii::t('wonlot','Se la finestra di Facebook o Google+ non si apre controllare nella barra in alto per abilitare i pop-up.'); ?></div>
                     <?php $this->widget('ext.hoauth.widgets.HOAuthShare'); ?>
                 </div>
                 <div class="clearfix"></div>

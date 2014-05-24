@@ -3,7 +3,7 @@
 /* @var $model Tickets */
 ?>
 
-<h1>View Ticket #<?php echo $model->serial_number; ?></h1>
+<h1>Ticket #<?php echo $model->serial_number; ?></h1>
 
 <div class="lot-panel panel panel-default bootstrap-widget-table">
     <div class="panel-heading">
@@ -13,9 +13,69 @@
         <?php
             if($model->lottery->winner_ticket_id == $model->id){ ?>
                 <div class="col-md-12">
-                    <h3><?php echo Yii::t("wonlot","Hai vinto!"); ?></h3>
+                    <h3><?php echo CHtml::image(Yii::app()->baseUrl."/images/site/winner.png", "Winner", array("class"=>"winner-ban")); ?>
+                        <?php echo Yii::t("wonlot","Hai vinto!"); ?></h3>
                     <div class="text-block">
-                        <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/winner.png", "Winner", array("class"=>"winner-ban")); ?>
+                        <h4><?php echo Yii::t("wonlot","Congratulazioni "); ?><?php echo $model->lottery->winner->profile->first_name." ".$model->lottery->winner->profile->last_name; ?></h4>
+                        <p><?php echo Yii::t("wonlot","Hai vinto questa lotteria: "); ?><?php echo $model->lottery->name; ?></p>
+                        <p><?php echo Yii::t("wonlot","Biglietto Vincitore: "); ?><?php echo $model->lottery->winnerTicket->serial_number; ?></p>
+                        <div>
+                            <div><?php echo Yii::t("wonlot","Per ricevere il premio mettiti in contatto con il venditore (scrivendogli da questa mail):"); ?></div>
+                            <div><?php echo Yii::t("wonlot","Venditore: "); ?><b><?php echo $model->lottery->owner->username; ?></b> - Email: <?php echo $model->lottery->owner->email; ?></div>
+                            <div><?php echo Yii::t("wonlot","Se hai segnalazioni o problemi scrivi a: "); ?><a href="mailto:help@wonlot.com">help@wonlot.com</a></div>
+                        </div>
+                        <br>
+                        <div class="col-md-12">
+                            <div class="col-md-4">
+                                <div class="pull-left">
+                                    <?php echo Yii::t("wonlot","Dai un voto al venditore!"); ?>
+                                </div>
+                                <div class="pull-left ratebox">
+                                    <?php $this->widget('CStarRating',array(
+                                        'name'=>'rating',
+                                        'callback'=>'function(){
+                                            $("#rate-value").val($(this).val());
+                                        }'
+                                    )); ?>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="pull-left">
+                                    <?php echo Yii::t("wonlot","e lascia un commento"); ?>
+                                </div>
+                                <div class="pull-left">
+                                    <?php echo CHtml::textArea('comment-text', '',array('id'=>'comment-text','placeholder'=>'Lascia il tuo commento')); ?>
+                                    <?php echo CHtml::hiddenField('comment-touserid', $model->lottery->owner->id, array('id'=>'comment-touserid')); ?>
+                                    <?php echo CHtml::hiddenField('comment-lotteryid', $model->lottery->id, array('id'=>'comment-lotteryid')); ?>
+                                    <?php echo CHtml::hiddenField('comment-ticketid', $model->id, array('id'=>'comment-ticketid')); ?>
+                                    <?php echo CHtml::hiddenField('rate-value', 0, array('id'=>'rate-value')); ?>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <?php echo CHtml::ajaxButton(Yii::t("wonlot","Invia"), CController::createUrl('ratings/create'), 
+                                            array( //AJAX
+                                                'type' => 'POST', 
+                                                'data'=>array(
+                                                    'comment' => 'js:$("#comment-text").val()',
+                                                    'touserId' => 'js:$("#comment-touserid").val()',
+                                                    'lotteryId' => 'js:$("#comment-lotteryid").val()',
+                                                    'ticketId' => 'js:$("#comment-ticketid").val()',
+                                                    'rating' => 'js:$("#rate-value").val()',
+                                                ),
+                                                'success'=>'function(data){
+                                                    if(data.res){
+                                                        alert("Votato!");
+                                                    } else {
+                                                        alert(data.msg);
+                                                    }
+                                                }',
+                                            ),
+                                            array()
+                                      );?>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
                     </div>
                 </div>
         <?php } ?>

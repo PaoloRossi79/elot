@@ -22,7 +22,7 @@ class UserWithdraw extends PActiveRecord
                         array('user_id, value, status', 'required'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('user_id, value, status, paid_by, paid_on', 'safe', 'on'=>'search'),
+			array('user_id, value, status, paid_by, paid_on, paid_ref', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -35,6 +35,8 @@ class UserWithdraw extends PActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+                    'lastModUser' => array(self::BELONGS_TO, 'Users', 'last_modified_by'),
+                    'paidUser' => array(self::BELONGS_TO, 'Users', 'paid_by'),
 		);
 	}
         
@@ -43,9 +45,11 @@ class UserWithdraw extends PActiveRecord
 		return array(
 			'id' => Yii::t('wonlot','ID'),
 			'user_id' => Yii::t('wonlot','User'),
-			'first_name' => Yii::t('wonlot','Nome'),
-			'last_name' => Yii::t('wonlot','Cognome'),
-			'address' => Yii::t('wonlot','Indirizzo'),
+			'value' => Yii::t('wonlot','Valore'),
+			'status' => Yii::t('wonlot','Stato'),
+			'paid_by' => Yii::t('wonlot','Pagato da'),
+			'paid_on' => Yii::t('wonlot','Pagato il'),
+			'last_modified_by' => Yii::t('wonlot','Ultima modifica di'),
 		);
 	}
 
@@ -69,12 +73,11 @@ class UserWithdraw extends PActiveRecord
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('user_id',$this->user_id,true);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('address',$this->address,true);
-		$criteria->compare('lat',$this->lat,true);
-		$criteria->compare('lng',$this->lng,true);
-		$criteria->compare('img',$this->img,true);
+		$criteria->compare('value',$this->value,true);
+		$criteria->compare('status',$this->status,true);
+		$criteria->compare('paid_by',$this->paid_by,true);
+		$criteria->compare('paid_on',$this->paid_on,true);
+		$criteria->compare('last_modified_by',$this->last_modified_by,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

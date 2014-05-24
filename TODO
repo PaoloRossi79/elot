@@ -2,8 +2,7 @@ BUG:
 
 1) MyLottery: testi lunghi la tabella esce dalla pagina -> text-wrap
 
-3) Transazioni: manca il credito regalato
-4) Notifiche: non azzera il count (pallino rosso)
+OK 4) Notifiche: non azzera il count (pallino rosso)
 5) Notifiche: non mostra il credito regalato
 6) Regala ticket:
     a) se regalo a follower: ok regalo, ma non mostra correttamente a chi lo hai regalato (mostra me stesso)
@@ -12,19 +11,12 @@ BUG:
 
 TODO:
 
-0) creazione lotteria: blocca a 5 immagini: STOP -> in attersa
-
-2) Blocco Youtube -> sospeso
-    metterlo anche nella pagina di edit x lotterie già salvate
-http://apiblog.youtube.com/2012/02/video-uploads-from-your-sites-community.html
-SOSPESO!!!
 
 1) Lot-box: per numeri troppo grandi -> tagliare (non mostrare cifre troppo grande)
 
 3) aggiungere pagina dove lasciare Feedback al Venditore: solo vinctiore? consideriamo come parametro anche il numero di lotterie annullate
 
 
-4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori" -> in sospeso ... usare cmq i dati
 
 4) Promozioni speciali: -> IN ATTESA
     a) promozione per vincitore che da consenso
@@ -34,6 +26,23 @@ SOSPESO!!!
     b) funzione di invio
     c) possibilità di annuncio sponsorizzato, con commissione più alta
 
+
+
+!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
+SOSPESI
+
+4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori" -> in sospeso ... usare cmq i dati
+
+0) creazione lotteria: blocca a 5 immagini: STOP -> in attera
+
+2) Blocco Youtube -> sospeso
+    metterlo anche nella pagina di edit x lotterie già salvate
+http://apiblog.youtube.com/2012/02/video-uploads-from-your-sites-community.html
+SOSPESO!!!
+
+
+!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DONE
 
 8) Sharer via Facebook, G+, TW
 
@@ -48,10 +57,6 @@ SOSPESO!!!
         
     TW: <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://wonlot.com/twitter" data-text="Test 1" data-via="paolorossi79" data-lang="it" data-size="large" data-count="none" data-hashtags="wonlot">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
-DONE
 
 1) Bottone codice per link esterno -> OK
 

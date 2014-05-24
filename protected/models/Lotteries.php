@@ -549,7 +549,7 @@ class Lotteries extends PActiveRecord
                         }
                         $winner=$lotteryTickets[$winnerId];
                         if($winner){
-                            $checkForWinnerUser = (!empty($winner->user_id) && $winner->user->is_active);
+                            $checkForWinnerUser = (!empty($winner->user_id) && isset($winner->user) && $winner->user->is_active);
                             if($checkForWinnerUser){
                                 //winner FOUND
                                 $checkWinner=false;

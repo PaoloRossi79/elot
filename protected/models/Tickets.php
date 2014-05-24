@@ -164,6 +164,8 @@ class Tickets extends PActiveRecord
             if($_POST['lotStatus']){
                 $criteria->addCondition('t.status='.$_POST['lotStatus']);
                 $viewData['lotStatus']=$_POST['lotStatus'];
+            } else {
+                $criteria->addNotInCondition('t.status',array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['void']));
             }
             $criteria->order='t.name';
             $criteria->with=array("tickets"=>array(
@@ -185,6 +187,8 @@ class Tickets extends PActiveRecord
             if($_POST['lotStatus']){
                 $criteria->addCondition('t.status='.$_POST['lotStatus']);
                 $viewData['lotStatus']=$_POST['lotStatus'];
+            } else {
+                $criteria->addNotInCondition('t.status',array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['void']));
             }
             $criteria->order='t.name';
             $criteria->with=array("tickets"=>array(

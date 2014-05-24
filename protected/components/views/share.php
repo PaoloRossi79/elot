@@ -72,6 +72,7 @@
     <input name="link" type="hidden" value="<?php echo $this->link;?>">    
     <input class="btn btn-info fb-share" type="button" value="Facebook" >    
     <input class="btn btn-info gp-share" type="button" value="Google" >    
-    <a class="btn btn-info tw-share twitter-share-button" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" href="https://twitter.com/share">Twitter</a>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+    <!--<input class="btn btn-info tw-share" type="button" value="Twitter" >-->
+    <a class="btn btn-info tw-share" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" href="https://twitter.com/share">Twitter</a>
+    <!--<a href="https://twitter.com/share" id="twitter-share-btn" class="twitter-share-button" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" data-lang="en">Tweet</a>-->
 </div>

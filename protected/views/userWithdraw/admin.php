@@ -46,16 +46,25 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
-		'user_id',
+		array(
+                    'name'=>'user',
+                    'type'=>'raw',
+                    'value'=>'$this->grid->controller->widget("userBoxWidget", array("model"=>$data->user), true);',
+                ),
 		'value',
 		'created',
-		'modified',
-		'last_modified_by',
-		/*
-		'status',
-		'paid_by',
-		'paid_on',
-		*/
+		array(
+                    'name'=>'status',
+                    'type'=>'raw',
+                    'value'=>'Yii::app()->params["payStatusConst"][$data->status]',
+                ),
+		array(
+                    'name'=>'paid_by',
+                    'type'=>'raw',
+                    'value'=>'$this->grid->controller->widget("userBoxWidget", array("model"=>$data->paidUser), true);',
+                ),
+		'paid_on',		
+		'paid_ref',		
 		array(
 			'class'=>'CButtonColumn',
 		),

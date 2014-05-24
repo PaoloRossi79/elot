@@ -1005,9 +1005,8 @@ button.close {
 }
 
 .winner-ban {
-    position: absolute;
-    margin-top: 6px;
-    margin-left: 18px;
+    /* position: absolute; */
+    margin: 6px 20px 6px 20px;
 }
 
 .gift-box {
@@ -1116,7 +1115,7 @@ button.close {
     padding: 10px;
 }
 
-#emailErrorText, #emailSuccessText, .giftErrorText, .giftSuccessText , #retrive-credit-panel, .draw-block {
+#emailErrorText, #emailSuccessText, .giftErrorText, .giftSuccessText , #retrive-credit-panel, .draw-block, .twitter-share-button {
     display: none;
 }
 

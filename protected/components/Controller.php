@@ -244,6 +244,9 @@ class Controller extends CController
             if(get_class($entity) == "stdClass"){
                 $file=$entity->file;
                 $img_path="/images/".strtolower($entity->entityType)."/".$entity->entityId."/";
+            } elseif(get_class($entity) == "Users") {
+                $file=$entity->profile->img;
+                $img_path="/images/userProfiles/".$entity->id."/";
             } else {
                 $file=$entity->prize_img;
                 $img_path="/images/".strtolower(get_class($entity))."/".$entity->id."/";

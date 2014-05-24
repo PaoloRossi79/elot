@@ -36,7 +36,7 @@ class Ratings extends PActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, to_entity_id, to_entity_type, rating_value, spam_check_by', 'required'),
+			array('user_id, to_entity_id, to_entity_type, rating_value', 'required'),
 			array('spam_alert, spam_check, published, last_modified_by', 'numerical', 'integerOnly'=>true),
 			array('user_id, to_entity_id, spam_check_by', 'length', 'max'=>10),
 			array('to_entity_type', 'length', 'max'=>15),

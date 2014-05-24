@@ -9,6 +9,7 @@
 <div>Pagina di ADMIN</div>
 <div>
     <a class="btn btn-primary" href="<?php echo $this->createUrl('users/admin'); ?>">Utenti</a>
-    <a class="btn btn-primary" href="<?php echo $this->createUrl('users/admin'); ?>">Utenti</a>
+    <a class="btn btn-primary" href="<?php echo $this->createUrl('userWithdraw/admin'); ?>">Richieste prelievo</a>
+    <a class="btn btn-primary" href="<?php echo $this->createUrl('lotteryPaymentRequest/admin'); ?>">Pagamenti lotterie</a>
     <a class="btn btn-primary" href="<?php echo $this->createUrl('userSpecialOffers/admin'); ?>">Promozioni</a>
 </div>

@@ -160,5 +160,6 @@ return array(
             'companyTypes' => $companyTypesId,
             'prizeConditions' => $prizeConditions,
             'prizeConditionsId' => $prizeConditionsId,
+            'payStatusConst'=>$payStatusConst,
 	),
 );

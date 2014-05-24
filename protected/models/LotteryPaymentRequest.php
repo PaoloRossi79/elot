@@ -20,7 +20,7 @@ class LotteryPaymentRequest extends PActiveRecord
                         array('lottery_id, from_user_id', 'required'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, category_name, seo_name', 'safe', 'on'=>'search'),
+			array('id, lottery_id, from_user_id, sent_date, is_completed, complete_date, complete_by, complete_ref', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -42,10 +42,14 @@ class LotteryPaymentRequest extends PActiveRecord
 	{
 		return array(
 			'id' => Yii::t('wonlot','ID'),
-			'user_id' => Yii::t('wonlot','User'),
-			'first_name' => Yii::t('wonlot','Nome'),
-			'last_name' => Yii::t('wonlot','Cognome'),
-			'address' => Yii::t('wonlot','Indirizzo'),
+			'lottery_id' => Yii::t('wonlot','ID Lotteria'),
+			'from_user_id' => Yii::t('wonlot','Utente'),
+			'sent_date' => Yii::t('wonlot','Data'),
+			'is_completed' => Yii::t('wonlot','E\' pagata?'),
+			'complete_date' => Yii::t('wonlot','Data pagamento'),
+			'complete_by' => Yii::t('wonlot','Pagata da'),
+			'complete_ref' => Yii::t('wonlot','Rif. Pagamento'),
+			'prize_img' => Yii::t('wonlot','Premio'),
 		);
 	}
 
@@ -68,13 +72,13 @@ class LotteryPaymentRequest extends PActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('user_id',$this->user_id,true);
-		$criteria->compare('first_name',$this->first_name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('address',$this->address,true);
-		$criteria->compare('lat',$this->lat,true);
-		$criteria->compare('lng',$this->lng,true);
-		$criteria->compare('img',$this->img,true);
+		$criteria->compare('lottery_id',$this->lottery_id,true);
+		$criteria->compare('from_user_id',$this->from_user_id,true);
+		$criteria->compare('sent_date',$this->sent_date,true);
+		$criteria->compare('is_completed',$this->is_completed,true);
+		$criteria->compare('complete_date',$this->complete_date,true);
+		$criteria->compare('complete_by',$this->complete_by,true);
+		$criteria->compare('complete_ref',$this->complete_ref,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

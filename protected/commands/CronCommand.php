@@ -11,8 +11,9 @@ class CronCommand extends CConsoleCommand
             Yii::log("CRON OK!", "warning");
             $file=Yii::app()->basePath."/cron-lottery.lock";
             $oFile=fopen($file,"w");
-            fwrite($oFile,"DO");
+            fwrite($oFile,"5");
             fclose($oFile);
+            chmod($file, '777');
             try {
                 $errors = array('open'=>array(),'close'=>array(), 'extract'=>array(),'void'=>array());
                 Lotteries::model()->checkToOpen($errors);
@@ -35,6 +36,21 @@ class CronCommand extends CConsoleCommand
             unlink($file);
         } else {
             Yii::log("CRON Busy -> SKIP ", "warning");
+            $file=Yii::app()->basePath."/cron-lottery.lock";
+            $oFile=fopen($file,"r");
+            $filesize=filesize($file);
+            Yii::log("SIZE=".$filesize, "warning");
+            $last=fread($oFile,$filesize);
+            fclose($oFile); 
+            Yii::log("LAST=".$last, "warning");
+            $newLast=$last-1;
+            if($newLast == 0){
+                unlink($file);
+            } else {
+                $oFile=fopen($file,"w");
+                fwrite($oFile,$newLast);
+                fclose($oFile); 
+            }
         }
         Yii::log("CRON END!", "warning");
     }

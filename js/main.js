@@ -98,6 +98,7 @@ $(window).bind("load", function() {
    });
    
    $('.lot-item').click(function(event){
+       $(this).find('.sel-btn')[0].click();
        if(!$("#ticket-lot-"+this.id).is(":visible")){
             $(".ticket-block").fadeOut();
             $("#ticket-lot-"+this.id).fadeIn();
@@ -264,6 +265,7 @@ $(window).bind("load", function() {
             $("#emailFormGroup").addClass("has-success");
             $(".giftErrorText").hide();
             $(".giftSuccessText").show();
+            $(this).find('.ticket-gift-text').text("Regalato a "+$('input[name="gift-username"]').val());
             setTimeout(function() {
                 $("#gift-modal").modal('hide');
                 $("#buy-modal").modal('show');
@@ -287,8 +289,23 @@ $(window).bind("load", function() {
        $('.giftErrorText').hide();
    };
    
+   // load notifications every timer
+   $.getUnreadNotifications = function(){
+       $.post( '/users/getNumUnreadNotifications')
+            .done(function( data ) {
+                if(data > 0){
+                    $('.notify-unread-count').html(data); 
+                    $('.float-circle').show(); 
+                }
+                setTimeout(function(){
+                    $.getUnreadNotifications();
+                },30000);
+       });
+   };
+   $.getUnreadNotifications();
+   
    jQuery('body').on('click','.notify-pop-btn',function(event){
-      $.post( 'users/markNewNotifyRead' , { notifyId: $(this).attr('name')})
+      $.post( '/users/markNewNotifyRead' , { notifyId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
                     $('.notify-unread-count').html(0); 
@@ -298,7 +315,7 @@ $(window).bind("load", function() {
    });
    jQuery('body').on('click','.notify-row',function(event){
        var sender = $(this);
-       $.post( 'users/markNotifyRead' , { notifyId: $(this).attr('name')})
+       $.post( '/users/markNotifyRead' , { notifyId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
                     sender.removeClass('notify-unread');
@@ -342,7 +359,10 @@ $(window).bind("load", function() {
                         'type':'POST',
                         'url':'/lotteries/gift',
                         'cache':false,
-                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 'ticketId': $("#ticketIdForGift").val()},
+                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 
+                                'ticketId': $("#ticketIdForGift").val(),
+                                'userName': $('input[name="gift-username"]').val(),
+                        },
                         'success':function(result){
                             $.updateTicketGift(result);
                         }
@@ -487,9 +507,27 @@ $(window).bind("load", function() {
         });
    });
    jQuery('body').on('click','.tw-share',function(event) {
-        FB.ui({
-            method: 'feed',
-            link: $('input[name=link]').val(),
-        });
+        var width  = 575,
+            height = 400,
+            left   = ($(window).width()  - width)  / 2,
+            top    = ($(window).height() - height) / 2,
+            url    = this.href,
+            opts   = 'status=1' +
+                     ',width='  + width  +
+                     ',height=' + height +
+                     ',top='    + top    +
+                     ',left='   + left;
+
+        window.open(url, 'twitter', opts);
+
+        return false;
    });
+   /*twttr.ready(function (twttr) {
+        twttr.events.bind('tweet', function (event) {
+            alert("TW!");
+        });
+   });*/
+   $.updateRating = function(event){
+       alert("RATE!");
+   }
 });

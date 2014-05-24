@@ -170,7 +170,8 @@ class PHPMailer {
    * Method to send mail: ("mail", "sendmail", or "smtp").
    * @var string
    */
-  public $Mailer            = 'sendmail';
+//  public $Mailer            = 'sendmail';
+  public $Mailer            = 'smtp';
 
   /**
    * Sets the path of the sendmail program.
@@ -235,13 +236,15 @@ class PHPMailer {
    * @var string
    */
 //  public $Host          = '192.168.2.11';
-  public $Host          = 'localhost';
+//  public $Host          = 'localhost';
+  public $Host          = 'smtp.mandrillapp.com';
 
   /**
    * Sets the default SMTP server port.
    * @var int
    */
-  public $Port          = 25;
+//  public $Port          = 25;
+  public $Port          = 587;
 
   /**
    * Sets the SMTP HELO of the message (Default is $Hostname).
@@ -259,19 +262,22 @@ class PHPMailer {
    * Sets SMTP authentication. Utilizes the Username and Password variables.
    * @var bool
    */
-  public $SMTPAuth      = false;
+//  public $SMTPAuth      = false;
+  public $SMTPAuth      = true;
 
   /**
    * Sets SMTP username.
    * @var string
    */
-  public $Username      = '';
+//  public $Username      = '';
+  public $Username      = 'paolorossi79@gmail.com';
 
   /**
    * Sets SMTP password.
    * @var string
    */
-  public $Password      = '';
+//  public $Password      = '';
+  public $Password      = 'cxcqPz_shAt432UcYYH7uQ';
 
   /**
    *  Sets SMTP auth type. Options are LOGIN | PLAIN | NTLM | CRAM-MD5 (default LOGIN)

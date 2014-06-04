@@ -8,15 +8,12 @@ OK 4) Notifiche: non azzera il count (pallino rosso)
     a) se regalo a follower: ok regalo, ma non mostra correttamente a chi lo hai regalato (mostra me stesso)
     b) se regalo ad email: non arriva la mail (col link)
 
-
 TODO:
-
 
 1) Lot-box: per numeri troppo grandi -> tagliare (non mostrare cifre troppo grande)
 
-3) aggiungere pagina dove lasciare Feedback al Venditore: solo vinctiore? consideriamo come parametro anche il numero di lotterie annullate
-
-
+3) aggiungere pagina dove lasciare Feedback al Venditore: solo vinctiore? 
+    consideriamo come parametro anche il numero di lotterie annullate
 
 4) Promozioni speciali: -> IN ATTESA
     a) promozione per vincitore che da consenso
@@ -25,8 +22,6 @@ TODO:
 5) Newsletter: 
     b) funzione di invio
     c) possibilità di annuncio sponsorizzato, con commissione più alta
-
-
 
 !!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SOSPESI

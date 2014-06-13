@@ -83,7 +83,7 @@ class LotteriesController extends Controller
 	 */
 	public function actionCreate()
 	{
-                $this->layout='column2l6l4';
+//                $this->layout='column2l6l4';
                 $this->sideView='createLotteyHelp';
                 $model=new Lotteries;
                 $this->_editLottery($model);
@@ -96,7 +96,7 @@ class LotteriesController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-                $this->layout='column2l6l4';
+//                $this->layout='column2l6l4';
                 $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
                 $updatableStatus = array(
@@ -127,7 +127,7 @@ class LotteriesController extends Controller
 	 */
 	public function actionClone($id)
 	{
-                $this->layout='column2l6l4';
+//                $this->layout='column2l6l4';
                 $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
                 unset($model->id);

@@ -34,10 +34,10 @@
     <div class="updateImgBox">
         <div class="thumbnail <?php echo $defClass; ?>">
             <?php echo CHtml::image($this->getImageUrl($img,"smallSquaredThumb"),'Prize image '.$k); ?>
-            <div class="<?php echo $type; ?>" style="<?php echo $displayAlert;?>">
+<!--            <div class="<?php echo $type; ?>" style="<?php echo $displayAlert;?>">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
               <?php echo $msg; ?>
-            </div>
+            </div>-->
             <div class="caption">
               <?php if($lotId){ ?>
                     <?php echo CHtml::ajaxButton ("Set Default",

@@ -77,7 +77,7 @@ class HybridAuthIdentity extends CUserIdentity
             "debug_mode" => false, 
  
             // to enable logging, set 'debug_mode' to true, then provide here a path of a writable file 
-            "debug_file" => "",             
+            "debug_file" => "debug-hoauth.log",             
         );
  
         $this->hybridAuth = new Hybrid_Auth($this->config);

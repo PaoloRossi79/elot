@@ -4,7 +4,7 @@ $db = array(
         'connectionString' => 'mysql:host=localhost;dbname=elot',
         'emulatePrepare' => true,
         'username' => 'root',
-        'password' => 'paolo!!dbroot',
+        'password' => 'rsspla79',
         'charset' => 'utf8',
 );
 

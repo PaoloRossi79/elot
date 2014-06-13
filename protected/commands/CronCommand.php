@@ -20,7 +20,7 @@ class CronCommand extends CConsoleCommand
                 Yii::log("CRON 1", "warning");
                 Lotteries::model()->checkToClose($errors);
                 Yii::log("CRON 2", "warning");
-                Lotteries::model()->checkToExtract($errors);
+//                Lotteries::model()->checkToExtract($errors);
                 Yii::log("CRON 3", "warning");
                 Lotteries::model()->checkToVoid($errors);
                 Yii::log("CRON Fine", "warning");

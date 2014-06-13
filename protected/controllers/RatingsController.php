@@ -25,7 +25,7 @@ class RatingsController extends Controller
                 if($params['lotteryId'] && $params['ticketId'] && $params['touserId']){
                     //check if can rate
                     $lottery = Lotteries::model()->findByPk($params['lotteryId']);
-                    if($lottery && $lottery->winnerTicket->id == $params['ticketId'] && $lottery->winner->id == $userId){
+                    if($lottery && $lottery->winner->id == $userId){
                         $rate = new Ratings;
                         $rate->user_id = $userId;
                         $rate->to_entity_id = $params['touserId'];

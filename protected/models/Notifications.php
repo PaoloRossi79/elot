@@ -139,10 +139,10 @@ class Notifications extends PActiveRecord
             $notify->save();
         }
         
-        public function sendExtractLotteryToWinnerNotify($lottery,$ticket){
+        public function sendExtractLotteryToWinnerNotify($lottery){
             $notify = new Notifications();
             $notify->from_user_id = 0;
-            $notify->to_user_id = $ticket->user->id;
+            $notify->to_user_id = $lottery->winner->id;
             $notify->message_value = $lottery->id;
             $notify->message_type = Yii::app()->params['notifyTypeConst']['winLottery'];
             $notify->message_read = 0;

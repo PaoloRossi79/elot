@@ -137,6 +137,20 @@ class Tickets extends PActiveRecord
             return $data[0]['count'];
         }
         
+        public function getMyTotalForLottery($lotId)
+	{            
+            $dbCommand = Yii::app()->db->createCommand("
+                SELECT lottery_id,user_id,SUM(random_weight) as sumweight 
+                FROM `tickets` 
+                WHERE lottery_id = ".$lotId.
+                    " AND user_id = ".Yii::app()->user->id.
+                    " AND status = 1 GROUP BY `user_id`
+            ");
+
+            $data = $dbCommand->queryAll();
+            return $data[0]['sumweight'];
+        }
+        
         public function getMyTicketsByLottery($lotId)
 	{
             $criteria=new CDbCriteria; 

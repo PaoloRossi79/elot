@@ -1,6 +1,6 @@
 // executed after ALL (also after document.ready !!!)
 $(window).bind("load", function() {
-    
+   var giftBoxActive;
    //Bootstrap Tabs-Url Trick 
    var url = document.location.toString();
    if (url.match('#')) {
@@ -198,18 +198,24 @@ $(window).bind("load", function() {
    
    jQuery('body').on('click','.gift-ticket-btn',function(){
        var boxActive = $(this).attr('name');
-       $('.labelProvider').text($(this).val());
+       giftBoxActive = $(this).attr('name');
+       $('input[name="GiftForm[provider]"]').val($(this).attr('value'));
        $('.gift-ticket-box').filter('[name='+boxActive+']').fadeIn();
        $('.gift-ticket-box').not('[name='+boxActive+']').fadeOut();
        $('.box-spinner').hide();
+       $('.friend-box').fadeIn();
+       $('.gift-panel-ok').hide();
+       $('.gift-panel-err').hide();
    });
    jQuery('body').on('click','.gift-ticket-social-btn',function(){
-       var boxActive = $(this).attr('name');
+       $('input[name="GiftForm[provider]"]').val($(this).val());
        $('.labelProvider').text($(this).val());
-       $('input[name=gift-provider]').val($(this).val());
        $('.gift-ticket-box').not('[name=0]').fadeOut();
        $('.gift-ticket-box').filter('[name=0]').fadeIn();   
        $('.box-spinner').show();
+       $('.friend-box').fadeIn();
+       $('.gift-panel-ok').hide();
+       $('.gift-panel-err').hide();
    });
    jQuery('body').on('click','.setFollow',function(event){
        if($(this).attr('id') == 1){
@@ -238,6 +244,7 @@ $(window).bind("load", function() {
        $('#gift-userid').val(id);
        $('#gift-username').val(username);
        $('input[name=ticketId]').val($('#ticketIdForGift').val());
+       $('input[name=ticketId]').val($('#ticketIdForGift').val());
    });
    jQuery('body').on('click','.user-small-ticket-box',function(event){
        var id=$(this).children("input[name=id]").val();
@@ -246,10 +253,37 @@ $(window).bind("load", function() {
        $(this).addClass('selected-box');
        console.log(id);
        console.log(username);
-       $('input[name="gift-userid"]').val(id);
-       $('input[name="gift-username"]').val(username);
-       $('input[name=ticketId]').val($('#ticketIdForGift').val());
+       $('input[name="GiftForm[giftToUserId]"]').val(id);
+       $('input[name="GiftForm[giftToUsername]"]').val(username);
+       $('#gift-to-header').text(" a: "+username);
+       if(giftBoxActive == "fb"){
+         $.feedShare("fb",id);
+       } else if(giftBoxActive == "gp"){
+         $.feedShare("gp",id);  
+       }
    });
+   
+   $.updateBuySuccess = function(data){
+        if(data.res == "1"){
+          $("#alert-box").removeClass("alert-error");
+          $("#alert-box").addClass("alert-success");
+          $("#alert-box").fadeIn();
+        } else {
+          $("#alert-box").removeClass("alert-success");
+          $("#alert-box").addClass("alert-error");
+          $("#alert-box").fadeIn();
+        }
+        $("#alert-msg").text(data.msg);  
+        if(data.isWinning && !data.newWinnerUser){
+                $("#win-strong").text("Sei già in testa!");
+                $("#win-msg").text("Sei già in testa con "+res.actWinnerValue);
+                $("#alert-box").fadeIn();
+        } else if(data.isWinning && data.newWinnerUser){
+                $("#win-strong").text("Sei passato in testa");
+                $("#win-msg").text("Sei passato in testa con "+res.newWinnerValue);
+                $("#alert-box").fadeIn();
+        } 
+   }
    
    
    $.updateTicketGift = function(data){
@@ -323,31 +357,15 @@ $(window).bind("load", function() {
                 }
        });
    });
-   jQuery('body').on('click','#gift-back',function(event){
-       try {
-            $("#gift-modal").modal('hide');
-       } catch(err) {
-            //Handle errors here
-       }
-       $('#buy-modal').modal('show');
-   });
-   jQuery('body').on('click','.feedShare',function(){
-        var button = $(this);
-        var provider = $('input[name=gift-provider]').val();
-        if(!$('input[name=gift-userid]').val()){
-            $(".giftErrorText").text(noUserErrorMsg);
-            $(".giftErrorText").show();
-            return false;
-        } else {
-            $(".giftErrorText").hide();
-        }
-        if(provider == "Facebook"){
+  
+   $.feedShare = function(provider,id){
+        if(provider == "fb"){
             FB.ui({method: 'feed',
-                message: 'Ti ho regalato un biglietto su Wonlot.com!',
+                message: baseGiftMsg,
                 //link: '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val(),
-                link: baseTicketUrl+$("#ticketIdForGift").val(),
+                link: baseTicketUrl,
     //                                to: $(this).attr('id');
-                to: '100004725912341'
+                to: '100004725912341',
             }, function(response){
                 if(!response){
                     return false;
@@ -355,27 +373,16 @@ $(window).bind("load", function() {
                     alert(response.error_msg);
                     return false;
                 } else {
-                    $.ajax({
-                        'type':'POST',
-                        'url':'/lotteries/gift',
-                        'cache':false,
-                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 
-                                'ticketId': $("#ticketIdForGift").val(),
-                                'userName': $('input[name="gift-username"]').val(),
-                        },
-                        'success':function(result){
-                            $.updateTicketGift(result);
-                        }
-                    });
+                    $('#giftBtn').click();
                 }
             });
-        } else if(provider == "Google"){
+        } else if(provider == "gp"){
 //            var shareLink = '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val();
-            var shareLink = baseTicketUrl+$("#ticketIdForGift").val();
+            var shareLink = baseTicketUrl;
 //            var baseLink = '<?php echo $this->createAbsoluteUrl(''); ?>';
             var baseLink = baseUrl;
-            var shareMsg = "Ecco un Ticket in regalo per te su WonLot!";
-            gpInviteBtnOptions.recipients=$('input[name="gift-userid"]').val();
+            var shareMsg = baseGiftMsg;
+            gpInviteBtnOptions.recipients=id;
             gpInviteBtnOptions.prefilltext=shareMsg;
             gpInviteBtnOptions.contenturl=baseLink;
             gpInviteBtnOptions.calltoactionurl=shareLink;
@@ -385,15 +392,7 @@ $(window).bind("load", function() {
                 if(response.status=="completed" && response.action=="cancelled"){
                     
                 } else if(response.status=="completed" && response.action=="shared"){
-                    $.ajax({
-                        'type':'POST',
-                        'url':'/lotteries/gift',
-                        'cache':false,
-                        'data':{'provider': provider, 'userId': $('input[name=gift-userid]').val(), 'ticketId': $("#ticketIdForGift").val()},
-                        'success':function(result){
-                            $.updateTicketGift(result);
-                        }
-                    });
+                    $('#giftBtn').click();
                 }
             };
 //            gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
@@ -403,7 +402,7 @@ $(window).bind("load", function() {
                 $('#gpshare-gift').click();
             },300);
         }
-   });
+   };
     
    jQuery('body').on('click','.gp-gift',function() {
         var newParams = $.extend(gpdefaults, {'callback': $.gpGetFriends});
@@ -421,6 +420,7 @@ $(window).bind("load", function() {
                 console.log('gp-People', data);
                 $('#social-friend-box').loadTemplate($("#gp-template"),data.items);
                 $('.box-spinner').hide();
+                giftBoxActive = "gp";
             });
         } else if (authResult['error']) {
           alert("Error Google Login");
@@ -457,6 +457,7 @@ $(window).bind("load", function() {
                });
                $('#social-friend-box').loadTemplate($("#fb-template"),response.data);
                $('.box-spinner').hide();
+               giftBoxActive = "fb";
            }
        });
    }   
@@ -522,11 +523,7 @@ $(window).bind("load", function() {
 
         return false;
    });
-   /*twttr.ready(function (twttr) {
-        twttr.events.bind('tweet', function (event) {
-            alert("TW!");
-        });
-   });*/
+   
    $.updateRating = function(event){
        alert("RATE!");
    }

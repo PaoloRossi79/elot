@@ -184,22 +184,22 @@ class EmailManager extends PActiveRecord
             return $sendRes;
         }
 	
-	public function sendExtractLotteryToWinner($lottery,$winner){
+	public function sendExtractLotteryToWinner($lottery){
             $mail = new YiiMailer();
             $mail->setView('winlottery');
-            $mail->setData(array('lottery' => $lottery,'winner'=>$winner));
+            $mail->setData(array('lottery' => $lottery));
             $mail->setFrom('info@wonlot.com', 'WonLot');
-            $mail->setTo($winner->user->email);
+            $mail->setTo($lottery->winner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
             $sendRes=$mail->send();
             return $sendRes;
         }
 	
-	public function sendExtractLotteryToOwner($lottery,$winner){
+	public function sendExtractLotteryToOwner($lottery){
             $mail = new YiiMailer();
             $mail->setView('extractlottery');
-            $mail->setData(array('lottery' => $lottery,'winner'=>$winner));
+            $mail->setData(array('lottery' => $lottery));
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');

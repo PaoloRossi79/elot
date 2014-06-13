@@ -1,47 +1,52 @@
 <div id="data-<?php echo $data->id; ?>">
-    <div class="ticket-list">
+    <div class="ticket-list" class="container-fluid">
         <?php 
         if(!is_null($result)){
+          $ticketBoxSize = 500;
           if(!$canBuyAgain){
               $cs = Yii::app()->clientScript;
-              $cs->registerScript('blockBuy', '$("input[name=buyBtn]").attr("disabled", "disabled").fadeOut();$(".cannot-buy").fadeIn()', CClientScript::POS_READY);
+              $cs->registerScript('blockBuy', 
+                '$("input[name=buyBtn]").attr("disabled", "disabled").fadeOut();
+                 $(".cannot-buy").fadeIn()'
+              , CClientScript::POS_READY);
           } 
-          if($result == "OK!"){
+          if($result == "1"){
               ?>
                 <script>
-                    $('#alert-box').removeClass('alert-error');
-                    $('#alert-box').addClass('alert-success');
-                    $('#alert-box').fadeIn();
+                    $('#ok-msg').text("<?php echo $msg; ?>");
+                    $('.box-panel-ok').fadeIn();
                 </script>
               <?php
           } else {
               ?>
                 <script>
-                    $('#alert-box').removeClass('alert-success');
-                    $('#alert-box').addClass('alert-error');
-                    $('#alert-box').fadeIn();
+                    $('#alert-msg').text("<?php echo $msg; ?>");
+                    $('.box-panel-err').fadeIn();
                 </script>
               <?php
           }
-          ?>
-            <script>
-                $('#alert-strong').text("<?php echo $result; ?>");
-                $('#alert-msg').text("<?php echo $msg; ?>");
-            </script>
-          <?php
-        }
-        $dataId=0;
-        $lot=null;
-        if(isset($data->id)){
-            $dataId=$data->id;
         } else {
-            $dataId=$id;
+            $ticketBoxSize = 350;
+        }
+        if(isset($winRes)){
+            if($winRes['isWinning'] && !$winRes['newWinner']){ ?>
+                <script>
+                    $('#win-strong').text("Sei già in testa!");
+                    $('#win-msg').text("Sei già in testa con "+<?php echo $winRes['actWinnerValue']; ?>);
+                    $('#alert-box').fadeIn();
+                </script>
+            <?php } elseif($winRes['isWinning'] && $winRes['newWinnerUser']){ ?>
+                <script>
+                    $('#win-strong').text("Sei passato in testa");
+                    $('#win-msg').text("Sei passato in testa con "+<?php echo $winRes['newWinnerValue']; ?>);
+                    $('#alert-box').fadeIn();
+                </script>
+            <?php } 
         }
         ?>
         <?php /** @var TbActiveForm $form */
         $formModel = new BuyForm;
-        $formModel->lotId = $dataId;
-        $formModel->ticketGiftId = null;
+        $formModel->lotId = $data->id;
         $form = $this->beginWidget(
             'CActiveForm',
             array(
@@ -49,30 +54,98 @@
             )
         ); 
         echo $form->hiddenField($formModel,'lotId'); 
-        echo $form->hiddenField($formModel,'ticketGiftId'); 
         ?>
+        
+        <div class="buy-box container-fluid">
+            <div class="col-md-6">
+                <div class="box-panel-score panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Il tuo punteggio'); ?></h3>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt><?php echo Yii::t('wonlot','Biglietti acquistati'); ?></dt>
+                            <dd><b><?php echo count($this->ticketTotals); ?></b></dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                            <dd><b><?php echo $this->actualWeight; ?></b></dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="box-panel-win panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt><?php echo Yii::t('wonlot','Utente'); ?></dt>
+                            <dd>
+                                <span class="user-small-avatar-container">
+                                    <a href="<?php echo CController::createUrl('users/view/'.$data->winningUser->id);?>">
+                                        <?php echo CHtml::image("/images/userProfiles/".$data->winningUser->id."/smallThumb/".$data->winningUser->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                        <span class="small-username"><?php echo CHtml::encode($data->winningUser->username); ?></span>
+                                    </a>
+                                </span>
+                            </dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                            <dd><b><?php echo $data->winning_sum; ?></b></dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="box-panel-ok panel panel-success" style="display: none;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Acquistato!'); ?></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="ok-box" class="alert alert-success">
+                            <strong id="win-strong"></strong><span id="ok-msg"></span>
+                        </div>
+                        <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa lotteria!</p>
+                    </div>
+                </div>
+                <div class="box-panel-err panel panel-danger" style="display: none;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Errore'); ?></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="alert-box" class="alert alert-error">
+                            <strong id="alert-strong"></strong><span id="alert-msg"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ticket-box col-md-6">
+                <div class="ticketGrid">
+                    <!-- NEW STYLE: come ticket con bottone sotto! -->
+                    <?php $this->widget('ticketsWidget',array('tickets'=>$this->ticketTotals)); ?>
+                </div>
+                
+                <script>
+                    $(".ticketGrid").slimScroll({
+                         height: '<?php echo $ticketBoxSize; ?>px',
+                         size: '5px',
+                    }); 
+                </script>
+            </div>
+        </div>
+        <div class="special-offer-block form-group">
         <?php 
-                $formModel->offerId = -1;
-                $offersType = UserSpecialOffers::model()->getUserSpecialOffersDropdown();
-                if(!empty($offersType)){
-                    echo $form->labelEx($formModel,'offerId');
-                    echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta')));
-                }
-            ?>
+            $formModel->offerId = -1;
+            $offersType = UserSpecialOffers::model()->getUserSpecialOffersDropdown();
+            if(!empty($offersType)){ ?>
+                <div class="col-md-5">
+                    <?php echo $form->labelEx($formModel,'offerId'); ?>
+                </div>
+                <div class="col-md-6">
+                    <?php echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); ?>
+                </div>
+            <?php } ?>
+        </div>
 
         <?php $this->endWidget(); ?>
-        <?php if(true){ ?>
-            <div class="modal-gallery-subtitle no-margin">Hai già comprato <b><?php echo count($this->ticketTotals); ?></b> ticket!</div>
-            <div class="ticketGrid">
-                <!-- NEW STYLE: come ticket con bottone sotto! -->
-                <?php $this->widget('ticketsWidget',array('tickets'=>$this->ticketTotals)); ?>
-            </div>
-            <script>
-                $(".ticketGrid").slimScroll({
-                     height: '300px',
-                     size: '5px',
-                }); 
-            </script>
-        <?php } ?>
+        
     </div>
 </div>

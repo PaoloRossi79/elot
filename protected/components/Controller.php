@@ -265,7 +265,8 @@ class Controller extends CController
         }
         
         public function getImageList($entityId){
-            $model = new $this->id;
+            $modelName=ucFirst(Yii::app()->controller->id);
+            $model=new $modelName();
             return $model->getImageList($entityId);
             /*$subPath="/images/".$this->id."/".$entityId."/";
             $img_path=Yii::app()->basePath."/..".$subPath;
@@ -321,19 +322,6 @@ class Controller extends CController
             return $menuList;
         }
         
-        private function sendEmailFromTemplate($template,$data) {
-            // TODO: merge template and data
-            Yii::app()->mailer->Host = '192.168.2.11';
-            Yii::app()->mailer->IsSMTP();
-            Yii::app()->mailer->From = 'wei@pradosoft.com';
-            Yii::app()->mailer->FromName = 'Wei';
-            Yii::app()->mailer->AddReplyTo('wei@pradosoft.com');
-            Yii::app()->mailer->AddAddress('paolorossi79@gmail.com');
-            Yii::app()->mailer->Subject = 'Yii rulez!';
-            Yii::app()->mailer->Body = $message;
-            Yii::app()->mailer->Send();
-        }
-        
         private function recursiveFileMove($source,$destination) {
             $files = scandir($source);
             // Cycle through all source files
@@ -350,6 +338,7 @@ class Controller extends CController
                   }
                   try {
                     if (copy($source.$file, $destination.$file)) {
+                        chmod($destination.$file, 0777);
                         unlink($source.$file);
                     } else {
                         $errCount+=1;
@@ -379,7 +368,7 @@ class Controller extends CController
                         mkdir($destination);
                     }
                     if (copy($source.$file, $destination.$file)) {
-
+                        chmod($destination.$file, 0777);
                     } else {
                         $errCount+=1;
                     }

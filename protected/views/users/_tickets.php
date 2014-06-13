@@ -5,4 +5,3 @@
         <?php $this->widget('lotteryWidget',array('tickets'=>$tickets)); ?>  
     </div>    
 </div>
-<?php $this->renderPartial('/lotteries/_giftModal'); ?>

@@ -22,6 +22,7 @@
  * @property string $modified
  * @property integer $last_modified_by
  */
+require_once Yii::getPathOfAlias('ext.PHPStats') .  DIRECTORY_SEPARATOR . 'PHPStats.phar';
 class Lotteries extends PActiveRecord
 {
         public $maxPrice;
@@ -77,6 +78,7 @@ class Lotteries extends PActiveRecord
 			'tickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id'),
 			'validTickets' => array(self::HAS_MANY, 'Tickets', 'lottery_id', 'condition'=>'validTickets.status = 1'),
 			'owner' => array(self::BELONGS_TO, 'Users', 'owner_id'),
+			'winningUser' => array(self::BELONGS_TO, 'Users', 'winning_id'),
 			'winner' => array(self::BELONGS_TO, 'Users', 'winner_id'),
 			'winnerTicket' => array(self::BELONGS_TO, 'Tickets', 'winner_ticket_id'),
 			'category' => array(self::BELONGS_TO, 'PrizeCategories', 'prize_category'),
@@ -432,6 +434,53 @@ class Lotteries extends PActiveRecord
 		return rand(100000,999999);
 	}
         
+        public function updateWinning2(){
+            $res = array('isWinning'=>false,'newWinner' => false);
+            
+            return $res;
+        }
+        public function updateWinning(){
+            $res = array('isWinning'=>false,'newWinner' => false);
+            if(count($this->validTickets)>0){
+                /*$dbCommand = Yii::app()->db->createCommand("
+                    SELECT lottery_id,user_id,SUM(random_weight) as sumweight FROM `tickets` WHERE lottery_id = ".$this->id." GROUP BY `user_id`
+                ");*/
+                
+                $dbCommand = Yii::app()->db->createCommand("
+                    SELECT lottery_id,user_id,SUM(random_weight) as sumweight 
+                    FROM `tickets` 
+                    WHERE lottery_id = ".$this->id.
+                    " AND user_id != 0
+                      AND status = 1 GROUP BY `user_id`
+                ");
+
+                $data = $dbCommand->queryAll();
+                $reduced=array();
+                foreach ($data as $group) {
+                    $res['actWinnerValue'] = $this->winning_sum;
+                    if($group['sumweight'] > $this->winning_sum){
+                        $res['isWinning'] = true;
+                        $this->winning_sum = $group['sumweight'];
+                        if($group['user_id'] != $this->winning_id){
+                            $this->winning_id = $group['user_id'];
+                            $this->save();
+                            $res['newWinner'] = true;
+                            $res['newWinnerValue'] = $group['sumweight'];
+                            $res['newWinnerUser'] = $group['user_id'];
+                            // Notification to all players
+//                            Notifications::sendNewWinningToAll($this);
+                        } else { //same user as before
+                            $res['actWinnerValue'] = $this->winning_sum;
+                            $this->save();
+                            // Notification to already winning user
+//                            Notifications::sendSameWinningToUser($this);
+                        }
+                    }
+                }
+            }
+            return $res;
+        }
+        
         public function checkToOpen(&$errors){
             // check upcoming to open
             $upCriteria = new CDbCriteria();
@@ -481,8 +530,27 @@ class Lotteries extends PActiveRecord
                 }
                 $close->status = Yii::app()->params['lotteryStatusConst']['closed'];
                 $close->lottery_close_date = new CDbExpression('NOW()');
+                $close->winner_id = $close->winnind_id;                
                 if($close->save()){
                     Yii::log("Lottery close: Id=".$close->id.", name=".$close->name, "warning");
+                    //send email for opening
+                    $emailRes=EmailManager::sendExtractLotteryToWinner($close);
+                    Notifications::model()->sendExtractLotteryToWinnerNotify($close);
+                    if(!$emailRes){
+                        Yii::log("Err sending email: ".$emailRes, "error");
+                    } else {
+                        $extract->is_sent_extracted *= 2;
+                    }
+                    $emailRes=EmailManager::sendExtractLotteryToOwner($close);
+                    Notifications::model()->sendExtractLotteryToOwnerNotify($close);
+                    if(!$emailRes){
+                        Yii::log("Err sending email: ".$emailRes, "error");
+                    } else {
+                        $close->is_sent_extracted *= 3;
+                    }
+                    if($close->is_sent_extracted > 1){
+                        $close->save();
+                    }
                 } else {
                     Yii::log("Lottery not close: Id=".$close->id.", name=".$close->name, "error");
                     $errors['close'][$close->id]=array();
@@ -510,6 +578,25 @@ class Lotteries extends PActiveRecord
                     $close->is_sent_close = 1;
                 }
                 if($close->save()){
+                    Yii::log("Lottery close: Id=".$close->id.", name=".$close->name, "warning");
+                    //send email for opening
+                    $emailRes=EmailManager::sendExtractLotteryToWinner($close);
+                    Notifications::model()->sendExtractLotteryToWinnerNotify($close);
+                    if(!$emailRes){
+                        Yii::log("Err sending email: ".$emailRes, "error");
+                    } else {
+                        $extract->is_sent_extracted *= 2;
+                    }
+                    $emailRes=EmailManager::sendExtractLotteryToOwner($close);
+                    Notifications::model()->sendExtractLotteryToOwnerNotify($close);
+                    if(!$emailRes){
+                        Yii::log("Err sending email: ".$emailRes, "error");
+                    } else {
+                        $close->is_sent_extracted *= 3;
+                    }
+                    if($close->is_sent_extracted > 1){
+                        $close->save();
+                    }
                     Yii::log("Lottery close EMAIL: Id=".$close->id.", name=".$close->name, "warning");
                 } else {
                     Yii::log("Lottery not close EMAIL: Id=".$close->id.", name=".$close->name, "error");
@@ -766,79 +853,4 @@ class Lotteries extends PActiveRecord
             $favArr = CHtml::listData( $favLots, 'lottery_id','lottery_id');
             return $favArr;
         }
-        
-        /*public function checkToExtract(&$errors){
-            // check close to extracted
-            $extractCriteria = new CDbCriteria();
-            $extractCriteria->addCondition('t.status = '.Yii::app()->params['lotteryStatusConst']['closed']);
-            $extractCriteria->addCondition('t.lottery_close_date <= '.new CDbExpression("NOW() - INTERVAL 1 HOUR"));
-            $extractChange = Lotteries::model()->findAll($extractCriteria);
-            foreach($extractChange as $extract){
-                Yii::log("Extraction: lottery=".$extract->id, "warning");
-                $winner=null;
-                $winnerTicket=null;
-                $criteria=new CDbCriteria; 
-                $lotteryTickets = Yii::app()->db->createCommand()
-                ->select('serial_number')
-                ->from('tickets')
-                ->where('lottery_id=:lotid and status=1', array(':lotid'=>$extract->id))
-                ->queryColumn();
-                if($lotteryTickets){
-                    // extract winner
-                    if(count($lotteryTickets) == 1){
-                        $winner=$lotteryTickets[0];
-                    } else {
-                        $winner=Lotteries::model()->genRandomTicketSerial(); 
-                    }
-                    $checkWinner=true;
-                    while ($checkWinner){ 
-                        $existTicket = in_array($winner,$lotteryTickets);
-                        if($existTicket){
-                            $checkForOwner = (!empty($existTicket->user_id) && $existTicket->user->is_active);
-                            if($checkForOwner){
-                                //winner FOUND
-                                $checkWinner=false;
-                                $winnerTicket=$existTicket;
-                            } else {
-                                if(count($lotteryTickets) == 1){
-                                    break;
-                                }
-                                $winner=Lotteries::model()->genRandomTicketSerial();
-                            }
-                        } else {
-                            $winner=Lotteries::model()->genRandomTicketSerial();
-                        }
-                    }
-                    if($winnerTicket){
-                        $extract->status = Yii::app()->params['lotteryStatusConst']['extracted'];
-                        $extract->lottery_extract_date = new CDbExpression('NOW()');
-                        $extract->winner_id = $winnerTicket->user_id;
-                        $extract->winner_ticket_id = $winnerTicket->id;
-                        if($extract->save()){
-                            Yii::log("Lottery extract: Id=".$extract->id.", name=".$extract->name, "warning");
-                            //send email for opening
-                            $emailRes=EmailManager::sendExtractLotteryToWinner($extract);
-                            if(!$emailRes){
-                                Yii::log("Err sending email: ".$emailRes, "error");
-                            }
-                            $emailRes=EmailManager::sendExtractLotteryToOwner($extract);
-                            if(!$emailRes){
-                                Yii::log("Err sending email: ".$emailRes, "error");
-                            }
-                        } else {
-                            Yii::log("Lottery not extract: Id=".$extract->id.", name=".$extract->name, "error");
-                            $errors['extract'][$extract->id]=array();
-                            foreach ($extract->getErrors() as $err){
-                                foreach ($err as $e){
-                                    Yii::log("Error: ".$e, "error");
-                                    $errors['extract'][$extract->id][]=$e;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    Yii::log("No tickets: lottery=".$extract->id, "warning");
-                }
-            }
-        }*/
 }

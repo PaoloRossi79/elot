@@ -230,10 +230,18 @@ class SiteController extends Controller
                 if($user->ext_source == 0){
                     $socialUser = SocialUser::model()->find('t.user_id='.$user->id.' AND t.login_type='.Yii::app()->params['authExtSource'][$oAuth->provider]);
                     if($socialUser){
-                        if($socialUser->ext_user_id != $oAuth->identifier){ // diff ext user id: maybe new account
-                            $socialUser->ext_user_id = $oAuth->identifier;
-                            $socialUser->linked_on = new CDbExpression('NOW()');
-                            $socialUser->save();
+                        if($socialUser->user_id != Yii::app()->user->id){
+                            Yii::app()->user->logout();
+                            $identity=new UserIdentity($socialUser->user->username,$socialUser->user->password,Yii::app()->params['authExtSource']['site']);
+                            $identity->authenticate();
+                            $duration=3600*24; // 1 day
+                            Yii::app()->user->login($identity,$duration);
+                        } else {
+                            if($socialUser->ext_user_id != $oAuth->identifier){ // diff ext user id: maybe new account
+                                $socialUser->ext_user_id = $oAuth->identifier;
+                                $socialUser->linked_on = new CDbExpression('NOW()');
+                                $socialUser->save();
+                            }
                         }
                     } else {
                         $newSocialUser = new SocialUser();

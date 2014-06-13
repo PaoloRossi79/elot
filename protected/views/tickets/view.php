@@ -18,7 +18,6 @@
                     <div class="text-block">
                         <h4><?php echo Yii::t("wonlot","Congratulazioni "); ?><?php echo $model->lottery->winner->profile->first_name." ".$model->lottery->winner->profile->last_name; ?></h4>
                         <p><?php echo Yii::t("wonlot","Hai vinto questa lotteria: "); ?><?php echo $model->lottery->name; ?></p>
-                        <p><?php echo Yii::t("wonlot","Biglietto Vincitore: "); ?><?php echo $model->lottery->winnerTicket->serial_number; ?></p>
                         <div>
                             <div><?php echo Yii::t("wonlot","Per ricevere il premio mettiti in contatto con il venditore (scrivendogli da questa mail):"); ?></div>
                             <div><?php echo Yii::t("wonlot","Venditore: "); ?><b><?php echo $model->lottery->owner->username; ?></b> - Email: <?php echo $model->lottery->owner->email; ?></div>

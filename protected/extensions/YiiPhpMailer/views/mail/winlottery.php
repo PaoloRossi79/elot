@@ -1,10 +1,9 @@
 <h1>HAI VINTO!!!!</h1>
 
-<h2>Congratulazioni <?php echo $winner->user->profile->first_name." ".$winner->user->profile->last_name; ?></h2>
+<h2>Congratulazioni <?php echo $lottery->winner->profile->first_name." ".$lottery->winner->profile->last_name; ?></h2>
 
 <p>Hai vinto questa lotteria: <?php echo $lottery->name; ?></p>
 
-<p>Biglietto Vincitore: <?php echo $winner->serial_number; ?></p>
 
 <div>
     <div>Per ricevere il premio mettiti in contatto con il venditore (scrivendogli da questa mail):</div>

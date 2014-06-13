@@ -17,8 +17,6 @@ $form = $this->beginWidget(
         <dl class="dl-horizontal">
             <dt>Email:</dt>
             <dd><?php echo CHtml::encode($winner->email); ?></dd>
-            <dt><?php echo Yii::t('wonlot','Biglietto vincente'); ?>:</dt>
-            <dd><?php echo CHtml::encode($winnerTicket->serial_number); ?></dd>
         </dl>
         <?php echo Chtml::hiddenField('lot_id', $lottery->id); ?>
     <?php } elseif($type == "profile") { ?>

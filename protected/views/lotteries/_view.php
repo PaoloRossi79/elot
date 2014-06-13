@@ -168,7 +168,10 @@
             <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
                 <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
                     <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#buy-modal">
-                        <?php echo Yii::t('wonlot','Compra biglietto'); ?>
+                        <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
+                    </button>
+                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#gift-modal">
+                        <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
                     </button>
                 <?php } else { ?>
                     <p>Non puoi comprare...la lotteria non è aperta...</p>
@@ -189,5 +192,5 @@
 </div>
 <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
     <?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
-    <?php $this->renderPartial('_giftModal',array('isBuy'=>true)); ?>
+    <?php $this->renderPartial('_giftModal',array('data'=>$model, 'addData' => $addData)); ?>
 <?php } ?>

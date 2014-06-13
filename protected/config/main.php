@@ -35,6 +35,7 @@ return array(
                 'zii.widgets.jui.CJuiWidget',
                 'zii.widgets.jui.CJuiInputWidget',
                 'zii.widgets.jui.zii.widget.grid.CGridColumn',
+                'ext.PHPStats',
 	),
     
         'aliases' => array(

@@ -1,5 +1,5 @@
 <?php
-
+require_once Yii::getPathOfAlias('ext.PHPStats') .  DIRECTORY_SEPARATOR . 'PHPStats.phar';
 class LotteriesController extends Controller
 {
 	/**
@@ -9,10 +9,17 @@ class LotteriesController extends Controller
 	public $layout='//layouts/basecolumn';
         
         public $ticketTotals;
+        public $actualWeight;
         public $giftTicketTotals;
         
         public $lotErrors = array();
         
+        private $randValues = array(
+            'k' => 1,
+            'lambda'=>12
+        );
+
+
         /**
 	 * @return array action filters
 	 */
@@ -38,7 +45,7 @@ class LotteriesController extends Controller
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','userIndex','upload','buyTicket','setDefault',
-                                                 'deleteImg','gift','setFavorite','unsetFavorite'),
+                                                 'deleteImg','giftTicket','setFavorite','unsetFavorite'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -46,12 +53,12 @@ class LotteriesController extends Controller
                                 'expression' => array('LotteriesController','allowOnlyOwner'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','cronLottery'),
+				'actions'=>array('admin','cronLottery','random'),
                                 'expression' => array('LotteriesController','isAdmin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
-                            'deniedCallback' => array($this, 'redirectToHome'), 
+                                'deniedCallback' => array($this, 'redirectToHome'), 
 			),
 		);
 	}
@@ -70,6 +77,7 @@ class LotteriesController extends Controller
                 if(!Yii::app()->user->isGuest){
 //                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                     $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
+                    $this->actualWeight = Tickets::model()->getMyTotalForLottery($id);
                     $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($id);
                 }
 		$this->render('view',array(
@@ -111,6 +119,7 @@ class LotteriesController extends Controller
                     if(!Yii::app()->user->isGuest){
 //                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                         $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
+                        $this->actualWeight = Tickets::model()->getMyTotalForLottery($id);
                         $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($id);
                     }
                     $this->layout='//layouts/basecolumn';
@@ -153,6 +162,22 @@ class LotteriesController extends Controller
 		if(!isset($_GET['ajax'])){
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
                 }
+	}
+        
+	public function actionRandom()
+	{
+                $random = array();
+                
+                $beta = new \PHPStats\ProbabilityDistribution\Weibull($this->randValues['lambda'],$this->randValues['k']);
+                for($i=0;$i<1000;$i++){
+                    $t0 = ceil($beta->rvs());
+                    if($t0 > 100) $t0 = $t0%100;
+                    $random[floor($t0/10)] += 1;
+                }
+                $this->render('random',array(
+                    'random'=>$random,
+                    'randValues'=>$this->randValues,
+                ));
 	}
         
 	/**
@@ -444,126 +469,144 @@ class LotteriesController extends Controller
 	 * actionBuyTicket -> buy a ticket for lottery
          * actionSetDefault ->set default image to existing lottery
 	 */
-        public function actionGift(){
-            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-            $params=$_POST;
-            parse_str($params['user'], $params['user']);
-            if(empty($params['ticketId'])){
-                echo CJSON::encode(array('exit'=>0,'msg'=>"Numero del Ticket mancante"));
+        public function setGift($ticket,$formPost){
+            $res = false;
+            $msg = "";
+            $toUser = "";
+            if(empty($formPost['provider'])){
+                $msg = Yii::t('wonlot','Dati mancanti');
             } else {
-                if(!empty($params['provider']) && !empty($params['userId'])){
-                    $ticket = Tickets::model()->findByPk($params['ticketId']);
-                    // check for ownership
-                    if($ticket->user_id == Yii::app()->user->id){
-                        if($ticket->is_gift != 1){
-                            $ticket->is_gift = 1;
-                            $ticket->gift_from_id = Yii::app()->user->id;
-                            $ticket->gift_provider = trim($params['provider']);
-                            $ticket->gift_ext_user = $params['userId'];
-                            $ticket->gift_ext_username = $params['userName'];
-                            if($ticket->save()){
-                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
-                            } else {
-                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
-                            }
-                        } else {
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
-                        }
-                    } else {
-                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
-                    }
-                } elseif(!empty($params['user']['giftEmail'])) {
-                    $ticket = Tickets::model()->findByPk($params['ticketId']);
-                    // check for ownership
-                    if($ticket->user_id == Yii::app()->user->id){
-                        if($ticket->is_gift != 1){
+                switch ($formPost['provider']) {
+                    case "Email":
+                        $emailValidator = new CEmailValidator();
+                        $emailValid = $emailValidator->validateValue($formPost['giftToEmail']);
+                        if(!empty($formPost['giftToEmail']) && $emailValid) {
                             $checkExistUserCrit = new CDbCriteria();
-                            $checkExistUserCrit->addCondition('t.email = "'.$params['user']['giftEmail'].'"');
+                            $checkExistUserCrit->addCondition('t.email = "'.$formPost['giftToEmail'].'"');
                             $checkExistUserCrit->addCondition('t.is_active = 1');
                             $user = Users::model()->find($checkExistUserCrit);
                             if($user->email == Yii::app()->user->email){
-                                echo CJSON::encode(array('exit'=>0,'msg'=>"Non puoi regalare a te stesso!"));
-                                return;
-                            }
-                            if($user){
-                                $ticket->user_id = $user->id;
-                                $sendNotify = true;
+                                $msg = Yii::t('wonlot','Non puoi regalare a te stesso');
                             } else {
-                                $ticket->gift_provider = 'email';
-                                $ticket->gift_ext_user = $params['user']['giftEmail'];
-                                $ticket->gift_ext_username = $params['user']['giftEmail'];
-                            }
-                            $ticket->is_gift = 1;
-                            $ticket->is_sent = 0;
-                            $ticket->gift_from_id = Yii::app()->user->id;
-                            if($ticket->save()){
-                                if($sendNotify){
-                                    Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$params['user']['gift-userid']);
+                                if($user){
+                                    $ticket->user_id = $user->id;
+                                    $sendNotify = true;
+                                    $toUser = $user->username;
+                                } else {
+                                    $ticket->gift_provider = 'email';
+                                    $ticket->gift_ext_user = $formPost['giftToEmail'];
+                                    $ticket->gift_ext_username = $formPost['giftToEmail'];
+                                    $toUser = $ticket->gift_ext_username;
                                 }
-                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
-                            } else {
-                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                                $ticket->is_gift = 1;
+                                $ticket->is_sent = 0;
+                                $ticket->gift_from_id = Yii::app()->user->id;
+                                if($ticket->save()){
+                                    if($sendNotify){
+                                        Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$ticket->user_id);
+                                    }
+                                    $res = true;
+                                } else {
+                                    $msg = Yii::t('wonlot','Errore nel salvataggio del ticket');
+                                }
                             }
                         } else {
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                            $msg = Yii::t('wonlot','Email mancante');
                         }
-                    } else {
-                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
-                    }
-                } elseif(!empty($params['user']['gift-userid'])) {
-                    $ticket = Tickets::model()->findByPk($params['ticketId']);
-                    // check for ownership
-                    if($ticket->user_id == Yii::app()->user->id){
-                        if($ticket->is_gift != 1){
-                            $ticket->user_id = $params['user']['gift-userid'];
+                        break;
+                    case "Facebook":
+                    case "Google":
+                        if(!empty($formPost['giftToUserId'])) {
+                            $checkExistUserCrit = new CDbCriteria();
+                            $checkExistUserCrit->addCondition('t.login_type = '.Yii::app()->params['authExtSource'][$formPost['provider']]);
+                            $checkExistUserCrit->addCondition('t.ext_user_id = '.$formPost['giftToUserId']);
+                            $scuser = SocialUser::model()->find($checkExistUserCrit);
+                            if($scuser->user_id == Yii::app()->user->id){
+                                $msg = Yii::t('wonlot','Non puoi regalare a te stesso');
+                            } else {
+                                $ticket->is_gift = 1;
+                                if($scuser){
+                                    $ticket->user_id = $user->id;
+                                    $sendNotify = true;
+                                    $toUser = $user->username;
+                                } else {
+                                    $ticket->gift_from_id = Yii::app()->user->id;
+                                    $ticket->gift_provider = trim($formPost['provider']);
+                                    $ticket->gift_ext_user = $formPost['giftToUserId'];
+                                    $ticket->gift_ext_username = $formPost['giftToUsername'];
+                                    $toUser = $ticket->gift_ext_username;
+                                }
+                                if($ticket->save()){
+                                    if($sendNotify){
+                                        Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$ticket->user_id);
+                                    }
+                                    $res = true;
+                                } else {
+                                    $msg = Yii::t('wonlot','Errore nel salvataggio del ticket');
+                                }
+                            }
+                        } else {
+                            $msg = Yii::t('wonlot','Dati mancanti');
+                        }
+                        break;
+                    case "Chi ti segue":
+                    case "Chi segui":
+                        if(!empty($formPost['giftToUserId'])) {
+                            $ticket->user_id = $formPost['giftToUserId'];
                             $ticket->is_gift = 1;
                             $ticket->is_sent = 0;
                             $ticket->gift_from_id = Yii::app()->user->id;
                             if($ticket->save()){
-                                Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$params['user']['gift-userid']);
-                                echo CJSON::encode(array('exit'=>1,'ticketId'=>$ticket->id));
+                                $toUser = $ticket->user->username;
+                                Notifications::model()->sendGiftTicketNotify($ticket->id,Yii::app()->user->id,$ticket->user_id);
+                                $res = true;
                             } else {
-                                echo CJSON::encode(array('exit'=>0,'msg'=>"Errore modifica del ticket"));
+                                $msg = Yii::t('wonlot','Errore nel salvataggio del ticket');
                             }
                         } else {
-                            echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto è già regalato!"));
+                            $msg = Yii::t('wonlot','Dati mancanti');
                         }
-                    } else {
-                        echo CJSON::encode(array('exit'=>0,'msg'=>"Il biglietto non è tuo!"));
-                    }
-                } else {
-                    echo CJSON::encode(array('exit'=>0,'msg'=>"Nessun utente selezionato!"));
+                        break;
+                    default:
+                        break;
                 }
             }
+            return array('res'=>$res,'msg'=>$msg,'toUser'=>$toUser);
+        }
+        public function actionGiftTicket(){
+            $this->buyTicket($_POST['GiftForm'], true);         
         }
         
-        public function actionBuyTicket()
+        public function actionBuyTicket(){
+            $this->buyTicket($_POST['BuyForm']);
+        }
+        
+        public function buyTicket($formPost, $isGift = false)
         {
             Yii::app()->clientScript->scriptMap['jquery.js'] = false;
             Yii::log('BuyStart','error');
             $data = array();
-            $data["type"] = "alert alert-error";
-            $data["result"] = "ERROR - ";
+            $data["result"] = "0";
             $rollback=false;
-            $lotId = isset($_POST['BuyForm']['lotId']) ? $_POST['BuyForm']['lotId'] : null;
+            $skipEnd = false;
+            $lotId = isset($formPost['lotId']) ? $formPost['lotId'] : null;
             if($lotId){
                 $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
             } else {
-                $data["msg"] = "Lottery id is missing";
+                $data["msg"] = Yii::t('wonlot','ID lotteria mancante');
             }
             if(!$lot){
-                $data["msg"] = "Lottery in wrong status";
+                $data["msg"] = Yii::t('wonlot','Stato della lotteria errato');
             } else {
-                
                 $user=Users::model()->findByPk(Yii::app()->user->id);
                 $newPrice = $lot->ticket_value;
                 $promotion = null;
                 // calculate value with discount
-                if($_POST['BuyForm']['offerId'] > 0){
-                    $offer = UserSpecialOffers::model()->findByPk($_POST['BuyForm']['offerId']);
+                if($formPost['offerId'] > 0){
+                    $offer = UserSpecialOffers::model()->findByPk($formPost['offerId']);
                     if($offer->times_remaining > 0 && $offer->offer_on == UserSpecialOffers::onTicketBuy){
                         $newPrice = $lot->ticket_value - ($lot->ticket_value * (int)$offer->offer_value / 100);
-                        $promotion = $_POST['BuyForm']['offerId'];
+                        $promotion = $formPost['offerId'];
                     } 
                 }
                 
@@ -576,6 +619,7 @@ class LotteriesController extends Controller
                     $ticket->lottery_id=$lot->id; 
                     
                     $ticket->serial_number=Lotteries::model()->genRandomTicketSerial(); 
+                    $ticket->random_weight=$this->genRandomWeight(); 
                     $checkSerial=true;
                     
                     while ($checkSerial){
@@ -589,67 +633,86 @@ class LotteriesController extends Controller
                             $checkSerial=false;
                         }
                     }
-                    
+                    $dbTransaction=$ticket->dbConnection->beginTransaction();
                     // to add promotions mng
                     $ticket->price=$newPrice; // change with payed price (value - promotion)
                     $ticket->value=$lot->ticket_value; 
                     $ticket->promotion_id=$promotion; 
-                    $lotStatus=array_search($lot->status, Yii::app()->params['lotteryStatusConst']);
-                    if(in_array($lotStatus,array('upcoming','open'))){
-                        $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
-                    }
-                    $dbTransaction=$ticket->dbConnection->beginTransaction();
-                    if($ticket->save()){
-                        
-                        // fund down on user
-                        $user->available_balance_amount-=$ticket->price;
-                        if($promotion){
-                            $offer->times_remaining -= 1; 
-                            if(!$offer->save()){
-                               $dbTransaction->rollback(); 
-                               $data["msg"] = "saving user special offer";
-                               $rollback=true;
-                            }
+                    // give ticket as GIFT
+                    if($isGift){
+                        $giftRes = $this->setGift($ticket,$formPost);
+                        $data["social"] = $formPost;
+                        if(!$giftRes['res']){
+                            $dbTransaction->rollback(); 
+                            $data["msg"] = $giftRes['msg'];
+                            $skipEnd = true;
                         }
-                        if($user->save() && !$rollback){
-                            
-                            //transaction tracking
-                            if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price,$promotion)){
-                                
-                                $lot->ticket_sold+=1;
-                                $lot->ticket_sold_value+=$ticket->price;
-                                $lot->save();
-                                $dbTransaction->commit();
-                                $checkRes=$lot->checkNewStatus();
-                                $data["type"] = "alert alert-success";
-                                $data["result"] = "OK!";
-                                $data["msg"] = "Il biglietto n° ".$ticket->serial_number." è tuo!";
+                    }
+                    if(!$skipEnd){
+                        $lotStatus=array_search($lot->status, Yii::app()->params['lotteryStatusConst']);
+                        if(in_array($lotStatus,array('upcoming','open'))){
+                            $ticket->status=Yii::app()->params['ticketStatusConst']['open'];
+                        }
+                        if($ticket->save()){
+
+                            // fund down on user
+                            $user->available_balance_amount-=$ticket->price;
+                            if($promotion){
+                                $offer->times_remaining -= 1; 
+                                if(!$offer->save()){
+                                   $dbTransaction->rollback(); 
+                                   $data["msg"] = Yii::t('wonlot','Errore nel salvataggio delle offerte speciali');
+                                   $rollback=true;
+                                }
+                            }
+                            if($user->save() && !$rollback){
+
+                                //transaction tracking
+                                if(UserTransactions::model()->addBuyTicketTrans($ticket->id,$ticket->price,$promotion)){
+                                    $lot->ticket_sold+=1;
+                                    $lot->ticket_sold_value+=$ticket->price;
+                                    $lot->save();
+                                    $dbTransaction->commit();
+                                    $winRes = $lot->updateWinning();
+                                    $checkRes=$lot->checkNewStatus();
+                                    $data["result"] = "1";
+                                    if($isGift){
+                                        $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è stato regalato a ").$giftRes['toUser'];
+                                    } else {
+                                        $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è tuo e vale ").$ticket->random_weight;
+                                    }
+                                    $data["winRes"] = $winRes;
+                                } else {
+                                    $dbTransaction->rollback();
+                                    $data["msg"] = Yii::t('wonlot','Errore nel salvataggio della transazione');
+                                }
+
                             } else {
                                 $dbTransaction->rollback();
-                                $data["msg"] = "saving user transaction";
+                                $data["msg"] = Yii::t('wonlot','Errore nel salvataggio dell\'addebito');
                             }
-                            
                         } else {
-                            $dbTransaction->rollback();
-                            $data["msg"] = "witdrawing to user";
+                            $data["msg"] = Yii::t('wonlot','Errore nella creazione del ticket');
                         }
-                    } else {
-                        $data["msg"] = "creating ticket";
                     }
                 }
             }
             
-            $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($lotId);
+            $this->ticketTotals = Tickets::model()->getMyTicketsByLottery($lotId);
+            $this->actualWeight = Tickets::model()->getMyTotalForLottery($lotId);
             $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($lotId);
-            $data["id"] = $lot->id;
             $data["ticketNumber"] = $ticket->id;
-            $data["lottery"] = $lot;
             $data["canBuyAgain"] = ($checkRes && $checkRes == Yii::app()->params['lotteryStatusConst']['closed']) ? 0 : 1;
             $data["version"] = 'complete';
-            
-//            $data=array();
+            $data["data"] = $lot;
+            $data["ticket"] = $ticket;
+            if($isGift){
+                $this->renderPartial('_giftAjax', $data, false, true);
+            } else {
+                $this->renderPartial('_buyAjax', $data, false, true);
+            }
             Yii::log('BuyEND','error');
-            $this->renderPartial('_buyAjax', $data, false, true);
+            
         }
 
         public function actionSetDefault()
@@ -690,7 +753,11 @@ class LotteriesController extends Controller
                     $image_versions = Yii::app()->params['image_versions'];
                     foreach($image_versions as $version => $options) {
                         $thumbPath = "images/lotteries/".$_GET['lotId']."/".$version."/".$_GET['img'];
-                        $success = unlink($filePath);
+                        try{
+                            $success = unlink($thumbPath);
+                        } catch(Exception $e){
+                            $t=$e->getMessage();
+                        }
                     }
 //                    $data["type"] = "alert alert-success";
                     $data["result"] = "1";
@@ -864,11 +931,11 @@ class LotteriesController extends Controller
                         if($model->cloneId){
                             $this->copyCloneFolder('lottery',$model->cloneId,$model->id);
                         }
-                        if($isOld){
-                            $this->redirect(array('update','id'=>$model->id));
-                        } else {
+//                        if($isOld){
+//                            $this->redirect(array('update','id'=>$model->id));
+//                        } else {
                             $this->redirect(array('view','id'=>$model->id));
-                        }
+//                        }
                     }
             } else {
                 $this->cleanTmpFolder();
@@ -893,5 +960,13 @@ class LotteriesController extends Controller
                 $res .= '<button id="'.$data->id.'" class="btn btn-success btn-xs set-gift"><i class="glyphicon glyphicon-search">Regala</i></button>';
             }
             return $res;    
+       }
+       
+       private function genRandomWeight()
+       {
+		$weibull = new \PHPStats\ProbabilityDistribution\Weibull($this->randValues['lambda'],$this->randValues['k']);
+                $rnd = ceil($weibull->rvs());
+                if($rnd > 100) $rnd = $rnd%100;
+                return $rnd;
        }
 }

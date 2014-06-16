@@ -826,7 +826,7 @@ class LotteriesController extends Controller
             $filter=array();
             $result = array();
             $result['viewData']=array();
-            if(!empty($_POST['SearchForm']['Category'])){
+            if(!empty($_POST['SearchForm']['Category']) && empty($_POST['SearchForm']['Categories'])){
                 $filter["prizeCategory"]=$_POST['SearchForm']['Category'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Category'];
             }

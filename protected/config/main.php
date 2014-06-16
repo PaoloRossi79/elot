@@ -68,6 +68,10 @@ return array(
                             'company'=>3,
                         ),
 		),
+                'curl' => array(
+                    'class' => 'ext.curl.Curl',
+                    'options' => array(/* additional curl options */),
+                ),
                 /*'request' => array(
                     'baseUrl' => $localBaseUrl,
                 ),*/
@@ -157,7 +161,8 @@ return array(
             'image_versions' => $image_versions,
             'speditionType' => $speditionType,
             'speditionTypeId' => $speditionTypeId,
-            'specialOffersType' => $specialOffers,
+            'specialOffersType' => $specialOffersType,
+            'specialOffersCode' => $specialOffersCode,
             'companyTypes' => $companyTypesId,
             'prizeConditions' => $prizeConditions,
             'prizeConditionsId' => $prizeConditionsId,

@@ -47,7 +47,7 @@ $prizeConditionsId = array(
     2 => 'Usato',
 );
 
-$specialOffers = array(
+$specialOffersType = array(
     0 =>
     array(
         'name'=>Yii::t('wonlot','Sconto su acquisto Ticket'),
@@ -58,6 +58,11 @@ $specialOffers = array(
         'name'=>Yii::t('wonlot','Sconto su acquisto credito'),
         'desc'=>Yii::t('wonlot','Sconto su acquisto credito')
     ),
+);
+
+$specialOffersCode = array(
+    'ticket-buy' => 0,
+    'credit-buy' => 1,
 );
 
 $speditionType = array(

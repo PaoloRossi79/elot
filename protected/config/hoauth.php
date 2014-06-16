@@ -35,7 +35,7 @@ return
 
 			"Google" => array ( 
 				"enabled" => true,
-				"keys"    => array ( "id" => "281789908562.apps.googleusercontent.com", "secret" => "1ItCVeo8OWmxN0W0ThAeg0G4" )
+				"keys"    => array ( "id" => "281789908562.apps.googleusercontent.com", "secret" => "1ItCVeo8OWmxN0W0ThAeg0G4" , "api-key" => "AIzaSyB_m5qwUOFLDYlp_lnQFniqQaHEqyw-QOo")
 			),
 
 			"Facebook" => array ( 

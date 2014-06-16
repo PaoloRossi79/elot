@@ -306,11 +306,8 @@ class LotteriesController extends Controller
                 $_POST['SearchForm'] = null;
                 unset(Yii::app()->session['filters']);
             } 
-            if($_POST['Category']){
-                $cat = PrizeCategories::model()->findByAttributes(array('category_id'=>$_POST['Category']));
-                if($cat){
-                    $_POST['SearchForm']['Categories']=$cat->id;
-                }
+            if($_POST['SearchForm']['Category']){
+                $_POST['SearchForm']['Categories']=$_POST['SearchForm']['Category'];
             }
             if($_POST['SearchForm']){
                 Yii::app()->session['filters'] = $_POST['SearchForm'];

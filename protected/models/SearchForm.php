@@ -77,7 +77,7 @@ class SearchForm extends CFormModel
 	public function setSearchAttributes($data)
 	{
 		$this->searchText=$data['searchText'];
-                if($data['Category']){
+                if($data['Category'] && empty($data['Categories'])){
                     $this->Categories=$data['Category'];
                     $this->Category=$data['Category'];
                 } else {

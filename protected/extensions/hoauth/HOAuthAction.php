@@ -257,7 +257,8 @@ class HOAuthAction extends CAction
 					// user was successfully logged in
 					// firing callback
 					if(method_exists($this->controller, 'hoauthAfterLogin'))
-						$this->controller->hoauthAfterLogin($user, $newUser, $oAuth);
+//						$this->controller->hoauthAfterLogin($user, $newUser, $oAuth);
+						$this->controller->hoauthAfterLogin($user, false, $oAuth);
 				}
 
 				if($accessCode === 2)

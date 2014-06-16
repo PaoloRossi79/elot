@@ -76,11 +76,16 @@
             </div>
 
             <div class="form-group">
-                <div class="col-sm-6 col-sm-offset-2">
-                    <?php echo $form->errorSummary($profile); ?>
-                    <?php $genders = array('M' => 'uomo', 'F' => 'donna');
-                    echo $form->radioButtonList($profile, "gender", $genders,array('class'=>'form-control')); 
-                    ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($profile,'gender',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <div class="checkbox">
+                        <?php echo $form->errorSummary($profile); ?>
+                        <?php $genders = array('M' => 'uomo', 'F' => 'donna');
+                        echo $form->radioButtonList($profile, "gender", $genders,array('class'=>'')); 
+                        ?>
+                    </div>
                 </div>
             </div>
             
@@ -89,7 +94,7 @@
                     <?php echo $form->labelEx($profile,'description',array('class'=>'control-label'));?>
                 </div>
                 <div class="col-sm-6">
-                    <?php echo $form->textArea($profile, 'description', array('class' => '','rows'=>10)); ?>
+                    <?php echo $form->textArea($profile, 'description', array('class' => 'form-control','rows'=>10)); ?>
                 </div>
             </div>
             
@@ -98,7 +103,7 @@
                     <?php echo $form->labelEx($profile,'cod_fisc',array('class'=>'control-label'));?>
                 </div>
                 <div class="col-sm-6">
-                    <?php echo $form->textField($profile, 'cod_fisc', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                    <?php echo $form->textField($profile, 'cod_fisc', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
                 </div>
             </div>
             
@@ -106,63 +111,87 @@
         
         <div id="company-profile" <?php echo ($model->user_type_id == 3) ? "" : 'style="display: none"'; ?>>
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'legal_name',array('class'=>'control-label'));?>
-                <?php echo $form->textField($companyProfile, 'legal_name', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'legal_name',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textField($companyProfile, 'legal_name', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
+                </div>
             </div>
-
             <div class="form-group">
-                <?php echo $form->errorSummary($companyProfile); ?>
-                <?php 
-                echo $form->radioButtonList($companyProfile, "company_type", Yii::app()->params['companyTypes']); 
-                ?>
+                <div class="col-sm-2">
+                    <?php echo $form->errorSummary($companyProfile); ?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->radioButtonList($companyProfile, "company_type", Yii::app()->params['companyTypes']); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php 
-                    echo $form->labelEx($companyProfile,'category');
-                    echo $form->dropDownList($companyProfile,'category', PrizeCategories::model()->getPrizeCatCheckbox());
-                ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'category',array('class' => 'control-label')); ?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->dropDownList($companyProfile,'category', PrizeCategories::model()->getPrizeCatCheckbox(),array('class' => 'form-control')); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'description',array('class'=>'control-label'));?>
-                <?php echo $form->textArea($companyProfile, 'description', array('class' => '','rows'=>10)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'description',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textArea($companyProfile, 'description', array('class' => 'form-control','rows'=>10)); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'cod_fisc',array('class'=>'control-label'));?>
-                <?php echo $form->textField($companyProfile, 'cod_fisc', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'cod_fisc',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textField($companyProfile, 'cod_fisc', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'vat',array('class'=>'control-label'));?>
-                <?php echo $form->textField($companyProfile, 'vat', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'vat',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textField($companyProfile, 'vat', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'ref_name',array('class'=>'control-label'));?>
-                <?php echo $form->textField($companyProfile, 'ref_name', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'ref_name',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textField($companyProfile, 'ref_name', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
+                </div>
             </div>
-            
             <div class="form-group">
-                <?php echo $form->labelEx($companyProfile,'ref_email',array('class'=>'control-label'));?>
-                <?php echo $form->textField($companyProfile, 'ref_email', array('class' => '','size'=>45,'maxlength'=>45)); ?>
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($companyProfile,'ref_email',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo $form->textField($companyProfile, 'ref_email', array('class' => 'form-control','size'=>45,'maxlength'=>45)); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">
+                    <?php echo $form->labelEx($this->locationForm,'address',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <?php 
+                    /* http://www.yiiframework.com/extension/egmap/ */
+                    $this->widget('gmap.EGMapAutocomplete', array(
+                        'name' => 'lot_location',
+                        'model' => $this->locationForm,
+                        'attribute' => 'address',
+                        'htmlOptions' => array('class'=>'form-control'),
+                    ));
+                    ?>
+                </div>
             </div>
         </div>
 
-	<div class="form-group">
-            <?php echo $form->labelEx($this->locationForm,'address',array('class'=>'control-label'));?>
-            <div class="col-sm-6">
-            <?php 
-                /* http://www.yiiframework.com/extension/egmap/ */
-                $this->widget('gmap.EGMapAutocomplete', array(
-                    'name' => 'lot_location',
-                    'model' => $this->locationForm,
-                    'attribute' => 'address',
-                ));
-                ?>
-            </div>
-        </div>
 	
         <div class="form-group">
             <div id="user_img">
@@ -174,7 +203,7 @@
                             //our XUploadForm
                             'model' => $this->upForm,
                             //We set this for the widget to be able to target our own form
-                            'htmlOptions' => array('id'=>'userProfile-form'),
+                            'htmlOptions' => array('id'=>'userProfile-form','class'=>'btn btn-primary'),
                             'attribute' => 'file',
                             'multiple' => false,
                             'showForm' => false,
@@ -186,7 +215,9 @@
         </div>
         
 	<div class="form-group buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva'); ?>
+            <div class="col-sm-2">
+                <?php echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva',array('class'=>'btn btn-primary')); ?>
+            </div>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -62,7 +62,7 @@ class Lotteries extends PActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 //			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
-			array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, location_id', 'safe',),
+			array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, location_id', 'safe',),
 		);
 	}
 
@@ -530,26 +530,28 @@ class Lotteries extends PActiveRecord
                 }
                 $close->status = Yii::app()->params['lotteryStatusConst']['closed'];
                 $close->lottery_close_date = new CDbExpression('NOW()');
-                $close->winner_id = $close->winnind_id;                
+                $close->winner_id = $close->winning_id;                
                 if($close->save()){
-                    Yii::log("Lottery close: Id=".$close->id.", name=".$close->name, "warning");
+                    $closeLottery = $this->findByPk($close->id);
+                    Yii::log("Lottery close: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                     //send email for opening
-                    $emailRes=EmailManager::sendExtractLotteryToWinner($close);
-                    Notifications::model()->sendExtractLotteryToWinnerNotify($close);
+                    $emailRes=EmailManager::sendExtractLotteryToWinner($closeLottery);
+                    Notifications::model()->sendExtractLotteryToWinnerNotify($closeLottery);
+                    $closeLottery->is_sent_extracted = 1;
                     if(!$emailRes){
                         Yii::log("Err sending email: ".$emailRes, "error");
                     } else {
-                        $extract->is_sent_extracted *= 2;
+                        $closeLottery->is_sent_extracted *= 2;
                     }
-                    $emailRes=EmailManager::sendExtractLotteryToOwner($close);
-                    Notifications::model()->sendExtractLotteryToOwnerNotify($close);
+                    $emailRes=EmailManager::sendExtractLotteryToOwner($closeLottery);
+                    Notifications::model()->sendExtractLotteryToOwnerNotify($closeLottery);
                     if(!$emailRes){
                         Yii::log("Err sending email: ".$emailRes, "error");
                     } else {
-                        $close->is_sent_extracted *= 3;
+                        $closeLottery->is_sent_extracted *= 3;
                     }
-                    if($close->is_sent_extracted > 1){
-                        $close->save();
+                    if($closeLottery->is_sent_extracted > 1){
+                        $closeLottery->save();
                     }
                 } else {
                     Yii::log("Lottery not close: Id=".$close->id.", name=".$close->name, "error");
@@ -578,26 +580,28 @@ class Lotteries extends PActiveRecord
                     $close->is_sent_close = 1;
                 }
                 if($close->save()){
-                    Yii::log("Lottery close: Id=".$close->id.", name=".$close->name, "warning");
+                    $closeLottery = $this->findByPk($close->id);
+                    Yii::log("Lottery close: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                     //send email for opening
-                    $emailRes=EmailManager::sendExtractLotteryToWinner($close);
-                    Notifications::model()->sendExtractLotteryToWinnerNotify($close);
+                    $emailRes=EmailManager::sendExtractLotteryToWinner($closeLottery);
+                    Notifications::model()->sendExtractLotteryToWinnerNotify($closeLottery);
+                    $closeLottery->is_sent_extracted = 1;
                     if(!$emailRes){
                         Yii::log("Err sending email: ".$emailRes, "error");
                     } else {
-                        $extract->is_sent_extracted *= 2;
+                        $closeLottery->is_sent_extracted *= 2;
                     }
-                    $emailRes=EmailManager::sendExtractLotteryToOwner($close);
-                    Notifications::model()->sendExtractLotteryToOwnerNotify($close);
+                    $emailRes=EmailManager::sendExtractLotteryToOwner($closeLottery);
+                    Notifications::model()->sendExtractLotteryToOwnerNotify($closeLottery);
                     if(!$emailRes){
                         Yii::log("Err sending email: ".$emailRes, "error");
                     } else {
-                        $close->is_sent_extracted *= 3;
+                        $closeLottery->is_sent_extracted *= 3;
                     }
-                    if($close->is_sent_extracted > 1){
-                        $close->save();
+                    if($closeLottery->is_sent_extracted > 1){
+                        $closeLottery->save();
                     }
-                    Yii::log("Lottery close EMAIL: Id=".$close->id.", name=".$close->name, "warning");
+                    Yii::log("Lottery close EMAIL: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                 } else {
                     Yii::log("Lottery not close EMAIL: Id=".$close->id.", name=".$close->name, "error");
                     $errors['close'][$close->id]=array();

@@ -2,9 +2,9 @@
 
 <p><?php echo $lottery->name; ?></p>
 
-<p>Vincitore: <?php echo $winner->serial_number; ?></p>
+<p>Vincitore: <?php echo $lottery->winner->username; ?></p>
 
-<p>Vincitore UserID: <?php echo $winner->user_id; ?></p>
+<p>Vincitore UserID: <?php echo $lottery->winner->id; ?></p>
 
 <div>
     <div>Verrai contattato dal vincitore (ti scriverà da questa mail):</div>

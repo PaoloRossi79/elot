@@ -45,7 +45,7 @@ class LotteriesController extends Controller
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','userIndex','upload','buyTicket','setDefault',
-                                                 'deleteImg','giftTicket','setFavorite','unsetFavorite'),
+                                                 'deleteImg','giftTicket','setFavorite','unsetFavorite','getPartialView'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -83,6 +83,18 @@ class LotteriesController extends Controller
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
+	}
+
+	public function actionGetPartialView()
+	{
+                $view = "_".$_POST['view']."Ajax";
+                $id = $_POST['lotId'];
+                if(!Yii::app()->user->isGuest){
+                    $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
+                    $this->actualWeight = Tickets::model()->getMyTotalForLottery($id);
+                    $this->giftTicketTotals=Tickets::model()->getMyGiftTicketsByLottery($id);
+                }
+		$this->renderPartial($view,array('data'=>$this->loadModel($id)));
 	}
 
 	/**
@@ -294,8 +306,8 @@ class LotteriesController extends Controller
                 $_POST['SearchForm'] = null;
                 unset(Yii::app()->session['filters']);
             } 
-            if($_GET['cat']){
-                $cat = PrizeCategories::model()->findByAttributes(array('category_name'=>$_GET['cat']));
+            if($_POST['Category']){
+                $cat = PrizeCategories::model()->findByAttributes(array('category_id'=>$_POST['Category']));
                 if($cat){
                     $_POST['SearchForm']['Categories']=$cat->id;
                 }
@@ -421,20 +433,15 @@ class LotteriesController extends Controller
                 $errors = array();
                 $errors['open'] = Lotteries::model()->checkToOpen($errors);
                 $errors['close'] = Lotteries::model()->checkToClose($errors);
-                $errors['extract'] = Lotteries::model()->checkToExtract($errors);
+//                $errors['extract'] = Lotteries::model()->checkToExtract($errors);
                 if(count($errors['open'])+
                     count($errors['close'])+
                     count($errors['extract']) > 0){
                     $emailRes=EmailManager::sendCronAdminEmail($errors);
                     $errors['count'] = count($errors['open'])+count($errors['close'])+count($errors['extract']);
                 }
-		$model=new Lotteries('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Lotteries']))
-			$model->attributes=$_GET['Lotteries'];
-
-		$this->render('admin',array(
-			'model'=>$model,
+		
+		$this->render('/site/admin',array(
 			'errors'=>$errors,
 		));
 	}
@@ -526,9 +533,9 @@ class LotteriesController extends Controller
                             } else {
                                 $ticket->is_gift = 1;
                                 if($scuser){
-                                    $ticket->user_id = $user->id;
+                                    $ticket->user_id = $scuser->id;
                                     $sendNotify = true;
-                                    $toUser = $user->username;
+                                    $toUser = $scuser->user->username;
                                 } else {
                                     $ticket->gift_from_id = Yii::app()->user->id;
                                     $ticket->gift_provider = trim($formPost['provider']);
@@ -706,6 +713,7 @@ class LotteriesController extends Controller
             $data["version"] = 'complete';
             $data["data"] = $lot;
             $data["ticket"] = $ticket;
+            $data["offerId"] = $formPost['offerId'];
             if($isGift){
                 $this->renderPartial('_giftAjax', $data, false, true);
             } else {
@@ -786,9 +794,21 @@ class LotteriesController extends Controller
                 return Lotteries::errorStatus;
             }
             //check for credit  TODO: add check for discount (adapt check balance with use of discounts)
-            /*if($userCredit < $lot->ticket_value){
-                return Lotteries::errorCredit;
-            }*/
+            if($userCredit < $lot->ticket_value){
+                $checkCreditOk = false;
+                foreach($user->offers as $off){
+                    if($off->offer_on == Yii::app()->params['specialOffersCode']['ticket-buy']){
+                        $newPrice = $lot->ticket_value - ($lot->ticket_value * (int)$off->offer_value / 100);
+                        if($newPrice <= $userCredit){
+                            $checkCreditOk = true;
+                            break;
+                        }
+                    }
+                }
+                if(!$checkCreditOk){
+                    return Lotteries::errorCredit;
+                }
+            }
             return true;
         }
         
@@ -817,6 +837,9 @@ class LotteriesController extends Controller
                 $filter["prizeCategory"]=$_POST['SearchForm']['Categories'];
                 $result['viewData']['showCat']=$_POST['SearchForm']['Categories'];
             }
+            if(empty($_POST['SearchForm']['LotStatus']) && !empty($_POST['SearchForm']['LotStartStatus'])){
+                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
+            }
             if(!empty($_POST['SearchForm']['LotStatus'])){
                 $statusOptions = $_POST['SearchForm']['LotStatus'];
                 $first = true;
@@ -839,10 +862,6 @@ class LotteriesController extends Controller
                        $first=false;
                     }
                 }
-            }
-            if(empty($_POST['SearchForm']['LotStatus']) && !empty($_POST['SearchForm']['LotStartStatus'])){
-                $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
-                $filter['status']=array($_POST['SearchForm']['LotStartStatus']);
             }
             if(!empty($_POST['SearchForm']['searchStartDate'])){
                 $filter["minDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchStartDate']);
@@ -916,7 +935,7 @@ class LotteriesController extends Controller
                     if($_POST['Lotteries']['prize_price']){
                         $model->max_ticket = ceil($_POST['Lotteries']['prize_price'] / $model->ticket_value);
                     }
-                    if($_POST['Locations']){
+                    if($_POST['Locations'] && !empty($_POST['Locations']['addressLat']) && !empty($_POST['Locations']['addressLng'])){
                         //check if Location exist
                         $model->location_id = $this->saveLocation($_POST['Locations']);
                     }

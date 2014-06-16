@@ -506,10 +506,16 @@ button.close {
     margin: 5px;
     border: 1px solid black;
     background-color: white;
+    padding: 5px;
+}
+
+.lot-seller-war {
+    vertical-align: central;
 }
 
 .identity-text {
     border-radius: 5px;
+    height: 40px;
 }
 
 .lot-box-hover {
@@ -643,12 +649,19 @@ button.close {
     border: 1px dotted black;
     border-radius: 4px;
     height: 211px;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
 }
 
 .prize-desc-over-box {
-    height: 220px;
+    height: 58%;
+}
+
+.under-border-row {
+    border-bottom: 1px solid black;
+    margin-bottom: 3px;
 }
 
 .lot-creator-over {
@@ -817,9 +830,7 @@ button.close {
 }
 
 #profile-tabs {
-   width: 100%;
-   clear: both;
-   margin-bottom: 30px;
+   
 }
 
 .profile-tab-item {

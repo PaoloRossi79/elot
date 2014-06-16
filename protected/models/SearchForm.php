@@ -15,7 +15,7 @@ class SearchForm extends CFormModel
         
         // FOR LOTTERIES ONLY
         public $LotStatus;
-        public $LotStartStatus = 3;
+        public $LotStartStatus = 1;
 	public $date;
 	public $searchStartDate;
 	public $searchEndDate;
@@ -74,11 +74,15 @@ class SearchForm extends CFormModel
 	 * If not declared here, an attribute would have a label that is
 	 * the same as its name with the first letter in upper case.
 	 */
-	public function setSeachAttributes($data)
+	public function setSearchAttributes($data)
 	{
 		$this->searchText=$data['searchText'];
-		$this->Categories=$data['Categories'];
-		$this->Category=$data['Category'];
+                if($data['Category']){
+                    $this->Categories=$data['Category'];
+                    $this->Category=$data['Category'];
+                } else {
+                    $this->Categories=$data['Categories'];
+                }
 		$this->LotStatus=$data['LotStatus'];
 		$this->LotStartStatus=$data['LotStartStatus'];
 		$this->minTicketPriceRange=$data['minTicketPriceRange'];

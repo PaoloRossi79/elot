@@ -11,7 +11,20 @@ class EmailManager extends PActiveRecord
 	{
 		return parent::model($className);
 	}
-
+        
+        private function sendWithTry($mail){
+            $res = false;
+            if($mail){
+                try{
+                    $res = $mail->send();
+                    return $res;
+                } catch (Exception $ex) {
+                    Yii::log("Err sending email: ".$ex->getMessage(), "error");
+                }
+            }
+            return false;
+        }
+        
 	public function sendResetPasswordEmail($user){
             $mail = new YiiMailer();
             $mail->setView('resetPassword');
@@ -32,7 +45,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Email Confirmation');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -44,7 +57,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Email confirmed!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -57,7 +70,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Invite confirmed!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -70,7 +83,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('You got a new Invite on WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -82,7 +95,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è aperta su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -94,7 +107,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -106,7 +119,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -118,7 +131,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -130,7 +143,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($ticket->user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Hai acquistato un ticket su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -143,7 +156,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Hai acquistato dei ticket su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -155,7 +168,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($receiver);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Ti hanno regalato un ticket su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -168,7 +181,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Hai acquistato dei ticket su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -180,7 +193,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user['email']);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Ti hanno regalato un ticket su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -192,7 +205,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->winner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -204,7 +217,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 	
@@ -215,7 +228,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Error '.$action." - ID=".$model->id);
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 
@@ -226,7 +239,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('Error in CRON');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
         
@@ -239,7 +252,7 @@ class EmailManager extends PActiveRecord
             $mail->setTo($user->email);
 //            $mail->setTo('paolorossi79@gmail.com');
             $mail->setSubject('An invitation has been declined on WonLot!');
-            $sendRes=$mail->send();
+            $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
 

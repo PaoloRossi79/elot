@@ -13,9 +13,19 @@
           ?>
             <script>
                 $('#gift-to-header').text("");
+                $(window).on('load',function(){
+                   $.modalHasUpdated(true); 
+                });
             </script>
         <?php
-        } 
+        } else { ?>
+            <script>
+                $(window).on('load',function(){
+                   $.modalHasUpdated(false); 
+                });
+            </script>
+        <?php
+        }
         ?>
         <?php /** @var TbActiveForm $form */
         $formModel = new GiftForm;
@@ -107,7 +117,7 @@
                                 <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/loading-dots.gif", "Loading"); ?>
                             </td></tr></table>
                         </div>
-                        <?php $this->renderPartial('/lotteries/_friendList',array('form'=>$form,'formModel'=>$formModel)); ?>
+                        <?php $this->renderPartial('/lotteries/_friendList',array('form'=>$form,'formModel'=>$formModel,'social'=>$social)); ?>
                     </div>
                 </div>
                 <script>
@@ -127,7 +137,11 @@
                     <?php echo $form->labelEx($formModel,'offerId'); ?>
                 </div>
                 <div class="col-md-6">
-                    <?php echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); ?>
+                    <?php if($offerId){
+                        echo $form->dropDownList($formModel,'offerId',$offersType,array('options' => array($offerId=>array('selected'=>true)),'empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); 
+                    } else {
+                        echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); 
+                    } ?>
                 </div>
             <?php } ?>
         </div>
@@ -140,6 +154,12 @@
 <?php 
     $config = UserOAuth::getConfig(); 
 ?>
+<?php if($social['provider']) {?>
+<script>
+    $.selectProviderAndUser("<?php echo $social['provider']; ?>",<?php echo $social['giftToUserId']; ?>);
+</script>
+<?php }?>
+
 <script>
     // globals
     var baseTicketUrl = '<?php echo Yii::app()->createAbsoluteUrl('site/register'); ?>';

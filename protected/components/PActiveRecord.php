@@ -52,7 +52,7 @@ class PActiveRecord  extends CActiveRecord {
             }
             if($this->hasAttribute('last_modified_by')){
                 if(Yii::app()->params['isCron']){
-                    $this->last_modified_by="CRON";
+                    $this->last_modified_by="0";
                 } else {
                     $this->last_modified_by=Yii::app()->user->id;
                 }
@@ -63,11 +63,23 @@ class PActiveRecord  extends CActiveRecord {
                 if (!strlen($this->$columnName)) { 
                     $this->$columnName=null;
                 } else {
-                    $oldCol=$this->$columnName;
-                    
-                    $oldCol .= " 00:00:01";
-                    $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($oldCol,'dd/MM/yyyy HH:mm:ss'));
-
+                    if(!is_object($this->$columnName)){
+                        $val = $this->$columnName;
+                        $baseConversion = CDateTimeParser::parse($val,'yyyy-MM-dd HH:mm:ss');
+                        if(!$baseConversion){
+                            switch (strlen($val)){
+                                case 10: //dd/MM/yyyy
+                                    $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($this->$columnName." 00:00:00",'dd/MM/yyyy HH:mm:ss'));
+                                    break;
+                                case 16: //dd/MM/yyyy HH:mm
+                                    $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($this->$columnName.":00",'dd/MM/yyyy HH:mm:ss'));
+                                    break;
+                                default: //dd/MM/yyyy HH:mm
+                                    $this->$columnName=date('Y-m-d H:i:s',CDateTimeParser::parse($this->$columnName,'dd/MM/yyyy HH:mm:ss'));
+                                    break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -82,8 +94,9 @@ class PActiveRecord  extends CActiveRecord {
 
             if ($column->dbType == 'datetime' || $column->dbType == 'timestamp')
             {
-//                $this->$columnName = date('d/m/Y H:i:s', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
-                $this->$columnName = date('d/m/Y', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
+                $this->$columnName = date('d/m/Y H:i:s', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
+//                $this->$columnName = date('d/m/Y', CDateTimeParser::parse($this->$columnName, 'yyyy-MM-dd hh:mm:ss'));
+                $t=1;
             }
         }
         return parent::afterFind();

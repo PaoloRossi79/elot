@@ -1,10 +1,17 @@
 // executed after ALL (also after document.ready !!!)
 $(window).bind("load", function() {
    var giftBoxActive;
+   $('.profile-tab-item a').on('click', function (e) {
+       $.each($(this).parent().parent().children('.profile-tab-item'), function(i,item){
+           $(item).children().removeClass('btn-info');
+       });
+       $(this).addClass('btn-info');
+   });
    //Bootstrap Tabs-Url Trick 
    var url = document.location.toString();
    if (url.match('#')) {
-        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+//        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+        $('.nav-tabs a[href=#'+url.split('#')[1]+']').click();
 //        window.scrollTo(0, 0);
    } 
 
@@ -115,6 +122,15 @@ $(window).bind("load", function() {
         size: '5px',
    }); 
    
+   /*$.lotBoxIn = function(obj){
+     var hiddenDiv = $(obj).parent().children('.lot-box-hover');
+     hiddenDiv.filter(':not(:animated)').fadeIn();
+   // This only fires if the row is not undergoing an animation when you mouseover it
+   };
+   $.lotBoxOut = function(obj){
+        $(obj).fadeOut();
+      // This only fires if the row is not undergoing an animation when you mouseover it
+   };*/
    $(".lot-box-int").mouseenter(
       function(){
         var hiddenDiv = $(this).parent().children('.lot-box-hover');
@@ -303,7 +319,7 @@ $(window).bind("load", function() {
             setTimeout(function() {
                 $("#gift-modal").modal('hide');
                 $("#buy-modal").modal('show');
-                $.resetTicketGift();
+//                $.resetTicketGift();
             }, 3000);
        } else {
             $(".giftErrorText").text(res.msg);
@@ -377,30 +393,67 @@ $(window).bind("load", function() {
                 }
             });
         } else if(provider == "gp"){
-//            var shareLink = '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val();
-            var shareLink = baseTicketUrl;
-//            var baseLink = '<?php echo $this->createAbsoluteUrl(''); ?>';
-            var baseLink = baseUrl;
-            var shareMsg = baseGiftMsg;
-            gpInviteBtnOptions.recipients=id;
-            gpInviteBtnOptions.prefilltext=shareMsg;
-            gpInviteBtnOptions.contenturl=baseLink;
-            gpInviteBtnOptions.calltoactionurl=shareLink;
-            gpInviteBtnOptions.gapiattached=true;
-            gpInviteBtnOptions.class="g-interactivepost";
-            gpInviteBtnOptions.onshare=function(response){
-                if(response.status=="completed" && response.action=="cancelled"){
-                    
-                } else if(response.status=="completed" && response.action=="shared"){
-                    $('#giftBtn').click();
-                }
-            };
-//            gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
-            gapi.interactivepost.render('gpshare-gift', gpInviteBtnOptions); 
-//            gapi.plus.render('gpshare-'+entityType+'-'+entityId, gpShareBtnOptions);
-            setTimeout(function(){
-                $('#gpshare-gift').click();
-            },300);
+            gapi.client.load('plus','v1', function(){
+                var shareLink = baseTicketUrl;
+                var baseLink = baseUrl;
+                var shareMsg = baseGiftMsg;
+                gpInviteBtnOptions.recipients=id;
+                gpInviteBtnOptions.prefilltext=shareMsg;
+                gpInviteBtnOptions.contenturl=baseLink;
+                gpInviteBtnOptions.calltoactionurl=shareLink;
+                gpInviteBtnOptions.gapiattached=true;
+                gpInviteBtnOptions.class="g-interactivepost";
+                gpInviteBtnOptions.onShare=function(response){
+                    console.log("SHARE");
+                    console.log(JSON.stringify(response));
+                    if(response.status=="completed" && response.action=="cancelled"){
+
+                    } else if(response.status=="completed" && response.action=="shared"){
+                        $('#giftBtn').click();
+                    }
+                };
+                gapi.interactivepost.render('gpshare-lot', gpInviteBtnOptions); 
+                setTimeout(function(){
+                    $('#gpshare-lot').click();
+                },300); 
+            });
+            /*gapi.client.load('plus','v1', function(){
+    
+                var shareLink = baseTicketUrl;
+                var baseLink = baseUrl;
+                var shareMsg = baseGiftMsg;
+                gpInviteBtnOptions.recipients=id;
+                gpInviteBtnOptions.cookiepolicy="single_host_origin";
+                gpInviteBtnOptions.prefilltext=shareMsg;
+                gpInviteBtnOptions.contenturl=baseLink;
+                gpInviteBtnOptions.calltoactionlabel="Vieni su Wonlot.com!";
+                gpInviteBtnOptions.calltoactionurl=shareLink;
+                gpInviteBtnOptions.gapiattached=true;
+                gpInviteBtnOptions.class="g-interactivepost";
+                gpInviteBtnOptions.onSuccess=function(response){
+                    console.log("SUCCESS");
+                    console.log(JSON.stringify(response));
+                    if(response.status=="completed" && response.action=="cancelled"){
+
+                    } else if(response.status=="completed" && response.action=="shared"){
+                        $('#giftBtn').click();
+                    }
+                };
+                gpInviteBtnOptions.onShare=function(response){
+                    console.log("SHARE");
+                    console.log(JSON.stringify(response));
+                };
+                gpInviteBtnOptions.onClick=function(response){
+                    console.log("CLICK");
+                    console.log(JSON.stringify(response));
+                };
+    //            gapi.interactivepost.render('gpshare-'+$("#ticketIdForGift").val(), gpInviteBtnOptions); 
+                gapi.interactivepost.render('gpshare-gift', gpInviteBtnOptions); 
+    //            gapi.plus.render('gpshare-'+entityType+'-'+entityId, gpShareBtnOptions);
+                setTimeout(function(){
+                    $('#gpshare-gift').click();
+                },300);
+            });*/
         }
    };
     
@@ -526,5 +579,63 @@ $(window).bind("load", function() {
    
    $.updateRating = function(event){
        alert("RATE!");
-   }
+   };
+   
+   $.selectProviderAndUser = function(provider,user){
+       var providerObj;
+       var userObj;
+       $.each($('.gift-ticket-btn'), function(i, item){
+           if($(this).val() == provider){
+               providerObj = $(this);
+           }
+       });
+       $.each($('.user-small-ticket-box'), function(i, item){
+           if($(this).children('input[name=id]').val() == user){
+               userObj = $(this);
+           }
+       });
+       $('.gift-panel-ok').show();
+       providerObj.click();
+       setTimeout(function(){
+           userObj.click();
+       },200);
+   };
+   
+   var modalHasBeenUpdated = false;
+   $.modalHasUpdated = function(val){
+       modalHasBeenUpdated = val;
+   };
+   $.updateModal = function(view,lotId){
+     var main = "";
+     var doHttp = false;
+     if(view == "gift"){
+         main = '#gift-main';
+         doHttp = true;
+     } else if(view == "buy"){
+         main = '#buy-main';
+         doHttp = true;
+     }
+     if(doHttp){
+         if(modalHasBeenUpdated){
+            jQuery.ajax({
+               // The url must be appropriate for your configuration;
+               // this works with the default config of 1.1.11
+               url: '/lotteries/getPartialView',
+               type: "POST",
+               data: {view: view, lotId: lotId},  
+               error: function(xhr,tStatus,e){
+                   if(!xhr){
+                       alert("Error");
+                       alert(tStatus+"   "+e.message);
+                   }else{
+                       alert("else: "+e.message); // the great unknown
+                   }
+               },
+               success: function(resp){
+                   $(main).html(resp);
+               }
+            });
+         } 
+      }
+   };
 });

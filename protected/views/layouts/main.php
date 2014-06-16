@@ -119,7 +119,7 @@
                             <div class="welcome-text">
                                 <?php echo Yii::t('wonlot','Bentornato ').Yii::app()->user->username;?>
                             </div>
-                            <?php echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/smallThumb/".Yii::app()->user->avatar, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                            <?php echo Yii::app()->user->avatarUrl; ?>
                         </div>
                         <?php }  ?>
                         <?php if(Yii::app()->user->isAdmin){ ?>

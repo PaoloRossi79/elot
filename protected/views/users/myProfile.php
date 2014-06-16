@@ -3,7 +3,7 @@
     <div class="panel panel-default bootstrap-widget-table">
         <div class="panel-heading">
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="profile-tabs">
                 <li class="profile-tab-item width-25perc active">
                     <a id="profileButton1" href="#tabProfile1" data-toggle="tab" class="btn btn-info"><span class="badge"><em class="glyphicon glyphicon-user"></em></span> <span class="tab-text ng-binding">Profilo</span></a>
                 </li>

@@ -129,7 +129,6 @@ class Controller extends CController
                 return;
             }
             $this->filterModel=new SearchForm;
-            $this->filterModel->LotStatus = array('1');
             if(in_array($view,array('index','userIndex'))){
                 $this->catList = PrizeCategories::model()->getPrizeCatCheckbox($this->action->id);
                 $this->lotteryStatusList = $this->generateMenuCheckList('lotterySearchStatusConst');
@@ -160,7 +159,7 @@ class Controller extends CController
                     break;
             }
             if($_POST['SearchForm']){
-               $this->filterModel->setSeachAttributes($_POST['SearchForm']);
+               $this->filterModel->setSearchAttributes($_POST['SearchForm']);
             }
             return parent::beforeRender($view);
         }

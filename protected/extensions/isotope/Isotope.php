@@ -83,7 +83,12 @@ class Isotope extends CListView
         $cs->registerScriptFile("{$this->_assetsUrl}/js/jquery.isotope.min.js");
 
         $this->options['itemSelector']='.'.$this->itemSelectorClass;
-        $cs->registerScript('isotope',"var \$isoContainer = $('#{$this->itemContainerId} .{$this->itemsCssClass}');\$isoContainer.isotope(".CJavaScript::encode($this->options).");");
+        $cs->registerScript('isotope',
+                "var \$isoContainer = $('#{$this->itemContainerId} .{$this->itemsCssClass}');
+                \$(window).load(function(){
+                    \$isoContainer.isotope(".CJavaScript::encode($this->options).");
+                });
+        ");
     }
 
     protected function infiniteScrollScript(){
@@ -98,7 +103,6 @@ class Isotope extends CListView
 
         $options=$this->assignInfiniteOptions();
         $callback=$this->assignInfiniteCallback();
-
         $cs->registerScript('isotope-scroll',"\$isoContainer.infinitescroll({$options},{$callback});");
         $cs->registerCss('isotope-pager',"#{$this->itemContainerId} .{$this->pagerCssClass} { display:none; }");
     }
@@ -116,7 +120,25 @@ class Isotope extends CListView
 
     protected function assignInfiniteCallback(){
         // trigger Masonry as a callback
-        $defaultCallback="function( newElements ) { /* hide new items while they are loading*/ var newElems = jQuery( newElements ); \$isoContainer.isotope( 'appended', newElems, true );{$this->infiniteCallback}}";
+        $defaultCallback="function( newElements ) { 
+            /* hide new items while they are loading*/ 
+            var newElems = jQuery( newElements ); 
+            \$isoContainer.delay(500).isotope( 'insert', newElems, true );
+            \$('.lot-box-int').mouseenter(
+                function(){
+                  var hiddenDiv = \$(this).parent().children('.lot-box-hover');
+                  hiddenDiv.filter(':not(:animated)').fadeIn();
+                // This only fires if the row is not undergoing an animation when you mouseover it
+                }
+             );
+             \$('.lot-box-hover').mouseleave(
+                 function(){
+                  \$(this).fadeOut();
+                // This only fires if the row is not undergoing an animation when you mouseover it
+                }
+             );
+            {$this->infiniteCallback}
+        }";
         return $defaultCallback;
     }
 }

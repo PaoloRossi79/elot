@@ -18,7 +18,22 @@ class ticketsWidget extends CWidget
  
     protected function renderContent()
     {
-        $this->render('tickets',array('tickets'=>$this->tickets));
+        $myTickets = array();
+        $toGiftTickets = array();
+        if($this->tickets){
+            foreach($this->tickets as $t){
+                if($t->is_gift == 1 && $t->gift_from_id == Yii::app()->user->id){
+                    $toGiftTickets[] = $t;
+                } else {
+                    $myTickets[] = $t;
+                }
+            }
+            
+        } 
+        $this->render('tickets',array(
+            'myTickets'=>$myTickets,
+            'toGiftTickets'=>$toGiftTickets,
+        ));
     }   
     
     protected function registerScripts()

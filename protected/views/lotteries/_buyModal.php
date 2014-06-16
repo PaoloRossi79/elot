@@ -30,7 +30,7 @@
           <?php echo CHtml::ajaxButton ("Compra!",
             CController::createUrl('lotteries/buyTicket'), 
             array(
-              'update' => '#data-'.$data->id,
+              'update' => '#buy-main',
               'type' => 'POST', 
               'data'=>'js:$("#buyLotteryForm").serialize()',
             ),

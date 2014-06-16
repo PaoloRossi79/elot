@@ -38,6 +38,29 @@ class WebUser extends CWebUser {
 	return "";
   }
   
+  function getAvatarUrl()
+  {
+	$user = $this->loadUser(Yii::app()->user->id);
+	if($user!==null){
+            $img = $user->profile->img;
+            if(gettype($img) == "object"){
+                $url = CHtml::image("/images/userProfiles/".$user->id."/smallThumb/".$user->avatar, "User Avatar", array("class"=>"img-thumbnail"));
+                return $url;
+            } elseif(gettype($img) == "string"){
+                if($user->ext_source == Yii::app()->params['authExtSource']['Google']){
+                    require_once(dirname(__FILE__).'/../extensions/hoauth/models/UserOAuth.php');
+                    $config = UserOAuth::getConfig();
+                    $gUrl = "https://www.googleapis.com/plus/v1/people/".$user->ext_id."?fields=image&key=".$config['providers']['Google']['keys']['api-key'];
+                    $output = Yii::app()->curl->setOption(CURLOPT_HEADER,false)->get($gUrl);
+                    $res = CJSON::decode($output);
+                    $img = $res['image']['url'];
+                }
+                return CHtml::image($img, "User Avatar", array("class"=>"img-thumbnail"));
+            }
+        }
+	return "";
+  }
+  
   function getIsAdmin()
   {
 	$user = $this->loadUser(Yii::app()->user->id);

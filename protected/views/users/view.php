@@ -77,6 +77,7 @@ if($model->followers){
                 'itemSelectorClass'=>'lot-box-item',
                 'options'=>array( // options for the isotope jquery
                     'layoutMode'=>'masonry',
+                    'columnWidth'=>240,
                     'containerStyle' => array(
                         'position' => 'relative', 
                         'overflow' => 'hidden', 
@@ -88,6 +89,21 @@ if($model->followers){
                     'resizesContainer' => true,
                 ), 
                 'infiniteScroll'=>true, // default to true
+                /*'infiniteCallback'=>'
+                    \$(".lot-box-int").mouseenter(
+                        function(){
+                          var hiddenDiv = \$(this).parent().children(".lot-box-hover");
+                          hiddenDiv.filter(":not(:animated)").fadeIn();
+                        // This only fires if the row is not undergoing an animation when you mouseover it
+                        }
+                     );
+                     \$(".lot-box-hover").mouseleave(
+                         function(){
+                          \$(this).fadeOut();
+                        // This only fires if the row is not undergoing an animation when you mouseover it
+                        }
+                     );
+                ',*/
                 'infiniteOptions'=>array(
                     'loading' => array(
                         'msgText' => 'Caricamento ... ',

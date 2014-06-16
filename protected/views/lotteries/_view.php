@@ -167,10 +167,10 @@
         <div class="col-md-8">
             <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
                 <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
-                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#buy-modal">
+                    <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
                         <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
                     </button>
-                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#gift-modal">
+                    <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
                         <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
                     </button>
                 <?php } else { ?>
@@ -193,4 +193,12 @@
 <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
     <?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
     <?php $this->renderPartial('_giftModal',array('data'=>$model, 'addData' => $addData)); ?>
+    <script>
+        $('#openBuyModal').click(function(ev){
+            $.updateModal('buy',<?php echo $model->id; ?>);
+        });
+        $('#openGiftModal').click(function(ev){
+            $.updateModal('gift',<?php echo $model->id; ?>);
+        });
+    </script>
 <?php } ?>

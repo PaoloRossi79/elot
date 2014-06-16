@@ -1,4 +1,4 @@
-<div id="data-<?php echo $data->id; ?>">
+<div id="buy-main">
     <div class="ticket-list" class="container-fluid">
         <?php 
         if(!is_null($result)){
@@ -9,7 +9,13 @@
                 '$("input[name=buyBtn]").attr("disabled", "disabled").fadeOut();
                  $(".cannot-buy").fadeIn()'
               , CClientScript::POS_READY);
-          } 
+          } ?>
+        <script>
+            $(window).on('load',function(){
+                $.modalHasUpdated(true); 
+             });
+        </script>
+          <?php
           if($result == "1"){
               ?>
                 <script>
@@ -25,7 +31,13 @@
                 </script>
               <?php
           }
-        } else {
+        } else {?>
+        <script>
+            $(window).on('load',function(){
+                $.modalHasUpdated(false); 
+             });
+        </script>
+        <?php
             $ticketBoxSize = 350;
         }
         if(isset($winRes)){
@@ -140,7 +152,13 @@
                     <?php echo $form->labelEx($formModel,'offerId'); ?>
                 </div>
                 <div class="col-md-6">
-                    <?php echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); ?>
+                    <?php 
+                    if($offerId){
+                        echo $form->dropDownList($formModel,'offerId',$offersType,array('options' => array($offerId=>array('selected'=>true)),'empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); 
+                    } else {
+                        echo $form->dropDownList($formModel,'offerId',$offersType,array('empty'=>Yii::t("wonlot",'Nessuna offerta'),'class'=>'form-control')); 
+                    }
+                    ?>
                 </div>
             <?php } ?>
         </div>

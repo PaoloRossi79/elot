@@ -73,16 +73,16 @@
                         <?php echo $form->dropDownList($model,'prize_shipping',CHtml::listData(Yii::app()->params['speditionType'], 'id', 'type'),$htmlDisabled); ?>
                         <?php echo $form->error($model,'prize_shipping'); ?>
                     </div>
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model,'prize_price'); ?>
+                    <!--<div class="form-group">-->
+                        <?php //echo $form->labelEx($model,'prize_price'); ?>
                         <?php 
-                            $this->widget('ext.prizeCalculator.PrizeCalculatorWidget', array(
+                            /*$this->widget('ext.prizeCalculator.PrizeCalculatorWidget', array(
                                 'model' => $model,
                                 'attribute' => 'prize_price',
                                 'htmlOptions' => $htmlDisabled,
-                            ));
+                            ));*/
                             ?>
-                    </div>
+                    <!--</div>-->
                     <div class="form-group">
                         <?php echo $form->labelEx($model,'ticket_value'); ?>
                         <?php echo $form->numberField($model,'ticket_value',$htmlDisabled); ?>
@@ -92,7 +92,8 @@
                     <div class="form-group">
                         <?php echo $form->labelEx($model,'lottery_start_date'); ?>
                         <?php echo 
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+//                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
                                 'id' => 'lot_start',
                                 'model' => $model,
                                 'attribute' => 'lottery_start_date',
@@ -101,14 +102,16 @@
                                         'dateFormat'=>'dd/mm/yy',
                                         'minDate'=>date('d/m/Y'),
                                         //'dateFormat'=>'yy-mm-dd',
-                                        'timeFormat'=>'HH:mm:ss',
-                                        'showSecond'=>true,
+                                        'timeFormat'=>'hh:mm',
+                                        'showSecond'=>false,
                                         'showTimezone'=>false,
                                         'language' => 'it',
                                         'ampm' => false,
                                         'showAnim'=>'fold',
                                         'onSelect'=>'js:function(selDate,obj){
-                                            $("#lot_end").datepicker("option","minDate",selDate);
+                                            if(!$("#lot_end").datepicker("getDate")){
+                                                $("#lot_end").datepicker("option","minDate",selDate);
+                                            }
                                         }',
                                 ),
                                 'language' => 'it',
@@ -119,7 +122,8 @@
                     <div class="form-group">
                         <?php echo $form->labelEx($model,'lottery_draw_date'); ?>
                         <?php echo 
-                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+//                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
                                 'id' => 'lot_end',
                                 'model' => $model,
                                 'attribute' => 'lottery_draw_date',
@@ -128,14 +132,16 @@
                                         'dateFormat'=>'dd/mm/yy',
                                         'minDate'=>date('d/m/Y'),
                                         //'dateFormat'=>'yy-mm-dd',
-                                        'timeFormat'=>'HH:mm:ss',
-                                        'showSecond'=>true,
+                                        'timeFormat'=>'hh:mm',
+                                        'showSecond'=>false,
                                         'showTimezone'=>false,
                                         'language' => 'it',
                                         'ampm' => false,
                                         'showAnim'=>'fold',
                                         'onSelect'=>'js:function(selDate,obj){
-                                            $("#lot_start").datepicker("option","maxDate",selDate);
+                                            if(!$("#lot_start").datepicker("getDate")){
+                                                $("#lot_start").datepicker("option","maxDate",selDate);
+                                            }
                                         }',
                                 ),
                                 'language' => 'it',

@@ -13,7 +13,7 @@ class CronCommand extends CConsoleCommand
             $oFile=fopen($file,"w");
             fwrite($oFile,"5");
             fclose($oFile);
-            chmod($file, '777');
+            chmod($file, 0777);
             try {
                 $errors = array('open'=>array(),'close'=>array(), 'extract'=>array(),'void'=>array());
                 Lotteries::model()->checkToOpen($errors);

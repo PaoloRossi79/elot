@@ -226,4 +226,24 @@ class Users extends PActiveRecord
         public function getConfirmLink($user){
             return Yii::app()->createAbsoluteUrl('users/confirmEmail',array('email'=>$user->email,'id'=>$user->id));
         }
+        
+        public static function getImageTag($user){
+            $url = "";
+            if(!$user || get_class($user) != "Users"){
+                return $url;
+            }
+            if($user->ext_source == 0){
+                if(!$user->profile->img){
+                    // try with social user
+                    if($user->socials){
+                        // TODO: recreate social avatar: FB & G+
+                    }
+                } else {
+                    $url = CHtml::image("/images/userProfiles/".$user->id."/smallThumb/".$user->profile->img, "User Avatar", array("class"=>"img-avatar img-thumbnail"));
+                }
+            } elseif (in_array($user->ext_source, array(Yii::app()->params['authExtSource']['Facebook'],Yii::app()->params['authExtSource']['Google']))) {
+                $url = CHtml::image($user->profile->img, "User Avatar", array("class"=>"img-avatar img-thumbnail"));
+            }
+            return $url;
+        }
 }

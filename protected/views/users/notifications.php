@@ -19,14 +19,16 @@
                 </td>
                 <td>
                     <?php if($no->to_user_id == Yii::app()->user->id){ ?>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->from_user_id."/smallThumb/".$no->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php // echo CHtml::image("/images/userProfiles/".$no->from_user_id."/smallThumb/".$no->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->fromUser); ?>
                         <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$no->message_type]['fw']); ?></span>
                         <?php echo CHtml::link($no->message_value, Yii::app()->controller->createUrl('tickets/view/'.$no->message_value)); ?>
                     <?php } else {  ?>
                         <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$no->message_type]['bw']); ?></span>
                         <?php echo CHtml::link($no->message_value, Yii::app()->controller->createUrl('tickets/view/'.$no->message_value)); ?>
                         <span> a: </span>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->to_user_id."/smallThumb/".$no->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php // echo CHtml::image("/images/userProfiles/".$no->to_user_id."/smallThumb/".$no->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->toUser); ?>
                         <span><?php echo CHtml::encode($no->toUser->username); ?></span>
                     <?php }   ?>
                 </td>
@@ -36,14 +38,15 @@
                 </td>
                 <td>
                     <?php if($no->to_user_id == Yii::app()->user->id){ ?>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->from_user_id."/smallThumb/".$no->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php // echo CHtml::image("/images/userProfiles/".$no->from_user_id."/smallThumb/".$no->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->fromUser); ?>
                         <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$no->message_type]['fw']); ?></span>
                         <?php echo CHtml::link($no->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
                     <?php } else {  ?>
                         <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$no->message_type]['bw']); ?></span>
                         <?php echo CHtml::link($no->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
                         <span> a: </span>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->to_user_id."/smallThumb/".$no->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->toUser); ?>
                         <span><?php echo CHtml::encode($no->toUser->username); ?></span>
                     <?php }  ?>
                     
@@ -55,11 +58,11 @@
                         <?php echo CHtml::link($no->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->to_user_id."/smallThumb/".$no->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->toUser); ?>
                     </td>
                 <?php } else {  ?>
                     <td>
-                        <?php echo CHtml::image("/images/userProfiles/".$no->from_user_id."/smallThumb/".$no->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                        <?php echo Users::model()->getImageTag($no->fromUser); ?>
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$no->message_type]['bw']); ?>

@@ -12,7 +12,7 @@ class CronTicketsCommand extends CConsoleCommand
             $oFile=fopen($file,"w");
             fwrite($oFile,"5");
             fclose($oFile);
-            chmod($file, '777');
+            chmod($file, 0777);
             try {
                 // ADD TO CRONTAB: php /path/to/cron.php CronTickets
                 Yii::log("CRON Tickets OK!", "warning");

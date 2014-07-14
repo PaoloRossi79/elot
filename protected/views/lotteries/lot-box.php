@@ -35,7 +35,7 @@
                 <img src="/images/site/wl-money.png">
             </div>
         </div>
-        <?php if($data->max_ticket){ ?>
+        <?php if($data->winning_sum){ ?>
             <div class="lot-box-first-row">
                 <p class="text-left pull-left win-perc-text"><?php echo Yii::t('wonlot','Punteggio attuale');?> <span class="win-perc"><?php echo Chtml::encode($data->winning_sum);?></span></p>
             </div>
@@ -84,12 +84,16 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <?php if(!Yii::app()->user->isGuest){ ?>
-                        <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
-                            <?php echo CHtml::image("/images/userProfiles/".$data->owner_id."/smallThumb/".$data->owner->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
-                        </a>
-                    <?php } else { ?>
-                        <?php echo CHtml::image("/images/userProfiles/".$data->owner_id."/smallThumb/".$data->owner->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                    <?php if($data->owner){ ?>
+                        <?php if(!Yii::app()->user->isGuest){ ?>
+                            <a href="<?php echo CController::createUrl('users/view/'.$data->owner_id);?>">
+                                <?php // echo CHtml::image("/images/userProfiles/".$data->owner_id."/smallThumb/".$data->owner->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                <?php echo Users::model()->getImageTag($data->owner); ?>
+                            </a>
+                        <?php } else { ?>
+                            <?php // echo CHtml::image("/images/userProfiles/".$data->owner_id."/smallThumb/".$data->owner->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            <?php echo Users::model()->getImageTag($data->owner); ?>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             </div>

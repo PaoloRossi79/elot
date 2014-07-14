@@ -5,7 +5,8 @@
         // TODO: get Image from socials
         echo "<img src='".$model->profile->img."' style='width:200px;heigth:200px;'/>";
     } else {
-        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar img-thumbnail"));
+//        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar img-thumbnail"));
+        echo Yii::app()->user->avatarUrl;
     } ?>
 
 

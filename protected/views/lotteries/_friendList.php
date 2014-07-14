@@ -24,7 +24,8 @@
                             <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
                         </div>
                         <div class="user-small-avatar-container">                        
-                            <?php echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            <?php // echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            <?php echo Users::model()->getImageTag($fl->user); ?>
                         </div>
                     </div>
                     <?php } ?>
@@ -35,16 +36,19 @@
             <?php if(count($user->followers) > 0){ ?>
                 <div class="">
                     <?php foreach($user->followers as $fw){ ?>
-                    <div class="user-small-ticket-box">
-                        <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
-                        <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">
-                        <div class="user-small-vendor-container">
-                            <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
-                        </div>
-                        <div class="user-small-avatar-container">
-                            <?php echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
-                        </div>
-                    </div>
+                        <?php if($fw->follower){ ?>
+                            <div class="user-small-ticket-box">
+                                <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
+                                <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">
+                                <div class="user-small-vendor-container">
+                                    <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
+                                </div>
+                                <div class="user-small-avatar-container">
+                                    <?php // echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                    <?php echo Users::model()->getImageTag($fw->follower); ?>
+                                </div>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             <?php } ?>

@@ -49,7 +49,8 @@
                         <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
                     </span>
                     <span class="user-small-avatar-container">                        
-                        <?php echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                        <?php // echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                        <?php echo Users::model()->getImageTag($fl->user); ?>
                     </span>
                 </div>
                 <?php } ?>
@@ -63,7 +64,8 @@
                             <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
                     </span>
                     <span class="user-small-avatar-container">
-                            <?php echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            <?php // echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                            <?php echo Users::model()->getImageTag($fw->follower); ?>
                     </span>
                 </div>
                 <?php } ?>

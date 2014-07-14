@@ -9,14 +9,14 @@
         </td>
         <td>
             <?php if($data->to_user_id == Yii::app()->user->id){ ?>
-                <?php echo CHtml::image("/images/userProfiles/".$data->from_user_id."/smallThumb/".$data->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->fromUser); ?>
                 <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$data->message_type]['fw']); ?></span>
                 <?php echo CHtml::link($data->message_value, Yii::app()->controller->createUrl('tickets/view/'.$data->message_value)); ?>
             <?php } else {  ?>
                 <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$data->message_type]['bw']); ?></span>
                 <?php echo CHtml::link($data->message_value, Yii::app()->controller->createUrl('tickets/view/'.$data->message_value)); ?>
                 <span> a: </span>
-                <?php echo CHtml::image("/images/userProfiles/".$data->to_user_id."/smallThumb/".$data->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->toUser); ?>
                 <span><?php echo CHtml::encode($data->toUser->username); ?></span>
             <?php }   ?>
         </td>
@@ -26,14 +26,14 @@
         </td>
         <td>
             <?php if($data->to_user_id == Yii::app()->user->id){ ?>
-                <?php echo CHtml::image("/images/userProfiles/".$data->from_user_id."/smallThumb/".$data->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->fromUser); ?>
                 <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$data->message_type]['fw']); ?></span>
                 <?php echo CHtml::link($data->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
             <?php } else {  ?>
                 <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$data->message_type]['bw']); ?></span>
                 <?php echo CHtml::link($data->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
                 <span> a: </span>
-                <?php echo CHtml::image("/images/userProfiles/".$data->to_user_id."/smallThumb/".$data->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->toUser); ?>
                 <span><?php echo CHtml::encode($data->toUser->username); ?></span>
             <?php }  ?>
 
@@ -45,11 +45,11 @@
                 <?php echo CHtml::link($data->message_value, Yii::app()->controller->createUrl('users/myProfile')); ?>
             </td>
             <td>
-                <?php echo CHtml::image("/images/userProfiles/".$data->to_user_id."/smallThumb/".$data->toUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->toUser); ?>
             </td>
         <?php } else {  ?>
             <td>
-                <?php echo CHtml::image("/images/userProfiles/".$data->from_user_id."/smallThumb/".$data->fromUser->profile->img, "User Avatar", array("class"=>"img-thumbnail")); ?>
+                <?php echo Users::model()->getImageTag($data->fromUser); ?>
             </td>
             <td>
                 <span><?php echo CHtml::encode(Yii::app()->params['notifyTypeMsg'][$data->message_type]['bw']); ?></span>

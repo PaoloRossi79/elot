@@ -2,7 +2,7 @@
     <?php if($data){ ?>
     <div>
         <div class="user-img">
-            <?php echo CHtml::image(Yii::app()->controller->getImageUrl($data,'smallThumb'),'User Image'); ?>
+            <?php echo Users::model()->getImageTag($data); ?>
         </div>
     </div>
     <div>

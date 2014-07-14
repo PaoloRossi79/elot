@@ -13,16 +13,12 @@
           ?>
             <script>
                 $('#gift-to-header').text("");
-                $(window).on('load',function(){
-                   $.modalHasUpdated(true); 
-                });
+                $.modalHasUpdated(true); 
             </script>
         <?php
         } else { ?>
             <script>
-                $(window).on('load',function(){
-                   $.modalHasUpdated(false); 
-                });
+                $.modalHasUpdated(false); 
             </script>
         <?php
         }
@@ -55,7 +51,8 @@
                             <dd>
                                 <span class="user-small-avatar-container">
                                     <a href="<?php echo CController::createUrl('users/view/'.$data->winningUser->id);?>">
-                                        <?php echo CHtml::image("/images/userProfiles/".$data->winningUser->id."/smallThumb/".$data->winningUser->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                        <?php //echo CHtml::image("/images/userProfiles/".$data->winningUser->id."/smallThumb/".$data->winningUser->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                        <?php echo Users::model()->getImageTag($data->winningUser); ?>
                                         <span class="small-username"><?php echo CHtml::encode($data->winningUser->username); ?></span>
                                     </a>
                                 </span>

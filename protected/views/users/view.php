@@ -26,13 +26,7 @@ if($model->followers){
     </div>
     <div class="panel-body">
         <div class="col-md-3">
-            <?php if($model->ext_source > 1){
-                //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
-                // TODO: get Image from socials
-                echo "<img src='".$model->profile->img."' style='width:200px;heigth:200px;'/>";
-            } else {
-                echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"img-thumbnail"));
-            } ?>
+            <?php echo Users::model()->getImageTag($model); ?>
         </div>
         <div class="col-md-9">
             <h4><?php echo Yii::t("wonlot","Informazioni"); ?></h4>

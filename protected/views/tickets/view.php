@@ -91,7 +91,7 @@
                     <?php } elseif($model->gift_from_id == $userId){ ?>
                         <div class="text-block">
                             <?php echo Yii::t('wonlot','Ticket regalato a '); ?>
-                            <b><?php echo $model->giftFromUser->username; ?></b>
+                            <b><?php echo $model->user->username; ?></b>
                         </div>
                     <?php } elseif($model->gift_from_id != $userId && $model->user_id == $userId) { ?>
                         <div class="text-block">

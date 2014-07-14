@@ -678,7 +678,7 @@ class LotteriesController extends Controller
                                     $lot->save();
                                     $dbTransaction->commit();
                                     $winRes = $lot->updateWinning();
-                                    $checkRes=$lot->checkNewStatus();
+//                                    $checkRes=$lot->checkNewStatus();
                                     $data["result"] = "1";
                                     if($isGift){
                                         $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è stato regalato a ").$giftRes['toUser'];

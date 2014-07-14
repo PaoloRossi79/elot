@@ -1,10 +1,11 @@
 BUG:
 
+3- FINESTRA REGALO BIGLIETTI: quando si clicca sopra ogni volta si riduce al click la finestra
 
-OK 4) Notifiche: non azzera il count (pallino rosso)
+4- LOTTERIE ESTRATTE: manca il nome del vincitore
+
 5) Notifiche: non mostra il credito regalato
 6) Regala ticket:
-    a) se regalo a follower: ok regalo, ma non mostra correttamente a chi lo hai regalato (mostra me stesso)
     b) se regalo ad email: non arriva la mail (col link)
 
 7) Problema infinite Scroll: mettere bottone per casi in cui non funziona

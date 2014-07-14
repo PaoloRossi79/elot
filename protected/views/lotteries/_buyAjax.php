@@ -11,9 +11,7 @@
               , CClientScript::POS_READY);
           } ?>
         <script>
-            $(window).on('load',function(){
-                $.modalHasUpdated(true); 
-             });
+            $.modalHasUpdated(true); 
         </script>
           <?php
           if($result == "1"){
@@ -33,9 +31,7 @@
           }
         } else {?>
         <script>
-            $(window).on('load',function(){
-                $.modalHasUpdated(false); 
-             });
+            $.modalHasUpdated(false); 
         </script>
         <?php
             $ticketBoxSize = 350;
@@ -95,7 +91,7 @@
                             <dd>
                                 <span class="user-small-avatar-container">
                                     <a href="<?php echo CController::createUrl('users/view/'.$data->winningUser->id);?>">
-                                        <?php echo CHtml::image("/images/userProfiles/".$data->winningUser->id."/smallThumb/".$data->winningUser->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                        <?php echo Users::model()->getImageTag($data->winningUser); ?>
                                         <span class="small-username"><?php echo CHtml::encode($data->winningUser->username); ?></span>
                                     </a>
                                 </span>

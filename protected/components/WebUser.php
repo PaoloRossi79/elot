@@ -40,13 +40,9 @@ class WebUser extends CWebUser {
   
   function getAvatarUrl()
   {
-	$user = $this->loadUser(Yii::app()->user->id);
-	if($user!==null){
-            $img = $user->profile->img;
-            if(gettype($img) == "object"){
-                $url = CHtml::image("/images/userProfiles/".$user->id."/smallThumb/".$user->avatar, "User Avatar", array("class"=>"img-thumbnail"));
-                return $url;
-            } elseif(gettype($img) == "string"){
+      
+        // old code:
+        /*
                 if($user->ext_source == Yii::app()->params['authExtSource']['Google']){
                     require_once(dirname(__FILE__).'/../extensions/hoauth/models/UserOAuth.php');
                     $config = UserOAuth::getConfig();
@@ -56,9 +52,10 @@ class WebUser extends CWebUser {
                     $img = $res['image']['url'];
                 }
                 return CHtml::image($img, "User Avatar", array("class"=>"img-thumbnail"));
-            }
-        }
-	return "";
+        */
+	$user = $this->loadUser(Yii::app()->user->id);
+        $url = Users::model()->getImageTag($user);
+	return $url;
   }
   
   function getIsAdmin()

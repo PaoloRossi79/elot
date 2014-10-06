@@ -55,6 +55,7 @@
                     <div id="header-logo-div">
                         <a href="/">
                             <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "WonLot", array("class"=>"site-main-logo img-responsive")); ?>
+                            <span class='logo-subtitle'><?php echo Yii::t('wonlot','Asta delle meraviglie'); ?></span>
                         </a>
                     </div>
                     <div id="header-icons">
@@ -78,14 +79,14 @@
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-register.png", "My Profile", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Le tue lotterie'); ?>">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/userIndex">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylottery.png", "My Lotteries", array("class"=>"img-responsive")); ?>
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Le tue aste'); ?>">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/auctions/userIndex">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-mylottery.png", "My auctions", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
-                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Lotterie'); ?>">
-                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/lotteries/index">
-                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Lotteries", array("class"=>"img-responsive")); ?>
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Aste'); ?>">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/auctions/index">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-lottery.png", "Auctions", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Notifiche'); ?>">
@@ -176,7 +177,7 @@
             <div class="footer-middle">
                <h3>Come funziona?</h3>
                <p>
-                   <b><?php echo CHtml::encode(Yii::app()->name); ?></b> è un portale che ti permette di partecipare e vincere ad un mondo di lotterie create dagli utenti.
+                   <b><?php echo CHtml::encode(Yii::app()->name); ?></b> è un portale che ti permette di partecipare e vincere ad un mondo di aste create dagli utenti.
                </p>
                <p>
                   Hai bisogno di aiuto per usare <?php echo CHtml::encode(Yii::app()->name); ?>? Puoi trovare tutte le risposte alla sezione "Come Funziona".

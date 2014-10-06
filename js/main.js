@@ -104,8 +104,8 @@ $(window).bind("load", function() {
        $('.box-spinner').show();
    });
    
-   $('.lot-item').click(function(event){
-       $(this).find('.sel-btn')[0].click();
+   $('.ticket-list-btn').click(function(event){
+       $('#myTickets'+this.id).click();
        if(!$("#ticket-lot-"+this.id).is(":visible")){
             $(".ticket-block").fadeOut();
             $("#ticket-lot-"+this.id).fadeIn();
@@ -121,6 +121,30 @@ $(window).bind("load", function() {
         height: '200px',
         size: '5px',
    }); 
+   $.checkDate = function(selDate){
+       alert(selDate);
+       alert(new Date(selDate,"dd/mm/yy hh:mm"));
+   }
+   
+   $.checkMinDate = function(selDate){
+        if(!$("#lot_start").datepicker("getDate")){
+            $("#lot_start").datepicker("option","maxDate",selDate);
+        }
+   }
+   $.checkMaxDate = function(selDate){
+        if(!$("#lot_end").datepicker("getDate")){
+            $("#lot_end").datepicker("option","minDate",selDate);
+        }
+   }
+   
+   /*$("#lot_start").focus(function(event){
+       alert("E blur");
+       $("#lot_end").blur();
+   });
+   $("#lot_end").focus(function(event){
+       alert("S blur");
+       $("#lot_start").blur();
+   });*/
    
    /*$.lotBoxIn = function(obj){
      var hiddenDiv = $(obj).parent().children('.lot-box-hover');

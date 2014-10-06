@@ -1,3 +1,3 @@
-<p>La tua lotteria è aperta!</p>
+<p>La tua Asta è aperta!</p>
 
 <p><?php echo $lottery->name; ?></p>

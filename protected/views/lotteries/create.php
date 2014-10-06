@@ -9,6 +9,6 @@ $this->breadcrumbs=array(
 
 ?>
 
-<h1>Create Lotteries</h1>
+<h1><?php echo Yii::t("wonlot","Crea asta"); ?></h1>
 
 <?php echo $this->renderPartial('_form', array('form' => $form)); ?>

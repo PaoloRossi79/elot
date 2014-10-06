@@ -128,8 +128,8 @@ $notifyTypeMsg = array(
     2=>array('fw'=>Yii::t('wonlot','ti ha regalato dei WlMoney:'),'bw'=>Yii::t('wonlot','hai regalato dei WlMoney:')), // gift money receive
     3=>array('fw'=>Yii::t('wonlot','ha iniziato a seguirti.'),'bw'=>Yii::t('wonlot','hai iniziato a seguire:')), // start follow receive
     4=>array('fw'=>Yii::t('wonlot','ha smesso di seguirti.'),'bw'=>Yii::t('wonlot','hai smesso di seguire:')), // stop follow receive
-    5=>array('fw'=>Yii::t('wonlot','hai vinto una lotteria:'),'bw'=>''), // lottery won receive
-    6=>array('fw'=>Yii::t('wonlot','una tua lotteria è stata estratta:'),'bw'=>''), // lottery extracted receive
+    5=>array('fw'=>Yii::t('wonlot','hai vinto una Asta:'),'bw'=>''), // lottery won receive
+    6=>array('fw'=>Yii::t('wonlot','una tua Asta è stata estratta:'),'bw'=>''), // lottery extracted receive
     7=>array('fw'=>Yii::t('wonlot','ti sono stati rimborsati dei Ticket:'),'bw'=>Yii::t('wonlot','hai rimborsato dei Ticket:')), // ticket refound receive
     8=>array('fw'=>Yii::t('wonlot','la tua richietsa di ritiro denaro è stata inviata: '),'bw'=>Yii::t('wonlot','')), // withdraw request sent
     9=>array('fw'=>Yii::t('wonlot','la tua richietsa di ritiro denaro è stata eseguita: '),'bw'=>Yii::t('wonlot','')), // withdraw request complete

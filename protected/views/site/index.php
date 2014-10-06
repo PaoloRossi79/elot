@@ -42,13 +42,13 @@ unset(Yii::app()->session['confirmEmailError']);
         <div class="input-group">
           <div class="input-group-btn">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                  <span id="cat-sel"><?php echo Yii::t('wonlot','Categories'); ?></span><span class="glyphicon glyphicon-tag"></span>
+                  <span id="cat-sel"><?php echo Yii::t('wonlot','Categories'); ?></span>
               </button>
             <ul class="dropdown-menu cat-list">
               <?php
                     $cat = $this->filterModel->lists['Categories'];
                     foreach($cat as $k=>$item){ ?>
-                    <?php echo "<li id='".$item."' data-id='".$k."'>".$item."</li>";?>
+                    <?php echo "<li class='cat-drop-list' id='".$item."' data-id='".$k."'>".$item."</li>";?>
               <?php } ?>
             </ul>
           </div><!-- /btn-group -->

@@ -18,7 +18,7 @@
     <legend>
         <?php echo Yii::t('wonlot','Richiesta di pagamento di: ').$model->user->username;?>
         <br>
-        <?php echo Yii::t('wonlot','Lotteria: ').$model->lottery->name;?>
+        <?php echo Yii::t('wonlot','Asta: ').$model->lottery->name;?>
     </legend>
 
 	<?php echo $form->errorSummary($model); ?>

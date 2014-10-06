@@ -63,8 +63,42 @@ class Lotteries extends PActiveRecord
 			// @todo Please remove those attributes that should not be searched.
 //			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
 			array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, location_id', 'safe',),
+                        array('lottery_start_date', 'myCheckdate', 'compare'=>'lottery_draw_date', 'criteria'=>'smaller'),
+                        array('lottery_draw_date', 'myCheckdate', 'compare'=>'lottery_start_date', 'criteria'=>'bigger'),
 		);
 	}
+        
+        public function myCheckdate($attribute,$params) // $params: compare= attribute to compare, criteria= {bigger or smaller}
+        {
+            if(!$this->hasErrors())
+            {
+                $now = strtotime(date("d/m/Y h:m"));
+                if(strtotime($this->{$attribute}) < $now)
+                {
+                    $this->addError($attribute,Yii::t('wonlot','La data non è valida (passata)'));
+                }
+                if($params['compare'] && $params['criteria']){
+                    if($params['criteria'] == "bigger"){
+                        if(strtotime($this->{$attribute}) < strtotime($this->{$params['compare']}))
+                        {
+                            $this->addError($attribute,Yii::t('wonlot','La data non è valida (maggiore)'));
+                        }
+                        // check for max lenght of auction: 2 HR min, 30 days max
+                        $diff = strtotime($this->{$attribute}) - strtotime($this->{$params['compare']});
+                        if($diff < (60 *60 * 2)){
+                            $this->addError($attribute,Yii::t('wonlot','La durata dell\'asta è inferiore alle 2 ore'));
+                        } elseif($diff > (60 * 60 * 24 * 30)){
+                            $this->addError($attribute,Yii::t('wonlot','La durata dell\'asta è superiore a 30 giorni'));
+                        }
+                    } elseif($params['criteria'] == "smaller"){
+                        if(strtotime($this->{$attribute}) > strtotime($this->{$params['compare']}))
+                        {
+                            $this->addError($attribute,Yii::t('wonlot','La data non è valida (minore)'));
+                        }
+                    }
+                }
+            }
+        }
 
 	/**
 	 * @return array relational rules.
@@ -95,7 +129,7 @@ class Lotteries extends PActiveRecord
 		return array(
 			'id' => Yii::t('wonlot','ID'),
 			'name' => Yii::t('wonlot','Nome'),
-			'lottery_type' => Yii::t('wonlot','Tipo di lotteria'),
+			'lottery_type' => Yii::t('wonlot','Tipo di Asta'),
 			'prize_desc' => Yii::t('wonlot','Descrizione del premio'),
 			'prize_category' => Yii::t('wonlot','Categoria del premio'),
 			'prize_conditions' => Yii::t('wonlot','Condizioni del premio'),
@@ -105,11 +139,12 @@ class Lotteries extends PActiveRecord
 			'ticket_value' => Yii::t('wonlot','Valore del ticket'),
 			'min_ticket' => Yii::t('wonlot','Min Ticket'),
 			'max_ticket' => Yii::t('wonlot','Max Ticket'),
-			'lottery_start_date' => Yii::t('wonlot','Data di inizio della lotteria'),
-			'lottery_draw_date' => Yii::t('wonlot','Data di estrazione della lotteria'),
+			'lottery_start_date' => Yii::t('wonlot','Data di inizio della Asta'),
+			'lottery_draw_date' => Yii::t('wonlot','Data di estrazione della Asta'),
 			'created' => Yii::t('wonlot','Creata'),
 			'modified' => Yii::t('wonlot','Modificata'),
 			'last_modified_by' => Yii::t('wonlot','Ultima modifica di'),
+			'lot_location' => Yii::t('wonlot','Città o Indirizzo'),
 		);
 	}
 
@@ -158,7 +193,8 @@ class Lotteries extends PActiveRecord
         public static function getMainLotteries()
 	{
             $criteria=new CDbCriteria; 
-            $criteria->addInCondition('status',array(3,4));
+            $criteria->addInCondition('status',array(3,2,4,5));
+            $criteria->order = "FIELD(t.status, 3,2,4,5)";
             $dataProvider=new CActiveDataProvider('Lotteries', array(
                 /*'pagination'=>array(
 //                    'pageSize'=>8,
@@ -179,9 +215,11 @@ class Lotteries extends PActiveRecord
                 if($type['status']==="active"){
                     $dbToday=new CDbExpression('NOW()');
                     $criteria->order='lottery_start_date';
-                    $criteria->addCondition('status=`active`');
+                    $criteria->addCondition('status='.Yii::app()->params['lotteryStatusConst']['open']);
                     $criteria->addCondition('lottery_start_date <='.$dbToday);
                     $criteria->addCondition('lottery_draw_date >='.$dbToday);
+                } else {
+                    $criteria->order = "FIELD(t.status, 3,2,4,5)";
                 }
                 if(!is_array($type['status'])){
                     $status=array($type['status']);

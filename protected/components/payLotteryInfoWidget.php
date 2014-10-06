@@ -41,6 +41,7 @@ class payLotteryInfoWidget extends CWidget
                 'winnerTicket'=>$this->model->winnerTicket,
                 'returnUrl'=>$this->returnUrl,
                 'type'=>$this->type,
+                'controller'=>$this->controller,
             )
         );
     }   
@@ -50,8 +51,9 @@ class payLotteryInfoWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		$.showResponse = function(data){
-                    data=$.parseJSON(data);
+		$.showResponse = function(data,closeModal){
+                    //data=$.parseJSON(data);
+                    alert(data);
                     if(data.res){
                       $(".success-message").text(data.okMsg);
                       $(".success-block").show();
@@ -63,6 +65,13 @@ class payLotteryInfoWidget extends CWidget
                       }*/
                       $('#reqPayBtn').removeAttr('disabled');
                       $('.draw-block').fadeIn();
+                      if(closeModal){
+                        setTimeout(function(){
+                          $('#buy-credit-modal').modal('hide');
+                          $('#gift-credit-modal').modal('hide');
+                          $('#with-credit-modal').modal('hide');
+                        },2000);
+                      }
                     } else {
                       $(".error-message").text(data.errMsg);
                       $(".error-block").show();
@@ -70,6 +79,11 @@ class payLotteryInfoWidget extends CWidget
                       $(".success-block").hide();
                       //$('#reqPayBtn').attr('disabled','disabled');
                     }
+                }
+		$.showResponse2 = function(data){
+                    //data=$.parseJSON(data);
+                    alert(data);
+                    $("#with-credit-modal-container").html(data);
                 }
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());

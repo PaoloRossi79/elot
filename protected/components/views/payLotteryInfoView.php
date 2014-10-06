@@ -79,7 +79,7 @@ $form = $this->beginWidget(
     <div class="col-sm-12">
         <?php if(isset($lottery) && $lottery->paid_ref_id > 0){ ?>
             <?php if($lottery->paidInfo->is_completed){ ?>
-                <h4><?php echo Yii::t('wonlot','Lotteria già pagata'); ?></h4>
+                <h4><?php echo Yii::t('wonlot','Asta già pagata'); ?></h4>
                 <dl class="dl-horizontal">
                     <dt><?php echo Yii::t('wonlot','Pagamento eseguito da'); ?>:</dt>
                     <dd><?php echo CHtml::encode($lottery->paidInfo->completeUser->username); ?></dd>
@@ -87,14 +87,15 @@ $form = $this->beginWidget(
                     <dd><?php echo CHtml::encode($lottery->paidInfo->complete_date); ?></dd>
                 </dl>
             <?php } else { ?>
-                <h4><?php echo Yii::t('wonlot','Lotteria già in attesa di pagamento'); ?></h4>
+                <h4><?php echo Yii::t('wonlot','Asta già in attesa di pagamento'); ?></h4>
             <?php }  ?>
         <?php } else { ?>
-            <?php echo CHtml::ajaxButton (Yii::t('wonlot','Richiedi pagamento'),
+            <?php echo CHtml::ajaxSubmitButton (Yii::t('wonlot','Richiedi pagamento'),
                 Yii::app()->controller->createUrl('users/savePayInfo'), 
                 array(
-                  'type' => 'POST', 
-                  'data'=>'js:$("#userPaymentInfo-form").serialize()',
+                  'dataType' => 'json', 
+                  'type' => 'post', 
+//                  'data'=>'js:$("#userPaymentInfo-form").serialize()',
                   'success'=>'js:function(data){
                       $.showResponse(data);
                   }',
@@ -107,11 +108,12 @@ $form = $this->beginWidget(
 <?php } else { ?>
 <div class="form-group">
     <div class="col-sm-12">
-        <?php echo CHtml::ajaxButton (Yii::t('wonlot','Salva i dati'),
+        <?php echo CHtml::ajaxSubmitButton (Yii::t('wonlot','Salva i dati'),
             Yii::app()->controller->createUrl('users/savePayInfo'), 
             array(
-              'type' => 'POST', 
-              'data'=>'js:$("#userPaymentInfo-form").serialize()',
+              'dataType' => 'json', 
+              'type' => 'post', 
+//              'data'=>'js:$("#userPaymentInfo-form").serialize()',
               'success'=>'js:function(data){
                   $.showResponse(data);
               }',
@@ -135,6 +137,7 @@ $form = $this->beginWidget(
         'CActiveForm',
         array(
             'id' => 'userWithdraw-form',
+//            'action'=>$controller->createUrl('users/requestWithdraw'),
             'htmlOptions' => array('class' => 'form-horizontal','enctype' => 'multipart/form-data','role'=>'form'), // for inset effect
         )
     );
@@ -146,20 +149,22 @@ $form = $this->beginWidget(
             echo $formDraw->radioButtonList($withdraw, "creditOption", Yii::app()->params['buyCreditOptions'], $opt); */
             ?>
             <br/>
-            <div><?php echo $formDraw->textField($withdraw, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da ritirare...'))); ?></div>
+            <div><?php echo $formDraw->textField($withdraw, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da ritirare...'))); ?> €</div>
             <small><em>(<?php echo Yii::t('wonlot','Importo massimo:').' '.$this->userCredit; ?> WlMoney)</em></small>
-            <div><?php echo CHtml::ajaxButton (Yii::t('wonlot','Ritira denaro'),
-                Yii::app()->controller->createUrl('users/requestWithdraw'), 
-                array(
-                  'type' => 'POST', 
-                  'data'=>'js:$("#userWithdraw-form").serialize()',
-                  'success'=>'js:function(data){
-                      $.showResponse(data);
-                  }',
-                ),
-                array('name'=>'reqDrawBtn', 'class'=>'btn btn-primary buy-btn')
-            );
-            ?>
+            <div>
+                <?php // echo CHtml::submitButton(Yii::t('wonlot','Acquista credito'),array('class'=>'btn btn-success')); ?>
+                <?php echo CHtml::ajaxSubmitButton (Yii::t('wonlot','Ritira denaro'),
+                    Yii::app()->controller->createUrl('users/requestWithdraw'), 
+                    array(
+                      'dataType' => 'json', 
+                      'type' => 'post', 
+    //                  'data'=>'js:$("#userWithdraw-form").serialize()',
+                      'success'=>'js:function(data){
+                          $.showResponse(data,true);
+                      }',
+                    ),
+                    array('name'=>'reqDrawBtn', 'class'=>'btn btn-primary buy-btn')
+                ); ?>
             </div>
         </div>
     </div>

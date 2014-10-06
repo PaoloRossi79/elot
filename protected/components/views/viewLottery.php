@@ -79,7 +79,7 @@
                     <p>
                         <span class="lot-i-text">
                             <?php echo ""; ?>
-                            Copia il testo qui in basso per creare un bottone per la tua lotteria sul tuo sito!
+                            Copia il testo qui in basso per creare un bottone per la tua Asta sul tuo sito!
                         </span>
                     </p>
                 </div>
@@ -93,7 +93,7 @@
                         <?php echo Yii::t('wonlot','Compra biglietto'); ?>
                     </button>
                 <?php } else { ?>
-                    <p>Non puoi comprare...la lotteria non è aperta...</p>
+                    <p>Non puoi comprare...la Asta non è aperta...</p>
                 <?php } ?>
             <?php } elseif(isset($this->lotController->userId) && $this->lotController->userId==$model->owner_id) { ?>
                     <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>

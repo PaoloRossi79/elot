@@ -72,7 +72,7 @@
                         <div id="ok-gift-box" class="alert alert-success">
                             <strong id="win-strong"></strong><span id="ok-msg"><?php echo $msg; ?></span>
                         </div>
-                        <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa lotteria!</p>
+                        <p style="display: none;" class="cannot-buy">Mi spiace...non puoi più comprare ticket per questa Asta!</p>
                     </div>
                 </div>
                 <div class="gift-panel-err panel panel-danger" style="display: <?php echo ((isset($result) && $result == 0) ? 'block' : 'none'); ?>;">

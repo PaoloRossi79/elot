@@ -5,7 +5,7 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <td><?php echo Yii::t('wonlot','Lotteria'); ?></td>
+                    <td><?php echo Yii::t('wonlot','Asta'); ?></td>
                 </tr>
             </thead>
             <?php foreach($model as $m){ ?>

@@ -49,6 +49,11 @@ class UserPaymentInfo extends PActiveRecord
 			'first_name' => Yii::t('wonlot','Nome'),
 			'last_name' => Yii::t('wonlot','Cognome'),
 			'address' => Yii::t('wonlot','Indirizzo'),
+			'legal_name' => Yii::t('wonlot','Denominazione sociale'),
+			'vat' => Yii::t('wonlot','Partita IVA'),
+			'iban' => Yii::t('wonlot','Iban'),
+			'fiscal_number' => Yii::t('wonlot','Codice Fiscale'),
+			'paypal_account' => Yii::t('wonlot','Conto Paypal'),
 		);
 	}
 

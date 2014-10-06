@@ -100,7 +100,7 @@ if(!Yii::app()->user->isGuest){
                                 . '$.fn.yiiGridView.update("my-grid");'
                                 . '}'
                             ),
-                            'confirm'=>Yii::t('wonlot','Sei sicuro di voler annullare questa lotteria?'),
+                            'confirm'=>Yii::t('wonlot','Sei sicuro di voler annullare questa Asta?'),
                         )
                     ),
                     'delete' => array

@@ -1,4 +1,4 @@
-<p>La tua lotteria è estratta!</p>
+<p>La tua Asta è estratta!</p>
 
 <p><?php echo $lottery->name; ?></p>
 

@@ -28,7 +28,7 @@
       </div>
       <div class="modal-footer">
           <?php echo CHtml::ajaxButton ("Compra!",
-            CController::createUrl('lotteries/buyTicket'), 
+            CController::createUrl('auctions/buyTicket'), 
             array(
               'update' => '#buy-main',
               'type' => 'POST', 

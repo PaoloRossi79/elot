@@ -28,17 +28,17 @@
             </div>
         <?php } ?>
         <?php if(in_array($model->status,array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
                 <div class="text-block">
                     <?php echo $model->prize_desc; ?>
                 </div>
             </div>
-            <div class="col-md-6">
+<!--            <div class="col-md-6">
                 <h3><?php echo Yii::t("wonlot","Video"); ?></h3>
                 <div class="text-block">
-<!--                    <div id="widget"></div>
-                    <div id="player"></div>-->
+                    <div id="widget"></div>
+                    <div id="player"></div>
                     <script>
                         // 2. Asynchronously load the Upload Widget and Player API code.
                         var tag = document.createElement('script');
@@ -82,7 +82,7 @@
                         }
                       </script>
                 </div>
-            </div>
+            </div>-->
         <?php } else { ?>
             <div class="col-md-12">
                 <h3><?php echo Yii::t("wonlot","Descrizione"); ?></h3>
@@ -108,6 +108,12 @@
         <div class="col-md-4">
             <h4><?php echo Yii::t("wonlot","Premio"); ?></h4>
             <div class="text-block">
+                <p><?php echo Yii::t("wonlot","Ticket:"); ?> 
+                    <?php echo CHtml::image('/images/site/wl-money.png', 'WL Money',array('class'=>'wl-icon'));?> 
+                    <span class="lot-prize-text">
+                        <?php echo CHtml::encode($model->ticket_value); ?>
+                    </span>
+                </p>
                 <p><?php echo Yii::t("wonlot","Città:"); ?> <span class="lot-b-text"><?php echo CHtml::encode($model->location->address); ?></span></p>
                 <p><?php echo Yii::t("wonlot","Stato:"); ?> 
                     <span class="lot-b-text"><?php echo CHtml::encode(Yii::app()->params['prizeConditionsId'][$model->prize_conditions]); ?></span><br/>
@@ -116,18 +122,6 @@
                 <p><?php echo Yii::t("wonlot","Consegna:"); ?> <span class="lot-b-text"><?php echo CHtml::encode(Yii::app()->params['speditionTypeId'][$model->prize_shipping]); ?></span></p>
             </div>
         </div>
-        <div class="col-md-4">
-            <h4><?php echo Yii::t("wonlot","Ticket"); ?></h4>
-            <div class="text-block">
-                <p>
-                    <?php echo CHtml::image('/images/site/wl-money.png', 'WL Money',array('class'=>'wl-icon'));?> 
-                    <span class="lot-prize-text">
-                        <?php echo CHtml::encode($model->ticket_value); ?>
-                    </span>
-                </p>
-            </div>
-        </div>
-        <div class="clearfix"></div>
         <?php if($model->owner->id == $this->userId){ ?>
             <div class="col-md-4">
                 <h4><?php echo Yii::t("wonlot","Info per il venditore"); ?></h4>
@@ -151,42 +145,44 @@
             <div class="col-md-4">
                 <h4><?php echo Yii::t("wonlot","Condividi sul tuo sito!"); ?></h4>
                 <div class="text-block">
-                    <?php $btnCode = CHtml::link(CHtml::image(Yii::app()->controller->createAbsoluteUrl('/').'/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id));?>
-                    <?php // $btnCode = '<a href="'.Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id).'"><img src="'.Yii::app()->controller->createAbsoluteUrl('/').'images/site/icon-wl-buy.png" alt="Compra con WonLot"></a>';?>
+                    <?php $btnCode = CHtml::link(CHtml::image(Yii::app()->controller->createAbsoluteUrl('/').'/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('auctions/view/'.$model->id));?>
+                    <?php // $btnCode = '<a href="'.Yii::app()->controller->createAbsoluteUrl('auctions/view/'.$model->id).'"><img src="'.Yii::app()->controller->createAbsoluteUrl('/').'images/site/icon-wl-buy.png" alt="Compra con WonLot"></a>';?>
                     <?php echo CHtml::hiddenField('lot-txt-copy',$btnCode);?>
                     <blockquote>
-                        <?php echo CHtml::link(CHtml::image('/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('lotteries/view/'.$model->id));?>
+                        <?php echo CHtml::link(CHtml::image('/images/site/icon-wl-buy.png', 'Compra con WonLot'), Yii::app()->controller->createAbsoluteUrl('auctions/view/'.$model->id));?>
                         <button class="btn btn-sm btn-default lot-btn-copy"><?php echo Yii::t('wonlot','Copia negli appunti'); ?></button>
-                        <footer><?php echo Yii::t('wonlot','Copia il codice negli appunti ed usalo per creare un collegamento con la tua lotteria sul tuo sito!'); ?></footer>
+                        <footer><?php echo Yii::t('wonlot','Copia il codice negli appunti ed usalo per creare un collegamento con la tua Asta sul tuo sito!'); ?></footer>
                     </blockquote>
                 </div>
             </div>
         <?php } ?>
         <?php $this->widget('shareWidget',array('model'=>$model)); ?>
-        <div class="clearfix"></div>
-        <div class="col-md-8">
-            <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
-                <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
-                    <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
-                        <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
-                    </button>
-                    <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
-                        <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
-                    </button>
-                <?php } else { ?>
-                    <p>Non puoi comprare...la lotteria non è aperta...</p>
+        
+        <div class="col-md-12">
+            <div class="panel-body">
+                <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
+                    <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
+                        <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
+                            <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
+                        </button>
+                        <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
+                            <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
+                        </button>
+                    <?php } else { ?>
+                        <p>Non puoi comprare...la Asta non è aperta...</p>
+                    <?php } ?>
+                <?php } elseif(isset($this->userId) && $this->userId==$model->owner_id) { ?>
+                    <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
+                        <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('auctions/update/'.$model->id));?></button>
+                    <?php } ?>
+                    <?php if($this->lotErrors['update']){ ?>
+                        <div class="alert alert-danger">
+                            <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+                            <?php echo CHtml::encode($this->lotErrors['update']); ?>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
-            <?php } elseif(isset($this->userId) && $this->userId==$model->owner_id) { ?>
-                <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
-                    <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>
-                <?php } ?>
-                <?php if($this->lotErrors['update']){ ?>
-                    <div class="alert alert-danger">
-                        <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
-                        <?php echo CHtml::encode($this->lotErrors['update']); ?>
-                    </div>
-                <?php } ?>
-            <?php } ?>
+            </div>
         </div>
     </div>
 </div>

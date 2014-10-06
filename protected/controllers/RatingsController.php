@@ -24,7 +24,7 @@ class RatingsController extends Controller
             if($params){
                 if($params['lotteryId'] && $params['ticketId'] && $params['touserId']){
                     //check if can rate
-                    $lottery = Lotteries::model()->findByPk($params['lotteryId']);
+                    $lottery = Lotteriesz::model()->findByPk($params['lotteryId']);
                     if($lottery && $lottery->winner->id == $userId){
                         $rate = new Ratings;
                         $rate->user_id = $userId;
@@ -46,7 +46,7 @@ class RatingsController extends Controller
                     } else {
                         echo CJSON::encode(array(
                             'res'=>0,
-                            'msg'=>Yii::t('wonlot','Errore: non puoi votare per questa lotteria'),
+                            'msg'=>Yii::t('wonlot','Errore: non puoi votare per questa Asta'),
                         ));
                     }
                     

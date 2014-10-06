@@ -1,7 +1,7 @@
 <?php
 /* @var $this LotteriesController */
 /* @var $data Lotteries */
-$boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/'.$data->id))."</b>";
+$boxTitle="<b>".CHtml::link($data->name, CController::createUrl('auctions/view/'.$data->id))."</b>";
 /*if($showCat){
     $boxTitle.=" - ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category));
 }*/

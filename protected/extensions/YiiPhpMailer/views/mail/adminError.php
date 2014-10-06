@@ -1,4 +1,4 @@
-<p>Errore in chiusura Lotteria!</p>
+<p>Errore in chiusura Asta!</p>
 
 <p><?php echo $model->id. " - ".$model->name; ?></p>
 

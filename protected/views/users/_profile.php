@@ -29,10 +29,10 @@
     }
 ?>
         <div class="form-group">
+            <?php echo $form->errorSummary($model); ?>
             <?php if($model->user_type_id == Yii::app()->user->userTypes['admin']){ ?>
                 <p>Sei un <b>ADMIN!</b></p>
             <?php } else { ?>
-                <?php echo $form->errorSummary($model); ?>
                 <?php echo $form->hiddenField($model, 'user_type_id'); ?>
                 <div class="radio col-sm-6 col-sm-offset-2">
                     <?php $profileTypes = array(1 => 'Privato', 3 => 'Azienda');
@@ -49,7 +49,7 @@
                 
             <?php } ?>
         </div>
-        <div id="private-profile" <?php echo ($model->user_type_id == 1 || !$model->user_type_id) ? "" : 'style="display: none"'; ?>>
+        <div id="private-profile" <?php echo ($model->user_type_id == 1 || $model->user_type_id == Yii::app()->user->userTypes['admin'] || !$model->user_type_id) ? "" : 'style="display: none"'; ?>>
             <div class="form-group">
                 <div class="col-sm-2">
                     <?php echo $form->labelEx($model,'username',array('class'=>'control-label'));?>

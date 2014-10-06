@@ -94,7 +94,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è aperta su WonLot!');
+            $mail->setSubject('Una tua Asta si è aperta su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
@@ -106,7 +106,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
+            $mail->setSubject('Una tua Asta si è chiusa su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
@@ -118,7 +118,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
+            $mail->setSubject('Una tua Asta si è chiusa su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
@@ -130,7 +130,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
+            $mail->setSubject('Una tua Asta si è chiusa su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
@@ -204,7 +204,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->winner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
+            $mail->setSubject('Una tua Asta si è chiusa su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }
@@ -216,7 +216,7 @@ class EmailManager extends PActiveRecord
             $mail->setFrom('info@wonlot.com', 'WonLot');
             $mail->setTo($lottery->owner->email);
 //            $mail->setTo('paolorossi79@gmail.com');
-            $mail->setSubject('Una tua lotteria si è chiusa su WonLot!');
+            $mail->setSubject('Una tua Asta si è chiusa su WonLot!');
             $sendRes=EmailManager::sendWithTry($mail);
             return $sendRes;
         }

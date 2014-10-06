@@ -10,6 +10,7 @@ class UsersController extends Controller
 	public $subscriptionForm;
 	public $tickets;
 	public $ticketsProvider;
+	public $userWithdraw;
 
 	/**
 	 * @return array action filters
@@ -283,76 +284,95 @@ class UsersController extends Controller
                 }
                 $userInfoModel->setAttributes($_POST['UserPaymentInfo']);
                 if(!$userInfoModel->legal_name || !$userInfoModel->address){
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Nome e Indirizzo sono obbligatori')));
-                    return;
+                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Nome e Indirizzo sono obbligatori')));
+                    return;*/
+                    $resError = Yii::t('wonlot','Nome e Indirizzo sono obbligatori');
                 }
                 if(!$userInfoModel->vat && !$userInfoModel->fiscal_number){
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
-                    return;
+                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
+                    return;*/
+                    $resError = Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale');
                 }
                 if($_POST['for_credit']){
                     if(!$userInfoModel->iban && !$userInfoModel->paypal_account){
-                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
-                        return;
+                        /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
+                        return;*/
+                        $resError = Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal');
                     }
                 }
                 if($userInfoModel->save()){
                     $userOk = true;
                 } else {
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
-                    return;
+                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
+                    return;*/
+                    $resError = Yii::t('wonlot','Salvataggio dei dati non riuscito');
                 }
 
                 if($userOk && (isset($_POST['for_profile']) || isset($_POST['for_credit']))){
-                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>$_POST['for_profile'],'isDraw'=>$_POST['for_credit']));
-                    return;
-                }
-                if($userOk && isset($_POST['lot_id'])){
-                    $lottery = Lotteries::model()->findByPk($_POST['lot_id']);
-                    if($lottery){
-                        if($lottery->paidInfo){
-                            if($lottery->paidInfo->is_completed){
-                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria già pagata')));
-                                return;
-                            } else {
-                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria già in attesa di pagamento')));
-                                return;
-                            }
-                        } else {
-                            $payReq = new LotteryPaymentRequest;
-                            $payReq->lottery_id = $lottery->id;
-                            $payReq->from_user_id = Yii::app()->user->id;
-                            $payReq->sent_date = new CDbExpression('NOW()');
-                            if($payReq->save()){
-                                $lottery->paid_ref_id = $payReq->id;
-                                if($lottery->save()){
-                                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di pagamento inviata')));
-                                    return;
+                    /*echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>$_POST['for_profile'],'isDraw'=>$_POST['for_credit']));
+                    return;*/
+                    $resOk = Yii::t('wonlot','Dati di pagamento salvati');
+                } else {
+                    if($userOk && isset($_POST['lot_id'])){
+                        $lottery = Lotteries::model()->findByPk($_POST['lot_id']);
+                        if($lottery){
+                            if($lottery->paidInfo){
+                                if($lottery->paidInfo->is_completed){
+                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta già pagata')));
+                                    return;*/
+                                    $resError = Yii::t('wonlot','Asta già pagata');
                                 } else {
-                                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
-                                    return;
+                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta già in attesa di pagamento')));
+                                    return;*/
+                                    $resError = Yii::t('wonlot','Asta già in attesa di pagamento');
                                 }
                             } else {
-                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
-                                return;
+                                $payReq = new LotteryPaymentRequest;
+                                $payReq->lottery_id = $lottery->id;
+                                $payReq->from_user_id = Yii::app()->user->id;
+                                $payReq->sent_date = new CDbExpression('NOW()');
+                                if($payReq->save()){
+                                    $lottery->paid_ref_id = $payReq->id;
+                                    if($lottery->save()){
+    //                                    echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di pagamento inviata')));
+    //                                    return;
+                                        $resOk = Yii::t('wonlot','Richiesta di pagamento inviata');
+                                    } else {
+    //                                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+    //                                    return;
+                                        $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
+                                    }
+                                } else {
+                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                    return;*/
+                                    $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
+                                }
                             }
+                        } else {
+                            /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta non trovata')));
+                            return;*/
+                            $resError = Yii::t('wonlot','Asta non trovata');
                         }
                     } else {
-                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria non trovata')));
-                        return;
+                        /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta non trovata')));
+                        return;*/
+                        $resError = Yii::t('wonlot','Asta non trovata');
                     }
-                } else {
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Lotteria non trovata')));
-                    return;
                 }
             } else {
-                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+                //echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+                $resError = Yii::t('wonlot','Dati di pagamento mancanti');
             }
+            $this->renderPartial('_billForm',array(
+                    'this'=>$this,
+                    'resError'=>$resError,
+                    'resOk'=>$resOk,
+            ),false,true);
 	}
         
         public function actionRequestWithdraw(){
             if(isset($_POST['UserWithdraw'])){
-                $user = Yii::app()->user->loadUser();
+                $user = Yii::app()->user->loadUser(Yii::app()->user->id);
                 $withdraw = $_POST['UserWithdraw'];
                 if(isset($withdraw['creditValue'])){
                     $withdrawVal = (float) $withdraw['creditValue'];
@@ -369,13 +389,14 @@ class UsersController extends Controller
                                 $user->available_balance_amount-=$drawReq->value;
                                 if($user->save()){
                                     if($drawReq->save()){
-                                        if(UserTransactions::model()->addDrawCreditTrans($credit,$user,$drawReq)){
+                                        if(UserTransactions::model()->addDrawCreditTrans($drawReq->value,$user,$drawReq)){
                                             $dbTransaction->commit();
-                                            Notifications::model()->sendDrawCreditNotify($credit,$user,$drawReq);
-                                            echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Richiesta di ritiro denaro inviata')));
+                                            Notifications::model()->sendDrawCreditNotify($drawReq->value,$user,$drawReq);
+                                            $resOk = Yii::t('wonlot','Richiesta di ritiro denaro inviata');
                                         } else {
                                             $dbTransaction->rollback();
-                                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
+                                            $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
+//                                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
                                         }
                                     } else {
                                         $dbTransaction->rollback();
@@ -384,18 +405,29 @@ class UsersController extends Controller
                                     $dbTransaction->rollback();
                                 }
                             } else {
-                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile')));
+//                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile')));
+                                $resError = Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile');
                             }
                         } else {
-                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+//                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
+                            $resError = Yii::t('wonlot','Dati di pagamento mancanti');
                         }
                     } else {
-                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+//                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+                        $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                     }
                 } else {
-                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+//                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
+                    $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                 }
             }
+                
+            $this->userWithdraw = new UserWithdraw;
+            $this->renderPartial('_withCreditForm',array(
+                    'this'=>$this,
+                    'resError'=>$resError,
+                    'resOk'=>$resOk,
+            ),false,true);
         }
         
         public function actionMyProfile()
@@ -407,6 +439,7 @@ class UsersController extends Controller
                 $this->subscriptionForm = new SubscriptionForm;
                 $this->tickets = Tickets::model()->getMyTickets();
                 $this->ticketsProvider = Tickets::model()->getMyTicketsProvider();
+                $this->userWithdraw = new UserWithdraw;
                 if($model->id){
                     $existLoc=Locations::model()->findByPk($model->location_id);
                     if($existLoc)
@@ -649,7 +682,7 @@ class UsersController extends Controller
 		} else {
                     $myUser->addError('creditOption','Form error');
                 }
-                $this->renderPartial('_giftCredit',array(
+                $this->renderPartial('_giftCreditForm',array(
 			'model'=>$myUser,
                         'this'=>$this,
 		),false,true);

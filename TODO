@@ -19,7 +19,7 @@ TODO:
 
 4) Promozioni speciali: -> IN ATTESA
     a) promozione per vincitore che da consenso
-    b) in Creazione lotteria: usa offerte speciali (1 pagina, vedi...sito->regolamento->009)
+    b) in Creazione Asta: usa offerte speciali (1 pagina, vedi...sito->regolamento->009)
 
 5) Newsletter: 
     b) funzione di invio
@@ -28,9 +28,9 @@ TODO:
 !!!!!!!!!!!!!!!!!!!--------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!
 SOSPESI
 
-4) Vincitore lotteria: chiedere se concede uso suoi dati nel post "vincitori" -> in sospeso ... usare cmq i dati
+4) Vincitore Asta: chiedere se concede uso suoi dati nel post "vincitori" -> in sospeso ... usare cmq i dati
 
-0) creazione lotteria: blocca a 5 immagini: STOP -> in attera
+0) creazione Asta: blocca a 5 immagini: STOP -> in attera
 
 2) Blocco Youtube -> sospeso
     metterlo anche nella pagina di edit x lotterie già salvate
@@ -57,7 +57,7 @@ DONE
 
 1) Bottone codice per link esterno -> OK
 
-2) Annullamento lotteria (fino a 24 H prima dell'estrazione)
+2) Annullamento Asta (fino a 24 H prima dell'estrazione)
 
     b) mail di comunicazione a OWNER e PATECIPANTI (biglietti già acquistati) -> scelto di fare NOTIFICA
     c) notifica (generica) a partecipanti -> OK, DONE
@@ -89,7 +89,7 @@ DONE
                 buy price: intervallo (slider o 2 campi) OK
                 keyword: free text da usare in ricerca
     c) TICKET INDEX (MANCA)
-                categoria lotteria
+                categoria Asta
                 keyword: free text da usare in ricerca
                 data acquisto (2 ... range)
     MANCA: ricerca x località
@@ -100,12 +100,12 @@ DONE
     box x scelta uso sconto nella modal di acquisto OK
     calcolo del costo con sconto OK
     tracciatura uso sconto OK
-    calcolo soglia lotteria con sconti
-    aggiungere check di status lotteria alla fine dell'acquisto
-    calcolo soglia lotteria con sconti OK
-    aggiungere check di status lotteria alla fine dell'acquisto OK
+    calcolo soglia Asta con sconti
+    aggiungere check di status Asta alla fine dell'acquisto
+    calcolo soglia Asta con sconti OK
+    aggiungere check di status Asta alla fine dell'acquisto OK
 
-3) Estrazione lotteria
+3) Estrazione Asta
     a) calcolo random del vincitore
     b) tracciatura del biglietto vincente
     c) mail a vincitore (o a tutti i concorrenti)
@@ -121,7 +121,7 @@ DONE
     b) funzione di invio
     c) possibilità di annuncio sponsorizzato, con commissione più alta
 
-6) ANNULLAMENTO Lotteria:
+6) ANNULLAMENTO Asta:
     a) fino a 24 H prima dell'estrazione
 
 8) Sharer via Facebook, G+, TW

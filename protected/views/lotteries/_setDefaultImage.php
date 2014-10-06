@@ -41,12 +41,12 @@
             <div class="caption">
               <?php if($lotId){ ?>
                     <?php echo CHtml::ajaxButton ("Set Default",
-                                      CController::createUrl('lotteries/setDefault',array("img"=>$img->file,"lotId"=>$data->id)), 
+                                      CController::createUrl('auctions/setDefault',array("img"=>$img->file,"lotId"=>$data->id)), 
                                       array('update' => '#defImageBox'),
                                       array('style' => $display,'class'=>'btn btn-green')
                     );?>
                     <?php echo CHtml::ajaxButton ("Delete",
-                                      CController::createUrl('lotteries/deleteImg',array("img"=>$img->file,"lotId"=>$data->id)), 
+                                      CController::createUrl('auctions/deleteImg',array("img"=>$img->file,"lotId"=>$data->id)), 
                                       array('update' => '#defImageBox'),
                                       array('style' => $display,'class'=>'btn btn-danger')
                     );?>

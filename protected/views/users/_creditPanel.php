@@ -1,14 +1,5 @@
 <div class='well col-md-12 gift-credit-box'>
-    <?php echo $this->renderPartial('_buyCredit', array('model'=>$model),true); ?>
-</div>
-<div class='well col-md-12 gift-credit-box'>
-<?php echo $this->renderPartial('_giftCredit', array('model'=>$model),true); ?>
-    <?php echo CHtml::ajaxButton ("Regala Credito",
-            CController::createUrl('users/giftCredit'), 
-            array('update' => '#creditGiftForm',
-                    'type' => 'POST', 
-                    'data'=>'js:$("#userCreditGift-form").serialize()',
-            ),array('class'=>'btn btn-success')); ?>
+    <?php echo $this->renderPartial('_creditActionPanel', array('model'=>$model),true); ?>
 </div>
 <div class='well col-md-12'>
     <?php 

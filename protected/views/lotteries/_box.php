@@ -1,7 +1,7 @@
 <?php
 /* @var $this LotteriesController */
 /* @var $data Lotteries */
-$boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/'.$data->id))."</b>";
+$boxTitle="<b>".CHtml::link($data->name, CController::createUrl('auctions/view/'.$data->id))."</b>";
 /*if($showCat){
     $boxTitle.=" - ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($data->prize_category));
 }*/
@@ -32,6 +32,6 @@ $boxTitle="<b>".CHtml::link($data->name, CController::createUrl('lotteries/view/
         <?php if($data->lottery_type === Yii::app()->params['lotteryTypesConst']['fixTime']){ ?>
                 <div class=""><b>Lottery draw date:</b><?php echo CHtml::encode($data->lottery_draw_date); ?></div>
         <?php } ?>
-                <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'+$data->id));?></button>
+                <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('auctions/update/'+$data->id));?></button>
     </div>
 </div>

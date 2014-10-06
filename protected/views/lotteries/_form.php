@@ -3,56 +3,58 @@
       <h3 class="panel-title">
           <?php
              //disabled="disabled"
-             $htmlDisabled=array('class'=>'form-control');
+             $htmlDisabled=array('class'=>'form-control', 'autocomplete'=>'off');
              if($model->id){
-                  echo Yii::t('wonlot','Edit Lottery') . " " .$model->name;
+                  echo Yii::t('wonlot','Modifica asta') . " " .$model->name;
                   if($model->status >= 3){
                       $htmlDisabled = array_merge($htmlDisabled,array("disabled"=>"disabled"));
                   }
              } else {
-                  echo Yii::t('wonlot','Create Lottery');
+                  echo Yii::t('wonlot','Crea asta');
              }
           ?>
       </h3>
     </div>
     <div class="panel-body">
         <div class=".container-fluid">
-            <div class="col-md-6">
-                <div class="form">
-                <?php $form = $this->beginWidget('CActiveForm', array(
+            <?php $form = $this->beginWidget('CActiveForm', array(
                         'id'=>'lot-form',
                         'enableAjaxValidation'=>false,
                     ), array(
                         'class'=>'form-inline',
                 )); ?>
+            <div class="col-md-12">
                 <!--SAVED IMG SECTION-->
-                    <?php echo $form->errorSummary($model); ?>
-                    <?php if(!$model->isNewRecord){ ?>
-                        <div class="form-group">
-                            La lotteria è in stato: <?php echo $model->getStatusText(); ?>
-                        </div>
-                    <?php } ?>
+                <?php echo $form->errorSummary($model); ?>
+                <?php if(!$model->isNewRecord){ ?>
                     <div class="form-group">
-                        <?php echo $form->labelEx($model,'name'); ?>
-                        <?php echo $form->textField($model,'name',array('size'=>25,'maxlength'=>45,'class'=>'form-control')); ?>
-                        <?php echo $form->error($model,'name'); ?>
+                        La Asta è in stato: <?php echo $model->getStatusText(); ?>
                     </div>
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model,'prize_desc'); ?>
-                        <?php 
-                            $this->widget('ext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
-                                'model' => $model,
-                                'attribute' => 'prize_desc',
-                                'options' => array(
-                                   'buttons' => array('html', 'formatting', // togliere per PRODUZIONE
-                                        'bold', 'italic', 'deleted', 'unorderedlist', 
-                                        'orderedlist', 'outdent', 'indent','table', 
-                                        'alignment', 'horizontalrule'),
-                                ),
-                                'htmlOptions' => array('class'=>'form-control')
-                            ));
-                            ?>
-                    </div>
+                <?php } ?>
+                <div class="form-group">
+                    <?php echo $form->labelEx($model,'name'); ?>
+                    <?php echo $form->textField($model,'name',array('size'=>25,'maxlength'=>45,'class'=>'form-control')); ?>
+                    <?php echo $form->error($model,'name'); ?>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->labelEx($model,'prize_desc'); ?>
+                    <?php 
+                        $this->widget('ext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
+                            'model' => $model,
+                            'attribute' => 'prize_desc',
+                            'options' => array(
+                               'buttons' => array('html', 'formatting', // togliere per PRODUZIONE
+                                    'bold', 'italic', 'deleted', 'unorderedlist', 
+                                    'orderedlist', 'outdent', 'indent','table', 
+                                    'alignment', 'horizontalrule'),
+                                'minHeight' => 200,
+                            ),
+                            'htmlOptions' => array('class'=>'form-control')
+                        ));
+                        ?>
+                </div>
+            </div>
+            <div class="col-md-6">                
                     <div class="form-group">
                         <?php echo $form->labelEx($model,'prize_category'); ?>
                         <?php echo $form->dropDownList($model,'prize_category',CHtml::listData(PrizeCategories::model()->getPrizeCatList(), 'id', 'category_name'),$htmlDisabled); ?>
@@ -83,123 +85,93 @@
                             ));*/
                             ?>
                     <!--</div>-->
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model,'ticket_value'); ?>
-                        <?php echo $form->numberField($model,'ticket_value',$htmlDisabled); ?>
-                        <?php echo $form->error($model,'ticket_value'); ?>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <?php $htmlTicketValue = array_merge($htmlDisabled,array("step"=>"0.02")); ?>
+                    <?php echo $form->labelEx($model,'ticket_value'); ?>
+                    <?php echo $form->numberField($model,'ticket_value',$htmlTicketValue); ?>
+                    <?php echo $form->error($model,'ticket_value'); ?>
+                </div>
 
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model,'lottery_start_date'); ?>
-                        <?php echo 
+                <div class="form-group">
+                    <?php echo $form->labelEx($model,'lottery_start_date'); ?>
+                    <?php echo 
 //                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
-                                'id' => 'lot_start',
-                                'model' => $model,
-                                'attribute' => 'lottery_start_date',
-                                'htmlOptions' => $htmlDisabled,
-                                'options'=>array(
-                                        'dateFormat'=>'dd/mm/yy',
-                                        'minDate'=>date('d/m/Y'),
-                                        //'dateFormat'=>'yy-mm-dd',
-                                        'timeFormat'=>'hh:mm',
-                                        'showSecond'=>false,
-                                        'showTimezone'=>false,
-                                        'language' => 'it',
-                                        'ampm' => false,
-                                        'showAnim'=>'fold',
-                                        'onSelect'=>'js:function(selDate,obj){
-                                            if(!$("#lot_end").datepicker("getDate")){
-                                                $("#lot_end").datepicker("option","minDate",selDate);
-                                            }
-                                        }',
-                                ),
-                                'language' => 'it',
-                            ),true);
-                        ?>
-                        <?php echo $form->error($model,'lottery_start_date'); ?>
-                    </div>
-                    <div class="form-group">
-                        <?php echo $form->labelEx($model,'lottery_draw_date'); ?>
-                        <?php echo 
-//                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
-                                'id' => 'lot_end',
-                                'model' => $model,
-                                'attribute' => 'lottery_draw_date',
-                                'htmlOptions' => $htmlDisabled,
-                                'options'=>array(
-                                        'dateFormat'=>'dd/mm/yy',
-                                        'minDate'=>date('d/m/Y'),
-                                        //'dateFormat'=>'yy-mm-dd',
-                                        'timeFormat'=>'hh:mm',
-                                        'showSecond'=>false,
-                                        'showTimezone'=>false,
-                                        'language' => 'it',
-                                        'ampm' => false,
-                                        'showAnim'=>'fold',
-                                        'onSelect'=>'js:function(selDate,obj){
-                                            if(!$("#lot_start").datepicker("getDate")){
-                                                $("#lot_start").datepicker("option","maxDate",selDate);
-                                            }
-                                        }',
-                                ),
-                                'language' => 'it',
-                            ),true);
-                        ?>
-                        <?php echo $form->error($model,'lottery_draw_date'); ?>
-                    </div>
-                    <?php 
-                    /* http://www.yiiframework.com/extension/egmap/ */
-                    $this->widget('gmap.EGMapAutocomplete', array(
-                        'name' => 'lot_location',
-                        'model' => $this->locationForm,
-                        'attribute' => 'address',
-                        'htmlOptions' => $htmlDisabled,
-                        /*'options' => array(
-                           'types' => array(
-                             '(geocode)'
-                           ),
-                        )*/
-                    ));
-                    ?>
-
-                    <div id="prize_img">
-                        <script>var imgCount=0;</script>
-                    <?php
-                        //echo $form->labelEx($model,'photos');
-
-                        $this->widget( 'xupload.XUpload', array(
-                            'url' => Yii::app( )->createUrl( "/lotteries/upload"),
-                            'model' => $this->upForm,
-                            'htmlOptions' => array('id'=>'lot-form'),
-                            'attribute' => 'file',
-                            'multiple' => true,
-                            'showForm' => false,
-                            'entityModel' => $model,
+                        $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
+                            'id' => 'lot_start',
+                            'model' => $model,
+                            'attribute' => 'lottery_start_date',
+                            'htmlOptions' => $htmlDisabled,
                             'options'=>array(
-                                'added' => 'js:function(e, data) { '
-                                        . "if(imgCount == 0){"
-                                            . "$('.lot-sub-btn').attr('disabled','disabled');"
-                                        ."}"
-                                        . "imgCount = imgCount + 1;"
-                                        ."}",
-                                'completed' => 'js:function(e, data) { '
-                                        . "imgCount = imgCount - 1;"
-                                        . "if(imgCount == 0){"
-                                            . "$('.lot-sub-btn').attr('disabled',false);"
-                                        ."}"
-                                        ."}",
-                                'failed' => 'js:function(e, data) { '
-                                        . "imgCount = imgCount - 1;"
-                                        . "if(imgCount == 0){"
-                                            . "$('.lot-sub-btn').attr('disabled',false);"
-                                        ."}"
-                                        ."}",
+                                    'dateFormat'=>'dd/mm/yy',
+                                    'minDate'=>date('d/m/Y'),
+                                    //'dateFormat'=>'yy-mm-dd',
+                                    'timeFormat'=>'hh:mm',
+                                    'showSecond'=>false,
+                                    'showTimezone'=>false,
+                                    'language' => 'it',
+                                    'ampm' => false,
+                                    'showAnim'=>'fold',
+                                    'onSelect'=>'js:function(selDate,obj){
+                                        $.checkMaxDate(selDate);
+                                    }',
                             ),
-                        ));
+                            'language' => 'it',
+                        ),true);
                     ?>
-                    </div>
+                    <?php echo $form->error($model,'lottery_start_date'); ?>
+                </div>
+                <div class="form-group">
+                    <?php echo $form->labelEx($model,'lottery_draw_date'); ?>
+                    <?php echo 
+//                            $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
+                            'id' => 'lot_end',
+                            'model' => $model,
+                            'attribute' => 'lottery_draw_date',
+                            'htmlOptions' => $htmlDisabled,
+                            'options'=>array(
+                                    'dateFormat'=>'dd/mm/yy',
+                                    'minDate'=>date('d/m/Y'),
+                                    //'dateFormat'=>'yy-mm-dd',
+                                    'timeFormat'=>'hh:mm',
+                                    'showSecond'=>false,
+                                    'showTimezone'=>false,
+                                    'language' => 'it',
+                                    'ampm' => false,
+                                    'showAnim'=>'fold',
+                                    'onSelect'=>'js:function(selDate,obj){
+                                        $.checkMinDate(selDate);
+                                    }',
+                            ),
+                            'language' => 'it',
+                        ),true);
+                    ?>
+                    <?php echo $form->error($model,'lottery_draw_date'); ?>
+                </div>
+                <?php echo $form->labelEx($model,'lot_location'); ?>
+                <?php 
+                /* http://www.yiiframework.com/extension/egmap/ */
+                $this->widget('gmap.EGMapAutocomplete', array(
+                    'name' => 'lot_location',
+                    'model' => $this->locationForm,
+                    'attribute' => 'address',
+                    'htmlOptions' => $htmlDisabled,
+                    /*'options' => array(
+                       'types' => array(
+                         '(geocode)'
+                       ),
+                    )*/
+                ));
+                ?>
+                <div class="">
+                    <?php if(!empty($model->id) || $model->cloneId){ ?>
+                      <?php $this->renderPartial('_setDefaultImage',array('data'=>$model)); ?>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <?php
                 if($model->isNewRecord){
                     echo CHtml::submitButton('Salva come bozza',array('name'=>'save','class'=>'btn btn-primary lot-sub-btn'));
@@ -213,16 +185,44 @@
                     }
                 }
                 ?>
-                <?php $this->endWidget(); ?>
-            </div>
-            </div>
-            <div class="col-md-4">
-                <div class="">
-                    <?php if(!empty($model->id) || $model->cloneId){ ?>
-                      <?php $this->renderPartial('_setDefaultImage',array('data'=>$model)); ?>
-                    <?php } ?>
+                <div id="prize_img">
+                    <script>var imgCount=0;</script>
+                <?php
+                    //echo $form->labelEx($model,'photos');
+
+                    $this->widget( 'xupload.XUpload', array(
+                        'url' => Yii::app( )->createUrl( "/lotteries/upload"),
+                        'model' => $this->upForm,
+                        'htmlOptions' => array('id'=>'lot-form'),
+                        'attribute' => 'file',
+                        'multiple' => true,
+                        'showForm' => false,
+                        'entityModel' => $model,
+                        'options'=>array(
+                            'added' => 'js:function(e, data) { '
+                                    . "if(imgCount == 0){"
+                                        . "$('.lot-sub-btn').attr('disabled','disabled');"
+                                    ."}"
+                                    . "imgCount = imgCount + 1;"
+                                    ."}",
+                            'completed' => 'js:function(e, data) { '
+                                    . "imgCount = imgCount - 1;"
+                                    . "if(imgCount == 0){"
+                                        . "$('.lot-sub-btn').attr('disabled',false);"
+                                    ."}"
+                                    ."}",
+                            'failed' => 'js:function(e, data) { '
+                                    . "imgCount = imgCount - 1;"
+                                    . "if(imgCount == 0){"
+                                        . "$('.lot-sub-btn').attr('disabled',false);"
+                                    ."}"
+                                    ."}",
+                        ),
+                    ));
+                ?>
                 </div>
             </div>
+            <?php $this->endWidget(); ?>
         </div>
     </div>
 </div>

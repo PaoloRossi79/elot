@@ -127,7 +127,7 @@ class LotteriesController extends Controller
                 if(in_array($model->status,$updatableStatus)){
                     $this->_editLottery($model);
                 } else {
-                    $this->lotErrors['update'] = Yii::t('wonlot','Lotteria non modificabile');
+                    $this->lotErrors['update'] = Yii::t('wonlot','Asta non modificabile');
                     if(!Yii::app()->user->isGuest){
 //                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                         $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
@@ -202,14 +202,14 @@ class LotteriesController extends Controller
                 // check for STATUS ( == OPEN 3) and extraction_date (more than 24 hours later)
                 $lot = $this->loadModel($id);
 		if(!$lot->status == Yii::app()->params['lotteryStatusConst']['open']){
-                    echo Yii::t('wonlot','Non puoi annullare questa lotteria: non è aperta');
+                    echo Yii::t('wonlot','Non puoi annullare questa Asta: non è aperta');
                     return;
                 }
                 $lotDate = DateTime::createFromFormat('d/m/yy',$lot->lottery_draw_date);
                 $lotDate->sub(new DateInterval('PT25H'));
                 $now = new DateTime;
                 if($now > $lotDate){
-                    echo Yii::t('wonlot','Non puoi annullare questa lotteria: mancano meno di 24 ore');
+                    echo Yii::t('wonlot','Non puoi annullare questa Asta: mancano meno di 24 ore');
                     return;
                 }
                 $dbTransaction=$lot->dbConnection->beginTransaction();
@@ -304,8 +304,10 @@ class LotteriesController extends Controller
 	{
             if($_POST['reset']){
                 $_POST['SearchForm'] = null;
-                unset(Yii::app()->session['filters']);
             } 
+            if($_POST['SearchForm'] == null){
+                unset(Yii::app()->session['filters']);
+            }
             if($_POST['SearchForm']['Category']){
                 $_POST['SearchForm']['Categories']=$_POST['SearchForm']['Category'];
             }
@@ -597,10 +599,10 @@ class LotteriesController extends Controller
             if($lotId){
                 $lot=Lotteries::model()->findByAttributes(array('id'=>$lotId),'status=:status',array(':status'=>Yii::app()->params['lotteryStatusConst']['open']));
             } else {
-                $data["msg"] = Yii::t('wonlot','ID lotteria mancante');
+                $data["msg"] = Yii::t('wonlot','ID Asta mancante');
             }
             if(!$lot){
-                $data["msg"] = Yii::t('wonlot','Stato della lotteria errato');
+                $data["msg"] = Yii::t('wonlot','Stato della Asta errato');
             } else {
                 $user=Users::model()->findByPk(Yii::app()->user->id);
                 $newPrice = $lot->ticket_value;
@@ -920,39 +922,44 @@ class LotteriesController extends Controller
 
             if(isset($_POST['Lotteries']))
             {
-                    $model->attributes=$_POST['Lotteries'];
-                    $model->owner_id=Yii::app()->user->id;
-                    if($_POST['filename'][0]){
-                        if($_POST['isdefault'] && isset($_POST['isdefault'][0])){
-                            $model->prize_img=$_POST['filename'][$_POST['isdefault'][0]];
-                        } else {
-                            $model->prize_img=$_POST['filename'][0];
-                        }
+                $model->attributes=$_POST['Lotteries'];
+                $model->owner_id=Yii::app()->user->id;
+                //check for dates
+                /*$now=date("d/m/Y h:m");
+                if($model->lottery_start_date < $now){
+                    $model->lottery_start_date
+                }*/
+                if($_POST['filename'][0]){
+                    if($_POST['isdefault'] && isset($_POST['isdefault'][0])){
+                        $model->prize_img=$_POST['filename'][$_POST['isdefault'][0]];
+                    } else {
+                        $model->prize_img=$_POST['filename'][0];
                     }
-                    if($_POST['Lotteries']['prize_price']){
-                        $model->max_ticket = ceil($_POST['Lotteries']['prize_price'] / $model->ticket_value);
+                }
+                if($_POST['Lotteries']['prize_price']){
+                    $model->max_ticket = ceil($_POST['Lotteries']['prize_price'] / $model->ticket_value);
+                }
+                if($_POST['Locations'] && !empty($_POST['Locations']['addressLat']) && !empty($_POST['Locations']['addressLng'])){
+                    //check if Location exist
+                    $model->location_id = $this->saveLocation($_POST['Locations']);
+                }
+                if($_POST['publish']){
+                    $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
+                } 
+                if(!$model->status) {
+                    $model->status=Yii::app()->params['lotteryStatusConst']['draft'];
+                }
+                if($model->save()){
+                    $this->renameTmpFolder($model->id);
+                    if($model->cloneId){
+                        $this->copyCloneFolder('lottery',$model->cloneId,$model->id);
                     }
-                    if($_POST['Locations'] && !empty($_POST['Locations']['addressLat']) && !empty($_POST['Locations']['addressLng'])){
-                        //check if Location exist
-                        $model->location_id = $this->saveLocation($_POST['Locations']);
-                    }
-                    if($_POST['publish']){
-                        $model->status=Yii::app()->params['lotteryStatusConst']['upcoming'];
-                    } 
-                    if(!$model->status) {
-                        $model->status=Yii::app()->params['lotteryStatusConst']['draft'];
-                    }
-                    if($model->save()){
-                        $this->renameTmpFolder($model->id);
-                        if($model->cloneId){
-                            $this->copyCloneFolder('lottery',$model->cloneId,$model->id);
-                        }
 //                        if($isOld){
 //                            $this->redirect(array('update','id'=>$model->id));
 //                        } else {
-                            $this->redirect(array('view','id'=>$model->id));
+                        $this->redirect(array('view','id'=>$model->id));
 //                        }
-                    }
+                }
             } else {
                 $this->cleanTmpFolder();
             }

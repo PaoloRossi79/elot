@@ -15,7 +15,7 @@ $this->pageTitle=Yii::app()->name . ' - Register';
             <div class="form">
             <?php $form=$this->beginWidget('CActiveForm',array(
                     'id'=>'user_register_form',
-                    'htmlOptions' => array('class' => ' form-horizontal','enctype' => 'multipart/form-data', 'role' => 'form'), // for inset effect
+                    'htmlOptions' => array('enctype' => 'multipart/form-data', 'role' => 'form'), // for inset effect
                 )); ?>
 
                     <p class="note">Fields with <span class="required">*</span> are required.</p>

@@ -5,7 +5,7 @@
 		<!-- The fileinput-button span is used to style the file input field as button -->
 		<span class="btn btn-success fileinput-button">
             <i class="icon-plus icon-white"></i>
-            <span><?php echo $this->t('1#Add files|0#Choose file', $this->multiple); ?></span>
+            <span><?php echo $this->t('1#Carica immagine |0#Scegli immagine', $this->multiple); ?></span>
 			<?php
             if ($this -> hasModel()) :
                 echo CHtml::activeFileField($this -> model, $this -> attribute, $htmlOptions) . "\n";

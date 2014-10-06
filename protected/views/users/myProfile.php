@@ -4,18 +4,18 @@
         <div class="panel-heading">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" id="profile-tabs">
-                <li class="profile-tab-item width-25perc active">
+                <li class="profile-tab-item width-33perc active">
                     <a id="profileButton1" href="#tabProfile1" data-toggle="tab" class="btn btn-info"><span class="badge"><em class="glyphicon glyphicon-user"></em></span> <span class="tab-text ng-binding">Profilo</span></a>
                 </li>
-                <li class="profile-tab-item width-25perc">
+                <li class="profile-tab-item width-33perc">
                     <a id="profileButton2" href="#tabProfile2" data-toggle="tab" class="btn"><span class="badge"><em class="glyphicon glyphicon-euro"></em></span> <span class="tab-text ng-binding">Conto</span></a>
                 </li>
-                <li class="profile-tab-item width-25perc">
+                <li class="profile-tab-item width-33perc">
                     <a id="profileButton3" href="#tabProfile3" data-toggle="tab" class="btn"><span class="badge"><em class="glyphicon glyphicon-envelope"></em></span> <span class="tab-text ng-binding">Tickets</span></a>
                 </li>
-                <li class="profile-tab-item width-25perc">
+<!--                <li class="profile-tab-item width-25perc">
                     <a id="profileButton4" href="#tabProfile4" data-toggle="tab" class="btn"><span class="badge"><em class="glyphicon glyphicon-envelope"></em></span> <span class="tab-text ng-binding">Newsletter</span></a>
-                </li>
+                </li>-->
             </ul>
         </div>
         <div class="panel-body">
@@ -37,7 +37,7 @@
                         echo $this->renderPartial('_tickets', array('tickets'=>$this->tickets),true);
                       ?>
                   </div>
-                  <div class="tab-pane fade" id="tabProfile4">
+                  <!--<div class="tab-pane fade" id="tabProfile4">-->
                       <?php 
                         $panel3=CHtml::ajaxButton ("Save",
                             CController::createUrl('users/editNewsletter'), 
@@ -46,9 +46,9 @@
                                     'data'=>'js:$("#newsletter-form").serialize()',
                             ));
                         $panel3.=$this->renderPartial('_newsletter', array('model'=>$model),true);
-                        echo $panel3;
+                        //echo $panel3;
                       ?>
-                  </div>
+                  <!--</div>-->
                 </div>
             </div>
         </div>

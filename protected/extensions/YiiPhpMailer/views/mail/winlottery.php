@@ -2,7 +2,7 @@
 
 <h2>Congratulazioni <?php echo $lottery->winner->profile->first_name." ".$lottery->winner->profile->last_name; ?></h2>
 
-<p>Hai vinto questa lotteria: <?php echo $lottery->name; ?></p>
+<p>Hai vinto questa Asta: <?php echo $lottery->name; ?></p>
 
 
 <div>

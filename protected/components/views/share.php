@@ -67,12 +67,14 @@
 <div id="gpshare-lot"></div>
 <div class="col-md-4">
     <h4><?php echo Yii::t('wonlot','Condividi'); ?></h4>
-    <input name="modelId" type="hidden" value="<?php echo $this->model->id; ?>">    
-    <input name="modelType" type="hidden" value="<?php echo get_class($this->model); ?>">    
-    <input name="link" type="hidden" value="<?php echo $this->link;?>">    
-    <input class="btn btn-info fb-share" type="button" value="Facebook" >    
-    <input class="btn btn-info gp-share" type="button" value="Google" >    
-    <!--<input class="btn btn-info tw-share" type="button" value="Twitter" >-->
-    <a class="btn btn-info tw-share" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" href="https://twitter.com/share">Twitter</a>
-    <!--<a href="https://twitter.com/share" id="twitter-share-btn" class="twitter-share-button" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" data-lang="en">Tweet</a>-->
+    <div class="text-block">
+        <input name="modelId" type="hidden" value="<?php echo $this->model->id; ?>">    
+        <input name="modelType" type="hidden" value="<?php echo get_class($this->model); ?>">    
+        <input name="link" type="hidden" value="<?php echo $this->link;?>">    
+        <input class="btn btn-info fb-share" type="button" value="Facebook" >    
+        <input class="btn btn-info gp-share" type="button" value="Google" >    
+        <!--<input class="btn btn-info tw-share" type="button" value="Twitter" >-->
+        <a class="btn btn-info tw-share" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" href="https://twitter.com/share">Twitter</a>
+        <!--<a href="https://twitter.com/share" id="twitter-share-btn" class="twitter-share-button" data-url="<?php echo $this->link;?>" title="<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>" data-lang="en">Tweet</a>-->
+    </div>
 </div>

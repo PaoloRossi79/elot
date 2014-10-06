@@ -91,6 +91,9 @@ return array(
 			'urlFormat'=>'path',
                         'showScriptName'=>false,
 			'rules'=>array(
+                                'auctions/<id:\d+>'=>'lotteries/view',
+				'auctions/<action:\w+>/<id:\d+>'=>'lotteries/<action>',
+				'auctions/<action:\w+>'=>'lotteries/<action>',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',

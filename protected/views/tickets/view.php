@@ -17,7 +17,7 @@
                         <?php echo Yii::t("wonlot","Hai vinto!"); ?></h3>
                     <div class="text-block">
                         <h4><?php echo Yii::t("wonlot","Congratulazioni "); ?><?php echo $model->lottery->winner->profile->first_name." ".$model->lottery->winner->profile->last_name; ?></h4>
-                        <p><?php echo Yii::t("wonlot","Hai vinto questa lotteria: "); ?><?php echo $model->lottery->name; ?></p>
+                        <p><?php echo Yii::t("wonlot","Hai vinto questa Asta: "); ?><?php echo $model->lottery->name; ?></p>
                         <div>
                             <div><?php echo Yii::t("wonlot","Per ricevere il premio mettiti in contatto con il venditore (scrivendogli da questa mail):"); ?></div>
                             <div><?php echo Yii::t("wonlot","Venditore: "); ?><b><?php echo $model->lottery->owner->username; ?></b> - Email: <?php echo $model->lottery->owner->email; ?></div>
@@ -192,7 +192,7 @@
                     <p>
                         <span class="lot-i-text">
                             <?php echo ""; ?>
-                            Copia il testo qui in basso per creare un bottone per la tua lotteria sul tuo sito!
+                            Copia il testo qui in basso per creare un bottone per la tua Asta sul tuo sito!
                         </span>
                     </p>
                 </div>

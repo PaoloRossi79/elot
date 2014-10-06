@@ -42,7 +42,7 @@ class LotteryPaymentRequest extends PActiveRecord
 	{
 		return array(
 			'id' => Yii::t('wonlot','ID'),
-			'lottery_id' => Yii::t('wonlot','ID Lotteria'),
+			'lottery_id' => Yii::t('wonlot','ID Asta'),
 			'from_user_id' => Yii::t('wonlot','Utente'),
 			'sent_date' => Yii::t('wonlot','Data'),
 			'is_completed' => Yii::t('wonlot','E\' pagata?'),

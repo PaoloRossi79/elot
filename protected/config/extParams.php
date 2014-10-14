@@ -2,6 +2,7 @@
 
 $toDbDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
 $toUserDateFormat = 'dd/mm/yy';
+$toUserTimeFormat = 'hh:mm:ss';
 
 $lotteryTypes = array(
     array(

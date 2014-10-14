@@ -112,8 +112,7 @@
                             'options'=>array(
                                     'dateFormat'=>Yii::app()->params['toUserDateFormat'],
                                     'minDate'=>date('d/m/Y'),
-                                    //'dateFormat'=>'yy-mm-dd',
-                                    'timeFormat'=>'hh:mm:ss',
+                                    'timeFormat'=>Yii::app()->params['toUserTimeFormat'],
                                     'showSecond'=>false,
                                     'showTimezone'=>false,
                                     'language' => 'it',
@@ -140,8 +139,7 @@
                             'options'=>array(
                                     'dateFormat'=>Yii::app()->params['toUserDateFormat'],
                                     'minDate'=>date('d/m/Y'),
-                                    //'dateFormat'=>'yy-mm-dd',
-                                    'timeFormat'=>'hh:mm:ss',
+                                    'timeFormat'=>Yii::app()->params['toUserTimeFormat'],
                                     'showSecond'=>false,
                                     'showTimezone'=>false,
                                     'language' => 'it',

@@ -52,13 +52,14 @@
 
 	<div id="header" class='row'>
 		<div id="fixed-cart">
-                    <div id="header-logo-div">
+                    <div class="col-md-6">
                         <a href="/">
                             <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/logo.png", "WonLot", array("class"=>"site-main-logo img-responsive")); ?>
                             <span class='logo-subtitle'><?php echo Yii::t('wonlot','Asta delle meraviglie'); ?></span>
                         </a>
                     </div>
-                    <div id="header-icons">
+                    <div class="col-md-6">
+                        <div id="header-icons">
                         <?php if(!Yii::app()->user->isGuest){ ?>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Logout'); ?>">
                                 <?php 
@@ -113,19 +114,24 @@
                               </a>
                             </div>
                           <?php }  ?>
+                          <?php if(!Yii::app()->user->isGuest){ ?>
+                            <div class="welcome-block">
+                                <div class="welcome-text">
+                                    <?php echo Yii::t('wonlot','Bentornato ');?>
+                                </div>
+                                <?php echo Yii::app()->user->avatarUrl; ?>
+                                <div class="welcome-text">
+                                    <?php echo Yii::app()->user->username;?>
+                                </div>
+                            </div>
+                          <?php }  ?>
+                          <?php if(Yii::app()->user->isAdmin){ ?>
+                            <div class="admin-text"><a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/admin"><?php echo Yii::t('wonlot','Vai all\'amministrazione');?></a></div>
+                          <?php }  ?>
+                        </div>
                     </div>
                     <div id="header-icons">
-                        <?php if(!Yii::app()->user->isGuest){ ?>
-                        <div class="welcome-block">
-                            <div class="welcome-text">
-                                <?php echo Yii::t('wonlot','Bentornato ').Yii::app()->user->username;?>
-                            </div>
-                            <?php echo Yii::app()->user->avatarUrl; ?>
-                        </div>
-                        <?php }  ?>
-                        <?php if(Yii::app()->user->isAdmin){ ?>
-                        <div class="admin-text"><a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/admin"><?php echo Yii::t('wonlot','Vai all\'amministrazione');?></a></div>
-                        <?php }  ?>
+                        
                     </div>
                  </div>
 	</div><!-- header -->
@@ -175,13 +181,7 @@
                </div>
             </div>
             <div class="footer-middle">
-               <h3>Come funziona?</h3>
-               <p>
-                   <b><?php echo CHtml::encode(Yii::app()->name); ?></b> è un portale che ti permette di partecipare e vincere ad un mondo di aste create dagli utenti.
-               </p>
-               <p>
-                  Hai bisogno di aiuto per usare <?php echo CHtml::encode(Yii::app()->name); ?>? Puoi trovare tutte le risposte alla sezione "Come Funziona".
-               </p>
+               
                <p class="footer-link">
                   <a href="#">Scopri come funziona &raquo;</a>
                </p>

@@ -1,5 +1,8 @@
 <?php
 
+$toDbDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
+$toUserDateFormat = 'dd/mm/yy';
+
 $lotteryTypes = array(
     array(
         'id'=>1,

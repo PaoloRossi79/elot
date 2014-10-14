@@ -72,28 +72,31 @@ class Lotteries extends PActiveRecord
         {
             if(!$this->hasErrors())
             {
-                $now = strtotime(date("d/m/Y h:m"));
-                if(strtotime($this->{$attribute}) < $now)
+                $now = CDateTimeParser::parse(date("d/m/Y H:m:s"), Yii::app()->params['toDbDateTimeFormat']);
+                $checkDate = CDateTimeParser::parse($this->{$attribute}, Yii::app()->params['toDbDateTimeFormat']);
+                if($checkDate < $now)
                 {
                     $this->addError($attribute,Yii::t('wonlot','La data non è valida (passata)'));
                 }
                 if($params['compare'] && $params['criteria']){
+                    $compareDate = CDateTimeParser::parse($this->{$params['compare']}, Yii::app()->params['toDbDateTimeFormat']);
                     if($params['criteria'] == "bigger"){
-                        if(strtotime($this->{$attribute}) < strtotime($this->{$params['compare']}))
+                        if($checkDate < $compareDate)
                         {
-                            $this->addError($attribute,Yii::t('wonlot','La data non è valida (maggiore)'));
+                            $this->addError($attribute,Yii::t('wonlot','La data di chiusura è minore di quella di apertura'));
                         }
                         // check for max lenght of auction: 2 HR min, 30 days max
-                        $diff = strtotime($this->{$attribute}) - strtotime($this->{$params['compare']});
+                        $diff = $checkDate - $compareDate;
                         if($diff < (60 *60 * 2)){
                             $this->addError($attribute,Yii::t('wonlot','La durata dell\'asta è inferiore alle 2 ore'));
                         } elseif($diff > (60 * 60 * 24 * 30)){
                             $this->addError($attribute,Yii::t('wonlot','La durata dell\'asta è superiore a 30 giorni'));
                         }
                     } elseif($params['criteria'] == "smaller"){
-                        if(strtotime($this->{$attribute}) > strtotime($this->{$params['compare']}))
+//                        if(strtotime($this->{$attribute}) > strtotime($this->{$params['compare']}))
+                        if($checkDate > $compareDate)
                         {
-                            $this->addError($attribute,Yii::t('wonlot','La data non è valida (minore)'));
+                            $this->addError($attribute,Yii::t('wonlot','La data di apertura è maggiore di quella di chiusura'));
                         }
                     }
                 }

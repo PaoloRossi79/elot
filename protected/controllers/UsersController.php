@@ -244,7 +244,17 @@ class UsersController extends Controller
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+        
+        public function actionDeleteMyUser()
+	{
+                $userId = Yii::app()->user->id;
+                try {
+                    $this->loadModel($userId)->delete();
+                } catch (Exception $exc) {
+                    echo $exc->getTraceAsString();
+                }
 
+	}
 	/**
 	 * Lists all models.
 	 */

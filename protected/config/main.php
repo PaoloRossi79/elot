@@ -170,5 +170,7 @@ return array(
             'prizeConditions' => $prizeConditions,
             'prizeConditionsId' => $prizeConditionsId,
             'payStatusConst'=>$payStatusConst,
+            'toDbDateTimeFormat'=>$toDbDateTimeFormat,
+            'toUserDateFormat'=>$toUserDateFormat
 	),
 );

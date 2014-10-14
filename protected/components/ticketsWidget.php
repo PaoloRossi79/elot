@@ -4,6 +4,7 @@ class ticketsWidget extends CWidget
     public $ticket;
     public $tickets;
     public $userId;
+    public $lotId;
     
     public function init()
     {
@@ -31,6 +32,7 @@ class ticketsWidget extends CWidget
             
         } 
         $this->render('tickets',array(
+            'lotId'=>$this->lotId,
             'myTickets'=>$myTickets,
             'toGiftTickets'=>$toGiftTickets,
         ));
@@ -41,7 +43,7 @@ class ticketsWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		jQuery('body').on('click','.set-gift',function(event) {
+		/*jQuery('body').on('click','.set-gift',function(event) {
                         $("input[name=giftBtn]").removeAttr("disabled");
                         $("#ticketIdForGift").val($(this).attr("id"));
                         $(".gift-box").slideDown(); 
@@ -56,7 +58,7 @@ class ticketsWidget extends CWidget
                         $("#giftBtn").removeAttr("disabled");
                         $(".feedShare").removeAttr("disabled");
                         return false;
-                   });
+                   });*/
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());
     }

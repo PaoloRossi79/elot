@@ -3,18 +3,15 @@
     
     <div class="lot-box-int">
         <div class="lot-box-first-row"> 
-            <div class="pull-left"> 
+            <div class="pull-left col-md-3"> 
                 <div class="jam-round status-<?php echo $data->status?>"></div>
             </div>
-            <div class="pull-right lot-seller-war"> 
-                <p class="identity-text bg-success"><?php echo Yii::t('wonlot','VENDITORE GARANTITO'); ?></p>
-            </div>
-        </div>
-        <div class="center-block lot-name-cont">
-            <div class="lot-name">
-                <a href="/index.php/lotteries/view/<?php echo $data->id;?>">
-                    <h3><?php echo $data->name; ?></h3>
-                </a>
+            <div class="pull-right lot-seller-war col-md-9"> 
+                <div class="lot-name">
+                    <a href="/index.php/lotteries/view/<?php echo $data->id;?>">
+                        <h3><?php echo $data->name; ?></h3>
+                    </a>
+                </div>
             </div>
         </div>
         
@@ -42,7 +39,7 @@
         <?php } ?>
     </div>
     <div class="lot-box-hover">
-        <div class="lot-icons-cont">
+<!--        <div class="lot-icons-cont">
             <div class="star-cont">
             <?php if($this->userId != $data->owner->id && !Yii::app()->user->isGuest){ ?>
                 <?php if(!in_array($data->id,$this->favLots)){ ?>
@@ -58,7 +55,7 @@
             <div class="cocc-cont">
                 <img src="/images/site/coccarda-small.png">
             </div>
-        </div>
+        </div>-->
         <div class="prize-desc-over-box">
             <a href="<?php echo CController::createUrl('lotteries/view/'.$data->id);?>">
                 <div class="prize-desc-over center-block">

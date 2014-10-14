@@ -1,3 +1,4 @@
+<div class="left">
 <?php 
 $h1="<h1>Lotteries</h1>";
 if($viewData['showStatus']){
@@ -7,12 +8,14 @@ if($viewData['showStatus']){
 if($viewData['showCat']){
    $h1.=" <h3>Category: ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($viewData['showCat']))."</h3>"; 
 }
-echo $h1;
-if(!Yii::app()->user->isGuest){
-    echo CHtml::link("New Lottery",CController::createUrl('lotteries/create'),array('class'=>'btn')); 
-}
+echo $h1; ?>
+    
+<div class="right">
+    <?php if(!Yii::app()->user->isGuest){
+        echo CHtml::link(Yii::t("wonlot","Nuova asta"),CController::createUrl('lotteries/create'),array('class'=>'btn btn-success')); 
+    } ?>
+</div>
 
-?>
 <div class="alert alert-error void-alert" style="display: none;">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <strong id="void-alert-strong"></strong>

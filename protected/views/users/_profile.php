@@ -219,6 +219,11 @@
             <div class="col-sm-2">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva',array('class'=>'btn btn-primary')); ?>
             </div>
+            <?php if(!$model->isNewRecord){ ?>
+                <div class="col-sm-2">
+                    <?php echo CHtml::ajaxButton('Cancella utente',Yii::app( )->createUrl( "/users/deleteMyUser"),array(),array('class'=>'btn btn-danger')); ?>
+                </div>
+            <?php } ?>
 	</div>
 
 <?php $this->endWidget(); ?>

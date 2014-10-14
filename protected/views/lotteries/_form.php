@@ -1,19 +1,25 @@
 <div class="panel panel-default bootstrap-widget-table">
     <div class="panel-heading">
-      <h3 class="panel-title">
-          <?php
-             //disabled="disabled"
-             $htmlDisabled=array('class'=>'form-control', 'autocomplete'=>'off');
-             if($model->id){
-                  echo Yii::t('wonlot','Modifica asta') . " " .$model->name;
-                  if($model->status >= 3){
-                      $htmlDisabled = array_merge($htmlDisabled,array("disabled"=>"disabled"));
-                  }
-             } else {
-                  echo Yii::t('wonlot','Crea asta');
-             }
-          ?>
-      </h3>
+        <div class="pull-left">
+            <h3 class="panel-title">
+                <?php
+                   //disabled="disabled"
+                   $htmlDisabled=array('class'=>'form-control', 'autocomplete'=>'off');
+                   if($model->id){
+                        echo Yii::t('wonlot','Modifica asta') . " " .$model->name;
+                        if($model->status >= 3){
+                            $htmlDisabled = array_merge($htmlDisabled,array("disabled"=>"disabled"));
+                        }
+                   } else {
+                        echo Yii::t('wonlot','Crea asta');
+                   }
+                ?>
+            </h3>
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#help-modal"><i class="glyphicon glyphicon-question-sign"></i></button>
+        </div>
+        <div class="clearfix"></div>
     </div>
     <div class="panel-body">
         <div class=".container-fluid">
@@ -88,7 +94,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <?php $htmlTicketValue = array_merge($htmlDisabled,array("step"=>"0.02")); ?>
+                    <?php $htmlTicketValue = array_merge($htmlDisabled,array("step"=>"0.02","min"=>0)); ?>
                     <?php echo $form->labelEx($model,'ticket_value'); ?>
                     <?php echo $form->numberField($model,'ticket_value',$htmlTicketValue); ?>
                     <?php echo $form->error($model,'ticket_value'); ?>
@@ -104,10 +110,10 @@
                             'attribute' => 'lottery_start_date',
                             'htmlOptions' => $htmlDisabled,
                             'options'=>array(
-                                    'dateFormat'=>'dd/mm/yy',
+                                    'dateFormat'=>Yii::app()->params['toUserDateFormat'],
                                     'minDate'=>date('d/m/Y'),
                                     //'dateFormat'=>'yy-mm-dd',
-                                    'timeFormat'=>'hh:mm',
+                                    'timeFormat'=>'hh:mm:ss',
                                     'showSecond'=>false,
                                     'showTimezone'=>false,
                                     'language' => 'it',
@@ -132,10 +138,10 @@
                             'attribute' => 'lottery_draw_date',
                             'htmlOptions' => $htmlDisabled,
                             'options'=>array(
-                                    'dateFormat'=>'dd/mm/yy',
+                                    'dateFormat'=>Yii::app()->params['toUserDateFormat'],
                                     'minDate'=>date('d/m/Y'),
                                     //'dateFormat'=>'yy-mm-dd',
-                                    'timeFormat'=>'hh:mm',
+                                    'timeFormat'=>'hh:mm:ss',
                                     'showSecond'=>false,
                                     'showTimezone'=>false,
                                     'language' => 'it',
@@ -226,3 +232,5 @@
         </div>
     </div>
 </div>
+
+<?php $this->renderPartial('_helpModal'); ?>

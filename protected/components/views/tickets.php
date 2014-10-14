@@ -2,14 +2,14 @@
 <div class="col-md-12">
     <ul class="nav nav-tabs" id="profile-tabs">
         <li class="profile-tab-item width-50perc active">
-            <a id="myTickets-<?php echo $ticket->id; ?>" href="#myTicketsTab" data-toggle="tab" class="btn btn-info"><span class="badge"><em class="glyphicon glyphicon-user"></em></span><?php echo Yii::t('wonlot','Disponibili'); ?></a>
+            <a id="myTickets-<?php echo $lotId; ?>" href="#myTicketsTab-<?php echo $lotId; ?>" data-toggle="tab" class="btn btn-info"><span class="badge"><em class="glyphicon glyphicon-user"></em></span><?php echo Yii::t('wonlot','Disponibili'); ?></a>
         </li>
         <li class="profile-tab-item width-50perc">
-            <a id="giftTickets-<?php echo $ticket->id; ?>" href="#giftTicketsTab" data-toggle="tab" class="btn"><span class="badge"><em class="glyphicon glyphicon-euro"></em></span><?php echo Yii::t('wonlot','Regalati'); ?></a>
+            <a id="giftTickets-<?php echo $lotId; ?>" href="#giftTicketsTab-<?php echo $lotId; ?>" data-toggle="tab" class="btn"><span class="badge"><em class="glyphicon glyphicon-euro"></em></span><?php echo Yii::t('wonlot','Regalati'); ?></a>
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="myTicketsTab">
+        <div class="tab-pane fade in active" id="myTicketsTab-<?php echo $lotId; ?>">
             <?php if(count($myTickets) > 0){ ?>
                 <?php foreach($myTickets as $ticket){ ?>
                     <div class="ticket-lot" id="ticket-lot-<?php echo $ticket->id; ?>">
@@ -21,10 +21,10 @@
                     </div>
                 <?php } ?>
             <?php } else {?>
-                <div class="ticket-lot"></div>
+                <div class=""></div>
             <?php }?>
         </div>
-        <div class="tab-pane fade" id="giftTicketsTab">
+        <div class="tab-pane fade" id="giftTicketsTab-<?php echo $lotId; ?>">
             <?php if(count($toGiftTickets) > 0){ ?>
                 <?php foreach($toGiftTickets as $ticket){ ?>
                     <div class="ticket-lot" id="ticket-lot-<?php echo $ticket->id; ?>">
@@ -38,7 +38,7 @@
                     </div>
                 <?php } ?>
             <?php } else {?>
-                <div class="ticket-lot"></div>
+                <div class=""></div>
             <?php }?>
         </div>
     </div>

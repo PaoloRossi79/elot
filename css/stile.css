@@ -82,6 +82,7 @@ a, a:hover, a:focus, a:visited {
     float: right;
     padding-top: 30px;
     padding-right: 30px;
+    width: 100%;
 }
 
 .header-icon {
@@ -831,6 +832,7 @@ button.close {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
 }
 
 .updateImgBox {
@@ -1132,6 +1134,9 @@ button.close {
 /* TICKETS in profile*/
 .list-img {
     float: left;
+    min-width: 140px;
+    margin-right: 10px;
+    text-align: center;
 }
 
 .list-text {
@@ -1222,4 +1227,22 @@ button.close {
 // PROFILE -> GIFT CREDIT
 #retrive-credit-panel {
     display: none;
+}
+
+.grid-view .button-column
+{
+	text-align: left!important;
+	/*width: 65px;*/
+}
+
+.grid-view .button-column > a > span 
+{
+	/* text-align: center; */
+	width: 75px;
+        margin: 3px 0 3px 0;
+}
+
+.big-words {
+    color: #62c462;
+    text-decoration: underline;
 }

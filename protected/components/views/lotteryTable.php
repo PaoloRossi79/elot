@@ -4,7 +4,7 @@
         <tr class="lot-item">
             <td>
                 <div class="row">
-                    <div class="list-img">
+                    <div class="list-img img-thumbnail">
                         <?php echo CHtml::image(Yii::app()->controller->getImageUrl($m,'smallThumb'),'Lottery Image'); ?>
                     </div>
                     <div class="list-text">
@@ -19,7 +19,7 @@
                 <div class="row ticket-block" id="ticket-lot-<?php echo $m->id; ?>">
                     <!--<div class="small-row-scroll">--> <!-- for small row scroller inside ticket block -->
                     <div class="">
-                        <?php $this->widget('ticketsWidget',array('tickets'=>$m->tickets)); ?>
+                        <?php $this->widget('ticketsWidget',array('lotId'=>$m->id,'tickets'=>$m->tickets)); ?>
                     </div>
                 </div>
             </td>

@@ -205,8 +205,7 @@ $(window).bind("load", function() {
             .done(function( data ) {
                 if(data){
                     if(btnClick.hasClass("unsetFav")){
-                        btnClick.removeClass("glyphicon-star");
-                        btnClick.addClass("glyphicon-star-empty");
+                        btnClick.show();
                         btnClick.removeClass("unsetFav");
                         btnClick.addClass("setFav");
                     } else if(btnClick.hasClass("setFav")){

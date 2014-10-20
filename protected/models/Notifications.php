@@ -98,89 +98,121 @@ class Notifications extends PActiveRecord
 	}
         
         public function sendGiftCreditNotify($value, $from, $to){
-            $notify = new Notifications();
-            $notify->from_user_id = $from;
-            $notify->to_user_id = $to;
-            $notify->message_value = $value;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['giftCredit'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = $from;
+                $notify->to_user_id = $to;
+                $notify->message_value = $value;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['giftCredit'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendGiftTicketNotify($value, $from, $to){
-            $notify = new Notifications();
-            $notify->from_user_id = $from;
-            $notify->to_user_id = $to;
-            $notify->message_value = $value;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['giftTicket'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = $from;
+                $notify->to_user_id = $to;
+                $notify->message_value = $value;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['giftTicket'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendStartFollowNotify($from, $to){
-            $notify = new Notifications();
-            $notify->from_user_id = $from;
-            $notify->to_user_id = $to;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['startFollow'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = $from;
+                $notify->to_user_id = $to;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['startFollow'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendStopFollowNotify($from, $to){
-            $notify = new Notifications();
-            $notify->from_user_id = $from;
-            $notify->to_user_id = $to;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['stopFollow'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = $from;
+                $notify->to_user_id = $to;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['stopFollow'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendExtractLotteryToWinnerNotify($lottery){
-            $notify = new Notifications();
-            $notify->from_user_id = 0;
-            $notify->to_user_id = $lottery->winner->id;
-            $notify->message_value = $lottery->id;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['winLottery'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = 0;
+                $notify->to_user_id = $lottery->winner->id;
+                $notify->message_value = $lottery->id;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['winLottery'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendExtractLotteryToOwnerNotify($lottery){
-            $notify = new Notifications();
-            $notify->from_user_id = 0;
-            $notify->to_user_id = $lottery->owner->id;
-            $notify->message_value = $lottery->id;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['extractLottery'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = 0;
+                $notify->to_user_id = $lottery->owner->id;
+                $notify->message_value = $lottery->id;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['extractLottery'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendRefoundLotteryNotify($lottery,$user){
-            $notify = new Notifications();
-            $notify->from_user_id = $lottery->owner->id;
-            $notify->to_user_id = $user->id;
-            $notify->message_value = $lottery->id;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['refoundTicket'];
-            $notify->message_read = 0;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = $lottery->owner->id;
+                $notify->to_user_id = $user->id;
+                $notify->message_value = $lottery->id;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['refoundTicket'];
+                $notify->message_read = 0;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
         public function sendDrawCreditNotify($credit,$user,$drawReq){
-            $notify = new Notifications();
-            $notify->from_user_id = 0;
-            $notify->to_user_id = $user->id;
-            $notify->message_value = $drawReq->id;
-            $notify->message_type = Yii::app()->params['notifyTypeConst']['widthdrawSent'];
-            $notify->message_read = 1;
-            $notify->sent_date = new CDbExpression('NOW()');
-            $notify->save();
+            try {
+                $notify = new Notifications();
+                $notify->from_user_id = 0;
+                $notify->to_user_id = $user->id;
+                $notify->message_value = $drawReq->id;
+                $notify->message_type = Yii::app()->params['notifyTypeConst']['widthdrawSent'];
+                $notify->message_read = 1;
+                $notify->sent_date = new CDbExpression('NOW()');
+                $notify->save();
+            } catch (Exception $e){
+                Yii::log("Err sending notify: ".$e->getMessage(), "error");
+            }
         }
         
 }

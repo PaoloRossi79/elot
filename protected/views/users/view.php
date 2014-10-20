@@ -9,16 +9,18 @@ if($model->followers){
     <div class="panel-heading">
       <h3 class="panel-title">
           <span class="row">
-          <span class="col-md-11">
+          <span class="col-md-10">
               <?php echo CHtml::encode($model->username); ?>
           </span>
-          <span class="col-md-1">
+          <span class="col-md-2">
               <?php if($this->userId != $model->id){ ?>
-                <?php if(!in_array($model->id,$followersId)){ ?>
-                      <?php echo CHtml::ajaxLink('', '#',array(),array('id'=>'follUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn setFav btn btn-default btn-lg glyphicon glyphicon-star-empty')); ?>
-                <?php } else { ?>
-                      <?php echo CHtml::ajaxLink('', '#',array(),array('id'=>'unfollUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn unsetFav btn btn-default btn-lg glyphicon glyphicon-star'));?>
-                <?php } ?>
+                <?php if(!in_array($model->id,$followersId)){ 
+                    $flVis = true;
+                } else { 
+                    $flVis = false;
+                } ?>
+                <?php echo CHtml::ajaxLink('  Segui', '#',array(),array('id'=>'follUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn setFav btn btn-default btn-lg glyphicon glyphicon-eye-open','style'=>"display:".($flVis ? "block":"none"))); ?>
+                <?php echo CHtml::ajaxLink('  Non seguire', '#',array(),array('id'=>'unfollUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn unsetFav btn btn-default btn-lg glyphicon glyphicon-eye-close','style'=>"display:".(!$flVis ? "block":"none")));?>
               <?php } ?>
           </span>
           </span>
@@ -26,7 +28,7 @@ if($model->followers){
     </div>
     <div class="panel-body">
         <div class="col-md-3">
-            <?php echo Users::model()->getImageTag($model); ?>
+            <?php echo Users::model()->getImageTag($model,'mediumSquaredThumb'); ?>
         </div>
         <div class="col-md-9">
             <h4><?php echo Yii::t("wonlot","Informazioni"); ?></h4>

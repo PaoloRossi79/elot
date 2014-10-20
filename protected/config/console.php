@@ -24,6 +24,9 @@ return array(
             'lotteryTypes'=>$lotteryTypes,
             'lotteryTypesConst'=>$lotteryTypesConst,
             'lotteryStatusConst'=>$lotteryStatusConst,
+            'toDbDateTimeFormat'=>$toDbDateTimeFormat,
+            'toUserDateFormat'=>$toUserDateFormat,
+            'toUserTimeFormat'=>$toUserTimeFormat,
             'baseUrl'=>'http://test.wonlot.com/',
         ),
 

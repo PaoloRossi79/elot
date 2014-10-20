@@ -540,7 +540,7 @@ class Lotteries extends PActiveRecord
                 }
                 $up->status = Yii::app()->params['lotteryStatusConst']['open'];
 //                $up->is_active = 1;
-                if($up->save()){
+                if($up->save(false)){
                     Yii::log("Lottery open: Id=".$up->id.", name=".$up->name, "warning");
                 } else {
                     Yii::log("Lottery not open: Id=".$up->id.", name=".$up->name, "error");
@@ -572,7 +572,7 @@ class Lotteries extends PActiveRecord
                 $close->status = Yii::app()->params['lotteryStatusConst']['closed'];
                 $close->lottery_close_date = new CDbExpression('NOW()');
                 $close->winner_id = $close->winning_id;                
-                if($close->save()){
+                if($close->save(false)){
                     $closeLottery = $this->findByPk($close->id);
                     Yii::log("Lottery close: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                     //send email for opening
@@ -592,7 +592,7 @@ class Lotteries extends PActiveRecord
                         $closeLottery->is_sent_extracted *= 3;
                     }
                     if($closeLottery->is_sent_extracted > 1){
-                        $closeLottery->save();
+                        $closeLottery->save(false);
                     }
                 } else {
                     Yii::log("Lottery not close: Id=".$close->id.", name=".$close->name, "error");
@@ -620,7 +620,7 @@ class Lotteries extends PActiveRecord
                 } else {
                     $close->is_sent_close = 1;
                 }
-                if($close->save()){
+                if($close->save(false)){
                     $closeLottery = $this->findByPk($close->id);
                     Yii::log("Lottery close: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                     //send email for opening
@@ -640,7 +640,7 @@ class Lotteries extends PActiveRecord
                         $closeLottery->is_sent_extracted *= 3;
                     }
                     if($closeLottery->is_sent_extracted > 1){
-                        $closeLottery->save();
+                        $closeLottery->save(false);
                     }
                     Yii::log("Lottery close EMAIL: Id=".$closeLottery->id.", name=".$closeLottery->name, "warning");
                 } else {
@@ -700,7 +700,7 @@ class Lotteries extends PActiveRecord
                         $extract->winner_id = $winnerTicket->user_id;
                         $extract->winner_ticket_id = $winnerTicket->id;
                         $extract->is_sent_extracted = 1;
-                        if($extract->save()){
+                        if($extract->save(false)){
                             Yii::log("Lottery extract: Id=".$extract->id.", name=".$extract->name, "warning");
                             //send email for opening
                             $emailRes=EmailManager::sendExtractLotteryToWinner($extract,$winnerTicket);
@@ -718,7 +718,7 @@ class Lotteries extends PActiveRecord
                                 $extract->is_sent_extracted *= 3;
                             }
                             if($extract->is_sent_extracted > 1){
-                                $extract->save();
+                                $extract->save(false);
                             }
                         } else {
                             Yii::log("Lottery not extract: Id=".$extract->id.", name=".$extract->name, "error");
@@ -732,7 +732,7 @@ class Lotteries extends PActiveRecord
                         }
                     } else {
                         $extract->status = Yii::app()->params['lotteryStatusConst']['void'];
-                        if($extract->save()){
+                        if($extract->save(false)){
                             Yii::log("Lottery void: Id=".$extract->id.", name=".$extract->name, "warning");
                             //send email for opening
                             $emailRes=EmailManager::sendVoidLotteryToOwner($extract);
@@ -744,7 +744,7 @@ class Lotteries extends PActiveRecord
                 } else {
                     Yii::log("No tickets: lottery=".$extract->id, "warning");
                     $extract->status = Yii::app()->params['lotteryStatusConst']['void'];
-                    if($extract->save()){
+                    if($extract->save(false)){
                         Yii::log("Lottery void: Id=".$extract->id.", name=".$extract->name, "warning");
                         //send email for opening
                         $emailRes=EmailManager::sendVoidLotteryToOwner($extract);
@@ -772,7 +772,7 @@ class Lotteries extends PActiveRecord
                 } else {
                     $void->is_sent_void = 1;
                 }
-                if($void->save()){
+                if($void->save(false)){
                     Yii::log("Lottery void EMAIL: Id=".$void->id.", name=".$void->name, "warning");
                 } else {
                     Yii::log("Lottery void EMAIL error: Id=".$void->id.", name=".$void->name, "error");

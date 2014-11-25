@@ -82,12 +82,20 @@ $speditionTypeId = array(
 );
 
 $lotteryStatusConst = array(
-    Yii::t('wonlot','draft')=>1,
-    Yii::t('wonlot','upcoming')=>2,
-    Yii::t('wonlot','open')=>3,
-    Yii::t('wonlot','closed')=>4,
-    Yii::t('wonlot','extracted')=>5,
-    Yii::t('wonlot','void')=>6,
+    'draft'=>1,
+    'upcoming'=>2,
+    'open'=>3,
+    'closed'=>4,
+    'extracted'=>5,
+    'void'=>6,
+);
+$lotteryStatusConstIta = array(
+    'draft'=>'Draft',
+    'upcoming'=>'In arrivo',
+    'open'=>'Aperta',
+    'closed'=>'Chiusa',
+    'extracted'=>'Vinta',
+    'void'=>'Annullata',
 );
 $lotterySearchStatusConst = array(
     'In corso'=>1,
@@ -97,6 +105,9 @@ $lotterySearchStatusConst = array(
 $payStatusConst = array(
     1 => Yii::t('wonlot','Richiesto'),
     2 => Yii::t('wonlot','Eseguito'),
+);
+$creditConstant = array(
+    'maxMonthlyGiftCredit' => 250,
 );
 $userTransactionConst = array(
     'buyTicket'=>1,
@@ -165,6 +176,9 @@ $buyCreditOptions = array(
     0=>'15',
     1=>'25',
     2=>'50',
+    3=>'100',
+    4=>'250',
+    5=>'500',
 );
 
 $image_versions = array(

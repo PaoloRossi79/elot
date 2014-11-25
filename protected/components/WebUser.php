@@ -38,7 +38,34 @@ class WebUser extends CWebUser {
 	return "";
   }
   
-  function getAvatarUrl()
+  function isActive(){
+      if(Yii::app()->user->id){
+            $user = $this->loadUser(Yii::app()->user->id);
+            if($user!==null)
+                    return $user->is_active;
+            return false;
+      }
+  }
+  
+  function isEmailConfirmed(){
+      if(Yii::app()->user->id){
+            $user = $this->loadUser(Yii::app()->user->id);
+            if($user!==null)
+                    return $user->is_email_confirmed;
+            return false;
+      }
+  }
+  
+  function getUserModel(){
+      if(Yii::app()->user->id){
+            $user = $this->loadUser(Yii::app()->user->id);
+            if($user!==null)
+                    return $user;
+            return false;
+      }
+  }
+  
+  function getAvatarUrl($dimension = 'smallThumb')
   {
       
         // old code:
@@ -54,8 +81,8 @@ class WebUser extends CWebUser {
                 return CHtml::image($img, "User Avatar", array("class"=>"img-thumbnail"));
         */
 	$user = $this->loadUser(Yii::app()->user->id);
-        $url = Users::model()->getImageTag($user);
-	return $url;
+        $url = Users::model()->getImageTag($user,$dimension);
+        return $url;
   }
   
   function getIsAdmin()
@@ -106,14 +133,23 @@ class WebUser extends CWebUser {
         }
         return $this->_model;
   }
- 
-  
 
   function isGuest()
   {
 	if(Yii::app()->user->id)
-		return false;
+		return !$this->isActive();
 	return true;
+  }
+  
+  function getRemainingGiftCredit(){
+      $cond = new CDbCriteria();
+      $cond->addCondition("t.user_id = ".Yii::app()->user->id);
+      $cond->addCondition("t.modified > ".new CDbExpression("DATE_SUB(NOW(), INTERVAL 1 MONTH)"));
+      $cond->addCondition("t.transaction_type = ".Yii::app()->params['userTransactionConst']['giftCreditTo']);
+      $cond->select = "SUM(t.value) as sumVal";
+      $sumUserGift = UserTransactions::model()->find($cond);
+      $remCredit = Yii::app()->params['creditConstant']['maxMonthlyGiftCredit'] + $sumUserGift['sumVal']; // PIU' perchè il numero viene negativo, quindi va sommato
+      return $remCredit;
   }
 }
 ?>

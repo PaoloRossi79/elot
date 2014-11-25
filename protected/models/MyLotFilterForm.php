@@ -5,14 +5,13 @@
  * ContactForm is the data structure for keeping
  * contact form data. It is used by the 'contact' action of 'SiteController'.
  */
-class SearchForm extends CFormModel
+class MyLotFilterForm extends CFormModel
 {
 	// COMMON
         public $searchText;
 	public $Categories;
 	public $Category;
 	public $lists;
-        public $LotStatusComplete;
         
         // FOR LOTTERIES ONLY
         public $LotStatus;
@@ -37,16 +36,9 @@ class SearchForm extends CFormModel
 	public $userGuaranted;
 	public $userMinRating;
         
-        public $name;
-        public $prize_desc;
-        public $lottery_start_date;
-        public $lottery_draw_date;
-        
         // FOR TICKETS ONLY
 	public $lottery;
         public $TicketStatus;
-        
-        public $mine = false;
 
 	/**
 	 * Declares the validation rules.

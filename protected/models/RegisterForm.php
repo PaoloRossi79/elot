@@ -15,6 +15,7 @@ class RegisterForm extends CFormModel
 	public $terms;
 	public $persdatamng;
 	public $thirdpartdatamng;
+	public $newsletterAccept;
 	
 	/**
 	 * Declares the validation rules.
@@ -77,6 +78,7 @@ class RegisterForm extends CFormModel
             $model->is_agree_terms_conditions=$this->terms;
             $model->is_agree_personaldata_management=$this->persdatamng;
             $model->is_agree_3partdata_management=$this->thirdpartdatamng;
+            $model->newsletter_terms=$this->newsletterAccept;
             $model->is_active=0;
             $model->is_email_confirmed=0; //ATTENTION: for PROD
 //            $model->is_email_confirmed=1; //ATTENTION: for DEV

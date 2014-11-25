@@ -319,9 +319,10 @@ button.close {
 .logo-subtitle {
     position: relative;
     float: right;
-    font-size: 35px;
+    font-size: 50px;
     top: -40px;
     color: white;
+    font-family: UnifrakturCook;
 }
 
 .cat-drop-list {
@@ -612,9 +613,10 @@ button.close {
     margin: 5px 0 5px 0;
     border-bottom: 1px solid black;
     width: 100%;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 100px;
 }
 
 .lot-name-cont {
@@ -745,8 +747,11 @@ button.close {
     width: 30px;
     height: 30px;
     border-radius: 15px;
-    float: left;	
+    /*float: left;	*/
     margin-top: 5px;
+    position: absolute;
+    left: -10px;
+    top:-15px;
 }
 
 .status-1 {
@@ -1178,7 +1183,7 @@ button.close {
     display: none;
 }
 
-.following-box, follower-box {
+.following-box, .follower-box {
     display: none;
 }
 
@@ -1245,4 +1250,38 @@ button.close {
 .big-words {
     color: #62c462;
     text-decoration: underline;
+}
+
+.summary {
+    /*display: none;*/
+}
+
+.spacer {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#valueWithCommission {
+    
+}
+
+#valueWithCommissionBlock {
+    display: none;
+}
+
+.ui-dialog {
+    z-index: 1100!important;
+}
+
+.startHide {
+    display: none;
+}
+
+.redBox {
+    border: 1px solid red;
+    border-radius: 3px;
+}
+
+#ticket-search {
+    display: none;
 }

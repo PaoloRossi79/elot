@@ -3,10 +3,8 @@
     
     <div class="lot-box-int">
         <div class="lot-box-first-row"> 
-            <div class="pull-left col-md-3"> 
-                <div class="jam-round status-<?php echo $data->status?>"></div>
-            </div>
-            <div class="pull-right lot-seller-war col-md-9"> 
+            <span class="jam-round status-<?php echo $data->status?>"></span>
+            <div class="lot-seller-war"> 
                 <div class="lot-name">
                     <a href="/index.php/lotteries/view/<?php echo $data->id;?>">
                         <h3><?php echo $data->name; ?></h3>

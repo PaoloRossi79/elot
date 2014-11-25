@@ -149,6 +149,30 @@ class Users extends PActiveRecord
             return $myProfile;
         }
         
+        public function getUsername(){
+            if($this->profile){
+                return $this->profile->first_name . " " . $this->profile->last_name;
+            } 
+            return "";
+        }
+        
+        public function getUserLotteries($userId) {
+            $criteria = new CDbCriteria();
+            try {
+                $criteria->addCondition("t.owner_id=".$userId);
+                $dataProvider=new CActiveDataProvider('Lotteries', array(
+                    'pagination'=>array(
+                        'pageSize'=>8,
+                    ),
+                    'criteria'=>$criteria,
+                ));
+
+                return $dataProvider;
+            } catch(Exception $e) {
+                return array();
+            }
+        }
+        
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your PActiveRecord descendants!
@@ -167,10 +191,10 @@ class Users extends PActiveRecord
         public function setDefaults(){
             $this->user_type_id = 1;
             $this->password = rand();
-            $this->is_agree_terms_conditions = 1;
-            $this->is_agree_personaldata_management = 1;
-            $this->is_active = 1;
-            $this->is_email_confirmed = 1;
+            $this->is_agree_terms_conditions = 0;
+            $this->is_agree_personaldata_management = 0;
+            $this->is_active = 0;
+            $this->is_email_confirmed = 0;
         }
         
         public function getGiftTicketsAfterRegister($source){
@@ -231,22 +255,27 @@ class Users extends PActiveRecord
             $url = "";
             $class = "img-thumbnail";
             if($dimension == "smallThumb"){
-                $class = " img-avatar";
+                $class .= " img-avatar";
             }
             if(!$user || get_class($user) != "Users"){
                 return $url;
             }
+            if($user->user_type_id == 1){
+                $profileImg = $user->profile->img;
+            } else if($user->user_type_id == 3){
+                $profileImg = $user->companyProfile->img;
+            }
             if($user->ext_source == 0){
-                if(!$user->profile->img){
+                if(!$profileImg){
                     // try with social user
                     if($user->socials){
                         // TODO: recreate social avatar: FB & G+
                     }
                 } else {
-                    $url = CHtml::image("/images/userProfiles/".$user->id."/".$dimension."/".$user->profile->img, "User Avatar", array("class"=>"img-thumbnail"));
+                    $url = CHtml::image("/images/userProfiles/".$user->id."/".$dimension."/".$profileImg, "User Avatar", array("class"=>$class));
                 }
             } elseif (in_array($user->ext_source, array(Yii::app()->params['authExtSource']['Facebook'],Yii::app()->params['authExtSource']['Google']))) {
-                $url = CHtml::image($user->profile->img, "User Avatar", array("class"=>"img-thumbnail"));
+                $url = CHtml::image($user->profile->img, "User Avatar", array("class"=>$class));
             }
             return $url;
         }

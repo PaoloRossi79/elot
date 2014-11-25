@@ -222,6 +222,7 @@ class HOAuthAction extends CAction
 
 					if($this->alwaysCheckPass || $user->isNewRecord){
                                                 $user->ext_source = Yii::app()->params['authExtSource'][$provider];
+                                                $user->is_email_confirmed = 1;
 						if(method_exists($this->controller, 'hoauthProcessUser'))
 							$user = $this->controller->hoauthProcessUser($user, $newUser);
 						else
@@ -257,8 +258,8 @@ class HOAuthAction extends CAction
 					// user was successfully logged in
 					// firing callback
 					if(method_exists($this->controller, 'hoauthAfterLogin'))
-//						$this->controller->hoauthAfterLogin($user, $newUser, $oAuth);
-						$this->controller->hoauthAfterLogin($user, false, $oAuth);
+						$this->controller->hoauthAfterLogin($user, $newUser, $oAuth);
+//						$this->controller->hoauthAfterLogin($user, false, $oAuth);
 				}
 
 				if($accessCode === 2)
@@ -274,7 +275,7 @@ class HOAuthAction extends CAction
 					window.close();
 				</script>
 				<?php
-			}
+			}                        
 		}
 		catch( Exception $e ){
 			$error = "";

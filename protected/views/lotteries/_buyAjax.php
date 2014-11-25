@@ -10,9 +10,7 @@
                  $(".cannot-buy").fadeIn()'
               , CClientScript::POS_READY);
           } ?>
-        <script>
-            $.modalHasUpdated(true); 
-        </script>
+        
           <?php
           if($result == "1"){
               ?>
@@ -29,10 +27,7 @@
                 </script>
               <?php
           }
-        } else {?>
-        <script>
-            $.modalHasUpdated(false); 
-        </script>
+        ?>
         <?php
             $ticketBoxSize = 350;
         }

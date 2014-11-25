@@ -32,13 +32,13 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('ajaxCheckUsername','confirmEmail'),
+				'actions'=>array('ajaxCheckUsername','confirmEmail','getNumUnreadNotifications'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
                                     'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
-                                    'savePayInfo','requestWithdraw','getNumUnreadNotifications'),
+                                    'savePayInfo','requestWithdraw','acceptPolicy','payInfo','searchTicket'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -90,13 +90,38 @@ class UsersController extends Controller
                 return true;
             }
         }
+        
+        public function actionAcceptPolicy() {
+            $acceptForm = new AcceptPrivacyForm();
+            if($_POST['AcceptPrivacyForm']){
+                if($_POST['AcceptPrivacyForm']['terms'] && $_POST['AcceptPrivacyForm']['persdatamng']){
+                    $user = Yii::app()->user->getUserModel();
+                    $user->is_agree_terms_conditions = 1;
+                    $user->is_agree_personaldata_management = 1;
+                    $user->is_active = 1;
+                    $user->is_email_confirmed = 1;
+                    $user->save();
+                    $acceptForm->complete = 1;
+                }
+                if(!$_POST['AcceptPrivacyForm']['terms']){
+                    $acceptForm->addError('terms', Yii::t("wonlot","Devi accettare i \"Termini e Condizioni\""));
+                }
+                if(!$_POST['AcceptPrivacyForm']['persdatamng']){
+                    $acceptForm->addError('persdatamng', Yii::t("wonlot","Devi accettare i termini di gestione dei dati personali"));
+                }
+            }
+            $this->renderPartial("/site/acceptPolicyForm", array('model'=>$acceptForm));   
+        }
 
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionGetNumUnreadNotifications(){
-            $unreadNotifyCount = Notifications::model()->getCountUnreadNotifications();
+            $unreadNotifyCount = array();
+            if(!Yii::app()->user->isGuest()){
+                $unreadNotifyCount = Notifications::model()->getCountUnreadNotifications();
+            }
             echo $unreadNotifyCount;
         }
         
@@ -107,42 +132,14 @@ class UsersController extends Controller
 		));
 	}
         
+        public function actionPayInfo()
+	{
+		$this->render('payInfo',array());
+	}
+        
 	public function actionAllNotify()
 	{
-                $userId = Yii::app()->user->id;
-                $crit = new CDbCriteria();
-                $crit->addCondition('t.from_user_id = '.$userId,'OR');
-                $crit->addCondition('t.to_user_id = '.$userId,'OR');
-                $crit->order = 't.id DESC';
-                /*$allNot = Notifications::model()->findAll($crit);
-		$this->render('allNotify',array(
-                    'model'=>$allNot,
-		));*/
-                if($_GET['Notifications_sort']){
-                    $crit->order = "t.".str_replace('.', ' ', $_GET['Notifications_sort']);
-                }
-                $dataProvider=new CActiveDataProvider('Notifications', array(
-                    'pagination'=>array(
-                            'pageSize'=>10,
-                    ),
-//                    'sort'=>array(
-//                        'attributes'=>array(
-//                            'from_user_id'=>array(
-//                                'asc'=>'from_user_id',
-//                                'desc'=>'from_user_id DESC',
-//                            ),
-//                            'to_user_id'=>array(
-//                                'asc'=>'to_user_id',
-//                                'desc'=>'to_user_id DESC',
-//                            ),
-//                            'message_type'=>array(
-//                                'asc'=>'message_type',
-//                                'desc'=>'message_type DESC',
-//                            ),
-//                         ),
-//                    ),
-                    'criteria'=>$crit,
-                ));
+                $dataProvider=  Notifications::model()->getLastNotifications($_GET['Notifications_sort']);
                 $this->render('allNotify',array(
                     'dataProvider'=>$dataProvider,
 		));
@@ -297,43 +294,38 @@ class UsersController extends Controller
                     /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Nome e Indirizzo sono obbligatori')));
                     return;*/
                     $resError = Yii::t('wonlot','Nome e Indirizzo sono obbligatori');
+                    $userInfoModel->addError('legal_name',Yii::t('wonlot','Nome e Indirizzo sono obbligatori'));
                 }
                 if(!$userInfoModel->vat && !$userInfoModel->fiscal_number){
                     /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale')));
                     return;*/
                     $resError = Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale');
+                    $userInfoModel->addError('vat',Yii::t('wonlot','Inserire almeno uno tra Partita IVA e Codice Fiscale'));
                 }
                 if($_POST['for_credit']){
                     if(!$userInfoModel->iban && !$userInfoModel->paypal_account){
                         /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal')));
                         return;*/
                         $resError = Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal');
+                        $userInfoModel->addError('iban',Yii::t('wonlot','Inserire almeno uno tra IBAN e Account Paypal'));
                     }
                 }
-                if($userInfoModel->save()){
+                if(!$userInfoModel->hasErrors() && $userInfoModel->save()){
                     $userOk = true;
                 } else {
-                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Salvataggio dei dati non riuscito')));
-                    return;*/
                     $resError = Yii::t('wonlot','Salvataggio dei dati non riuscito');
                 }
 
                 if($userOk && (isset($_POST['for_profile']) || isset($_POST['for_credit']))){
-                    /*echo CJSON::encode(array('res'=>1,'okMsg'=>Yii::t('wonlot','Dati di pagamento salvati'),'isProfile'=>$_POST['for_profile'],'isDraw'=>$_POST['for_credit']));
-                    return;*/
                     $resOk = Yii::t('wonlot','Dati di pagamento salvati');
-                } else {
+                } /*else {
                     if($userOk && isset($_POST['lot_id'])){
                         $lottery = Lotteries::model()->findByPk($_POST['lot_id']);
                         if($lottery){
                             if($lottery->paidInfo){
                                 if($lottery->paidInfo->is_completed){
-                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta già pagata')));
-                                    return;*/
                                     $resError = Yii::t('wonlot','Asta già pagata');
                                 } else {
-                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta già in attesa di pagamento')));
-                                    return;*/
                                     $resError = Yii::t('wonlot','Asta già in attesa di pagamento');
                                 }
                             } else {
@@ -353,30 +345,29 @@ class UsersController extends Controller
                                         $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
                                     }
                                 } else {
-                                    /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
-                                    return;*/
                                     $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
                                 }
                             }
                         } else {
-                            /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta non trovata')));
-                            return;*/
                             $resError = Yii::t('wonlot','Asta non trovata');
                         }
                     } else {
-                        /*echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Asta non trovata')));
-                        return;*/
                         $resError = Yii::t('wonlot','Asta non trovata');
                     }
-                }
+                }*/
             } else {
                 //echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
                 $resError = Yii::t('wonlot','Dati di pagamento mancanti');
             }
+            /*if($_POST['return_url']){
+                $this->redirect($_POST['return_url']);
+            }*/
             $this->renderPartial('_billForm',array(
                     'this'=>$this,
+                    'paymentInfo'=>$userInfoModel,
                     'resError'=>$resError,
                     'resOk'=>$resOk,
+                    'redirect'=>$_POST['return_url']
             ),false,true);
 	}
         
@@ -387,47 +378,47 @@ class UsersController extends Controller
                 if(isset($withdraw['creditValue'])){
                     $withdrawVal = (float) $withdraw['creditValue'];
                     if($withdrawVal && $withdrawVal > 0){
-                        $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.$user->id);
-                        if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
-                            if($withdraw['creditValue'] <= Yii::app()->user->walletValue){
-                                $drawReq = new UserWithdraw;
-                                $drawReq->user_id = $user->id;
-                                $drawReq->value = $withdraw['creditValue'];
-                                $drawReq->status = 1;
-                                
-                                $dbTransaction=$user->dbConnection->beginTransaction();
-                                $user->available_balance_amount-=$drawReq->value;
-                                if($user->save()){
-                                    if($drawReq->save()){
-                                        if(UserTransactions::model()->addDrawCreditTrans($drawReq->value,$user,$drawReq)){
-                                            $dbTransaction->commit();
-                                            Notifications::model()->sendDrawCreditNotify($drawReq->value,$user,$drawReq);
-                                            $resOk = Yii::t('wonlot','Richiesta di ritiro denaro inviata');
+                        if($withdrawVal >= 7){
+                            $withdrawValWithCommission = $withdrawVal + ($withdrawVal / 100) * 1;
+                            $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.$user->id);
+                            if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
+                                if($withdrawValWithCommission <= Yii::app()->user->walletValue){
+                                    $drawReq = new UserWithdraw;
+                                    $drawReq->user_id = $user->id;
+                                    $drawReq->value = $withdrawValWithCommission;
+                                    $drawReq->status = 1;
+
+                                    $dbTransaction=$user->dbConnection->beginTransaction();
+                                    $user->available_balance_amount-=$drawReq->value;
+                                    if($user->save()){
+                                        if($drawReq->save()){
+                                            if(UserTransactions::model()->addDrawCreditTrans($drawReq->value,$user,$drawReq)){
+                                                $dbTransaction->commit();
+                                                Notifications::model()->sendDrawCreditNotify($drawReq->value,$user,$drawReq);
+                                                $resOk = Yii::t('wonlot','Richiesta di ritiro denaro inviata');
+                                            } else {
+                                                $dbTransaction->rollback();
+                                                $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
+                                            }
                                         } else {
                                             $dbTransaction->rollback();
-                                            $resError = Yii::t('wonlot','Errore nell\'invio della richiesta');
-//                                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Errore nell\'invio della richiesta')));
                                         }
                                     } else {
                                         $dbTransaction->rollback();
                                     }
                                 } else {
-                                    $dbTransaction->rollback();
+                                    $resError = Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile');
                                 }
                             } else {
-//                                echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile')));
-                                $resError = Yii::t('wonlot','L\'importo selezionato è maggiore di quello disponibile');
+                                $resError = Yii::t('wonlot','Dati di pagamento mancanti');
                             }
                         } else {
-//                            echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Dati di pagamento mancanti')));
-                            $resError = Yii::t('wonlot','Dati di pagamento mancanti');
+                            $resError = Yii::t('wonlot','L\'importo minimo da ritirare è 7 €');
                         }
                     } else {
-//                        echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
                         $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                     }
                 } else {
-//                    echo CJSON::encode(array('res'=>0,'errMsg'=>Yii::t('wonlot','Valore da ritirare mancante o errato')));
                     $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                 }
             }
@@ -447,7 +438,7 @@ class UsersController extends Controller
                 $this->upForm = new XUploadForm;
                 $this->locationForm=new Locations;
                 $this->subscriptionForm = new SubscriptionForm;
-                $this->tickets = Tickets::model()->getMyTickets();
+                $this->tickets = Tickets::model()->getMyTickets(array());
                 $this->ticketsProvider = Tickets::model()->getMyTicketsProvider();
                 $this->userWithdraw = new UserWithdraw;
                 if($model->id){
@@ -519,6 +510,11 @@ class UsersController extends Controller
 			'model'=>$model,
 		));
 	}
+        
+        public function actionSearchTicket(){
+            $this->tickets = Tickets::model()->getMyTickets($_POST);
+            $this->renderPartial('_tickets', array('tickets'=>$this->tickets),false,true);
+        }
         
         /**
 	 * Save newsletter changes
@@ -619,17 +615,17 @@ class UsersController extends Controller
                         if(is_float($credit) and $credit > 0){
                             $this->_finalizeBuyCredit($credit,$model);
                         } else {
-                            $model->addError('creditOption','Credit option not set or not valid!');
+                            $model->addError('creditOption',Yii::t("wonlot","Credito non selezionato o non valido"));
                         }
                     } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
                         $credit=(float) $_POST['Users']['creditValue'];
                         if(is_float($credit) and $credit > 0){
                             $this->_finalizeBuyCredit($credit,$model);
                         } else {
-                            $model->addError('creditValue','Credit value not set or not valid!');
+                            $model->addError('creditOption',Yii::t("wonlot","Credito non selezionato o non valido"));
                         }
                     } else {
-                        $model->addError('creditOption','Please, select a credit option o insert a credit value');
+                        $model->addError('creditOption',Yii::t("wonlot","Selezionare un valore per il credito"));
                     }
 		} else {
                     $model->addError('creditOption','Form error');
@@ -660,33 +656,39 @@ class UsersController extends Controller
                         } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
                             $credit=(float) $_POST['Users']['creditValue'];
                         } else {
-                            $myUser->addError('creditOption','Please, select a credit option o insert a credit value');
+                            $myUser->addError('creditOption','Selezionare o inserire un valore di credito valido');
                         }
 
                         if(is_float($credit) and $credit > 0){
                             //check for credit:
-                            if($myUser->available_balance_amount > $credit){
-                                $dbTransaction=$myUser->dbConnection->beginTransaction();
-                                $myUser->available_balance_amount-=$credit;
-                                $giftUser->available_balance_amount+=$credit;
-                                if($myUser->save() && $giftUser->save()){
-                                    if(UserTransactions::model()->addGiftCreditTransTo($credit,$myUser,$giftUser)
-                                            &&
-                                       UserTransactions::model()->addGiftCreditTransFrom($credit,$myUser,$giftUser)
-                                    ){
-                                        $dbTransaction->commit();
-                                        // TODO: add notifications and email for gift!!!
-                                        Notifications::model()->sendGiftCreditNotify($credit,$myUser->id,$giftUser->id);
-                                        $this->opMessage = Yii::t('wonlot','Hai regalato ').$credit.' WlMoney '.Yii::t('wonlot','a ').$giftUser->username;
+                            if(Yii::app()->user->getRemainingGiftCredit() >= $credit){
+                                if($myUser->available_balance_amount > $credit){
+                                    $dbTransaction=$myUser->dbConnection->beginTransaction();
+                                    $myUser->available_balance_amount-=$credit;
+                                    $giftUser->available_balance_amount+=$credit;
+                                    if($myUser->save() && $giftUser->save()){
+                                        if(UserTransactions::model()->addGiftCreditTransTo($credit,$myUser,$giftUser)
+                                                &&
+                                           UserTransactions::model()->addGiftCreditTransFrom($credit,$myUser,$giftUser)
+                                        ){
+                                            $dbTransaction->commit();
+                                            // TODO: add notifications and email for gift!!!
+                                            Notifications::model()->sendGiftCreditNotify($credit,$myUser->id,$giftUser->id);
+                                            $this->opMessage = Yii::t('wonlot','Hai regalato ').$credit.' WlMoney '.Yii::t('wonlot','a ').$giftUser->username;
+                                        } else {
+                                            $dbTransaction->rollback();
+                                        }
                                     } else {
                                         $dbTransaction->rollback();
                                     }
                                 } else {
-                                    $dbTransaction->rollback();
+                                    $myUser->addError('creditValue','Valore del credito è maggiore del credito disponibile');
                                 }
+                            } else {
+                                $myUser->addError('creditValue','Valore del credito è maggiore del credito regalabile disponibile');
                             }
                         } else {
-                            $myUser->addError('creditValue','Credit value not set or not valid!');
+                            $myUser->addError('creditValue','Valore del credito non impostato o non valido');
                         }
                     }
 		} else {

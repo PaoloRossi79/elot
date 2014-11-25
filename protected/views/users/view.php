@@ -1,5 +1,12 @@
 <?php
+$isFollowing = FALSE;
 if($model->followers){
+    foreach ($model->followers as $follower) {
+        if($follower->follower_id == Yii::app()->user->id){
+            $isFollowing = true;
+            break;
+        }
+    }
     $followersId = CHtml::listData( $model->followers, 'follower_id','follower_id');
 } else {
     $followersId = array();
@@ -14,13 +21,8 @@ if($model->followers){
           </span>
           <span class="col-md-2">
               <?php if($this->userId != $model->id){ ?>
-                <?php if(!in_array($model->id,$followersId)){ 
-                    $flVis = true;
-                } else { 
-                    $flVis = false;
-                } ?>
-                <?php echo CHtml::ajaxLink('  Segui', '#',array(),array('id'=>'follUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn setFav btn btn-default btn-lg glyphicon glyphicon-eye-open','style'=>"display:".($flVis ? "block":"none"))); ?>
-                <?php echo CHtml::ajaxLink('  Non seguire', '#',array(),array('id'=>'unfollUserBtn-'.$model->id,'name'=>$model->id,'class'=>'follUserBtn unsetFav btn btn-default btn-lg glyphicon glyphicon-eye-close','style'=>"display:".(!$flVis ? "block":"none")));?>
+                <button class="follUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? 'startHide' : '';?>"><i class="glyphicon glyphicon-eye-open"></i><?php echo Yii::t("wonlot","Segui");?></button>
+                <button class="unfollUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? '' : 'startHide' ;?>"><i class="glyphicon glyphicon-eye-close"></i><?php echo Yii::t("wonlot","Smetti di seguire");?></button>
               <?php } ?>
           </span>
           </span>
@@ -64,10 +66,8 @@ if($model->followers){
         <div class="col-md-12">
             <h4><?php echo Yii::t("wonlot","Lotterie"); ?></h4>
             <?php
-            $dataProvider =  new CArrayDataProvider('Lotteries');
-            $dataProvider->setData($model->lotteries);
             $this->widget('ext.isotope.Isotope',array(
-                'dataProvider'=>$dataProvider,
+                'dataProvider'=>Users::model()->getUserLotteries($model->id),
                 'itemView'=>'/lotteries/lot-box',
                 'summaryText'=>'', 
                 'itemSelectorClass'=>'lot-box-item',

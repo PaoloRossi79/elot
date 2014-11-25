@@ -17,6 +17,7 @@
  */
 class UserTransactions extends PActiveRecord
 {
+        public $sumVal;
 	/**
 	 * @return string the associated database table name
 	 */

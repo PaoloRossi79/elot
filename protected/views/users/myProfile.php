@@ -1,4 +1,4 @@
-<div class="main-width">
+<div class="">
 
     <div class="panel panel-default bootstrap-widget-table">
         <div class="panel-heading">
@@ -33,6 +33,12 @@
                       ?>
                   </div>
                   <div class="tab-pane fade" id="tabProfile3">
+                      <?php
+                            if(!$this->filterModel) {
+                                $this->filterModel = new SearchForm();
+                            }
+                            $this->renderPartial('/site/filters',$this->filterModel);
+                        ?>
                       <?php 
                         echo $this->renderPartial('_tickets', array('tickets'=>$this->tickets),true);
                       ?>

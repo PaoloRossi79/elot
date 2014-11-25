@@ -25,14 +25,15 @@
         </div>
     <?php } ?>
     <div class="form-group">
-        <div class="col-sm-12">
-            <?php 
-            /*$opt=array('template'=>'{input} {beginLabel}{labelTitle} euro{endLabel}');
-            echo $formDraw->radioButtonList($withdraw, "creditOption", Yii::app()->params['buyCreditOptions'], $opt); */
-            ?>
+        <div class="col-md-12">
+            <div>
+                <?php echo $formDraw->textField($withdraw, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da ritirare...'))); ?> €
+                <small id="valueWithCommissionBlock"> <em>(<?php echo Yii::t('wonlot','con commissione Wonlot:'); ?>  <strong><span id="valueWithCommission" class=""></span></strong>  <?php echo Yii::t('wonlot','WlMoney'); ?>)</em></small>
+            </div>
+            <small><em>(<?php echo Yii::t('wonlot','Importo massimo:').' '.($userCredit - ($userCredit / 100)).' '.Yii::t('wonlot','€'); ?>)</em></small>
             <br/>
-            <div><?php echo $formDraw->textField($withdraw, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da ritirare...'))); ?> €</div>
-            <small><em>(<?php echo Yii::t('wonlot','Importo massimo:').' '.$userCredit.' '.Yii::t('wonlot','WlMoney'); ?>)</em></small>
+            <small><em><?php echo Yii::t('wonlot','Come da condizioni generali, la commissione Wonlot sul prelievo è dell\'  ') . "<strong>1 %</strong>"; ?></em></small>
+            
         </div>
     </div>
     

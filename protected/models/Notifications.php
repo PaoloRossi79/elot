@@ -66,15 +66,22 @@ class Notifications extends PActiveRecord
 		);
 	}
         
-        public function getLastNotifications(){
+        public function getLastNotifications($notificationsSort = ""){            
             $userId = Yii::app()->user->id;
             $crit = new CDbCriteria();
             $crit->addCondition('t.from_user_id = '.$userId,'OR');
             $crit->addCondition('t.to_user_id = '.$userId,'OR');
             $crit->order = 't.id DESC';
-            $crit->limit = 6;
-            $notify = Notifications::model()->findAll($crit);
-            return $notify;
+            if($notificationsSort){
+                $crit->order = "t.".str_replace('.', ' ', $notificationsSort);
+            }
+            $dataProvider=new CActiveDataProvider('Notifications', array(
+                'pagination'=>array(
+                        'pageSize'=>10,
+                ),
+                'criteria'=>$crit,
+            ));
+            return $dataProvider;
         }
         
         public function getCountUnreadNotifications(){

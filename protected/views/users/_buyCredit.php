@@ -13,22 +13,28 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel"><?php echo Yii::t('wonlot','Compra Credito'); ?></h4>
+          <h4 class="modal-title" id="myModalLabel">
+                <?php echo Yii::t('wonlot','Compra Credito'); ?>
+                <?php $this->renderPartial('/users/availableCreditTitle',array('model'=>$model)); ?>
+          </h4>
         </div>
         <div class="modal-body">
 
           <?php echo $creditForm->errorSummary($model); ?>
-            <h4><?php echo Yii::t('wonlot','Scegli un importo'); ?></h4>
-            <?php 
-            $opt=array('template'=>'{input} {beginLabel}{labelTitle} euro{endLabel}');
-            echo $creditForm->radioButtonList($model, "creditOption", Yii::app()->params['buyCreditOptions'], $opt); 
-            ?>
-            <br/>
-            <?php //echo $creditForm->CMaskedTextField($model, 'creditOption', array('class' => 'span3','size'=>45,'maxlength'=>45)); ?>
-            <div>
-                <p><?php echo Yii::t('wonlot','Altro importo'); ?></p>
-                <?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>10,'maxlength'=>10)); ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4><?php echo Yii::t('wonlot','Scegli un importo'); ?></h4>
+                    <?php 
+                    $opt=array('template'=>'{input} {beginLabel}{labelTitle} euro{endLabel}');
+                    echo $creditForm->radioButtonList($model, "creditOption", Yii::app()->params['buyCreditOptions'], $opt); 
+                    ?>
+                </div>
+                <div class="col-md-6">
+                    <h4><?php echo Yii::t('wonlot','Altro importo'); ?></h4>
+                    <div>
+                        <div><?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da acquistare...'))); ?> €</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer">

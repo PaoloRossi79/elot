@@ -94,7 +94,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <?php $htmlTicketValue = array_merge($htmlDisabled,array("step"=>"0.02","min"=>0)); ?>
+                    <?php $htmlTicketValue = array_merge($htmlDisabled,array("step"=>"0.01","min"=>0.01)); ?>
                     <?php echo $form->labelEx($model,'ticket_value'); ?>
                     <?php echo $form->numberField($model,'ticket_value',$htmlTicketValue); ?>
                     <?php echo $form->error($model,'ticket_value'); ?>
@@ -186,6 +186,7 @@
                         echo CHtml::submitButton('Pubblica',array('name'=>'publish','class'=>'btn btn-success lot-sub-btn'));
                     } else {
                         echo CHtml::submitButton('Salva',array('name'=>'save','class'=>'btn btn-primary lot-sub-btn'));
+                        echo CHtml::link('Indietro', CController::createUrl('auctions/'.$model->id),array('class'=>'btn btn-default'));
                     }
                 }
                 ?>

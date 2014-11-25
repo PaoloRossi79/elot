@@ -111,7 +111,9 @@ class PrizeCategories extends PActiveRecord
 
 	public function getPrizeCatCheckbox()
 	{
-		$prizeCatList=$this->findAll();
+                $orderCrit = new CDbCriteria();
+                $orderCrit->order = 'category_name';
+		$prizeCatList=$this->findAll($orderCrit);
                 $catList=array();
                 foreach($prizeCatList as $cat){
                     $catList[$cat->id]=$cat->category_name;

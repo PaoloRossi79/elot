@@ -17,6 +17,7 @@
  */
 class Tickets extends PActiveRecord
 {
+        public $filterModel;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -172,15 +173,53 @@ class Tickets extends PActiveRecord
             return $this->findAll($criteria);
         }
         
-        public function getMyTickets(){
+        public function getMyTickets($post){
             $viewData=array();
-            $criteria=new CDbCriteria; 
-            if($_POST['lotStatus']){
-                $criteria->addCondition('t.status='.$_POST['lotStatus']);
-                $viewData['lotStatus']=$_POST['lotStatus'];
-            } else {
-                $criteria->addNotInCondition('t.status',array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['void']));
+            $criteria=new CDbCriteria(); 
+            if(!empty($post['SearchForm']['Categories'])){
+                $criteria->addInCondition('t.prize_category',$post['SearchForm']['Categories']);
+                $result['viewData']['showCat']=$post['SearchForm']['Categories'];
             }
+            if(!empty($post['SearchForm']['LotStatusComplete'])){
+                $statusOptions = $post['SearchForm']['LotStatusComplete'];
+                $first = true;
+                $filter['status'] = array();
+                foreach($statusOptions as $opt) {
+                    $filter['status'] = array_merge($filter['status'],array(Yii::app()->params['lotteryStatusConst'][$opt])); 
+                    $result['viewData']['showStatus'].=($first?"":", ").Yii::app()->params['lotteryStatusConstIta'][$opt];
+                    $first=false;
+                }
+                $criteria->addInCondition('t.status',$filter['status']);
+            }
+            if(!empty($post['SearchForm']['searchStartDate'])){
+                $minDate=Yii::app()->dateFormatter->format('dd-MM-yyyy',$post['SearchForm']['searchStartDate']);
+                $criteria->addCondition('t.lottery_start_date >="' .$minDate.'"');
+            }
+            if(!empty($post['SearchForm']['searchEndDate'])){
+                $maxDate=Yii::app()->dateFormatter->format('dd-MM-yyyy',$post['SearchForm']['searchEndDate']);
+                $criteria->addCondition('t.lottery_draw_date <="' .$maxDate.'"');
+            }
+            if(!empty($post['SearchForm']['lottery_start_date'])){
+                $startDate=Yii::app()->dateFormatter->format('dd-MM-yyyy',$post['SearchForm']['lottery_start_date']);
+                $criteria->addCondition('t.lottery_start_date ="' .$startDate.'"');
+            }
+            if(!empty($post['SearchForm']['lottery_draw_date'])){
+                $endDate=Yii::app()->dateFormatter->format('dd-MM-yyyy',$post['SearchForm']['lottery_draw_date']);
+                $criteria->addCondition('t.lottery_draw_date ="' .$endDate.'"');
+            }
+            if(!empty($post['SearchForm']['minTicketPriceRange'])){
+                $minTicketPriceRange=$post['SearchForm']['minTicketPriceRange'];
+                $criteria->addCondition('t.ticket_value >="' .$minTicketPriceRange.'"');
+            }
+            if(!empty($post['SearchForm']['maxTicketPriceRange'])){
+                $maxTicketPriceRange=$post['SearchForm']['maxTicketPriceRange'];
+                $criteria->addCondition('t.ticket_value <="' .$maxTicketPriceRange.'"');
+            }
+            if($post['SearchForm']['searchText']){
+                $sText=$post['SearchForm']['searchText'];
+                $criteria->addCondition('t.name like "%' .$sText.'%" OR t.prize_desc like "%' .$sText.'%"');
+            }
+            
             $criteria->order='t.name';
             $criteria->with=array("tickets"=>array(
                 // but want to get only users with published posts
@@ -254,6 +293,24 @@ class Tickets extends PActiveRecord
                 }
             }
             return $res;
+        }
+        
+        public static function getLotBoxTag($ticketId){
+            $ticket = Tickets::model()->findByPk($ticketId);
+            if($ticket){
+                $res = "<span>";
+                $url = "";
+                $class = "img-thumbnail";
+                $class .= " img-avatar";              
+                $img = CHtml::image("/images/lotteries/".$ticket->lottery->id."/smallThumb/".$ticket->lottery->prize_img, "Lottery image", array("class"=>$class));
+                $url = CHtml::link($img, Yii::app()->controller->createUrl('tickets/view/'.$ticketId));
+                $res .= "<p>".$ticket->lottery->name;
+                $res .= "</p>";
+                $res .= $url;
+                $res .= "</span>";
+                return $res;
+            } 
+            return "";
         }
 
 	/**

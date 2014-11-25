@@ -7,6 +7,8 @@
 
 <div>
     <div>Per ricevere il premio mettiti in contatto con il venditore (scrivendogli da questa mail):</div>
-    <div>Venditore: <b><?php echo $lottery->owner->username; ?></b> - Email: <?php echo $lottery->owner->email; ?></div>
+    <?php if($lottery->owner && $lottery->owner->username && $lottery->owner->email){ ?>
+        <div>Venditore: <b><?php echo $lottery->owner->username; ?></b> - Email: <?php echo $lottery->owner->email; ?></div>
+    <?php } ?>
     <div>Se hai segnalazioni o problemi scrivi a: <a href="mailto:help@wonlot.com">help@wonlot.com</a></div>
 </div>

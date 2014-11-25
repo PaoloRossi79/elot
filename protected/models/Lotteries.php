@@ -62,9 +62,9 @@ class Lotteries extends PActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 //			array('id, name, lottery_type, prize_desc, prize_category, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, created, modified, last_modified_by', 'safe', 'on'=>'search'),
-			array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, location_id', 'safe',),
-                        array('lottery_start_date', 'myCheckdate', 'compare'=>'lottery_draw_date', 'criteria'=>'smaller'),
-                        array('lottery_draw_date', 'myCheckdate', 'compare'=>'lottery_start_date', 'criteria'=>'bigger'),
+                        array('lottery_start_date', 'myCheckdate', 'compare'=>'lottery_draw_date', 'criteria'=>'smaller', 'on'=>'editSubmit'),
+                        array('lottery_draw_date', 'myCheckdate', 'compare'=>'lottery_start_date', 'criteria'=>'bigger', 'on'=>'editSubmit'),
+                        array('name, lottery_type, prize_desc, prize_category, prize_img, prize_conditions, prize_condition_text, prize_shipping, prize_price, min_ticket, max_ticket, ticket_value, lottery_start_date, lottery_draw_date, lottery_close_date, location_id, winning_id, winning_sum, winner_id', 'safe'),
 		);
 	}
         
@@ -211,9 +211,12 @@ class Lotteries extends PActiveRecord
         public function getLotteries($type,$returnType="")
 	{
             $criteria=new CDbCriteria; 
-            if(isset($type['my'])){
+            if(isset($type['my']) && $type['my']){
                 $criteria->addCondition('owner_id='.Yii::app()->user->id);
-            } 
+                $criteria->order = "FIELD(t.status, 3,2,1,4,5,6)";
+            } else {
+                $criteria->order = "FIELD(t.status, 3,2,4,5)";
+            }
             if(isset($type['status'])){
                 if($type['status']==="active"){
                     $dbToday=new CDbExpression('NOW()');
@@ -222,7 +225,7 @@ class Lotteries extends PActiveRecord
                     $criteria->addCondition('lottery_start_date <='.$dbToday);
                     $criteria->addCondition('lottery_draw_date >='.$dbToday);
                 } else {
-                    $criteria->order = "FIELD(t.status, 3,2,4,5)";
+                    //$criteria->order = "FIELD(t.status, 3,2,4,5)";
                 }
                 if(!is_array($type['status'])){
                     $status=array($type['status']);
@@ -231,7 +234,9 @@ class Lotteries extends PActiveRecord
                 }
                 $criteria->addInCondition('status',$status);
             } else {
-                $criteria->addNotInCondition('status',array(Yii::app()->params['lotteryStatusConst']['void']));
+                if(!isset($type['my']) || !$type['my']){
+                    $criteria->addNotInCondition('status',array(Yii::app()->params['lotteryStatusConst']['void']));
+                }
             }
             if(isset($type['prizeCategory'])){
                 if(!is_array($type['prizeCategory'])){
@@ -250,6 +255,12 @@ class Lotteries extends PActiveRecord
             
             if(isset($type['maxDate']))
                 $criteria->addCondition('t.lottery_draw_date <="' .$type['maxDate'].'"');
+            
+            if(isset($type['startDate']))
+                $criteria->addCondition('t.lottery_start_date ="' .$type['startDate'].'"');
+            
+            if(isset($type['endDate']))
+                $criteria->addCondition('t.lottery_draw_date ="' .$type['endDate'].'"');
 
             if(isset($type['minTicketPriceRange']))
                 $criteria->addCondition('t.ticket_value >="' .$type['minTicketPriceRange'].'"');
@@ -265,6 +276,12 @@ class Lotteries extends PActiveRecord
             
             if(isset($type['searchText'])){
                 $criteria->addCondition('t.name like "%' .$type['searchText'].'%" OR t.prize_desc like "%' .$type['searchText'].'%"');
+            }
+            if(isset($type['name'])){
+                $criteria->addCondition('t.name like "%' .$type['name'].'%"');
+            }
+            if(isset($type['prize_desc'])){
+                $criteria->addCondition('t.prize_desc like "%' .$type['name'].'%"');
             }
             if(isset($type['favorite'])){
                 $myFavLot = CHtml::listData(FavoriteLottery::model()->findAll('t.user_id ='.Yii::app()->user->id.' AND t.active=1'), 'lottery_id', 'lottery_id');
@@ -415,6 +432,7 @@ class Lotteries extends PActiveRecord
         
         public function getStatusText($status=null){
             $statuses=Yii::app()->params['lotteryStatusConst'];
+            $textStatuses=Yii::app()->params['lotteryStatusConstIta'];
             if($status != null){
                 if($status instanceof Lotteries){
                     $checkStatus = (int)$status->status;
@@ -426,7 +444,7 @@ class Lotteries extends PActiveRecord
             }
             foreach($statuses as $k=>$v){
                 if($v===$checkStatus){
-                    return $k;
+                    return $textStatuses[$k];
                 }
             }
             return "";
@@ -504,10 +522,10 @@ class Lotteries extends PActiveRecord
                         $this->winning_sum = $group['sumweight'];
                         if($group['user_id'] != $this->winning_id){
                             $this->winning_id = $group['user_id'];
-                            $this->save();
                             $res['newWinner'] = true;
                             $res['newWinnerValue'] = $group['sumweight'];
                             $res['newWinnerUser'] = $group['user_id'];
+                            $this->save();
                             // Notification to all players
 //                            Notifications::sendNewWinningToAll($this);
                         } else { //same user as before

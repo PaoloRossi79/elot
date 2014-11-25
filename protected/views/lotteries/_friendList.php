@@ -3,16 +3,16 @@
 <div class="friends">
     <div class="friends-list">
             
-            <div class="gift-ticket-box" name='0'>
-              <?php $this->renderPartial('/lotteries/_socialFriendList'); ?>
+        <div class="gift-ticket-box" name='0'>
+          <?php $this->renderPartial('/lotteries/_socialFriendList'); ?>
+        </div>
+        <div class="gift-ticket-box" name='1'>
+            <div id="emailFormGroup" class="form-group">
+              <?php echo $form->emailField($formModel,'giftToEmail',array('placeholder' => "Email", 'class' => 'form-control')); ?>                
+                <p class="giftErrorText text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
+                <p class="giftSuccessText text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
             </div>
-            <div class="gift-ticket-box" name='1'>
-                <div id="emailFormGroup" class="form-group">
-                  <?php echo $form->emailField($formModel,'giftToEmail',array('placeholder' => "Email", 'class' => 'form-control')); ?>                
-                    <p class="giftErrorText text-danger"><?php echo Yii::t('wonlot','Email non valida'); ?></p>
-                    <p class="giftSuccessText text-success"><?php echo Yii::t('wonlot','Regalo inviato!'); ?></p>
-                </div>
-            </div>
+        </div>
         <div class="gift-ticket-box" name='2'>
             <?php if(count($user->followings) > 0){ ?>
                 <div class="">

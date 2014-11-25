@@ -1,15 +1,5 @@
 <div class="text-block">
-<?php 
-    if($model->ext_source > 1){
-        //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
-        // TODO: get Image from socials
-        echo "<img src='".$model->profile->img."' style='width:200px;heigth:200px;'/>";
-    } else {
-//        echo CHtml::image("/images/userProfiles/".Yii::app()->user->id."/boxThumb/".$model->profile->img, "User Avatar", array("class"=>"user-avatar img-thumbnail"));
-        echo Yii::app()->user->avatarUrl;
-    } ?>
-
-
+    
 <?php 
     $form = $this->beginWidget(
         'CActiveForm',
@@ -28,6 +18,36 @@
         $companyProfile = new CompanyProfiles();
     }
 ?>
+    <div class="row">
+        <div>
+            <?php 
+            if($model->ext_source > 1){
+                //echo CHtml::image($model->profile->img, "User Avatar", array("class"=>"user-avatar"));
+                // TODO: get Image from socials
+                echo "<img src='".$model->profile->img."' style='width:400px;heigth:400px;'/>";
+            } else {
+                echo Yii::app()->user->getAvatarUrl('mediumSquaredThumb');
+            } ?>
+        </div>
+        <div id="user_img" class="pull-left">
+            <?php
+                if($model->ext_source == 0 || $model->ext_source == 1){
+                    //echo $form->labelEx($model,'photos');
+                    $this->widget( 'xupload.XUpload', array(
+                        'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
+                        //our XUploadForm
+                        'model' => $this->upForm,
+                        //We set this for the widget to be able to target our own form
+                        'htmlOptions' => array('id'=>'userProfile-form','class'=>'btn btn-primary'),
+                        'attribute' => 'file',
+                        'multiple' => false,
+                        'showForm' => false,
+                        )    
+                    );
+                }
+            ?>
+        </div>
+    </div>
         <div class="form-group">
             <?php echo $form->errorSummary($model); ?>
             <?php if($model->user_type_id == Yii::app()->user->userTypes['admin']){ ?>
@@ -193,28 +213,6 @@
             </div>
         </div>
 
-	
-        <div class="form-group">
-            <div id="user_img">
-                <?php
-                    if($model->ext_source == 0 || $model->ext_source == 1){
-                        //echo $form->labelEx($model,'photos');
-                        $this->widget( 'xupload.XUpload', array(
-                            'url' => Yii::app( )->createUrl( "/userProfiles/upload"),
-                            //our XUploadForm
-                            'model' => $this->upForm,
-                            //We set this for the widget to be able to target our own form
-                            'htmlOptions' => array('id'=>'userProfile-form','class'=>'btn btn-primary'),
-                            'attribute' => 'file',
-                            'multiple' => false,
-                            'showForm' => false,
-                            )    
-                        );
-                    }
-                ?>
-            </div>
-        </div>
-        
 	<div class="form-group buttons">
             <div class="col-sm-2">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva',array('class'=>'btn btn-primary')); ?>

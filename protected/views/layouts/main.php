@@ -12,6 +12,8 @@
         echo header("Access-Control-Allow-Origin: *");
         ?>
         
+        <link href='http://fonts.googleapis.com/css?family=UnifrakturCook:700' rel='stylesheet' type='text/css'></link>
+        
         <?php 
             //Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/screen.css','screen, projection');
             Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/print.css','print');
@@ -30,6 +32,7 @@
             Yii::app()->getClientScript()->registerScriptFile('//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.galleriffic.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/ie-fade.js',CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/bootbox.min.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/main-js.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/main.js',CClientScript::POS_HEAD);
             Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/js/slimscroll.min.js',CClientScript::POS_HEAD);
@@ -60,7 +63,7 @@
                     </div>
                     <div class="col-md-6">
                         <div id="header-icons">
-                        <?php if(!Yii::app()->user->isGuest){ ?>
+                        <?php if(!Yii::app()->user->isGuest && Yii::app()->user->isActive()){ ?>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Logout'); ?>">
                                 <?php 
                                 $controller = Yii::app()->getController();
@@ -96,7 +99,21 @@
                                 </a>
                                 <div class="notify-unread-count float-circle"></div>
                             </div>
-
+                          <?php } else if(!Yii::app()->user->isGuest && !Yii::app()->user->isActive()){ ?>
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
+                                <a href="#">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                            <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Logout'); ?>">
+                                <?php 
+                                $controller = Yii::app()->getController();
+                                $originUrl = $controller->getId() . '/' . $controller->getAction()->getId();
+                                ?>
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/logout?origin=<?php echo $originUrl; ?>">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-login.png", "Logout", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
                           <?php } else { ?>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
                                 <a href="#">
@@ -123,6 +140,28 @@
                                 <div class="welcome-text">
                                     <?php echo Yii::app()->user->username;?>
                                 </div>
+                                <?php if(!Yii::app()->user->isActive()){ ?>
+                                    <div class="welcome-text">
+                                        Devi attivare l'account
+                                    </div>
+                                    <?php  
+                                        Yii::app()->request->cookies['activation-request'] = new CHttpCookie('activation-request', 0);
+                                        $cookieAct = Yii::app()->request->cookies['activation-request']->value;
+                                        if(!$cookieAct){ ?>
+                                            <?php $this->renderPartial("/site/acceptPolicy", array('model'=>new AcceptPrivacyForm())); ?>
+                                            <script>
+                                                $(window).load(function(){
+                                                    $('#acceptModal').modal('show');
+                                                });
+                                            </script>
+                                        <?php }
+                                    ?>
+                                <?php }  ?>
+                                <?php if(!Yii::app()->user->isEmailConfirmed()){ ?>
+                                    <div class="welcome-text">
+                                        Devi attivare l'email
+                                    </div>
+                                <?php }  ?>
                             </div>
                           <?php }  ?>
                           <?php if(Yii::app()->user->isAdmin){ ?>
@@ -166,34 +205,37 @@
         <?php } ?>
             
         <div id="body-container" class="row">
-            <?php echo $content; ?>
+            <div class="">
+                <?php echo $content; ?>
+            </div>
         </div>
 
 	<div class="clear"></div>
 
 	<div class="footer row">
-         <div class="main-width">
-            <div class="footer-left">
-               <div class="footer-subtitle" style="float:left;">
-                  <a href="#" class="tooltip-down" title="Twitter"><i class="icon-twitter"></i></a>
-                  <a href="#" class="tooltip-down" title="Facebbok"><i class="icon-facebook"></i></a>
-                  <a href="#" class="tooltip-down" title="Instagram"><i class="icon-instagram"></i></a>
-               </div>
+            <div class="container">
+                <div class="footer-left">
+                    <div class="footer-link">
+                        <?php echo CHtml::link("Chi siamo", CController::createUrl('site/page/about'), array()) ?>
+                    </div>
+                    <div class="footer-link">
+                        <?php echo CHtml::link("Feedback", CController::createUrl('site/page/about'), array()) ?>
+                    </div>
+                </div>
+                <div class="footer-middle">
+                    <p><?php echo Yii::t('wonlot','Condividi');?></p>
+                    <a href="#" class="tooltip-down" title="Twitter"><i class="icon-twitter"></i></a>
+                    <a href="#" class="tooltip-down" title="Facebbok"><i class="icon-facebook"></i></a>
+                    <a href="#" class="tooltip-down" title="Instagram"><i class="icon-instagram"></i></a>
+                </div>
+                <div class="footer-right">
+                   <p>
+                      <a href="#">Informativa sulla privacy</a><br/>
+                      <a href="#">Termini & Condizioni</a><br/>
+                   </p>
+                </div>
+                <div class="clear"></div>
             </div>
-            <div class="footer-middle">
-               
-               <p class="footer-link">
-                  <a href="#">Scopri come funziona &raquo;</a>
-               </p>
-            </div>
-            <div class="footer-right">
-               <p>
-                  <a href="#">Informativa sulla privacy</a><br/>
-                  <a href="#">Termini & Condizioni</a><br/>
-               </p>
-            </div>
-            <div class="clear"></div>
-         </div>
       </div>
       <div class="gototop-fixed"><a href="#" class="icon-circle-arrow-up tooltip-left gototop" title="Torna a inizio pagina"></a></div>
 </div><!-- page -->

@@ -103,7 +103,10 @@ class LotteriesController extends Controller
 	 */
 	public function actionCreate()
 	{
-//                $this->layout='column2l6l4';
+                $paymentInfo = Yii::app()->user->payInfo;
+                if(!$paymentInfo){
+                    $this->redirect('/users/payInfo');
+                }
                 $this->sideView='createLotteyHelp';
                 $model=new Lotteries;
                 $this->_editLottery($model);
@@ -151,11 +154,28 @@ class LotteriesController extends Controller
 //                $this->layout='column2l6l4';
                 $this->sideView='createLotteyHelp';
                 $model = $this->loadModel($id);
-                unset($model->id);
+                /*unset($model->id);
                 unset($model->lottery_start_date);
+                unset($model->lottery_close_date);
+                unset($model->lottery_extract_date);
                 unset($model->lottery_draw_date);
+                unset($model->ticket_sold);
+                unset($model->ticket_sold_value);
+                unset($model->winning_id);
+                unset($model->winning_sum);
+                unset($model->winner_id);
+                unset($model->winner_ticket_id);*/
                 $newModel = new Lotteries;
-                $newModel->setAttributes($model->attributes);
+                //$newModel->setAttributes($model->attributes);
+                $copyArray = [
+                    'name','owner_id','lottery_type','is_charity','prize_desc',
+                    'prize_category','prize_img','prize_conditions','prize_condition_text',
+                    'prize_shipping','prize_price','ticket_value','location_id'
+                ];
+                foreach($copyArray as $copyAtt){
+                    $newModel->{$copyAtt} = $model->{$copyAtt};
+                }
+                
                 $newModel->cloneId = $id;
                 $this->_editLottery($newModel);
 	}
@@ -205,11 +225,12 @@ class LotteriesController extends Controller
                     echo Yii::t('wonlot','Non puoi annullare questa Asta: non è aperta');
                     return;
                 }
-                $lotDate = DateTime::createFromFormat('d/m/yy',$lot->lottery_draw_date);
-                $lotDate->sub(new DateInterval('PT25H'));
-                $now = new DateTime;
+                //$lotDate = DateTime::createFromFormat('d/m/yy hh:mm:ss',$lot->lottery_draw_date);
+                $lotDate = CDateTimeParser::parse($lot->lottery_draw_date, Yii::app()->params['toDbDateTimeFormat']);
+                $lotDate = $lotDate - (60 *60 * 1);
+                $now = CDateTimeParser::parse(date("d/m/Y H:m:s"), Yii::app()->params['toDbDateTimeFormat']);
                 if($now > $lotDate){
-                    echo Yii::t('wonlot','Non puoi annullare questa Asta: mancano meno di 24 ore');
+                    echo Yii::t('wonlot','Non puoi annullare questa Asta: manca meno di 1 ora');
                     return;
                 }
                 $dbTransaction=$lot->dbConnection->beginTransaction();
@@ -237,13 +258,13 @@ class LotteriesController extends Controller
                                     }
                                 }
                                 if($vt->giftFromUser->save()){
-                                    $dbTransaction->commit();
+                                    //$dbTransaction->commit();
                                     if(!in_array($vt->giftFromUser->id,$usersRefound)){
                                         $usersRefound[] = $vt->giftFromUser->id;
                                     }
                                     UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->giftFromUser->id);
                                 } else {
-                                    $dbTransaction->rollback();
+                                    //$dbTransaction->rollback();
                                     $allOk=false;
                                     Yii::log("Void lottery error: saving gift user. Ticket ".$vt->id);
                                 }
@@ -262,28 +283,30 @@ class LotteriesController extends Controller
                                     }
                                 }
                                 if($vt->user->save()){
-                                    $dbTransaction->commit();
+                                    //$dbTransaction->commit();
                                     if(!in_array($vt->user->id,$usersRefound)){
                                         $usersRefound[] = $vt->user->id;
                                     }
                                     UserTransactions::model()->addVoidTicketRepay($vt->id,$vt->price,$vt->user->id);
                                 } else {
-                                    $dbTransaction->rollback();
+                                    //$dbTransaction->rollback();
                                     $allOk=false;
                                     $errors[$vt->id][] = "Void lottery error:  saving user. Ticket ".$vt->id;
                                     Yii::log("Void lottery error: saving user. Ticket ".$vt->id);
                                 }
                             }
                         } else {
-                            $dbTransaction->rollback();
+                            //$dbTransaction->rollback();
                             $allOk=false;
                             break;
                         }
                     }
                 }
                 if(!$allOk){
+                    $dbTransaction->rollback();
                     $emailRes=EmailManager::sendCronAdminEmail($errors);
                 } else {
+                    $dbTransaction->commit();
                     foreach($usersRefound as $userRef){
                         Notifications::model()->sendRefoundLotteryNotify($lot,$userRef);
                     }
@@ -291,7 +314,7 @@ class LotteriesController extends Controller
                 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_POST['isAjax'])){
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : '/auctions/userIndex');
                 } else {
                     echo 1;
                 }
@@ -341,8 +364,21 @@ class LotteriesController extends Controller
          */
         public function actionUserIndex()
 	{
+            if($_POST['reset']){
+                $_POST['SearchForm'] = null;
+            } 
+            if($_POST['SearchForm'] == null){
+                unset(Yii::app()->session['filters']);
+            }
+            if($_POST['SearchForm']['Category']){
+                $_POST['SearchForm']['Categories']=$_POST['SearchForm']['Category'];
+            }
+            if($_POST['SearchForm']){
+                Yii::app()->session['filters'] = $_POST['SearchForm'];
+            } 
             $lotteries=$this->filterLotteries(true);
             $this->ticketTotals=Tickets::model()->getMyTicketsNumberAllLotteries();
+            $this->layout='//layouts/basecolumn';
             $this->render('userIndex',array(
                 'dataProvider'=>$lotteries['dataProvider'],
                 'viewType'=>"_box",
@@ -678,14 +714,15 @@ class LotteriesController extends Controller
                                     $lot->ticket_sold+=1;
                                     $lot->ticket_sold_value+=$ticket->price;
                                     $lot->save();
-                                    $dbTransaction->commit();
                                     $winRes = $lot->updateWinning();
+                                    $dbTransaction->commit();
 //                                    $checkRes=$lot->checkNewStatus();
                                     $data["result"] = "1";
                                     if($isGift){
                                         $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è stato regalato a ").$giftRes['toUser'];
                                     } else {
-                                        $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è tuo e vale ").$ticket->random_weight;
+                                        $showWeight = $ticket->random_weight - 1;
+                                        $data["msg"] = Yii::t('wonlot','Il biglietto n° ').$ticket->serial_number.Yii::t('wonlot'," è tuo e vale 1 WCredit + {$showWeight} WCredit Bonus");
                                     }
                                     $data["winRes"] = $winRes;
                                 } else {
@@ -839,6 +876,16 @@ class LotteriesController extends Controller
             if(empty($_POST['SearchForm']['LotStatus']) && !empty($_POST['SearchForm']['LotStartStatus'])){
                 $_POST['SearchForm']['LotStatus'][]=$_POST['SearchForm']['LotStartStatus'];
             }
+            if(!empty($_POST['SearchForm']['LotStatusComplete'])){
+                $statusOptions = $_POST['SearchForm']['LotStatusComplete'];
+                $first = true;
+                $filter['status'] = array();
+                foreach($statusOptions as $opt) {
+                    $filter['status'] = array_merge($filter['status'],array(Yii::app()->params['lotteryStatusConst'][$opt])); 
+                    $result['viewData']['showStatus'].=($first?"":", ").Yii::app()->params['lotteryStatusConstIta'][$opt];
+                    $first=false;
+                }
+            }
             if(!empty($_POST['SearchForm']['LotStatus'])){
                 $statusOptions = $_POST['SearchForm']['LotStatus'];
                 $first = true;
@@ -868,24 +915,36 @@ class LotteriesController extends Controller
             if(!empty($_POST['SearchForm']['searchEndDate'])){
                 $filter["maxDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchEndDate']);
             }
+            if(!empty($_POST['SearchForm']['lottery_start_date'])){
+                $filter["startDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['lottery_start_date']);
+            }
+            if(!empty($_POST['SearchForm']['lottery_draw_date'])){
+                $filter["endDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['lottery_draw_date']);
+            }
             if(!empty($_POST['SearchForm']['minTicketPriceRange'])){
                 $filter["minTicketPriceRange"]=$_POST['SearchForm']['minTicketPriceRange'];
             }
             if(!empty($_POST['SearchForm']['maxTicketPriceRange'])){
                 $filter["maxTicketPriceRange"]=$_POST['SearchForm']['maxTicketPriceRange'];
             }
-            if(!empty($_POST['SearchForm']['minPrizePriceRange'])){
+            /*if(!empty($_POST['SearchForm']['minPrizePriceRange'])){
                 $filter["minPrizePriceRange"]=$_POST['SearchForm']['minPrizePriceRange'];
             }
             if(!empty($_POST['SearchForm']['maxPrizePriceRange'])){
                 $filter["maxPrizePriceRange"]=$_POST['SearchForm']['maxPrizePriceRange'];
-            }
+            }*/
             if($_POST['SearchForm']['geoLat'] && $_POST['SearchForm']['geoLng']){
 //                $re = Locations::model()->orderByDistance(array('addressLat' => $_POST['SearchForm']['geoLat'],'addressLng' => $_POST['SearchForm']['geoLng']));
                 $filter["geo"]=array('lat'=>$_POST['SearchForm']['geoLat'], 'lng'=>$_POST['SearchForm']['geoLng']);
             }
             if($_POST['SearchForm']['searchText']){
                 $filter["searchText"]=$_POST['SearchForm']['searchText'];
+            }
+            if($_POST['SearchForm']['name']){
+                $filter["name"]=$_POST['SearchForm']['name'];
+            }
+            if($_POST['SearchForm']['prize_desc']){
+                $filter["prize_desc"]=$_POST['SearchForm']['prize_desc'];
             }
             if($_POST['SearchForm']['favorite']){
                 $filter["favorite"]=$_POST['SearchForm']['favorite'];
@@ -914,6 +973,7 @@ class LotteriesController extends Controller
             $this->upForm=$upForm;
             $this->locationForm=new Locations;
             $isOld=$model->id;
+            $model->scenario = "editSubmit";
             if($model->location_id){
                 $existLoc=Locations::model()->findByPk($model->location_id);
                 if($existLoc)

@@ -1,8 +1,17 @@
 <div class="col-md-12" id="buyCreditTarget">
     
 
-        <div><?php echo Yii::t('elot','Credito disponibile:'); ?></div>
-        <?php echo CHtml::encode($model->available_balance_amount); ?>
+        <div>
+            <span>
+                <h2>
+                    <small><?php echo Yii::t('elot','Credito disponibile:'); ?></small>
+                    <span>
+                        <?php echo CHtml::encode($model->available_balance_amount); ?>
+                    </span>
+                    <?php echo CHtml::image('/images/site/wl-money.png', 'WL Money',array('class'=>'wl-icon'));?> 
+                </h2>
+            </span>
+        </div>
         <hr/>
     
         

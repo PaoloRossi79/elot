@@ -96,7 +96,6 @@
             <div class="text-block">
                 <p><?php echo Yii::t("wonlot","Stato:"); ?> <span class="lot-b-text"><?php echo CHtml::encode($model->getStatusText()); ?></span></p>
                 <p><?php echo Yii::t("wonlot","Categoria:"); ?> 
-                    <?php echo CHtml::image('/images/site/'.$model->category->image, $model->category->category_name,array('class'=>'cat-icon'));?> 
                     <span class="lot-b-text">
                         <?php echo CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($model->prize_category)); ?>
                     </span>
@@ -115,7 +114,7 @@
                     </span>
                 </p>
                 <p><?php echo Yii::t("wonlot","Città:"); ?> <span class="lot-b-text"><?php echo CHtml::encode($model->location->address); ?></span></p>
-                <p><?php echo Yii::t("wonlot","Stato:"); ?> 
+                <p><?php echo Yii::t("wonlot","Stato del premio:"); ?> 
                     <span class="lot-b-text"><?php echo CHtml::encode(Yii::app()->params['prizeConditionsId'][$model->prize_conditions]); ?></span><br/>
                     <span class="lot-i-text"><?php echo CHtml::encode($model->prize_condition_text); ?></span>
                 </p>
@@ -126,20 +125,33 @@
             <div class="col-md-4">
                 <h4><?php echo Yii::t("wonlot","Info per il venditore"); ?></h4>
                 <div class="text-block">
-                    <?php if($model->prize_price){ ?>
-                        <p>
-                            <?php echo Yii::t("wonlot","Valore premio:"); ?>
-                            <span class="lot-b-text"><?php echo CHtml::encode($model->prize_price); ?></span>
-                        </p>
-                        <p>
-                            BARRA PROGRESSO!
-                        </p>
-                    <?php } ?>
                     <p>
                         <?php echo Yii::t("wonlot","Incasso attuale:"); ?>
                         <?php echo CHtml::image('/images/site/wl-money.png', 'WL Money',array('class'=>'wl-icon'));?> 
                         <span class="lot-b-text"><?php echo CHtml::encode($model->ticket_sold_value); ?></span>
                     </p>
+                    <div class="box-panel-win panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                        </div>
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                <dt><?php echo Yii::t('wonlot','Utente'); ?></dt>
+                                <dd>
+                                    <span class="user-small-avatar-container">
+                                        <a href="<?php echo CController::createUrl('users/view/'.$model->winningUser->id);?>">
+                                            <?php echo Users::model()->getImageTag($model->winningUser); ?>
+                                            <span class="small-username"><?php echo CHtml::encode($model->winningUser->username); ?></span>
+                                        </a>
+                                    </span>
+                                </dd>
+                            </dl>
+                            <dl class="dl-horizontal">
+                                <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                                <dd><b><?php echo $model->winning_sum; ?></b></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
@@ -169,11 +181,13 @@
                             <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
                         </button>
                     <?php } else { ?>
-                        <p>Non puoi comprare...la Asta non è aperta...</p>
+                        <p>L' Asta non è aperta, non è possibile acquistare biglietti</p>
                     <?php } ?>
                 <?php } elseif(isset($this->userId) && $this->userId==$model->owner_id) { ?>
                     <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['draft'],Yii::app()->params['lotteryStatusConst']['upcoming'],Yii::app()->params['lotteryStatusConst']['open']))){ ?>
-                        <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('auctions/update/'.$model->id));?></button>
+                        <?php echo CHtml::link('Modifica', CController::createUrl('auctions/update/'.$model->id),array('class'=>'btn btn-primary'));?>
+                        <?php echo CHtml::link('Annulla Asta', Yii::app()->createUrl("lotteries/void", array("id"=>$model->id)),array('class'=>'btn btn-danger'));?>
+                        <?php echo CHtml::link('Torna alle tue aste', Yii::app()->createUrl("lotteries/userIndex"),array('class'=>'btn btn-default'));?>
                     <?php } ?>
                     <?php if($this->lotErrors['update']){ ?>
                         <div class="alert alert-danger">
@@ -189,12 +203,4 @@
 <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
     <?php $this->renderPartial('_buyModal',array('data'=>$model, 'addData' => $addData)); ?>
     <?php $this->renderPartial('_giftModal',array('data'=>$model, 'addData' => $addData)); ?>
-    <script>
-        $('#openBuyModal').click(function(ev){
-            $.updateModal('buy',<?php echo $model->id; ?>);
-        });
-        $('#openGiftModal').click(function(ev){
-            $.updateModal('gift',<?php echo $model->id; ?>);
-        });
-    </script>
 <?php } ?>

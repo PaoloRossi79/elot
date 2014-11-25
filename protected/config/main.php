@@ -21,7 +21,7 @@ return array(
 	'timeZone' => 'Europe/Rome',
 
 	'sourceLanguage'=>'en',
-	'language'=>'en',
+	'language'=>'it',
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -153,6 +153,7 @@ return array(
             'lotteryTypes'=>$lotteryTypes,
             'lotteryTypesConst'=>$lotteryTypesConst,
             'lotteryStatusConst'=>$lotteryStatusConst,
+            'lotteryStatusConstIta'=>$lotteryStatusConstIta,
             'lotterySearchStatusConst'=>$lotterySearchStatusConst,
             'userTransactionConst'=>$userTransactionConst,
             'userTransactionId'=>$userTransactionId,
@@ -173,5 +174,6 @@ return array(
             'toDbDateTimeFormat'=>$toDbDateTimeFormat,
             'toUserDateFormat'=>$toUserDateFormat,
             'toUserTimeFormat'=>$toUserTimeFormat,
+            'creditConstant'=>$creditConstant,
 	),
 );

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 ?>
-<div class="main-width">
+<div class="">
     <div class="panel panel-default bootstrap-widget-table">
         <div class="panel-body">
             <table class="table table-hover">

@@ -46,6 +46,14 @@ $(window).bind("load", function() {
            $('#search-column').fadeOut();
        }
    });
+   $('#show-ticket-filter').click(function(){
+       $('#ticket-search').fadeIn(50);
+       $('#show-ticket-button').hide();
+   });
+   $('#hide-ticket-filter').click(function(){
+       $('#ticket-search').fadeOut(50);
+       $('#show-ticket-button').show();
+   });
    $('#login-button').click(function(){
        $('.login-panel').toggle("fast");
    });
@@ -137,24 +145,6 @@ $(window).bind("load", function() {
         }
    }
    
-   /*$("#lot_start").focus(function(event){
-       alert("E blur");
-       $("#lot_end").blur();
-   });
-   $("#lot_end").focus(function(event){
-       alert("S blur");
-       $("#lot_start").blur();
-   });*/
-   
-   /*$.lotBoxIn = function(obj){
-     var hiddenDiv = $(obj).parent().children('.lot-box-hover');
-     hiddenDiv.filter(':not(:animated)').fadeIn();
-   // This only fires if the row is not undergoing an animation when you mouseover it
-   };
-   $.lotBoxOut = function(obj){
-        $(obj).fadeOut();
-      // This only fires if the row is not undergoing an animation when you mouseover it
-   };*/
    $(".lot-box-int").mouseenter(
       function(){
         var hiddenDiv = $(this).parent().children('.lot-box-hover');
@@ -168,55 +158,33 @@ $(window).bind("load", function() {
       // This only fires if the row is not undergoing an animation when you mouseover it
       }
    );
-   $(".favLotBtn").click(function(event){
-       var btnClick = $(this);
-       var url;
-       if(btnClick.hasClass("unsetFav")){
-           url = "/lotteries/unsetFavorite";
-       } else if(btnClick.hasClass("setFav")){
-           url = "/lotteries/setFavorite";
-       }
-       $.post( url , { lotId: $(this).attr('name')})
-            .done(function( data ) {
-                if(data){
-                    if(btnClick.hasClass("unsetFav")){
-                        btnClick.removeClass("glyphicon-star");
-                        btnClick.addClass("glyphicon-star-empty");
-                        btnClick.removeClass("unsetFav");
-                        btnClick.addClass("setFav");
-                    } else if(btnClick.hasClass("setFav")){
-                        btnClick.removeClass("glyphicon-star-empty");
-                        btnClick.addClass("glyphicon-star");
-                        btnClick.removeClass("setFav");
-                        btnClick.addClass("unsetFav");
-                    }
-                }
-       });
-   });
    $(".follUserBtn").click(function(event){
        var btnClick = $(this);
        var url;
-       if(btnClick.hasClass("unsetFav")){
-           url = "/users/unsetFavorite";
-       } else if(btnClick.hasClass("setFav")){
-           url = "/users/setFavorite";
-       }
-       $.post( url , { userId: $(this).attr('name')})
+       url = "/lotteries/setFavorite";
+       
+       $.post( url , { lotId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
-                    if(btnClick.hasClass("unsetFav")){
-                        btnClick.show();
-                        btnClick.removeClass("unsetFav");
-                        btnClick.addClass("setFav");
-                    } else if(btnClick.hasClass("setFav")){
-                        btnClick.removeClass("glyphicon-star-empty");
-                        btnClick.addClass("glyphicon-star");
-                        btnClick.removeClass("setFav");
-                        btnClick.addClass("unsetFav");
-                    }
+                    btnClick.hide();
+                    btnClick.parent().children(".unfollUserBtn").show();
                 }
        });
    });
+   $(".unfollUserBtn").click(function(event){
+       var btnClick = $(this);
+       var url;
+       url = "/lotteries/unsetFavorite";
+       
+       $.post( url , { lotId: $(this).attr('name')})
+            .done(function( data ) {
+                if(data){
+                    btnClick.hide();
+                    btnClick.parent().children(".follUserBtn").show();
+                }
+       });
+   });
+   
    $('.utsel').click(function(){
         var utid = $(this).attr('id');
         console.log(utid);
@@ -349,7 +317,7 @@ $(window).bind("load", function() {
             $(".giftErrorText").show();
        }
    };
-   $.resetTicketGift = function(){
+   /*$.resetTicketGift = function(){
        $("#gift-ticket-follower-form").get(0).reset();
        $("#gift-ticket-following-form").get(0).reset();
        $('.user-small-ticket-box').removeClass('selected-box');
@@ -360,7 +328,7 @@ $(window).bind("load", function() {
        $('#giftEmail').val("");
        $('.giftSuccessText').hide();
        $('.giftErrorText').hide();
-   };
+   };*/
    
    // load notifications every timer
    $.getUnreadNotifications = function(){
@@ -375,6 +343,7 @@ $(window).bind("load", function() {
                 },30000);
        });
    };
+   
    $.getUnreadNotifications();
    
    jQuery('body').on('click','.notify-pop-btn',function(event){
@@ -600,6 +569,18 @@ $(window).bind("load", function() {
         return false;
    });
    
+   jQuery('body').on('input','#UserWithdraw_creditValue',function(event) {
+   //$('#UserWithdraw_creditValue').change(function(event){
+        var newVal = event.srcElement.value;
+        if(newVal){
+            var commValue = parseInt(newVal) + (parseInt(newVal) / 100);
+            $('#valueWithCommission').text(commValue);
+            $('#valueWithCommissionBlock').show();
+        } else {
+            $('#valueWithCommissionBlock').hide();
+        }
+   });
+   
    $.updateRating = function(event){
        alert("RATE!");
    };
@@ -661,4 +642,12 @@ $(window).bind("load", function() {
          } 
       }
    };
+   
+   $('#openConfirmGiftPanel').click(function(event){
+       //$("#giftDialog").dialog("open");
+       $("#buttonGiftCreditPanel").hide();
+       $("#confirmGiftCreditPanel").fadeIn();
+       $("#giftCreditFooter").addClass("redBox");
+   });
+   
 });

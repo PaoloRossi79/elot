@@ -1,4 +1,7 @@
 <div id="gift-main">
+    <script>
+        $(".gift-ticket-box").hide();
+    </script>
     <div class="ticket-list" class="container-fluid">
         <?php
         $friendBoxSize = 300;
@@ -10,17 +13,6 @@
                  $(".cannot-buy").fadeIn()'
               , CClientScript::POS_READY);
           } 
-          ?>
-            <script>
-                $('#gift-to-header').text("");
-                $.modalHasUpdated(true); 
-            </script>
-        <?php
-        } else { ?>
-            <script>
-                $.modalHasUpdated(false); 
-            </script>
-        <?php
         }
         ?>
         <?php /** @var TbActiveForm $form */

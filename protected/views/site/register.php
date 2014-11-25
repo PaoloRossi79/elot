@@ -105,6 +105,13 @@ $this->pageTitle=Yii::app()->name . ' - Register';
                             <?php echo $form->error($model,'persdatamng'); ?>
                         </div>
                     </div>
+                    <div class="row rememberMe checkbox-container">
+                        <div class="checkbox">
+                            <?php echo $form->checkBox($model,'newsletterAccept',array('class'=>' ')); ?>
+                            <?php echo $form->label($model,'Accetti di ricevere newsletter promozionali sulle aste in corso?',array('class'=>'')); ?>
+                            <?php echo $form->error($model,'newsletterAccept'); ?>
+                        </div>
+                    </div>
 
                     <div class="row buttons">
                         <div class="form-group">

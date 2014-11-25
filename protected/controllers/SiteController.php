@@ -88,6 +88,14 @@ class SiteController extends Controller
                 $this->layout='//layouts/index';
 		$this->render('index');
 	}
+        
+	public function actionAcceptPolicy()
+	{
+		// renders the view file 'protected/views/site/index.php'
+		// using the default layout 'protected/views/layouts/main.php'
+                $this->layout='//layouts/index';
+		$this->render('acceptPolicy');
+	}
 	
         public function actionAdmin()
 	{

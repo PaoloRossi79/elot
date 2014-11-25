@@ -67,7 +67,7 @@ class UserIdentity extends CUserIdentity
                                 $this->errorCode=self::ERROR_NONE;
                         }
                     } elseif($this->extSource > 0){
-                        if($this->password!==$user->password)
+                        if($this->password!=$user->password)
                                 $this->errorCode=self::ERROR_STATUS_EXTUSERINVALID;
                         else {
                                 $this->_id=$user->id;

@@ -24,6 +24,7 @@ echo $h1; ?>
 
     $this->widget('zii.widgets.grid.CGridView', array(
         'dataProvider'=>$dataProvider,
+        //'filter' => $this->filterModel,
         'id'=>'mylot-grid',
 //        'itemView'=>'/lotteries/my-lot-box',
         'enablePagination'=>true,
@@ -36,6 +37,13 @@ echo $h1; ?>
                 'name'=>'status',
 //                'value'=>'date("M j, Y", $data->lottery_start_date)',
                 'value'=>array($dataProvider->model,'getStatusText'), 
+                'filter'=>CHtml::dropDownList('Provider[onoff]', '',  
+                    array(
+                        ''=>'All',
+                        '1'=>'On',
+                        '0'=>'Off',
+                    )
+                ),
             ),
             array(            // display 'create_time' using an expression
                 'name'=>'lottery_start_date',
@@ -51,6 +59,7 @@ echo $h1; ?>
 //                'type'=>'image',
                 'type'=>'html',
                 'value'=>'CHtml::image(Controller::getImageUrl($data,"smallSquaredThumb"),"Foto Premio")',
+                'filter'=>false,
             ),
             
             array(            // display a column with "view", "update" and "delete" buttons
@@ -123,4 +132,4 @@ echo $h1; ?>
 //    
 
     ?>
-     
+</div>

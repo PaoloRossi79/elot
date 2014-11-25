@@ -5,7 +5,7 @@
 
 
 
-<div class="main-width">
+<div class="">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h1><?php echo $model->username; ?></h1>

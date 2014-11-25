@@ -13,6 +13,7 @@ class Controller extends CController
         
         public $catList;
         public $lotteryStatusList;
+        public $lotteryCompleteStatusList;
         public $ticketStatusList;
         
         public $upForm;
@@ -133,15 +134,22 @@ class Controller extends CController
                 $this->catList = PrizeCategories::model()->getPrizeCatCheckbox($this->action->id);
                 $this->lotteryStatusList = $this->generateMenuCheckList('lotterySearchStatusConst');
                 $this->ticketStatusList = $this->generateMenuCheckList('ticketStatusConst');
+                $this->lotteryCompleteStatusList = array_flip($this->generateMenuCheckList('lotteryStatusConstIta'));
             } else {
                 $this->catList = PrizeCategories::model()->getPrizeCatCheckbox('index');
                 $this->lotteryStatusList = $this->generateMenuCheckList('lotterySearchStatusConst','index');
                 $this->ticketStatusList = $this->generateMenuCheckList('ticketStatusConst','index');
+                $this->lotteryCompleteStatusList = array_flip($this->generateMenuCheckList('lotteryStatusConstIta','index'));
             }
             switch ($this->id){
                 case "lotteries":
                     $this->filterModel->lists["Categories"]=$this->catList;
-                    $this->filterModel->lists["LotStatus"]=$this->lotteryStatusList;
+                    if(in_array($view,array('myProfile','userIndex'))){
+                        $this->filterModel->lists["LotStatusComplete"]=$this->lotteryCompleteStatusList;
+                        $this->filterModel->mine = true;
+                    } else {
+                        $this->filterModel->lists["LotStatus"]=$this->lotteryStatusList;
+                    }
                     break;
                 case "site":
                     $this->filterModel->lists["Categories"]=$this->catList;
@@ -153,6 +161,8 @@ class Controller extends CController
                     break;
                 case "users":
                     $this->filterModel->lists["Categories"]=$this->catList;
+                    $this->filterModel->lists["LotStatusComplete"]=$this->lotteryCompleteStatusList;
+                    $this->filterModel->mine = true;
                     break;
                 default:
                     $this->filterModel->lists=array();

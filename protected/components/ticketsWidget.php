@@ -43,22 +43,13 @@ class ticketsWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		/*jQuery('body').on('click','.set-gift',function(event) {
-                        $("input[name=giftBtn]").removeAttr("disabled");
-                        $("#ticketIdForGift").val($(this).attr("id"));
-                        $(".gift-box").slideDown(); 
-                        $("#labelTicketNumber").text($(this).parent().children().first().text()); 
-                        $('#buy-modal').modal('hide');
-                        $('#gift-modal').modal('show');
-                        $('#gift-email-form').get(0).reset();
-                        $("#emailFormGroup").removeClass("has-error");
-                        $("#emailFormGroup").removeClass("has-success");
-                        $("#emailSuccessText").hide();
-                        $("#emailErrorText").hide();
-                        $("#giftBtn").removeAttr("disabled");
-                        $(".feedShare").removeAttr("disabled");
-                        return false;
-                   });*/
+		$('.ticket-list-btn').click(function(event){
+                    $('#myTickets'+this.id).click();
+                    if(!$("#ticket-lot-"+this.id).is(":visible")){
+                         $(".ticket-block").fadeOut();
+                         $("#ticket-lot-"+this.id).fadeIn();
+                    }
+                });
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());
     }

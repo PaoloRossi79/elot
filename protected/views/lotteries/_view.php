@@ -94,6 +94,8 @@
         <div class="col-md-4">
             <h4><?php echo Yii::t("wonlot","Informazioni"); ?></h4>
             <div class="text-block">
+                <p><?php echo Yii::t("wonlot","Utente:"); ?> <span class="lot-b-text"><?php echo CHtml::encode($model->owner->username); ?></span></p>
+                <?php echo Users::model()->getImageTag($model->owner,'smallSquaredThumb'); ?>
                 <p><?php echo Yii::t("wonlot","Stato:"); ?> <span class="lot-b-text"><?php echo CHtml::encode($model->getStatusText()); ?></span></p>
                 <p><?php echo Yii::t("wonlot","Categoria:"); ?> 
                     <span class="lot-b-text">

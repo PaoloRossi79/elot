@@ -112,13 +112,7 @@ $(window).bind("load", function() {
        $('.box-spinner').show();
    });
    
-   $('.ticket-list-btn').click(function(event){
-       $('#myTickets'+this.id).click();
-       if(!$("#ticket-lot-"+this.id).is(":visible")){
-            $(".ticket-block").fadeOut();
-            $("#ticket-lot-"+this.id).fadeIn();
-       }
-   });
+   
    
    $(".small-row-scroll").slimScroll({
         height: '120px',
@@ -129,6 +123,7 @@ $(window).bind("load", function() {
         height: '200px',
         size: '5px',
    }); 
+   
    $.checkDate = function(selDate){
        alert(selDate);
        alert(new Date(selDate,"dd/mm/yy hh:mm"));
@@ -161,9 +156,9 @@ $(window).bind("load", function() {
    $(".follUserBtn").click(function(event){
        var btnClick = $(this);
        var url;
-       url = "/lotteries/setFavorite";
+       url = "/users/setFavorite";
        
-       $.post( url , { lotId: $(this).attr('name')})
+       $.post( url , { userId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
                     btnClick.hide();
@@ -174,9 +169,9 @@ $(window).bind("load", function() {
    $(".unfollUserBtn").click(function(event){
        var btnClick = $(this);
        var url;
-       url = "/lotteries/unsetFavorite";
+       url = "/users/unsetFavorite";
        
-       $.post( url , { lotId: $(this).attr('name')})
+       $.post( url , { userId: $(this).attr('name')})
             .done(function( data ) {
                 if(data){
                     btnClick.hide();
@@ -317,6 +312,11 @@ $(window).bind("load", function() {
             $(".giftErrorText").show();
        }
    };
+   
+   $.addTabUrl = function(){
+       alert("tab");
+       return true;
+   }
    /*$.resetTicketGift = function(){
        $("#gift-ticket-follower-form").get(0).reset();
        $("#gift-ticket-following-form").get(0).reset();

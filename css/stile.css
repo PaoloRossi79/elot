@@ -1187,11 +1187,7 @@ button.close {
     display: none;
 }
 
-.user-small-box {
-    width: 100px;
-    cursor: pointer;
-}
-.user-small-ticket-box {
+.user-small-ticket-box, .user-small-box {
     width: 100px;
     height: 125px;
     cursor: pointer;

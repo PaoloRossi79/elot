@@ -55,7 +55,7 @@
         'infiniteOptions'=>array(
             'loading' => array(
                 'msgText' => 'Caricamento ... ',
-                'finishedMsg' => 'Tutte le lotterie sono state caricate!',
+                'finishedMsg' => 'Tutte le aste sono state caricate!',
             )
         ), // javascript options for infinite scroller
         'id'=>'lot-isotope-1',

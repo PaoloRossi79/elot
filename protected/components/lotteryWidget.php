@@ -14,6 +14,7 @@ class lotteryWidget extends CWidget
             $this->dataProvider = Tickets::model()->getMyTicketsProvider();
             /*$this->dataProvider = new CActiveDataProvider('Lotteries');
             $this->dataProvider->setData($this->tickets);*/
+            $t3 = Tickets::model()->getMyTickets(array());
             $t=$this->dataProvider->getData();
             $t2=$this->dataProvider->totalItemCount;
             $this->renderContent();   
@@ -22,7 +23,7 @@ class lotteryWidget extends CWidget
  
     protected function renderContent()
     {
-        $this->render('lotteryTable',array('tickets'=>$this->tickets));
+        $this->render('lotteryTable',array('tickets'=>$this->dataProvider));
     }   
     
     protected function registerScripts()
@@ -30,7 +31,13 @@ class lotteryWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		
+		$(".yiiPager a").live('click', function(event){
+                    var element = $(this)[0];
+                    $.get(element.href).done(function( data ) {
+                        $('#userTicketContainer').html(data);
+                    });
+                    event.preventDefault();
+                });
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());
     }

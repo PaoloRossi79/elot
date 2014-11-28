@@ -21,8 +21,8 @@ if($model->followers){
           </span>
           <span class="col-md-2">
               <?php if($this->userId != $model->id){ ?>
-                <button class="follUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? 'startHide' : '';?>"><i class="glyphicon glyphicon-eye-open"></i><?php echo Yii::t("wonlot","Segui");?></button>
-                <button class="unfollUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? '' : 'startHide' ;?>"><i class="glyphicon glyphicon-eye-close"></i><?php echo Yii::t("wonlot","Smetti di seguire");?></button>
+                <button name="<?php echo $model->id;?>" class="follUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? 'startHide' : '';?>"><i class="glyphicon glyphicon-eye-open"></i><?php echo Yii::t("wonlot","Segui");?></button>
+                <button name="<?php echo $model->id;?>" class="unfollUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? '' : 'startHide' ;?>"><i class="glyphicon glyphicon-eye-close"></i><?php echo Yii::t("wonlot","Smetti di seguire");?></button>
               <?php } ?>
           </span>
           </span>
@@ -38,11 +38,13 @@ if($model->followers){
                 <dl class="dl-horizontal">
                     <dt><?php echo Yii::t("wonlot","Nome utente:"); ?></dt>
                     <dd><?php echo CHtml::encode($model->username); ?></dd>
-                    <dt><?php echo Yii::t("wonlot","Venditore Garantito?"); ?></dt>
-                    <dd><?php echo CHtml::encode($model->is_guaranted); ?></dd>
+                    <dt><?php echo Yii::t("wonlot","Aste concluse:"); ?></dt>
+                    <dd><?php echo CHtml::encode(count($model->closedLotteries)); ?></dd>
+                    <dt><?php echo Yii::t("wonlot","Aste annullate:"); ?></dt>
+                    <dd><?php echo CHtml::encode(count($model->voidLotteries)); ?></dd>
                     <dt><?php echo Yii::t("wonlot","Votazione media"); ?></dt>
                     <dd><?php echo CHtml::encode($model->avg_rating); ?></dd>
-                    <dt><?php echo Yii::t("wonlot","Persone che seguono:"); ?></dt>
+                    <dt><?php echo Yii::t("wonlot","Persone che lo seguono:"); ?></dt>
                     <dd>
                         <?php 
                         foreach($model->followers as $fl){
@@ -103,7 +105,7 @@ if($model->followers){
                 'infiniteOptions'=>array(
                     'loading' => array(
                         'msgText' => 'Caricamento ... ',
-                        'finishedMsg' => 'Tutte le lotterie sono state caricate!',
+                        'finishedMsg' => 'Tutte le aste sono state caricate!',
                     )
                 ), // javascript options for infinite scroller
                 'id'=>'lot-isotope-user',

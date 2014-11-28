@@ -511,9 +511,16 @@ class UsersController extends Controller
 		));
 	}
         
-        public function actionSearchTicket(){
+        public function actionPageTicket(){
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
             $this->tickets = Tickets::model()->getMyTickets($_POST);
             $this->renderPartial('_tickets', array('tickets'=>$this->tickets),false,true);
+        }
+        
+        public function actionSearchTicket(){
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            $this->tickets = Tickets::model()->getMyTickets($_POST);
+            $this->renderPartial('_tickets', array('tickets'=>$this->tickets));
         }
         
         /**

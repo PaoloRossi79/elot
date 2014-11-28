@@ -84,6 +84,8 @@ class Users extends PActiveRecord
                     'socials' => array(self::HAS_MANY, 'SocialUser', 'user_id'),
                     'offers' => array(self::HAS_MANY, 'UserSpecialOffers', 'user_id'),
                     'lotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id'),
+                    'closedLotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id', 'condition' => 'closedLotteries.status = 5'),
+                    'voidLotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id', 'condition' => 'voidLotteries.status = 6'),
                     'followers' => array(self::HAS_MANY, 'FollowUser', 'user_id', 'condition' => 'followers.active'),
                     'followings' => array(self::HAS_MANY, 'FollowUser', 'follower_id', 'condition' => 'followings.active'),
 		);

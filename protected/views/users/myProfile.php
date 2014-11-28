@@ -39,9 +39,9 @@
                             }
                             $this->renderPartial('/site/filters',$this->filterModel);
                         ?>
-                      <?php 
-                        echo $this->renderPartial('_tickets', array('tickets'=>$this->tickets),true);
-                      ?>
+                    <div id="userTicketContainer">
+                        <?php echo $this->renderPartial('_tickets', array('tickets'=>$this->tickets),true); ?>
+                    </div>
                   </div>
                   <!--<div class="tab-pane fade" id="tabProfile4">-->
                       <?php 

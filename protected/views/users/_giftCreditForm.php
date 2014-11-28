@@ -23,15 +23,6 @@
             </blockquote>
         </div>
     <?php } else { ?>
-        <div class="col-md-12">
-            <blockquote>
-                <p><strong><?php echo Yii::t("wonlot","INFO"); ?></strong></p>
-                <small>
-                    <p><?php echo Yii::t("wonlot","Qui è possibile regalare del credito ad altri utenti Wonlot. Il valore massimo del credito regalabile è di € 250 (mensili)"); ?></p>
-                    <p><strong><?php echo Yii::t("wonlot","Attenzione:"); ?></strong> <?php echo Yii::t("wonlot","il credito regalato non è rimborsabile."); ?></p>
-                </small>
-            </blockquote>
-        </div>
             <?php if($this->opMessage){ ?>
                 <div id="alert-box" class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -39,6 +30,13 @@
                 </div>
             <?php } ?>
             <div class="col-md-6">
+                <blockquote>
+                    <p><strong><?php echo Yii::t("wonlot","INFO"); ?></strong></p>
+                    <small>
+                        <p><?php echo Yii::t("wonlot","Qui è possibile regalare del credito ad altri utenti Wonlot. Il valore massimo del credito regalabile è di € 250 (mensili)"); ?></p>
+                        <p><strong><?php echo Yii::t("wonlot","Attenzione:"); ?></strong> <?php echo Yii::t("wonlot","il credito regalato non è rimborsabile."); ?></p>
+                    </small>
+                </blockquote>
                 <div>
                     <?php echo $creditGiftForm->errorSummary($model); ?>
                 </div>
@@ -63,13 +61,13 @@
                     <div class="user-small-box">
                         <input type="hidden" name="id" value="<?php echo $fl->user->id; ?>">
                         <input type="hidden" name="username" value="<?php echo $fl->user->username; ?>">
-                        <span class="user-small-vendor-container">
+                        <div class="user-small-vendor-container">
                             <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
-                        </span>
-                        <span class="user-small-avatar-container">                        
+                        </div>
+                        <div class="user-small-avatar-container">                        
                             <?php // echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
                             <?php echo Users::model()->getImageTag($fl->user); ?>
-                        </span>
+                        </div>
                     </div>
                     <?php } ?>
                 </div>
@@ -78,13 +76,13 @@
                     <div class="user-small-box">
                         <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
                         <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">
-                        <span class="user-small-vendor-container">
+                        <div class="user-small-vendor-container">
                                 <span class="small-username"><?php echo CHtml::encode($fw->follower->username); ?></span>
-                        </span>
-                        <span class="user-small-avatar-container">
+                        </div>
+                        <div class="user-small-avatar-container">
                                 <?php // echo CHtml::image("/images/userProfiles/".$fw->follower->id."/smallThumb/".$fw->follower->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
                                 <?php echo Users::model()->getImageTag($fw->follower); ?>
-                        </span>
+                        </div>
                     </div>
                     <?php } ?>
                 </div>

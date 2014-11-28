@@ -173,7 +173,7 @@ class Tickets extends PActiveRecord
             return $this->findAll($criteria);
         }
         
-        public function getMyTickets($post){
+        public function getMyTickets($post, $returnType = "dataprovider"){
             $viewData=array();
             $criteria=new CDbCriteria(); 
             if(!empty($post['SearchForm']['Categories'])){
@@ -226,8 +226,19 @@ class Tickets extends PActiveRecord
                 'joinType'=>'INNER JOIN',
                 'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
             ));
-            $boughtLotteries = Lotteries::model()->findAll($criteria);
-            return $boughtLotteries;
+            $criteria->together = true;
+            if($returnType == "dataprovider"){
+                return new CActiveDataProvider('Lotteries', array(
+                    'pagination'=>array(
+                            'pageSize'=>8,
+                        ),
+                    'criteria'=>$criteria,
+                ));
+            } else {
+                $boughtLotteries = Lotteries::model()->findAll($criteria);
+                return $boughtLotteries;
+            }
+            
 //            $this->renderPartial('_tickets',array(
 //                'model'=>$boughtLotteries,
 //                //'viewType'=>"_box"
@@ -249,15 +260,13 @@ class Tickets extends PActiveRecord
                 'joinType'=>'INNER JOIN',
                 'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
             ));
-            $boughtLotteries = Lotteries::model()->findAll($criteria);
+            $criteria->together = true;
             return new CActiveDataProvider('Lotteries', array(
+                'pagination'=>array(
+                        'pageSize'=>8,
+                    ),
                 'criteria'=>$criteria,
             ));
-//            $this->renderPartial('_tickets',array(
-//                'model'=>$boughtLotteries,
-//                //'viewType'=>"_box"
-//                'viewData'=>$viewData,
-//            ));
         }
         
         public function organizeTicketsByLottery($tickets){

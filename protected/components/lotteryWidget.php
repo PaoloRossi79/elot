@@ -12,11 +12,6 @@ class lotteryWidget extends CWidget
     {   
         if(!Yii::app()->user->isGuest){
             $this->dataProvider = Tickets::model()->getMyTicketsProvider();
-            /*$this->dataProvider = new CActiveDataProvider('Lotteries');
-            $this->dataProvider->setData($this->tickets);*/
-            $t3 = Tickets::model()->getMyTickets(array());
-            $t=$this->dataProvider->getData();
-            $t2=$this->dataProvider->totalItemCount;
             $this->renderContent();   
         }
     }

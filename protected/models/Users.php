@@ -202,7 +202,7 @@ class Users extends PActiveRecord
         public function getGiftTicketsAfterRegister($source){
             // get gifted tickets suspended
             $user = Users::model()->findByPk(Yii::app()->user->id);
-            $ticketRes = false;
+            $ticketRes = true;
             if($source == Yii::app()->params['authExtSource']['Email']){
                 $giftCrit = new CDbCriteria();
                 $giftCrit->addCondition('t.is_gift = 1');
@@ -210,7 +210,7 @@ class Users extends PActiveRecord
                 $giftCrit->addCondition('t.status = 1');
 //                $ticketRes = Tickets::model()->updateAll(array('user_id' => $user->id),$giftCrit);
                 $ticketList = Tickets::model()->findAll($giftCrit);
-                foreach($ticketRes as $t){
+                foreach($ticketList as $t){
                     $t->user_id = $user->id;
                     if($t->save()){
                         Notifications::model()->sendGiftTicketNotify($t->id,$t->giftFromUser->id,Yii::app()->user->id);
@@ -237,7 +237,7 @@ class Users extends PActiveRecord
                 }
 //                $ticketRes = Tickets::model()->updateAll(array('user_id' => $user->id),$giftCrit);
                 $ticketList = Tickets::model()->findAll($giftCrit);
-                foreach($ticketRes as $t){
+                foreach($ticketList as $t){
                     $t->user_id = $user->id;
                     if($t->save()){
                         Notifications::model()->sendGiftTicketNotify($t->id,$t->giftFromUser->id,Yii::app()->user->id);

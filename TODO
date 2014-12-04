@@ -4,13 +4,10 @@ BUG:
 
 4- LOTTERIE ESTRATTE: manca il nome del vincitore
 
-5) Notifiche: non mostra il credito regalato
 6) Regala ticket:
     b) se regalo ad email: non arriva la mail (col link)
 
 TODO:
-
-1) Lot-box: per numeri troppo grandi -> tagliare (non mostrare cifre troppo grande)
 
 3) aggiungere pagina dove lasciare Feedback al Venditore: solo vinctiore? 
     consideriamo come parametro anche il numero di lotterie annullate
@@ -52,97 +49,6 @@ DONE
         
     TW: <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://wonlot.com/twitter" data-text="Test 1" data-via="paolorossi79" data-lang="it" data-size="large" data-count="none" data-hashtags="wonlot">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-1) Bottone codice per link esterno -> OK
-
-2) Annullamento Asta (fino a 24 H prima dell'estrazione)
-
-    b) mail di comunicazione a OWNER e PATECIPANTI (biglietti già acquistati) -> scelto di fare NOTIFICA
-    c) notifica (generica) a partecipanti -> OK, DONE
-
-3) Regala biglietto 
-    a) ad email -> link OK
-    b) a followers -> OK
-    d) funzione di check post registrazione per riscossione biglietto regalo -> OK
-
-4) PROFILO: visualizzazione sconti disponibili -> OK!
-
-1) Notifiche: icona + dropdown + pagina -> OK (manca layout pagina)
-
-2) Blocco dati fatturazione -> OK
-
-1) RICERCA : MANCA: ricerca x località -> DONE!
-
-1) Home-page: lottery box -> x utenti Guest non mostrare il link che rimanda alla pagina utente -> DONE!
-    a) pagina utente visible solo ad utenti registrati -> DONE!
-
-1) RICERCA 
-    a) MAIN PAGE: categoria OK (test ulteriori)
-                data (1 sola...estrazioni solo quel giorno)
-                geo: distanza rispetto alla località inserita
-    b) LOT INDEX: categoria OK (test ulteriori)
-                data (2 ... range)
-                geo: distanza rispetto alla località inserita
-                ticket price: intervallo (slider o 2 campi) OK
-                buy price: intervallo (slider o 2 campi) OK
-                keyword: free text da usare in ricerca
-    c) TICKET INDEX (MANCA)
-                categoria Asta
-                keyword: free text da usare in ricerca
-                data acquisto (2 ... range)
-    MANCA: ricerca x località
-           ricerca ticket
-
-2) BUY TICKET: 
-    check per uso sconto in abbinato al check su credito residuo sufficente OK
-    box x scelta uso sconto nella modal di acquisto OK
-    calcolo del costo con sconto OK
-    tracciatura uso sconto OK
-    calcolo soglia Asta con sconti
-    aggiungere check di status Asta alla fine dell'acquisto
-    calcolo soglia Asta con sconti OK
-    aggiungere check di status Asta alla fine dell'acquisto OK
-
-3) Estrazione Asta
-    a) calcolo random del vincitore
-    b) tracciatura del biglietto vincente
-    c) mail a vincitore (o a tutti i concorrenti)
-
-3) PROFILO: visualizzazione sconti disponibili
-   
-2) registrazione e login via facebook, twitter, g+ (OK FB)
-3) cambio stato delle lotterie
-4) aggiungere check x biglietti rimanenti
-
-5) Newsletter: 
-    a) gestire pagina di selezione delle NL OK
-    b) funzione di invio
-    c) possibilità di annuncio sponsorizzato, con commissione più alta
-
-6) ANNULLAMENTO Asta:
-    a) fino a 24 H prima dell'estrazione
-
-8) Sharer via Facebook, G+, TW
-
-9) gestione "amicizia" interna, per regalo biglietti:
-    a) following stile twitter
-    b) quando compri un biglietto lo puoi regalare a:   
-        1) email
-        2) social networks (FB, G+, ... )
-        3) utenti WL following
-        4) utenti WL followers
-    c) ricerca amici: In ATTESA!!!
-        1) per username
-        2) per area geografica
-
-
-2) aggiungere filtro ricerca per lotterie preferite -> OK
-2) aggiungere filtro ricerca per "Venditore garantito" -> OK
-2) aggiungere filtro ricerca per Feedback Venditore -> OK
-
-4) Pagina ADMIN gestione utenti: 
-    a) dove inserire che è "Venditore Garantito"
-    b) dove assegnare promozioni speciali
 
 SNIPPETS
 

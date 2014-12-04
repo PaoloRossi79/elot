@@ -11,12 +11,8 @@
       $this->widget('zii.widgets.CListView', array(
             'dataProvider'=>$notifyProvider,
             'itemView'=>'/users/notifyRow',   // refers to the partial view named '_post'
-            'enableSorting'=>true,
-            'sortableAttributes'=>array(
-                'from_user_id',
-                'to_user_id',
-                'message_type',
-            ),
+            'enableSorting'=>false,
+            'enablePagination'=>false,
       ));
 
     ?>

@@ -67,7 +67,7 @@ $this->pageTitle=Yii::app()->name . ' - Register';
                                 <span id="checkUsernameKo" style="display: none;" class="label label-danger"><span class="glyphicon glyphicon-remove"></span>Occupato!</span>
                             </span>
                             <?php 
-                                echo CHtml::ajaxButton ("Verifica",
+                                /*echo CHtml::ajaxButton ("Verifica",
                                     CController::createUrl('users/ajaxCheckUsername'), 
                                     array('update' => '#checkUsername',
                                           'type' => 'POST', 
@@ -86,7 +86,7 @@ $this->pageTitle=Yii::app()->name . ' - Register';
                                             }",
                                     ),
                                     array("class"=>"btn btn-primary btn-large")
-                                );
+                                );*/
                             ?>
                         </div>
                     </div>

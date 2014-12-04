@@ -43,13 +43,7 @@ class ticketsWidget extends CWidget
         $cs = Yii::app()->getClientScript();
         ob_start();
 		?>
-		$('.ticket-list-btn').click(function(event){
-                    $('#myTickets'+this.id).click();
-                    if(!$("#ticket-lot-"+this.id).is(":visible")){
-                         $(".ticket-block").fadeOut();
-                         $("#ticket-lot-"+this.id).fadeIn();
-                    }
-                });
+		
                 <?php
         $cs->registerScript(__CLASS__, ob_get_clean());
     }

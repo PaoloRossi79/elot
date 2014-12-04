@@ -13,6 +13,7 @@
         ?>
         
         <link href='http://fonts.googleapis.com/css?family=UnifrakturCook:700' rel='stylesheet' type='text/css'></link>
+        <link href='http://fonts.googleapis.com/css?family=Crimson+Text' rel='stylesheet' type='text/css'></link>
         
         <?php 
             //Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/css/screen.css','screen, projection');
@@ -74,7 +75,7 @@
                                 </a>
                             </div>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
-                                <a href="#">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=funziona-breve">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
@@ -101,7 +102,7 @@
                             </div>
                           <?php } else if(!Yii::app()->user->isGuest && !Yii::app()->user->isActive()){ ?>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
-                                <a href="#">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=funziona-breve">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
@@ -116,7 +117,7 @@
                             </div>
                           <?php } else { ?>
                             <div class="header-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Help'); ?>">
-                                <a href="#">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=funziona-breve">
                                     <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/icon-help.png", "Help", array("class"=>"img-responsive")); ?>
                                 </a>
                             </div>
@@ -168,9 +169,23 @@
                             <div class="admin-text"><a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/admin"><?php echo Yii::t('wonlot','Vai all\'amministrazione');?></a></div>
                           <?php }  ?>
                         </div>
-                    </div>
-                    <div id="header-icons">
-                        
+                        <div id="header-icons">
+                            <div class="header-rect-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Promozioni'); ?>">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=promozioni">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/btn-promozioni.png", "Promozioni", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                            <div class="header-rect-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','I tuoi costi'); ?>">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=costi">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/btn-tuoicosti.png", "Costi", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                            <div class="header-rect-icon" data-toggle="tooltip" data-placement="bottom" title="<?php echo Yii::t('wonlot','Come funziona'); ?>">
+                                <a href="<?php echo Yii::app()->getBaseUrl();?>/index.php/site/page?view=come-funziona">
+                                    <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/btn-comefunziona.png", "Come funziona", array("class"=>"img-responsive")); ?>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                  </div>
 	</div><!-- header -->
@@ -212,29 +227,65 @@
 
 	<div class="clear"></div>
 
-	<div class="footer row">
-            <div class="container">
-                <div class="footer-left">
+	<div class="footer">
+            <div class="row">
+                <div class="col-md-3">
                     <div class="footer-link">
-                        <?php echo CHtml::link("Chi siamo", CController::createUrl('site/page/about'), array()) ?>
+                        <?php echo CHtml::link("Chi siamo", CController::createUrl('site/page?view=chi-siamo'), array()) ?>
                     </div>
                     <div class="footer-link">
-                        <?php echo CHtml::link("Feedback", CController::createUrl('site/page/about'), array()) ?>
+                        <?php echo CHtml::link("Aiutaci a migliorare", CController::createUrl('site/page?view=aiutaci-a-migliorare'), array()) ?>
                     </div>
                 </div>
-                <div class="footer-middle">
-                    <p><?php echo Yii::t('wonlot','Condividi');?></p>
-                    <a href="#" class="tooltip-down" title="Twitter"><i class="icon-twitter"></i></a>
-                    <a href="#" class="tooltip-down" title="Facebbok"><i class="icon-facebook"></i></a>
-                    <a href="#" class="tooltip-down" title="Instagram"><i class="icon-instagram"></i></a>
+                <div class="col-md-3">
+                    <div class="footer-link">
+                        <?php echo CHtml::link("Invita amici", CController::createUrl('site/page?view=invita-amici'), array()) ?>
+                    </div>
+                    <div>
+                        <div>
+                            <i><?php echo Yii::t("wonlot","Modalità di pagamento")?></i>
+                        </div>
+                        <div>
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/visa-small.png", "Visa", array("class"=>"very-small-icon")); ?>
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/mastercard-small.png", "Mastercard", array("class"=>"very-small-icon")); ?>
+                            <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/paypal-small.png", "PayPal", array("class"=>"very-small-icon")); ?>
+                        </div>
+                    </div>
                 </div>
-                <div class="footer-right">
-                   <p>
-                      <a href="#">Informativa sulla privacy</a><br/>
-                      <a href="#">Termini & Condizioni</a><br/>
-                   </p>
+                <div class="col-md-3">
+                   <div class="footer-link">
+                        <?php echo CHtml::link("Termini e condizioni", CController::createUrl('site/page?view=termini-e-condizioni'), array()) ?>
+                    </div>
+                    <div class="footer-link">
+                        <?php echo CHtml::link("Privacy", CController::createUrl('site/page?view=privacy'), array()) ?>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <p><i><?php echo Yii::t('wonlot','Condividi');?></i></p>
+                    <div>
+                         <span class="votes-circle-big facebook">
+                             <a href="http://www.facebook.com/" tooltip-append-to-body="true" tooltip-placement="top" tooltip="'Condividi su Facebook'" >
+                                 <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/facebook_square-32.png", "Facebook", array("class"=>"")); ?>
+                             </a>
+                         </span>
+                         <span class="votes-circle-big twitter">
+                            <a href="http://www.twitter.com/" tooltip-append-to-body="true" tooltip-placement="top" tooltip="'Condividi su Twitter'">
+                                <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/twitter_square-32.png", "Twitter", array("class"=>"")); ?>
+                            </a>
+                         </span>
+                         <span class="votes-circle-big googleplus">
+                             <a href="http://plus.google.com/" tooltip-append-to-body="true" tooltip-placement="top" tooltip="'Condividi su Google+'">
+                                 <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/google_square-32.png", "Google+", array("class"=>"")); ?>
+                             </a>
+                         </span>
+                    </div>
                 </div>
                 <div class="clear"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    
+                </div>
             </div>
       </div>
       <div class="gototop-fixed"><a href="#" class="icon-circle-arrow-up tooltip-left gototop" title="Torna a inizio pagina"></a></div>

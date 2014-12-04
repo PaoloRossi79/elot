@@ -439,7 +439,9 @@ class UsersController extends Controller
                 $this->locationForm=new Locations;
                 $this->subscriptionForm = new SubscriptionForm;
                 $this->tickets = Tickets::model()->getMyTickets(array());
-                $this->ticketsProvider = Tickets::model()->getMyTicketsProvider();
+                if($_GET['ajax']){
+                    return $this->renderPartial('_tickets', array('tickets'=>$this->tickets));
+                }
                 $this->userWithdraw = new UserWithdraw;
                 if($model->id){
                     $existLoc=Locations::model()->findByPk($model->location_id);
@@ -451,58 +453,65 @@ class UsersController extends Controller
 		// $this->performAjaxValidation($model);
                 $toSave = false;
                 $errProfileSave = false;
-                if($_POST['Users']['user_type_id'] == 3){
-                    if(isset($_POST['CompanyProfiles'])){
-                        if(!$model->companyProfile){
-                            $model->companyProfile = new CompanyProfiles();
+                if($_POST){
+                    if($_POST['Users']){
+                        if($_POST['Users']['user_type_id'] == 3){
+                            if(isset($_POST['CompanyProfiles'])){
+                                if(!$model->companyProfile){
+                                    $model->companyProfile = new CompanyProfiles();
+                                }
+                                if($_POST['filename'][0]){
+                                    $_POST['CompanyProfiles']['img']=$_POST['filename'][0];
+                                }
+                                if(!$model->companyProfile->user_id){
+                                    $model->companyProfile->user_id = $model->id;
+                                }
+                                $model->companyProfile->attributes=$_POST['CompanyProfiles'];
+                                if(!$model->companyProfile->save()){
+        //                            $this->redirect(array('myProfile'));
+        //                            $model->addError('id','Errore nel salvataggio del profilo azienda');
+                                    $errProfileSave = true;
+                                }
+                            } 
                         }
-                        if($_POST['filename'][0]){
-                            $_POST['CompanyProfiles']['img']=$_POST['filename'][0];
+                        if($_POST['Users']['user_type_id'] == 1 || $_POST['Users']['user_type_id'] == 2 || !$model->user_type_id){
+                            if(isset($_POST['UserProfiles'])){
+                                if($_POST['filename'][0]){
+                                    $_POST['UserProfiles']['img']=$_POST['filename'][0];
+                                }
+                                if(!$model->profile->user_id){
+                                    $model->profile->user_id = $model->id;
+                                }
+                                $model->profile->attributes=$_POST['UserProfiles'];
+                                $model->profile->gender=$_POST['UserProfiles']['gender'];
+                                if(!$model->profile->save()){
+        //                            $model->addError('id','Errore nel salvataggio del profilo utente');
+                                    $errProfileSave = true;
+                                }
+                            } 
                         }
-                        if(!$model->companyProfile->user_id){
-                            $model->companyProfile->user_id = $model->id;
+                        
+                        if($_POST['Users']['user_type_id']){
+                            $model->user_type_id = $_POST['Users']['user_type_id'];
+                            $toSave = true;
                         }
-                        $model->companyProfile->attributes=$_POST['CompanyProfiles'];
-                        if(!$model->companyProfile->save()){
-//                            $this->redirect(array('myProfile'));
-//                            $model->addError('id','Errore nel salvataggio del profilo azienda');
-                            $errProfileSave = true;
+                        if($_POST['Users']['username']){
+                            $model->username = $_POST['Users']['username'];
+                            $toSave = true;
                         }
+                        
                     } 
-                }
-                if($_POST['Users']['user_type_id'] == 1 || $_POST['Users']['user_type_id'] == 2 || !$model->user_type_id){
-                    if(isset($_POST['UserProfiles'])){
-                        if($_POST['filename'][0]){
-                            $_POST['UserProfiles']['img']=$_POST['filename'][0];
+
+                    if($_POST['Locations']){
+                        //check if Location exist
+                        $model->location_id = $this->saveLocation($_POST['Locations']);
+                        $toSave = true;
+                    }
+                    
+                    if($toSave && !$errProfileSave){
+                        if(!$model->save()){
+                            $model->addError('id','Errore nel salvataggio dell\'utente');
                         }
-                        if(!$model->profile->user_id){
-                            $model->profile->user_id = $model->id;
-                        }
-                        $model->profile->attributes=$_POST['UserProfiles'];
-                        $model->profile->gender=$_POST['UserProfiles']['gender'];
-                        if(!$model->profile->save()){
-//                            $model->addError('id','Errore nel salvataggio del profilo utente');
-                            $errProfileSave = true;
-                        }
-                    } 
-                } 
-                
-                if($_POST['Locations']){
-                    //check if Location exist
-                    $model->location_id = $this->saveLocation($_POST['Locations']);
-                    $toSave = true;
-                }
-                if($_POST['Users']['user_type_id']){
-                    $model->user_type_id = $_POST['Users']['user_type_id'];
-                    $toSave = true;
-                }
-                if($_POST['Users']['username']){
-                    $model->username = $_POST['Users']['username'];
-                    $toSave = true;
-                }
-                if($toSave && !$errProfileSave){
-                    if(!$model->save()){
-                        $model->addError('id','Errore nel salvataggio dell\'utente');
                     }
                 }
 
@@ -511,15 +520,9 @@ class UsersController extends Controller
 		));
 	}
         
-        public function actionPageTicket(){
-            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-            $this->tickets = Tickets::model()->getMyTickets($_POST);
-            $this->renderPartial('_tickets', array('tickets'=>$this->tickets),false,true);
-        }
-        
         public function actionSearchTicket(){
             Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-            $this->tickets = Tickets::model()->getMyTickets($_POST);
+            $this->tickets = Tickets::model()->getMyTickets($_POST,($_GET['page'] ? $_GET['page'] : 0));
             $this->renderPartial('_tickets', array('tickets'=>$this->tickets));
         }
         

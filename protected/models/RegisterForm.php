@@ -91,7 +91,7 @@ class RegisterForm extends CFormModel
                 if($profile->save()){
                     $dbTransaction->commit();
                     // TODO: add email activation send
-                    return true;
+                    return $model;
                 } else {
                     $dbTransaction->rollback();
                     $model->addError('email', $profile->errors);

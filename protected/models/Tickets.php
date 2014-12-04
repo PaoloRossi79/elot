@@ -162,6 +162,16 @@ class Tickets extends PActiveRecord
             return $this->findAll($criteria);
         }
         
+        public function getMyTicketsByAllLottery($lotId)
+	{
+            $criteria=new CDbCriteria; 
+            $criteria->addCondition('t.user_id = '.Yii::app()->user->id,'OR'); 
+            $criteria->addCondition('t.gift_from_id = '.Yii::app()->user->id,'OR'); 
+            $criteria->addCondition('t.lottery_id = '.$lotId,'AND'); 
+            //$criteria->addCondition('t.status = 1','AND'); 
+            return $this->findAll($criteria);
+        }
+        
         public function getMyGiftTicketsByLottery($lotId)
 	{
             $criteria=new CDbCriteria; 
@@ -173,7 +183,8 @@ class Tickets extends PActiveRecord
             return $this->findAll($criteria);
         }
         
-        public function getMyTickets($post, $returnType = "dataprovider"){
+        public function getMyTickets($post, $page = 0){
+            $itemPerPage = Yii::app()->params['ticketPerPage'];
             $viewData=array();
             $criteria=new CDbCriteria(); 
             if(!empty($post['SearchForm']['Categories'])){
@@ -226,24 +237,20 @@ class Tickets extends PActiveRecord
                 'joinType'=>'INNER JOIN',
                 'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
             ));
+            $criteria->group = "t.id";
             $criteria->together = true;
-            if($returnType == "dataprovider"){
-                return new CActiveDataProvider('Lotteries', array(
-                    'pagination'=>array(
-                            'pageSize'=>8,
-                        ),
-                    'criteria'=>$criteria,
-                ));
-            } else {
-                $boughtLotteries = Lotteries::model()->findAll($criteria);
-                return $boughtLotteries;
+            $totalNumberOfLotteries = Lotteries::model()->count($criteria);
+            $totalNumberOfPages = ceil($totalNumberOfLotteries / $itemPerPage);
+            if($page >= 0 && $page < $totalNumberOfPages){
+                if($page == $totalNumberOfPages - 1){
+                    $criteria->limit = ($totalNumberOfLotteries % $itemPerPage);
+                } else {
+                    $criteria->limit = $itemPerPage;
+                }
             }
-            
-//            $this->renderPartial('_tickets',array(
-//                'model'=>$boughtLotteries,
-//                //'viewType'=>"_box"
-//                'viewData'=>$viewData,
-//            ));
+            $criteria->offset = $itemPerPage * $page;
+            $boughtLotteries = Lotteries::model()->findAll($criteria);
+            return array("lotteries" => $boughtLotteries, "totalPages" => $totalNumberOfPages);
         }
         
         public function getMyTicketsProvider(){
@@ -304,7 +311,7 @@ class Tickets extends PActiveRecord
             return $res;
         }
         
-        public static function getLotBoxTag($ticketId){
+        public static function getLotBoxTags($ticketId){
             $ticket = Tickets::model()->findByPk($ticketId);
             if($ticket){
                 $res = "<span>";
@@ -317,9 +324,9 @@ class Tickets extends PActiveRecord
                 $res .= "</p>";
                 $res .= $url;
                 $res .= "</span>";
-                return $res;
+                return array("url"=>$url, "name"=>$ticket->lottery->name);
             } 
-            return "";
+            return array();
         }
 
 	/**

@@ -85,7 +85,7 @@ a, a:hover, a:focus, a:visited {
     width: 100%;
 }
 
-.header-icon {
+.header-icon, .header-rect-icon {
     float: right;
     margin: 5px;
 }
@@ -96,6 +96,10 @@ a, a:hover, a:focus, a:visited {
 
 .header-icon img, .search-icon img {
     height: 50px;
+}
+
+#header {
+    margin-bottom: 15px;
 }
 
 .text-cut {
@@ -415,8 +419,12 @@ button.close {
 .footer {
    background: #f7f7f7;
    border-top: 1px solid #cccccc;
-   padding: 25px 0;
+   padding: 25px;
    margin-top: 20px;
+   border-radius: 5px 5px 0 0;
+   color: black;
+   font-size: initial;
+   font-family: 'Crimson Text', serif;
 }
 
 .footer-left, .footer-middle, .footer-right {
@@ -1280,4 +1288,74 @@ button.close {
 
 #ticket-search {
     display: none;
+}
+
+.table-title {
+    font-size: 24px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.table-sub-title {
+    padding-bottom: 10px;
+}
+
+.promo-right-col {
+    text-align: center;
+}
+
+.central {
+    text-align: center;
+}
+
+.summary-table {
+    background-color: white;
+    width: 100%; 
+    height: 100%;
+    color: black;
+    font-size: 21px;
+    margin-top: 10px;
+}
+
+.promozioni {
+    color: #6399cd;
+}
+
+.fullPageTable {
+    width: 100%;
+}
+
+.lot-item {
+    border: 1px solid black;
+}
+
+.very-small-icon {
+    width: 32px;
+    height: 20px;
+    margin: 0 1px 0 1px;
+}
+
+.max-width-img {
+    width: 100%;
+}
+
+.notify-desc {
+    width: 60%;
+    min-width: 230px;
+    margin: 0 10px 0 10px;
+    text-align: center;
+}
+
+.first-notify-col {
+    width: 220px;
+}
+
+.first-notify-col-img {
+    position: relative;
+    min-width: 80px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

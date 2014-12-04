@@ -39,6 +39,26 @@
                             }
                             $this->renderPartial('/site/filters',$this->filterModel);
                         ?>
+                    <nav>
+                        <ul class="pagination">
+                          <li><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+                          <?php for($i = 0; $i < $this->tickets["totalPages"]; $i++){ ?>
+                             <li>
+                                <?php echo CHtml::ajaxLink($i+1,
+                                        CController::createUrl('users/searchTicket?page='.$i), 
+                                        array(
+                                          'update' => '#user-tickets',
+                                          'type' => 'POST', 
+                                          'data'=>'js:$("#lotSearchForm").serialize()',
+                                          'beforeSend'=>'js:$.updatePagination('.$i.')'
+                                        ),
+                                        array('name'=>'pageBtn', 'class'=>'', 'id'=>'pageBtn'.$i)
+                                    ); ?>
+                             </li>   
+                          <?php } ?>
+                          <li><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+                        </ul>
+                    </nav>
                     <div id="userTicketContainer">
                         <?php echo $this->renderPartial('_tickets', array('tickets'=>$this->tickets),true); ?>
                     </div>

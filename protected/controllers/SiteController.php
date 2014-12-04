@@ -203,8 +203,8 @@ class SiteController extends Controller
                         } else {
                             $model->attributes=$_POST['RegisterForm'];
                             // validate user input and redirect to the previous page if valid
-                            if($model->validate() && $model->register()){
-                                EmailManager::sendConfirmEmail($model);
+                            if($model->validate() && $newUser = $model->register()){
+                                EmailManager::sendConfirmEmail($newUser);
                                 $this->redirect(Yii::app()->homeUrl);
                             }
                         }

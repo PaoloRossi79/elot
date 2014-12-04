@@ -60,6 +60,18 @@ $(window).bind("load", function() {
    $('#lotSearchForm').bind('keypress keydown keyup', function(e){
        if(e.keyCode == 13) { e.preventDefault(); }
    });
+   jQuery('body').on('click','.ticket-list-btn',function(){
+        $('#myTickets'+this.id).click();
+        if(!$("#ticket-lot-"+this.id).is(":visible")){
+             $(".ticket-block").fadeOut();
+             $("#ticket-lot-"+this.id).fadeIn();
+        }
+   });
+   $.updatePagination = function(page){
+       if(page == 0){
+           
+       }
+   }
    $("#slideshow-container").slidesjs({
        width: 960,
        height: 380,

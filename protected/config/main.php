@@ -175,5 +175,6 @@ return array(
             'toUserDateFormat'=>$toUserDateFormat,
             'toUserTimeFormat'=>$toUserTimeFormat,
             'creditConstant'=>$creditConstant,
+            'ticketPerPage'=>10,
 	),
 );

@@ -29,7 +29,7 @@ class EmailManager extends PActiveRecord
             try {
                 $mail = new YiiMailer();
                 $mail->setView('resetPassword');
-                $mail->setData(array('resetLink' => User::model()->getResetLink($user)));
+                $mail->setData(array('resetLink' => Users::model()->getResetLink($user)));
                 $mail->setFrom('info@wonlot.com', 'WonLot');
                 $mail->setTo($user->email);
     //            $mail->setTo('paolorossi79@gmail.com');
@@ -45,7 +45,7 @@ class EmailManager extends PActiveRecord
             try {
                 $mail = new YiiMailer();
                 $mail->setView('confirmEmail');
-                $mail->setData(array('confirmLink' => User::model()->getConfirmLink($user)));
+                $mail->setData(array('confirmLink' => Users::model()->getConfirmLink($user)));
                 $mail->setFrom('info@wonlot.com', 'WonLot');
                 $mail->setTo($user->email);
     //            $mail->setTo('paolorossi79@gmail.com');

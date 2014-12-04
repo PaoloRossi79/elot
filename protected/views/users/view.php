@@ -16,15 +16,15 @@ if($model->followers){
     <div class="panel-heading">
       <h3 class="panel-title">
           <span class="row">
-          <span class="col-md-10">
-              <?php echo CHtml::encode($model->username); ?>
-          </span>
-          <span class="col-md-2">
-              <?php if($this->userId != $model->id){ ?>
-                <button name="<?php echo $model->id;?>" class="follUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? 'startHide' : '';?>"><i class="glyphicon glyphicon-eye-open"></i><?php echo Yii::t("wonlot","Segui");?></button>
-                <button name="<?php echo $model->id;?>" class="unfollUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? '' : 'startHide' ;?>"><i class="glyphicon glyphicon-eye-close"></i><?php echo Yii::t("wonlot","Smetti di seguire");?></button>
-              <?php } ?>
-          </span>
+            <span class="pull-left">
+                <?php echo CHtml::encode($model->username); ?>
+            </span>
+            <span class="pull-right">
+                <?php if($this->userId != $model->id){ ?>
+                  <button name="<?php echo $model->id;?>" class="follUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? 'startHide' : '';?>"><i class="glyphicon glyphicon-eye-open"></i><?php echo Yii::t("wonlot","Segui");?></button>
+                  <button name="<?php echo $model->id;?>" class="unfollUserBtn btn btn-default btn-lg <?php echo ($isFollowing) ? '' : 'startHide' ;?>"><i class="glyphicon glyphicon-eye-close"></i><?php echo Yii::t("wonlot","Smetti di seguire");?></button>
+                <?php } ?>
+            </span>
           </span>
       </h3>
     </div>

@@ -358,6 +358,16 @@ $(window).bind("load", function() {
    
    $.getUnreadNotifications();
    
+   // update lottery modals -> call inside modals
+   $.updateLotteryModal = function(view,lotId){
+        if(view && lotId){
+            $.updateModal(view,lotId,true);
+        }
+        setTimeout(function(){
+            $.updateLotteryModal(view,lotId);
+        },3000);
+   };
+   
    jQuery('body').on('click','.notify-pop-btn',function(event){
       $.post( '/users/markNewNotifyRead' , { notifyId: $(this).attr('name')})
             .done(function( data ) {
@@ -621,7 +631,7 @@ $(window).bind("load", function() {
    $.modalHasUpdated = function(val){
        modalHasBeenUpdated = val;
    };
-   $.updateModal = function(view,lotId){
+   $.updateModal = function(view,lotId,force){
      var main = "";
      var doHttp = false;
      if(view == "gift"){
@@ -632,7 +642,7 @@ $(window).bind("load", function() {
          doHttp = true;
      }
      if(doHttp){
-         if(modalHasBeenUpdated){
+         if(modalHasBeenUpdated || force){
             jQuery.ajax({
                // The url must be appropriate for your configuration;
                // this works with the default config of 1.1.11

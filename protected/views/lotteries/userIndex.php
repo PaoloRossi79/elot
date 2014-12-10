@@ -1,12 +1,12 @@
 <div class="left">
 <?php 
-$h1="<h1>Lotteries</h1>";
+$h1="<h1>Aste</h1>";
 if($viewData['showStatus']){
 //   $h1.=" <h3>(".CHtml::encode(Yii::app()->params['lotteryStatusConst'][$viewData['showStatus']]).")</h3>"; 
    $h1.=" <h3>Status: ".CHtml::encode($viewData['showStatus'])."</h3>"; 
 }
 if($viewData['showCat']){
-   $h1.=" <h3>Category: ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($viewData['showCat']))."</h3>"; 
+   $h1.=" <h3>Categorie: ".CHtml::encode(PrizeCategories::model()->getPrizeCatNameById($viewData['showCat']))."</h3>"; 
 }
 echo $h1; ?>
     

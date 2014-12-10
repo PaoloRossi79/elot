@@ -175,10 +175,10 @@
             <div class="panel-body">
                 <?php if(isset($this->userId) && $this->userId!=$model->owner_id){ ?>
                     <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
-                        <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
+                <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal" onclick="js:$.updateLotteryModal('buy',<?php echo $model->id; ?>);">
                             <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
                         </button>
-                        <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
+                        <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal"  onclick="js:$.updateLotteryModal('gift',<?php echo $model->id; ?>);">
                             <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
                         </button>
                     <?php } else { ?>

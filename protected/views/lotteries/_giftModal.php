@@ -16,14 +16,18 @@
                 </div>
                     
             <?php } elseif($checkBuy == Lotteries::errorGuest) { ?>
-                <h4>LOGIN TO BUY!</h4>
+                <h4><?php echo Yii::t('wonlot','Entra o registrati per comprare'); ?></h4>
                 <?php $this->renderPartial('/site/login',array('showLogin'=>true)); ?>
             <?php } elseif($checkBuy == Lotteries::errorStatus) { ?>
-                <h4>LOTTERY IN WRONG STATUS</h4>
+                <h4><?php echo Yii::t('wonlot','Asta in stato errato'); ?></h4>
             <?php } elseif($checkBuy == Lotteries::errorCredit) { ?>
-                <h4>NOT ENOUGH CREDIT!</h4>
+                <h4><?php echo Yii::t('wonlot','Credito non sufficente'); ?></h4>
+                <div>
+                    <?php echo Yii::t('wonlot','Vai al Tuo Profilo per ricaricare'); ?>
+                    <?php echo CHtml::link(Yii::t('wonlot','Profilo'), array('myProfile'), array('class'=>'btn btn-primary')); ?>
+                </div>
             <?php } elseif($checkBuy == Lotteries::errorOwner) { ?>
-                <h4>CANNOT BUY YOUR LOTTERY!</h4>
+                <h4><?php echo Yii::t('wonlot','Non puoi comprare la tua lotteria'); ?></h4>
             <?php } ?>
       </div>
       <div class="modal-footer">
@@ -41,3 +45,4 @@
     </div>
   </div>
 </div>
+    

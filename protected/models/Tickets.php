@@ -55,7 +55,7 @@ class Tickets extends PActiveRecord
 		return array(
                     'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
                     'giftFromUser' => array(self::BELONGS_TO, 'Users', 'gift_from_id'),
-                    'lottery' => array(self::BELONGS_TO, 'Lotteries', 'lottery_id'),
+                    'lottery' => array(self::BELONGS_TO, 'Auctions', 'lottery_id'),
 		);
 	}
 
@@ -112,7 +112,7 @@ class Tickets extends PActiveRecord
 		));
 	}
         
-        public function getMyTicketsNumberAllLotteries()
+        public function getMyTicketsNumberAllAuctions()
 	{
             $dbCommand = Yii::app()->db->createCommand("
                 SELECT lottery_id,COUNT(*) as count FROM `tickets` WHERE user_id = ".Yii::app()->user->id." GROUP BY `lottery_id`
@@ -239,18 +239,18 @@ class Tickets extends PActiveRecord
             ));
             $criteria->group = "t.id";
             $criteria->together = true;
-            $totalNumberOfLotteries = Lotteries::model()->count($criteria);
-            $totalNumberOfPages = ceil($totalNumberOfLotteries / $itemPerPage);
+            $totalNumberOfAuctions = Auctions::model()->count($criteria);
+            $totalNumberOfPages = ceil($totalNumberOfAuctions / $itemPerPage);
             if($page >= 0 && $page < $totalNumberOfPages){
                 if($page == $totalNumberOfPages - 1){
-                    $criteria->limit = ($totalNumberOfLotteries % $itemPerPage);
+                    $criteria->limit = ($totalNumberOfAuctions % $itemPerPage);
                 } else {
                     $criteria->limit = $itemPerPage;
                 }
             }
             $criteria->offset = $itemPerPage * $page;
-            $boughtLotteries = Lotteries::model()->findAll($criteria);
-            return array("lotteries" => $boughtLotteries, "totalPages" => $totalNumberOfPages);
+            $boughtAuctions = Auctions::model()->findAll($criteria);
+            return array("auctions" => $boughtAuctions, "totalPages" => $totalNumberOfPages);
         }
         
         public function getMyTicketsProvider(){
@@ -268,7 +268,7 @@ class Tickets extends PActiveRecord
                 'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
             ));
             $criteria->together = true;
-            return new CActiveDataProvider('Lotteries', array(
+            return new CActiveDataProvider('Auctions', array(
                 'pagination'=>array(
                         'pageSize'=>8,
                     ),
@@ -294,17 +294,17 @@ class Tickets extends PActiveRecord
             foreach ($tickets as $ticket) {
                 if($ticket->is_gift == 1 && $ticket->gift_provider == "email" && $ticket->gift_ext_user){
                     if(isset($res[$ticket->gift_ext_user])){
-                        if(isset($res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id])){
-                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                        if(isset($res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id])){
+                            $res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id]['tickets'][] = $ticket;
                         } else {
-                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
-                            $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                            $res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
+                            $res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id]['tickets'][] = $ticket;
                         }
                     } else {
-                        $res[$ticket->gift_ext_user] = array('email'=>$ticket->gift_ext_user,'lotteries'=>array());
+                        $res[$ticket->gift_ext_user] = array('email'=>$ticket->gift_ext_user,'auctions'=>array());
                         
-                        $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
-                        $res[$ticket->gift_ext_user]['lotteries'][$ticket->lottery->id]['tickets'][] = $ticket;
+                        $res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id] = array('lottery'=>$ticket->lottery,'tickets'=>array());
+                        $res[$ticket->gift_ext_user]['auctions'][$ticket->lottery->id]['tickets'][] = $ticket;
                     }
                 }
             }
@@ -318,7 +318,7 @@ class Tickets extends PActiveRecord
                 $url = "";
                 $class = "img-thumbnail";
                 $class .= " img-avatar";              
-                $img = CHtml::image("/images/lotteries/".$ticket->lottery->id."/smallThumb/".$ticket->lottery->prize_img, "Lottery image", array("class"=>$class));
+                $img = CHtml::image("/images/auctions/".$ticket->lottery->id."/smallThumb/".$ticket->lottery->prize_img, "Lottery image", array("class"=>$class));
                 $url = CHtml::link($img, Yii::app()->controller->createUrl('tickets/view/'.$ticketId));
                 $res .= "<p>".$ticket->lottery->name;
                 $res .= "</p>";

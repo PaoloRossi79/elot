@@ -102,7 +102,7 @@
                 </div>
         <?php } ?>
         <?php
-            $imgList=Lotteries::model()->getImageList($model->lottery->id);
+            $imgList=Auctions::model()->getImageList($model->lottery->id);
             if(!empty($imgList)){ ?>
                 <div class="col-md-12">
                     <h3><?php echo Yii::t("wonlot","Immagini"); ?></h3>

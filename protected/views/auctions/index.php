@@ -1,8 +1,27 @@
-<?php 
-    $mainLotDp = Auctions::getMainAuctions(); 
+<div class="left">
+    <h1><?php echo Yii::t("wonlot","Aste"); ?></h1>
+    <?php 
+    if($viewData['showStatus']){
+    //   $h1.=" <h3>(".CHtml::encode(Yii::app()->params['lotteryStatusConst'][$viewData['showStatus']]).")</h3>"; 
+       $h1.= "<h3>".Yii::t("wonlot","Stato:")." ".CHtml::encode(Yii::t("wonlot",$viewData['showStatus']))."</h3>"; 
+    }
+    if($viewData['showCat']){
+       $h1.= "<h3>".Yii::t("wonlot","Categoria:")." ".CHtml::encode(Yii::t("wonlot",PrizeCategories::model()->getPrizeCatNameById($viewData['showCat'])))."</h3>"; 
+    }
+    echo $h1; ?>
+</div>
+<div class="right">
+    <?php if(!Yii::app()->user->isGuest){
+        echo CHtml::link(Yii::t("wonlot","Nuova asta"),CController::createUrl('auctions/create'),array('class'=>'btn btn-success')); 
+    }
+    ?>
+</div>
+
+    <?php
     $this->widget('ext.isotope.Isotope',array(
-        'dataProvider'=>$mainLotDp,
-        'itemView'=>'/auctions/lot-box',
+        'dataProvider'=>$dataProvider,
+        'itemView'=>'lot-box',
+        'viewData'=>$viewData,
         'itemSelectorClass'=>'lot-box-item',
         'options'=>array( // options for the isotope jquery
             'layoutMode'=>'masonry',
@@ -26,7 +45,7 @@
                 // This only fires if the row is not undergoing an animation when you mouseover it
                 }
              );
-             \$(".lot-box-hover").mouseleave(
+             \$(".lot-box-hover).mouseleave(
                  function(){
                   \$(this).fadeOut();
                 // This only fires if the row is not undergoing an animation when you mouseover it
@@ -39,6 +58,5 @@
                 'finishedMsg' => 'Tutte le aste sono state caricate!',
             )
         ), // javascript options for infinite scroller
-        'id'=>'lot-isotope-2',
-    ));
-?>
+        'id'=>'lot-isotope-1',
+    )); ?>

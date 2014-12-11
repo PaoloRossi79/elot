@@ -2,7 +2,7 @@
     <h2><?php echo Yii::t('wonlot','Ticket'); ?></h2>
     <div class="panel panel-default bootstrap-widget-table" id="tickets-table">
         <table class="fullPageTable">
-            <?php foreach($tickets["lotteries"] as $ticket){ ?>
+            <?php foreach($tickets["auctions"] as $ticket){ ?>
                 <tr class="lot-item" id="my-ticket-list">
                     <td>
                         <div class="row">

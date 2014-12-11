@@ -5,8 +5,8 @@
     <a class="btn btn-primary" href="<?php echo $this->createUrl('userWithdraw/admin'); ?>">Richieste prelievo</a>
     <a class="btn btn-primary" href="<?php echo $this->createUrl('lotteryPaymentRequest/admin'); ?>">Pagamenti lotterie</a>
     <a class="btn btn-primary" href="<?php echo $this->createUrl('userSpecialOffers/admin'); ?>">Promozioni</a>
-    <a class="btn btn-primary" href="<?php echo $this->createUrl('lotteries/random'); ?>">Random</a>
-    <a class="btn btn-primary" href="<?php echo $this->createUrl('lotteries/cronLottery'); ?>">Esegui Cron lottery</a>
+    <a class="btn btn-primary" href="<?php echo $this->createUrl('auctions/random'); ?>">Random</a>
+    <a class="btn btn-primary" href="<?php echo $this->createUrl('auctions/cronLottery'); ?>">Esegui Cron lottery</a>
 </div>
 
 <div class="panel panel-default bootstrap-widget-table">

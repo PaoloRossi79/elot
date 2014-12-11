@@ -1,6 +1,6 @@
 <script>
         // globals
-        var baseTicketUrl = '<?php echo Yii::app()->createAbsoluteUrl('lotteries/getGift?tid='); ?>';
+        var baseTicketUrl = '<?php echo Yii::app()->createAbsoluteUrl('auctions/getGift?tid='); ?>';
         var baseUrl = '<?php echo Yii::app()->createAbsoluteUrl(''); ?>';
         var baseGiftMsg = '<?php echo Yii::t('wonlot','Ecco un Ticket in regalo per te!'); ?>';
         var baseLotMsg = '<?php echo Yii::t('wonlot','Vinci con Wonlot"!'); ?>';

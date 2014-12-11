@@ -176,9 +176,9 @@ class TicketsController extends Controller
                     'joinType'=>'INNER JOIN',
                     'condition'=>'tickets.user_id='.Yii::app()->user->id.' OR tickets.gift_from_id='.Yii::app()->user->id,
                 ));
-                $boughtLotteries = Lotteries::model()->findAll($criteria);
+                $boughtAuctions = Auctions::model()->findAll($criteria);
                 $this->renderPartial('_tickets',array(
-                    'model'=>$boughtLotteries,
+                    'model'=>$boughtAuctions,
                     //'viewType'=>"_box"
                     'viewData'=>$viewData,
                 ));

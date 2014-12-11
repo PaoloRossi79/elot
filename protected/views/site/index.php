@@ -32,7 +32,7 @@ unset(Yii::app()->session['confirmEmailError']);
                 'CActiveForm',
                 array(
                     'id' => 'searchLot-form',
-                    'action' => CController::createUrl('lotteries/index'),
+                    'action' => CController::createUrl('auctions/index'),
                     'htmlOptions' => array('enctype' => 'multipart/form-data'), // for inset effect
                 )
             );
@@ -77,7 +77,7 @@ unset(Yii::app()->session['confirmEmailError']);
     </div>
     <div class="main-lot-list">
         <?php 
-            $this->renderPartial('/lotteries/main-lot'); 
+            $this->renderPartial('/auctions/main-lot'); 
 //        $this->widget('listLotteryWidget');
         ?>
     </div>

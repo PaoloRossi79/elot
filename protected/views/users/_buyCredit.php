@@ -31,6 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <h4><?php echo Yii::t('wonlot','Altro importo'); ?></h4>
+                    <div><b><em><?php echo Yii::t('wonlot','La quantità minima di Wmoney acquistabile è pari a 7€.'); ?></em></b></div>
                     <div>
                         <div><?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da acquistare...'))); ?> €</div>
                     </div>

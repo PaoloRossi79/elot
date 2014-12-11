@@ -83,9 +83,9 @@ class Users extends PActiveRecord
                     'newsletter' => array(self::HAS_MANY, 'Subscriptions', 'user_id'),
                     'socials' => array(self::HAS_MANY, 'SocialUser', 'user_id'),
                     'offers' => array(self::HAS_MANY, 'UserSpecialOffers', 'user_id'),
-                    'lotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id'),
-                    'closedLotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id', 'condition' => 'closedLotteries.status = 5'),
-                    'voidLotteries' => array(self::HAS_MANY, 'Lotteries', 'owner_id', 'condition' => 'voidLotteries.status = 6'),
+                    'auctions' => array(self::HAS_MANY, 'Auctions', 'owner_id'),
+                    'closedAuctions' => array(self::HAS_MANY, 'Auctions', 'owner_id', 'condition' => 'closedAuctions.status = 5'),
+                    'voidAuctions' => array(self::HAS_MANY, 'Auctions', 'owner_id', 'condition' => 'voidAuctions.status = 6'),
                     'followers' => array(self::HAS_MANY, 'FollowUser', 'user_id', 'condition' => 'followers.active'),
                     'followings' => array(self::HAS_MANY, 'FollowUser', 'follower_id', 'condition' => 'followings.active'),
 		);
@@ -158,11 +158,11 @@ class Users extends PActiveRecord
             return "";
         }
         
-        public function getUserLotteries($userId) {
+        public function getUserAuctions($userId) {
             $criteria = new CDbCriteria();
             try {
                 $criteria->addCondition("t.owner_id=".$userId);
-                $dataProvider=new CActiveDataProvider('Lotteries', array(
+                $dataProvider=new CActiveDataProvider('Auctions', array(
                     'pagination'=>array(
                         'pageSize'=>8,
                     ),

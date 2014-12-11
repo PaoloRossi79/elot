@@ -122,7 +122,7 @@ class Controller extends CController
                 $this->userId=-1;
             }
             if(!Yii::app()->user->isGuest()){
-                $this->favLots=Lotteries::model()->getMyFavoriteLotteries();
+                $this->favLots=Auctions::model()->getMyFavoriteAuctions();
             } else {
                 $this->favLots = array();
             }
@@ -142,7 +142,7 @@ class Controller extends CController
                 $this->lotteryCompleteStatusList = array_flip($this->generateMenuCheckList('lotteryStatusConstIta','index'));
             }
             switch ($this->id){
-                case "lotteries":
+                case "auctions":
                     $this->filterModel->lists["Categories"]=$this->catList;
                     if(in_array($view,array('myProfile','userIndex'))){
                         $this->filterModel->lists["LotStatusComplete"]=$this->lotteryCompleteStatusList;
@@ -157,7 +157,7 @@ class Controller extends CController
                 case "tickets":
                     $this->filterModel->lists["Categories"]=$this->catList;
                     $this->filterModel->lists["TicketStatus"]=$this->ticketStatusList;
-                    $this->filterModel->lists["Lotteries"]=Lotteries::model()->getBoughtLotMenu();
+                    $this->filterModel->lists["Auctions"]=Auctions::model()->getBoughtLotMenu();
                     break;
                 case "users":
                     $this->filterModel->lists["Categories"]=$this->catList;

@@ -16,13 +16,13 @@ class CronCommand extends CConsoleCommand
             chmod($file, 0777);
             try {
                 $errors = array('open'=>array(),'close'=>array(), 'extract'=>array(),'void'=>array());
-                Lotteries::model()->checkToOpen($errors);
+                Auctions::model()->checkToOpen($errors);
                 Yii::log("CRON 1", "warning");
-                Lotteries::model()->checkToClose($errors);
+                Auctions::model()->checkToClose($errors);
                 Yii::log("CRON 2", "warning");
-//                Lotteries::model()->checkToExtract($errors);
+//                Auctions::model()->checkToExtract($errors);
                 Yii::log("CRON 3", "warning");
-                Lotteries::model()->checkToVoid($errors);
+                Auctions::model()->checkToVoid($errors);
                 Yii::log("CRON Fine", "warning");
                 if(count($errors['open'])+
                    count($errors['close'])+

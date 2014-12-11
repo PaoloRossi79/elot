@@ -161,7 +161,7 @@ class HOAuthShareAction extends CAction
                                 );
                                 echo CJSON::encode($res);*/
                                 $this->controller->renderPartial(
-                                        '//lotteries/_socialFriendList', 
+                                        '//auctions/_socialFriendList', 
                                         array(
                                             'list'=>$contacts,
                                             'provider'=>$provider,

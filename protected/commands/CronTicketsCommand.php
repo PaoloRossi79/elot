@@ -18,8 +18,8 @@ class CronTicketsCommand extends CConsoleCommand
                 Yii::log("CRON Tickets OK!", "warning");
                 $errors = array('tickets'=>array(),'giftTickets'=>array());
 
-                Lotteries::model()->sendTicketsEmail($errors);
-                Lotteries::model()->sendGiftTicketsEmail($errors);
+                Auctions::model()->sendTicketsEmail($errors);
+                Auctions::model()->sendGiftTicketsEmail($errors);
                 Yii::log("CRON Tickets Fine", "warning");
 
                 if(count($errors['tickets']) > 0 && count($errors['giftTickets']) > 0){

@@ -320,7 +320,7 @@ class UsersController extends Controller
                     $resOk = Yii::t('wonlot','Dati di pagamento salvati');
                 } /*else {
                     if($userOk && isset($_POST['lot_id'])){
-                        $lottery = Lotteries::model()->findByPk($_POST['lot_id']);
+                        $lottery = Auctions::model()->findByPk($_POST['lot_id']);
                         if($lottery){
                             if($lottery->paidInfo){
                                 if($lottery->paidInfo->is_completed){
@@ -629,7 +629,7 @@ class UsersController extends Controller
                         }
                     } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
                         $credit=(float) $_POST['Users']['creditValue'];
-                        if(is_float($credit) and $credit > 0){
+                        if(is_float($credit) and $credit > Yii::app()->params['buyCreditOptions'][0]){
                             $this->_finalizeBuyCredit($credit,$model);
                         } else {
                             $model->addError('creditOption',Yii::t("wonlot","Credito non selezionato o non valido"));
@@ -640,10 +640,13 @@ class UsersController extends Controller
 		} else {
                     $model->addError('creditOption','Form error');
                 }
+                if($model->hasErrors()){
+                    
+                }
                 $this->redirect('myProfile#tabProfile2',array(
-			'model'=>$model,
+                        'model'=>$model,
                         'this'=>$this,
-		),false,true);
+                ),false,true);
 	}
         /**
 	 * Buy credit for user a particular model.

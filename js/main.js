@@ -359,12 +359,12 @@ $(window).bind("load", function() {
    $.getUnreadNotifications();
    
    // update lottery modals -> call inside modals
-   $.updateLotteryModal = function(view,lotId){
-        if(view && lotId){
-            $.updateModal(view,lotId,true);
+   $.updateAuctionModal = function(lotId){
+        if(lotId){
+            $.updateAuctionWinning(lotId);
         }
         setTimeout(function(){
-            $.updateLotteryModal(view,lotId);
+            $.updateAuctionModal(lotId);
         },3000);
    };
    
@@ -392,7 +392,7 @@ $(window).bind("load", function() {
         if(provider == "fb"){
             FB.ui({method: 'feed',
                 message: baseGiftMsg,
-                //link: '<?php echo $this->createAbsoluteUrl('lotteries/getGift?tid='); ?>'+$("#ticketIdForGift").val(),
+                //link: '<?php echo $this->createAbsoluteUrl('auctions/getGift?tid='); ?>'+$("#ticketIdForGift").val(),
                 link: baseTicketUrl,
     //                                to: $(this).attr('id');
                 to: '100004725912341',
@@ -646,7 +646,7 @@ $(window).bind("load", function() {
             jQuery.ajax({
                // The url must be appropriate for your configuration;
                // this works with the default config of 1.1.11
-               url: '/lotteries/getPartialView',
+               url: '/auctions/getPartialView',
                type: "POST",
                data: {view: view, lotId: lotId},  
                error: function(xhr,tStatus,e){
@@ -663,6 +663,24 @@ $(window).bind("load", function() {
             });
          } 
       }
+   };
+   $.updateAuctionWinning = function(lotId){
+    var winningUser = $('.winningUserHidden').get(0).value;
+    var winningVal = $('.winningValHidden').get(0).value;
+    jQuery.ajax({
+       // The url must be appropriate for your configuration;
+       // this works with the default config of 1.1.11
+       url: '/auctions/getPartialArray',
+       type: "POST",
+       data: {lotId: lotId, winnerId: winningUser, winnerVal : winningVal},  
+       success: function(resp){
+           if(resp){
+               $('.winningBox').html(resp);
+           } else {
+               var nochange = true;
+           }
+       }
+    });
    };
    
    $('#openConfirmGiftPanel').click(function(event){

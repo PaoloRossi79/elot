@@ -249,7 +249,7 @@ class EmailManager extends PActiveRecord
             try {
                 $mail = new YiiMailer();
                 $mail->setView('giftTicketsToExt');
-                $mail->setData(array('tickets' => $user['lotteries']));
+                $mail->setData(array('tickets' => $user['auctions']));
                 $mail->setFrom('info@wonlot.com', 'WonLot');
                 $mail->setTo($user['email']);
     //            $mail->setTo('paolorossi79@gmail.com');

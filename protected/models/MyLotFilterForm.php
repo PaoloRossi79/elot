@@ -13,7 +13,7 @@ class MyLotFilterForm extends CFormModel
 	public $Category;
 	public $lists;
         
-        // FOR LOTTERIES ONLY
+        // FOR AUCTIONS ONLY
         public $LotStatus;
         public $LotStartStatus = 1;
 	public $date;

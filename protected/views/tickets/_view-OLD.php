@@ -5,5 +5,5 @@
 
 <div class="view">
 
-    <?php echo $this->renderPartial('//lotteries/view/'.$model->lottery_id, array('model'=>$model->lottery)); ?>
+    <?php echo $this->renderPartial('//auctions/view/'.$model->lottery_id, array('model'=>$model->lottery)); ?>
 </div>

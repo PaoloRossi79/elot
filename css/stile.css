@@ -1359,3 +1359,7 @@ button.close {
     right: 0;
     bottom: 0;
 }
+
+.winner-panel {
+    margin-left: -100px;
+}

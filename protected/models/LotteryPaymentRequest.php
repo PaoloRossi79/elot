@@ -34,7 +34,7 @@ class LotteryPaymentRequest extends PActiveRecord
 		return array(
                     'user' => array(self::BELONGS_TO, 'Users', 'from_user_id'),
                     'completeUser' => array(self::BELONGS_TO, 'Users', 'complete_by'),
-                    'lottery' => array(self::BELONGS_TO, 'Lotteries', 'lottery_id'),
+                    'lottery' => array(self::BELONGS_TO, 'Auctions', 'lottery_id'),
 		);
 	}
         

@@ -1,6 +1,6 @@
 <?php
-/* @var $this LotteriesController */
-/* @var $model Lotteries */
+/* @var $this AuctionsController */
+/* @var $model Auctions */
 ?>
 <div class="lot-panel panel panel-default bootstrap-widget-table">
     <div class="panel-heading">
@@ -96,7 +96,7 @@
                     <p>Non puoi comprare...la Asta non è aperta...</p>
                 <?php } ?>
             <?php } elseif(isset($this->lotController->userId) && $this->lotController->userId==$model->owner_id) { ?>
-                    <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('lotteries/update/'.$model->id));?></button>
+                    <button type="button" class="btn btn-primary"><?php echo CHtml::link('Edit', CController::createUrl('auctions/update/'.$model->id));?></button>
             <?php } ?>
             <?php $this->lotController->widget('shareWidget',array('model'=>$model)); ?>
         </div>

@@ -39,9 +39,9 @@ if($model->followers){
                     <dt><?php echo Yii::t("wonlot","Nome utente:"); ?></dt>
                     <dd><?php echo CHtml::encode($model->username); ?></dd>
                     <dt><?php echo Yii::t("wonlot","Aste concluse:"); ?></dt>
-                    <dd><?php echo CHtml::encode(count($model->closedLotteries)); ?></dd>
+                    <dd><?php echo CHtml::encode(count($model->closedAuctions)); ?></dd>
                     <dt><?php echo Yii::t("wonlot","Aste annullate:"); ?></dt>
-                    <dd><?php echo CHtml::encode(count($model->voidLotteries)); ?></dd>
+                    <dd><?php echo CHtml::encode(count($model->voidAuctions)); ?></dd>
                     <dt><?php echo Yii::t("wonlot","Votazione media"); ?></dt>
                     <dd><?php echo CHtml::encode($model->avg_rating); ?></dd>
                     <dt><?php echo Yii::t("wonlot","Persone che lo seguono:"); ?></dt>
@@ -69,8 +69,8 @@ if($model->followers){
             <h4><?php echo Yii::t("wonlot","Lotterie"); ?></h4>
             <?php
             $this->widget('ext.isotope.Isotope',array(
-                'dataProvider'=>Users::model()->getUserLotteries($model->id),
-                'itemView'=>'/lotteries/lot-box',
+                'dataProvider'=>Users::model()->getUserAuctions($model->id),
+                'itemView'=>'/auctions/lot-box',
                 'summaryText'=>'', 
                 'itemSelectorClass'=>'lot-box-item',
                 'options'=>array( // options for the isotope jquery

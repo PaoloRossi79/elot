@@ -1,7 +1,7 @@
 <div class="form">
     <?php
     $model = $this->filterModel;
-    $contr = in_array($this->id,array('site')) ? 'lotteries' : $this->id;
+    $contr = in_array($this->id,array('site')) ? 'auctions' : $this->id;
     $form=$this->beginWidget('CActiveForm',
     array(
         'id' => 'lotSearchForm',
@@ -12,7 +12,7 @@
     
     if($this->id == "site"){
         echo $form->textField($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search..."));
-        echo CHtml::submitButton("New Lottery",CController::createUrl('lotteries/create'), array('class' => 'btn btn-success')); 
+        echo CHtml::submitButton("New Lottery",CController::createUrl('auctions/create'), array('class' => 'btn btn-success')); 
         $cat = $model->lists['Categories'];
         ?>
         <?php foreach($cat as $k=>$item){ ?>
@@ -21,12 +21,12 @@
                   <h3 class="panel-title"><?php echo Yii::t('wonlot','Categories');?></h3>
                 </div>
                 <div class="panel-body">
-                    <?php echo "<p>".CHtml::link($item, Yii::app()->createUrl('lotteries/index/'.$item), array('label' => false))."</p>";?>
+                    <?php echo "<p>".CHtml::link($item, Yii::app()->createUrl('auctions/index/'.$item), array('label' => false))."</p>";?>
                 </div>
             </div>
         <?php }
         
-    } elseif($this->id == "lotteries") { ?>
+    } elseif($this->id == "auctions") { ?>
         <div class="form-block">
             <?php echo $form->textField($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search...")); ?>
         </div>
@@ -128,7 +128,7 @@
         </div>
         <div class="form-block-high">
             <?php
-            $maxPrice = Lotteries::model()->getMaxTicketPrice()+0; 
+            $maxPrice = Auctions::model()->getMaxTicketPrice()+0; 
             $model->minTicketPriceRange=$model->minTicketPriceRange+0; // Trick to format decimals
             $model->maxTicketPriceRange=$model->maxTicketPriceRange+0;
             if(!$model->minTicketPriceRange){
@@ -299,7 +299,7 @@
                 <?php } ?>
                 <div class="col-md-3">
                     <?php
-                        $maxPrice = Lotteries::model()->getMaxTicketPrice()+0; 
+                        $maxPrice = Auctions::model()->getMaxTicketPrice()+0; 
                         $model->minTicketPriceRange=$model->minTicketPriceRange+0; // Trick to format decimals
                         $model->maxTicketPriceRange=$model->maxTicketPriceRange+0;
                         if(!$model->minTicketPriceRange){

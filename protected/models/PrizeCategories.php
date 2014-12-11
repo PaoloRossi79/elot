@@ -102,9 +102,9 @@ class PrizeCategories extends PActiveRecord
 	{
 		$prizeCatList=$this->findAll();
                 $catList=array();
-                $catList[]=array('label'=>'All Categories', 'url'=>array('lotteries/'.$action));
+                $catList[]=array('label'=>'All Categories', 'url'=>array('auctions/'.$action));
                 foreach($prizeCatList as $cat){
-                    $catList[]=array('label'=>$cat->category_name, 'url'=>array('lotteries/'.$action.'?prizeCategory='.$cat->id));
+                    $catList[]=array('label'=>$cat->category_name, 'url'=>array('auctions/'.$action.'?prizeCategory='.$cat->id));
                 }
                 return $catList;
 	}

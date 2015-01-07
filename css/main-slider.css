@@ -70,14 +70,6 @@ a.slider-arrow.prev{
    height: 450px;
 }
 
-/* Specifiche delle offerte all'interno */
-
-.main-to-align {
-   display: table-cell;
-   height: 450px;
-   vertical-align: middle;
-   background: url('../img/shadow.png');
-}
 
 .main-inserzioni .main-box {
    /*

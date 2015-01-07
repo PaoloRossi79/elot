@@ -35,6 +35,8 @@ class MyLotFilterForm extends CFormModel
 	public $favorite;
 	public $userGuaranted;
 	public $userMinRating;
+	public $onlyPrivate;
+	public $onlyCompany;
         
         // FOR TICKETS ONLY
 	public $lottery;
@@ -65,6 +67,8 @@ class MyLotFilterForm extends CFormModel
 			'userMinRating'=>Yii::t('wonlot','Affidabilità venditore'),
 			'favorite'=>Yii::t('wonlot','Solo preferite'),
 			'userGuaranted'=>Yii::t('wonlot','Venditore garantito'),
+			'onlyPrivate'=>Yii::t('wonlot','Solo privati'),
+			'onlyCompany'=>Yii::t('wonlot','Solo aziende'),
 			//''=>Yii::t('wonlot',''),
 		);
 	}

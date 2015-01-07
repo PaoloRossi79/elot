@@ -11,6 +11,10 @@ class UsersController extends Controller
 	public $tickets;
 	public $ticketsProvider;
 	public $userWithdraw;
+        public $openModal;
+        public $errorMsg;
+        public $hashLink;
+        public $confirmMsg;
 
 	/**
 	 * @return array action filters
@@ -38,7 +42,8 @@ class UsersController extends Controller
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
                                     'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
-                                    'savePayInfo','requestWithdraw','acceptPolicy','payInfo','searchTicket'),
+                                    'savePayInfo','requestWithdraw','acceptPolicy','payInfo','searchTicket',
+                                    'okBuyCredit','koBuyCredit','confirmBuyCredit'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -51,6 +56,22 @@ class UsersController extends Controller
 			),
 		);
 	}
+        
+        protected function beforeAction(CAction $action){
+            $model = Users::model()->getMyProfile();
+            Yii::import("xupload.models.XUploadForm");
+            $this->upForm = new XUploadForm;
+            $this->locationForm=new Locations;
+            $this->subscriptionForm = new SubscriptionForm;
+            $this->tickets = Tickets::model()->getMyTickets(array());
+            $this->userWithdraw = new UserWithdraw;
+            if($model->id){
+                $existLoc=Locations::model()->findByPk($model->location_id);
+                if($existLoc)
+                    $this->locationForm=$existLoc;
+            } 
+            return parent::beforeAction($action);
+        }
         
         public function actionConfirmEmail()
         {
@@ -616,38 +637,115 @@ class UsersController extends Controller
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionBuyCredit()
-	{        
+	{       
+                Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+                $errMsg = "";
                 if(isset($_POST['Users']))
 		{
                     $model=Users::model()->getMyProfile();
                     if(isset($_POST['Users']['creditOption']) && $_POST['Users']['creditOption'] !== ""){
                         $credit=(float) Yii::app()->params['buyCreditOptions'][$_POST['Users']['creditOption']];
                         if(is_float($credit) and $credit > 0){
-                            $this->_finalizeBuyCredit($credit,$model);
+                            $finalize = $this->_finalizeBuyCredit($credit,$model);
+                            if($finalize['res']){
+                                $location = $finalize['msg'];
+                            } else {
+                                $errMsg = $finalize['msg'];
+                            }
                         } else {
-                            $model->addError('creditOption',Yii::t("wonlot","Credito non selezionato o non valido"));
+                            $errMsg = Yii::t("wonlot","Credito non selezionato o non valido");
                         }
                     } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
                         $credit=(float) $_POST['Users']['creditValue'];
                         if(is_float($credit) and $credit > Yii::app()->params['buyCreditOptions'][0]){
-                            $this->_finalizeBuyCredit($credit,$model);
+                            list($res,$msg) = $this->_finalizeBuyCredit($credit,$model);
+                            $finalize = $this->_finalizeBuyCredit($credit,$model);
+                            if($finalize['res']){
+                                $location = $finalize['msg'];
+                            } else {
+                                $errMsg = $finalize['msg'];
+                            }
                         } else {
-                            $model->addError('creditOption',Yii::t("wonlot","Credito non selezionato o non valido"));
+                            $errMsg = Yii::t("wonlot","Credito non selezionato o non valido");
                         }
                     } else {
-                        $model->addError('creditOption',Yii::t("wonlot","Selezionare un valore per il credito"));
+                        $errMsg = Yii::t("wonlot","Selezionare un valore per il credito");
                     }
 		} else {
-                    $model->addError('creditOption','Form error');
+                    $errMsg = 'Form error';
                 }
-                if($model->hasErrors()){
-                    
-                }
-                $this->redirect('myProfile#tabProfile2',array(
-                        'model'=>$model,
-                        'this'=>$this,
-                ),false,true);
+                $this->renderPartial("_buyCreditForm",
+                    array(
+                        "model"=>$model,
+                        "errorMsg"=>$errMsg,
+                        "location" => $location
+                    )
+                );
 	}
+        
+        public function actionOkBuyCredit(){
+            $model = Users::model()->getMyProfile();
+            $this->confirmMsg = array("res"=>true);
+            $this->render('_creditPanel',
+                array(
+                    'model'=>$model,
+                )
+            );
+        }
+        
+        public function actionKoBuyCredit(){
+            $model = Users::model()->getMyProfile();
+            $this->confirmMsg = array("res"=>false);
+            $this->render('_creditPanel',
+                array(
+                    'model'=>$model,
+                )
+            );
+        }
+        
+        public function actionConfirmBuyCredit(){
+            Yii::log("MPS-conf1", "warning");
+            Yii::import('application.vendor.*');
+            require_once('mps/PgConsTriv.php');
+            $pg = new PgConsTriv($lng);
+            $pg->setAction('Purchase');
+            foreach($_POST as $s){
+                Yii::log($s, "warning");
+            }
+            $pg->setVal_NM($_POST);
+            // get paymentid
+            $paymentid = $pg->getPaymentID_NM();
+            // Verifico se esiste il PaymentID
+            if( $paymentid !== false ){
+                Yii::log("MPS 2: ".$paymentid, "warning");
+                // Recupero Ordine dal database in base al PaymentID settato in fase di PaymentInit
+                $creditRecord = UserBuyCredit::model()->findByPk($paymentid);
+                if($creditRecord){
+                    Yii::log("MPS 3", "warning");
+                    // set Security Code per verifica validità del Notification Message
+                    $secCode = sha1(Yii::app()->params['hashString'].$creditRecord->id.'-'.$creditRecord->user_id);
+                    $pg->setSecurityCode_PI($secCode);
+                    Yii::log("MPS 4: secCode=".$secCode, "warning");
+                    // Verifico autenticità del NotificationMessage
+                    if( $pg->isValid_NM() ) {
+                        Yii::log("MPS 5", "warning");
+                        # Transazione Elaborata
+                        if( $pg->isTransGood_NM() && $creditRecord->status == "NEW" && $pg->getVal_NM("trackid") == $creditRecord->id) {
+                            Yii::log("MPS 6", "warning");
+                            // OK, Registro STATO e dati TRANSAZIONE nel DB
+                            $TranID = $pg->getVal_NM("tranid");
+                            $Auth = $pg->getVal_NM("auth");
+                            $creditRecord->status = $pg->getVal_NM("result");
+                            Yii::log("MPS 7:".$TranID, "warning");
+                            Yii::log("MPS 8:".$Auth, "warning");
+                            Yii::log("MPS 9:".$creditRecord->status, "warning");
+                            $creditRecord->save();
+                        }
+                    }
+                }
+            }
+        }
+                
         /**
 	 * Buy credit for user a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -806,8 +904,44 @@ class UsersController extends Controller
 	}
         
         private function _finalizeBuyCredit($credit,$user) {
+            //create User_buy_credit record
+            $newUserBuyCredit = new UserBuyCredit();
+            $newUserBuyCredit->user_id = Yii::app()->user->id;
+            $newUserBuyCredit->amount = $credit;
+            $newUserBuyCredit->currency = "Euro";
+            $newUserBuyCredit->status = "NEW";
+            if($newUserBuyCredit->save()){
+                Yii::import('application.vendor.*');
+                require_once('mps/PgConsTriv.php');
+                $secCode = sha1(Yii::app()->params['hashString'].$newUserBuyCredit->id.'-'.$newUserBuyCredit->user_id);
+                // init PgConsTriv Class
+                $pg = new PgConsTriv();
+                $pg->setAction('Purchase');
+                $pg->setSecurityCode_PI( $secCode );
+                $pg->sendVal_PI($credit, $newUserBuyCredit->id);
+                
+                // Verifico esito del PaymentInit
+                if( $pg->hasError_PI() )
+                {
+                    // SEGNALAZIONE ERRORE!
+                    $newUserBuyCredit->error_msg = $pg->getError_PI();
+                    $newUserBuyCredit->save();
+                    return array("res"=>false,"msg"=>$pg->getError_PI());
+                    //$this->redirect(array('users/myProfile#tabProfile2'));
+                } else {
+                    // Registro il PaymentID nel database e invio l'utente alla HPP del Gateway
+                    $newUserBuyCredit->mps_payment_id = $pg->getID_PI();
+                    if($newUserBuyCredit->save()){
+                        return array("res"=>true,"msg"=>$pg->getPaymentURL_PI());
+                    } else {
+                        return array("res"=>false,"msg"=>Yii::t('wonlot','Errore nel salvataggio dell\'ID transazione'));
+                    }
+                }
+            }
+            
+
             //TODO: manage PAYPAL!!!!
-            $dbTransaction=$user->dbConnection->beginTransaction();
+            /*$dbTransaction=$user->dbConnection->beginTransaction();
             $user->available_balance_amount+=$credit;
             if($user->save()){
                 if(UserTransactions::model()->addBuyCreditTrans($credit)){
@@ -817,6 +951,6 @@ class UsersController extends Controller
                 }
             } else {
                 $dbTransaction->rollback();
-            }
+            }*/
         }
 }

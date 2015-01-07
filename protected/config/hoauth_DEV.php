@@ -12,8 +12,11 @@
 // ----------------------------------------------------------------------------------------
 return 
 	array(
-//		"base_url" => Yii::app()->getBaseUrl(true)."/index.php/site/oauth", 
-//		"base_url" => "http://test.wonlot.com/index.php/site/oauth", 
+                "base_url" => Yii::app()->getBaseUrl(true)."/index.php/site/oauth", 
+		"action_url" => array(
+                    'oauth' => Yii::app()->getBaseUrl(true)."/index.php/site/oauth", 
+                    'oauthshare' => Yii::app()->getBaseUrl(true)."/index.php/site/oauthshare", 
+                ),
 
 		"providers" => array ( 
 			// openid providers

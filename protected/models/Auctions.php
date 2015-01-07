@@ -283,6 +283,14 @@ class Auctions extends PActiveRecord
             if(isset($type['prize_desc'])){
                 $criteria->addCondition('t.prize_desc like "%' .$type['name'].'%"');
             }
+            if(isset($type['onlyCompany'])){
+                $criteria->with = array('owner');
+                $criteria->addCondition('owner.user_type_id = '.Yii::app()->user->userTypes['company']);
+            } 
+            if(isset($type['onlyPrivate'])){
+                $criteria->with = array('owner');
+                $criteria->addCondition('owner.user_type_id = '.Yii::app()->user->userTypes['user']);
+            }
             if(isset($type['favorite'])){
                 $myFavLot = CHtml::listData(FavoriteLottery::model()->findAll('t.user_id ='.Yii::app()->user->id.' AND t.active=1'), 'lottery_id', 'lottery_id');
                 if(!empty($myFavLot)){
@@ -304,7 +312,7 @@ class Auctions extends PActiveRecord
             if(isset($type['geo'])){
                 $unit = 6371;   
                 $criteria->select = '* ,( '.$unit.' * acos( cos( radians('.$type['geo']['lat'].' )) * cos( radians( location.addressLat ) ) * cos( radians( location.addressLng ) - radians('.$type['geo']['lng'].') ) + sin( radians('.$type['geo']['lat'].') ) * sin( radians( location.addressLat ) ) ) ) AS distance';
-                $criteria->with = array('location');
+                $criteria->with = array_merge($criteria->with,array('location'));
                 $criteria->order='distance';
             }
             

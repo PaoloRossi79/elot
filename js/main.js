@@ -690,4 +690,22 @@ $(window).bind("load", function() {
        $("#giftCreditFooter").addClass("redBox");
    });
    
+   $('.onlyOne').on('change',function(event){
+       var newStatus;
+       if($(this).attr('checked')){
+           newStatus = 'checked';
+       } else {
+           newStatus = false;
+       }
+       $('.onlyOne').attr('checked',false);
+       $(this).attr('checked',newStatus);
+   });
+   
+   $.goBank = function(){
+        setTimeout(function(){
+            //$("#goBank").click();  
+            window.location.href = $('#goBank').attr('href');
+        },1000);
+   };
+   
 });

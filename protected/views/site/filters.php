@@ -30,34 +30,18 @@
         <div class="form-block">
             <?php echo $form->textField($model, 'searchText', array('class' => 'input-medium','prepend' => '<i class="icon-search"></i>', 'label' => false, 'placeholder' => "Search...")); ?>
         </div>
-        <div class="form-block">
-            <?php if(!$model->mine){?>
+        <?php if(!$model->mine){?>
+            <div class="form-block">
                 <?php echo $form->labelEx($model,'favorite');?>
-                <?php echo $form->checkBox($model,'favorite',array('label'=>Yii::t('wonlot','Lotterie Preferite'))); ?>
-                <?php echo $form->labelEx($model,'userGuaranted');?>
-                <?php echo $form->checkBox($model,'userGuaranted',array('label'=>Yii::t('wonlot','Venditori Grantiti'))); ?>
-                <!--commentato per togliere il filtro sul giudizio venditore-->
-                <?php // echo $form->labelEx($model,'userMinRating');?>
-                <?php // echo $form->textField($model,'userMinRating',array('id'=>'userMinRating','disabled'=>'disabled'));?>
-                <?php
-                /*$this->widget('zii.widgets.jui.CJuiSliderInput',array(
-                    'name'=>'userMinRating',
-                    'value'=>0,
-                    'model'=>$model,
-                    // additional javascript options for the slider plugin
-                    'options'=>array(
-                        'min'=>0,
-                        'max'=>100,
-                        'animate'=>true,
-                        'step'=>1,
-                    ),
-                    'htmlOptions'=>array(
-                        'class'=>'input-medium'
-                    ),
-                ));*/
-                ?>
-            <?php }?>
-        </div>
+                <?php echo $form->checkBox($model,'favorite'); ?>
+            </div>
+            <div class="form-block">
+                <?php echo $form->labelEx($model,'onlyCompany');?>
+                <?php echo $form->checkBox($model,'onlyCompany',array('class'=>'onlyOne')); ?>
+                <?php echo $form->labelEx($model,'onlyPrivate');?>
+                <?php echo $form->checkBox($model,'onlyPrivate',array('class'=>'onlyOne')); ?>
+            </div>
+        <?php }?>
         <?php foreach($model->lists as $title=>$items){ ?>
             <div class="panel panel-default bootstrap-widget-table">
                 <div class="panel-heading">

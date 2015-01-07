@@ -1,6 +1,4 @@
 <?php
-/* @var $this LotteryPaymentRequestController */
-/* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
 	'Lottery Payment Requests',

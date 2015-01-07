@@ -1,6 +1,17 @@
 <div class='well col-md-12 gift-credit-box'>
     <?php echo $this->renderPartial('_creditActionPanel', array('model'=>$model),true); ?>
 </div>
+<?php if($this->confirmMsg){ ?>
+    <?php if($this->confirmMsg["res"]){ ?>
+        <div class='well col-md-12 gift-credit-box alert-success'>
+            Operazione eseguita...a breve ti arrivano i money
+        </div>
+    <?php } else { ?>
+        <div class='well col-md-12 gift-credit-box alert-success'>
+            Operazione fallita...no money!
+        </div>
+    <?php }  ?>
+<?php } ?>
 <div class='well col-md-12'>
     <?php 
     echo CHtml::ajaxButton ("Mostra transazioni",

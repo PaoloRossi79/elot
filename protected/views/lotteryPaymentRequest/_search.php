@@ -1,8 +1,3 @@
-<?php
-/* @var $this LotteryPaymentRequestController */
-/* @var $model LotteryPaymentRequest */
-/* @var $form CActiveForm */
-?>
 
 <div class="wide form">
 

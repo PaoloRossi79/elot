@@ -1,6 +1,3 @@
-<?php
-/* @var $this LotteryPaymentRequestController */
-/* @var $model LotteryPaymentRequest */
 
 $this->breadcrumbs=array(
 	'Lottery Payment Requests'=>array('index'),

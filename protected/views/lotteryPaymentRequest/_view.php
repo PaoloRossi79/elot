@@ -1,7 +1,3 @@
-<?php
-/* @var $this LotteryPaymentRequestController */
-/* @var $data LotteryPaymentRequest */
-?>
 
 <div class="view">
 

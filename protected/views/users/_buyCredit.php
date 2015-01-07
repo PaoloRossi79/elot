@@ -1,15 +1,6 @@
 <div class="modal fade" id="buy-credit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-    <?php 
-        $creditForm = $this->beginWidget(
-            'CActiveForm',
-            array(
-                'id' => 'userWallet-form',
-                'action'=>CController::createUrl('users/buyCredit'),
-                'htmlOptions' => array('enctype' => 'multipart/form-data'), // for inset effect
-            )
-        );
-    ?>
+    
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -19,30 +10,20 @@
           </h4>
         </div>
         <div class="modal-body">
-
-          <?php echo $creditForm->errorSummary($model); ?>
-            <div class="row">
-                <div class="col-md-6">
-                    <h4><?php echo Yii::t('wonlot','Scegli un importo'); ?></h4>
-                    <?php 
-                    $opt=array('template'=>'{input} {beginLabel}{labelTitle} euro{endLabel}');
-                    echo $creditForm->radioButtonList($model, "creditOption", Yii::app()->params['buyCreditOptions'], $opt); 
-                    ?>
-                </div>
-                <div class="col-md-6">
-                    <h4><?php echo Yii::t('wonlot','Altro importo'); ?></h4>
-                    <div><b><em><?php echo Yii::t('wonlot','La quantità minima di Wmoney acquistabile è pari a 7€.'); ?></em></b></div>
-                    <div>
-                        <div><?php echo $creditForm->textField($model, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da acquistare...'))); ?> €</div>
-                    </div>
-                </div>
+            <div id="buy-modal-form">
+                <?php $this->renderPartial('_buyCreditForm',array('model'=>$model));?>
             </div>
         </div>
         <div class="modal-footer">
-            <?php echo CHtml::submitButton(Yii::t('wonlot','Acquista credito'),array('class'=>'btn btn-success')); ?>
+            <?php echo CHtml::ajaxButton ("Acquista credito",
+                CController::createUrl('users/buyCredit'), 
+                array('update' => '#buy-modal-form',
+                        'type' => 'POST', 
+                        'data'=>'js:$("#userWallet-form").serialize()',
+                ),array('class'=>'btn btn-success','id'=>'okConfirmBuyCreditButton')); ?>
             <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo Yii::t('wonlot','Chiudi'); ?></button>
         </div>
       </div>
     </div>
-    <?php $this->endWidget(); ?>     
+    
 </div>

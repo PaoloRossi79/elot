@@ -37,11 +37,7 @@ class UserBuyCredit extends PActiveRecord
 		// will receive user inputs.
 		return array(
 			array('user_id, amount', 'required'),
-			
-			array('created, modified', 'safe'),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, amount, mps_payment_id, status, currency, created, modified, last_modified_by', 'safe', 'on'=>'search'),
+			array('id, user_id, amount, mps_payment_id, status, currency, error_msg, created, modified, last_modified_by', 'safe'),
 		);
 	}
 

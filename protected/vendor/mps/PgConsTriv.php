@@ -340,6 +340,8 @@
 //			curl_setopt($handle, CURLOPT_CAINFO, _PATH_ROOT_SISTEMA . "\include\curl-ca-bundle.crt");
 			curl_setopt($handle, CURLOPT_POST, true);
 			curl_setopt($handle, CURLOPT_POSTFIELDS, $this->get_UrlEncodedFromArray($arVal));
+                        Yii::log("SendPost","warning");
+                        Yii::log("URL POST=".$this->get_UrlEncodedFromArray($arVal),"warning");
 			$buffer = curl_exec($handle);
 
 			if($buffer === false)

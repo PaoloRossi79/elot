@@ -65,6 +65,10 @@ class UserProfiles extends PActiveRecord
 			'first_name' => Yii::t('wonlot','Nome'),
 			'last_name' => Yii::t('wonlot','Cognome'),
 			'address' => Yii::t('wonlot','Indirizzo'),
+			'gender' => Yii::t('wonlot','Genere'),
+			'description' => Yii::t('wonlot','Descrizione personale'),
+			'cod_fisc' => Yii::t('wonlot','Codice Fiscale'),
+			'birthday' => Yii::t('wonlot','Data di nascita'),
 		);
 	}
 

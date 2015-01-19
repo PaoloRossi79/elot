@@ -38,6 +38,8 @@ class SearchForm extends CFormModel
 	public $userMinRating;
         public $onlyPrivate;
 	public $onlyCompany;
+        public $onlyNew;
+	public $onlyUsed;
         
         public $name;
         public $prize_desc;
@@ -77,6 +79,8 @@ class SearchForm extends CFormModel
 			'userGuaranted'=>Yii::t('wonlot','Venditore garantito'),
                         'onlyPrivate'=>Yii::t('wonlot','Solo privati'),
 			'onlyCompany'=>Yii::t('wonlot','Solo aziende'),
+                        'onlyNew'=>Yii::t('wonlot','Solo nuovo'),
+			'onlyUsed'=>Yii::t('wonlot','Solo usato'),
 			//''=>Yii::t('wonlot',''),
 		);
 	}

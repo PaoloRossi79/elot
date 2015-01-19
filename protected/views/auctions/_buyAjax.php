@@ -67,11 +67,11 @@
                     </div>
                     <div class="panel-body">
                         <dl class="dl-horizontal">
-                            <dt><?php echo Yii::t('wonlot','Biglietti acquistati'); ?></dt>
+                            <dt><?php echo Yii::t('wonlot','WTICKETS acquistati'); ?></dt>
                             <dd><b><?php echo count($this->ticketTotals); ?></b></dd>
                         </dl>
                         <dl class="dl-horizontal">
-                            <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                            <dt><?php echo Yii::t('wonlot','WCREDITS totali'); ?></dt>
                             <dd><b><?php echo $this->actualWeight; ?></b></dd>
                         </dl>
                     </div>
@@ -95,7 +95,7 @@
                         </dl>
                         <dl class="dl-horizontal">
                             <input class="winningValHidden" type="hidden" value="<?php echo $data->winning_sum; ?>">
-                            <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                            <dt><?php echo Yii::t('wonlot','WCREDITS totali'); ?></dt>
                             <dd><b class="winningVal"><?php echo $data->winning_sum; ?></b></dd>
                         </dl>
                     </div>

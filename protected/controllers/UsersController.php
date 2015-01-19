@@ -58,19 +58,21 @@ class UsersController extends Controller
 	}
         
         protected function beforeAction(CAction $action){
-            if($action->id != "confirmBuyCredit" && $action->id != "actionConfirmBuyCredit"){
-                $model = Users::model()->getMyProfile();
-                Yii::import("xupload.models.XUploadForm");
-                $this->upForm = new XUploadForm;
-                $this->locationForm=new Locations;
-                $this->subscriptionForm = new SubscriptionForm;
-                $this->tickets = Tickets::model()->getMyTickets(array());
-                $this->userWithdraw = new UserWithdraw;
-                if($model->id){
-                    $existLoc=Locations::model()->findByPk($model->location_id);
-                    if($existLoc)
-                        $this->locationForm=$existLoc;
-                } 
+            if(!Yii::app()->user->isGuest()){
+                if($action->id != "confirmBuyCredit" && $action->id != "actionConfirmBuyCredit"){
+                    $model = Users::model()->getMyProfile();
+                    Yii::import("xupload.models.XUploadForm");
+                    $this->upForm = new XUploadForm;
+                    $this->locationForm=new Locations;
+                    $this->subscriptionForm = new SubscriptionForm;
+                    $this->tickets = Tickets::model()->getMyTickets(array());
+                    $this->userWithdraw = new UserWithdraw;
+                    if($model->id){
+                        $existLoc=Locations::model()->findByPk($model->location_id);
+                        if($existLoc)
+                            $this->locationForm=$existLoc;
+                    } 
+                }
             }
             return parent::beforeAction($action);
         }
@@ -406,14 +408,18 @@ class UsersController extends Controller
                 if(isset($withdraw['creditValue'])){
                     $withdrawVal = (float) $withdraw['creditValue'];
                     if($withdrawVal && $withdrawVal > 0){
-                        if($withdrawVal >= 7){
+                        //if($withdrawVal >= 7){
                             $withdrawValWithCommission = $withdrawVal + ($withdrawVal / 100) * 1;
+                            $withdrawValWithoutCommission = $withdrawVal - ($withdrawVal / 100) * 1;
                             $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.$user->id);
                             if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
-                                if($withdrawValWithCommission <= Yii::app()->user->walletValue){
+                                //if($withdrawValWithCommission <= Yii::app()->user->walletValue){
+                                if($withdrawVal <= Yii::app()->user->walletValue){
                                     $drawReq = new UserWithdraw;
                                     $drawReq->user_id = $user->id;
-                                    $drawReq->value = $withdrawValWithCommission;
+                                    //$drawReq->value = $withdrawValWithCommission;
+                                    $drawReq->value = $withdrawVal;
+                                    $drawReq->net_value = $withdrawValWithoutCommission;
                                     $drawReq->status = 1;
 
                                     $dbTransaction=$user->dbConnection->beginTransaction();
@@ -440,9 +446,9 @@ class UsersController extends Controller
                             } else {
                                 $resError = Yii::t('wonlot','Dati di pagamento mancanti');
                             }
-                        } else {
+                        /*} else {
                             $resError = Yii::t('wonlot','L\'importo minimo da ritirare è 7 €');
-                        }
+                        }*/
                     } else {
                         $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                     }
@@ -693,11 +699,10 @@ class UsersController extends Controller
         public function actionOkBuyCredit(){
             $model = Users::model()->getMyProfile();
             $this->confirmMsg = array("res"=>true);
-            $this->render('_creditPanel',
-                array(
-                    'model'=>$model,
-                )
-            );
+            $this->redirect(array(
+                'users/myProfile',
+                ''=>'#tabProfile2'
+            ));
         }
         
         public function actionKoBuyCredit(){

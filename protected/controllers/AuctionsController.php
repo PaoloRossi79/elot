@@ -975,6 +975,12 @@ class AuctionsController extends Controller
             if($_POST['SearchForm']['onlyPrivate']){
                 $filter["onlyPrivate"]=$_POST['SearchForm']['onlyPrivate'];
             }
+            if($_POST['SearchForm']['onlyNew']){
+                $filter["onlyNew"]=$_POST['SearchForm']['onlyNew'];
+            }
+            if($_POST['SearchForm']['onlyUsed']){
+                $filter["onlyUsed"]=$_POST['SearchForm']['onlyUsed'];
+            }
             if($my)
                 $filter["my"]="true";
             

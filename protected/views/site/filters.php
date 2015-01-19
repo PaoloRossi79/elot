@@ -41,6 +41,12 @@
                 <?php echo $form->labelEx($model,'onlyPrivate');?>
                 <?php echo $form->checkBox($model,'onlyPrivate',array('class'=>'onlyOne')); ?>
             </div>
+            <div class="form-block">
+                <?php echo $form->labelEx($model,'onlyNew');?>
+                <?php echo $form->checkBox($model,'onlyNew',array('class'=>'onlyOne')); ?>
+                <?php echo $form->labelEx($model,'onlyUsed');?>
+                <?php echo $form->checkBox($model,'onlyUsed',array('class'=>'onlyOne')); ?>
+            </div>
         <?php }?>
         <?php foreach($model->lists as $title=>$items){ ?>
             <div class="panel panel-default bootstrap-widget-table">

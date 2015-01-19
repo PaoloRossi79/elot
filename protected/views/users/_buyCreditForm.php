@@ -1,15 +1,14 @@
 <?php 
     if($location){
         //header("Location: " . $location );
-        echo "<div class='btn btn-success'>";
-        echo CHtml::link("Procedi al pagamento", $location, array('id'=>'goBank'));
-        echo "</div>";
+        echo CHtml::link("Procedi al pagamento", $location, array('id'=>'goBank', 'class'=>'hidden'));
     ?>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $.goBank();
-        });
-    </script>
+        <h4><?php echo Yii::t("wonlot","Stai per accedere alla pagina di pagamento bancario ... "); ?></h4>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.goBank();
+            });
+        </script>
     <?php
     } else {
         $creditForm = $this->beginWidget(

@@ -291,6 +291,12 @@ class Auctions extends PActiveRecord
                 $criteria->with = array('owner');
                 $criteria->addCondition('owner.user_type_id = '.Yii::app()->user->userTypes['user']);
             }
+            if(isset($type['onlyNew'])){
+                $criteria->addCondition('t.prize_conditions = '.array_search('Nuovo', Yii::app()->params['prizeConditionsId']));
+            }
+            if(isset($type['onlyUsed'])){
+                $criteria->addCondition('t.prize_conditions = '.array_search('Usato', Yii::app()->params['prizeConditionsId']));
+            }
             if(isset($type['favorite'])){
                 $myFavLot = CHtml::listData(FavoriteLottery::model()->findAll('t.user_id ='.Yii::app()->user->id.' AND t.active=1'), 'lottery_id', 'lottery_id');
                 if(!empty($myFavLot)){

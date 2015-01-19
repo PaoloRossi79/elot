@@ -4,11 +4,11 @@
 <?php if($this->confirmMsg){ ?>
     <?php if($this->confirmMsg["res"]){ ?>
         <div class='well col-md-12 gift-credit-box alert-success'>
-            Operazione eseguita...a breve ti arrivano i money
+            Operazione eseguita, a breve il credito verrà accreditato
         </div>
     <?php } else { ?>
         <div class='well col-md-12 gift-credit-box alert-success'>
-            Operazione fallita...no money!
+            Operazione fallita, riprovare o contattare il supporto a: <a href="mailto:help@wonlot.com">help@wonlot.com</a>
         </div>
     <?php }  ?>
 <?php } ?>

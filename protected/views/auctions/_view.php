@@ -203,11 +203,11 @@
                     <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
                         <!--<button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal" onclick="js:$.updateLotteryModal('buy',<?php echo $model->id; ?>);">-->
                         <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
-                            <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
+                            <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Acquista WTICKET'); ?></em>
                         </button>
                         <!--<button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal"  onclick="js:$.updateLotteryModal('gift',<?php echo $model->id; ?>);">-->
                         <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
-                            <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
+                            <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala WTICKET'); ?></em>
                         </button>
                     <?php } else { ?>
                         <p>L' Asta non è aperta, non è possibile acquistare biglietti</p>

@@ -28,9 +28,9 @@
         <div class="col-md-12">
             <div>
                 <?php echo $formDraw->textField($withdraw, 'creditValue', array('class' => 'span3','size'=>45,'maxlength'=>45,'placeholder'=>Yii::t('wonlot','Importo da ritirare...'))); ?> €
-                <small id="valueWithCommissionBlock"> <em>(<?php echo Yii::t('wonlot','con commissione Wonlot:'); ?>  <strong><span id="valueWithCommission" class=""></span></strong>  <?php echo Yii::t('wonlot','WlMoney'); ?>)</em></small>
+                <small id="valueWithCommissionBlock"> <em>(<?php echo Yii::t('wonlot','al netto della commissione Wonlot:'); ?>  <strong><span id="valueWithoutCommission" class=""></span></strong>  <?php echo Yii::t('wonlot','WlMoney'); ?>)</em></small>
             </div>
-            <small><em>(<?php echo Yii::t('wonlot','Importo massimo:').' '.($userCredit - ($userCredit / 100)).' '.Yii::t('wonlot','€'); ?>)</em></small>
+            <small><em>(<?php echo Yii::t('wonlot','Importo massimo:').' '.($userCredit).' '.Yii::t('wonlot','€'); ?>)</em></small>
             <br/>
             <small><em><?php echo Yii::t('wonlot','Come da condizioni generali, la commissione Wonlot sul prelievo è dell\'  ') . "<strong>1 %</strong>"; ?></em></small>
             

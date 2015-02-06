@@ -759,6 +759,7 @@ class UsersController extends Controller
                                 if($user->save()){
                                     Yii::log("MPS 6", "warning");
                                     if(UserTransactions::model()->addBuyCreditTrans($creditRecord->amount,$creditRecord->user_id)){
+                                        //Users::model()->addPromotionForBuy($creditRecord->amount,$creditRecord->user_id);
                                         Yii::log("MPS 7", "warning");
                                         $dbTransaction->commit();
                                     } else {

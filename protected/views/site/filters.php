@@ -18,7 +18,7 @@
         <?php foreach($cat as $k=>$item){ ?>
             <div class="panel panel-default bootstrap-widget-table">
                 <div class="panel-heading">
-                  <h3 class="panel-title"><?php echo Yii::t('wonlot','Categories');?></h3>
+                  <h3 class="panel-title"><?php echo Yii::t('wonlot','Categorie');?></h3>
                 </div>
                 <div class="panel-body">
                     <?php echo "<p>".CHtml::link($item, Yii::app()->createUrl('auctions/index/'.$item), array('label' => false))."</p>";?>

@@ -133,7 +133,11 @@
                     </p>
                     <div class="box-panel-win panel panel-warning">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                            <?php if($model->status >= Yii::app()->params['lotteryStatusConst']['closed']){ ?>
+                                <h3 class="panel-title"><?php echo Yii::t('wonlot','Vincitore'); ?></h3>
+                            <?php } else { ?>
+                                <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                            <?php } ?>
                         </div>
                         <div class="panel-body">
                             <dl class="dl-horizontal">
@@ -174,7 +178,11 @@
         <div class="col-md-4">
             <div class="box-panel-win panel panel-warning">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                    <?php if($model->status >= Yii::app()->params['lotteryStatusConst']['closed']){ ?>
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Vincitore'); ?></h3>
+                    <?php } else { ?>
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                    <?php } ?>
                 </div>
                 <div class="panel-body winner-panel winningBox">
                     <dl class="dl-horizontal">

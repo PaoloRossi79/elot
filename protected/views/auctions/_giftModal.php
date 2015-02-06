@@ -31,15 +31,17 @@
             <?php } ?>
       </div>
       <div class="modal-footer">
-          <?php echo CHtml::ajaxButton ("Regala!",
-            CController::createUrl('auctions/giftTicket'), 
-            array(
-              'update' => '#gift-main',
-              'type' => 'POST', 
-              'data'=>'js:$("#giftLotteryForm").serialize()',
-            ),
-            array('name'=>'giftBtn', 'class'=>'btn btn-primary', 'disabled'=>($checkBuy ? '' : 'disabled'))
-            ); ?>
+          <?php if($checkBuy >= 0){ ?>
+                <?php echo CHtml::ajaxButton ("Regala!",
+                  CController::createUrl('auctions/giftTicket'), 
+                  array(
+                    'update' => '#gift-main',
+                    'type' => 'POST', 
+                    'data'=>'js:$("#giftLotteryForm").serialize()',
+                  ),
+                  array('name'=>'giftBtn', 'class'=>'btn btn-primary', 'disabled'=>($checkBuy ? '' : 'disabled'))
+                  ); ?>
+          <?php } ?>
           <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo Yii::t('wonlot','Chiudi'); ?></button>
       </div>
     </div>

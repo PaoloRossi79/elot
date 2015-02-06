@@ -1,7 +1,7 @@
 <?php
 
 $db = array(
-        'connectionString' => 'mysql:host=localhost;dbname=wonlot',
+        'connectionString' => 'mysql:host=localhost;dbname=elot',
         'emulatePrepare' => true,
         'username' => 'root',
         'password' => 'localdb',

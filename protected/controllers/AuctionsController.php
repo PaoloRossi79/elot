@@ -75,6 +75,7 @@ class AuctionsController extends Controller
 	public function actionView($id)
 	{
 //                $this->layout="//layouts/allpage";
+                $this->layout='//layouts/column1';
                 if(!Yii::app()->user->isGuest){
 //                    $this->ticketTotals=Tickets::model()->getMyTicketsNumberByLottery($id);
                     $this->ticketTotals=Tickets::model()->getMyTicketsByLottery($id);
@@ -923,7 +924,7 @@ class AuctionsController extends Controller
                     }
                 }
             }
-            if(!empty($_POST['SearchForm']['searchStartDate'])){
+            /*if(!empty($_POST['SearchForm']['searchStartDate'])){
                 $filter["minDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['searchStartDate']);
             }
             if(!empty($_POST['SearchForm']['searchEndDate'])){
@@ -934,6 +935,18 @@ class AuctionsController extends Controller
             }
             if(!empty($_POST['SearchForm']['lottery_draw_date'])){
                 $filter["endDate"]=Yii::app()->dateFormatter->format('dd-MM-yyyy',$_POST['SearchForm']['lottery_draw_date']);
+            }*/
+            if(!empty($_POST['SearchForm']['searchStartDate'])){
+                $filter["minDate"]=Yii::app()->dateFormatter->format('yyyy-MM-dd',$_POST['SearchForm']['searchStartDate']);
+            }
+            if(!empty($_POST['SearchForm']['searchEndDate'])){
+                $filter["maxDate"]=Yii::app()->dateFormatter->format('yyyy-MM-dd',$_POST['SearchForm']['searchEndDate']);
+            }
+            if(!empty($_POST['SearchForm']['lottery_start_date'])){
+                $filter["startDate"]=Yii::app()->dateFormatter->format('yyyy-MM-dd',$_POST['SearchForm']['lottery_start_date']);
+            }
+            if(!empty($_POST['SearchForm']['lottery_draw_date'])){
+                $filter["endDate"]=Yii::app()->dateFormatter->format('yyyy-MM-dd',$_POST['SearchForm']['lottery_draw_date']);
             }
             if(!empty($_POST['SearchForm']['minTicketPriceRange'])){
                 $filter["minTicketPriceRange"]=$_POST['SearchForm']['minTicketPriceRange'];

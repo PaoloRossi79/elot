@@ -101,6 +101,7 @@ echo $h1; ?>
                                 . "alert(data);"
                                 . "if(data != 1){"
                                 . "$('#void-alert-strong').text(data);"
+                                . "$('#void-alert-strong').css('font-size','x-large');"
                                 . "$('.void-alert').removeClass('alert-success');"
                                 . "$('.void-alert').addClass('alert-error');"
                                 . "$('.void-alert').fadeIn();"

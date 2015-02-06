@@ -116,6 +116,7 @@ $this->pageTitle=Yii::app()->name . ' - Register';
                     <div class="row buttons">
                         <div class="form-group">
                             <?php echo CHtml::submitButton('Register',array("class"=>"btn btn-primary btn-large")); ?>
+                            <div class="text-danger"><?php echo Yii::t("wonlot"," ATTENZIONE! Per attivare l’account dovete confermare l’iscrizione cliccando su CONFERMA ISCRIZIONE nella mail che riceverete."); ?></div>
                         </div>
                     </div>
 

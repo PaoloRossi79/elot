@@ -108,7 +108,7 @@
                                 <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/loading-dots.gif", "Loading"); ?>
                             </td></tr></table>
                         </div>
-                        <?php $this->renderPartial('/auctions/_friendList',array('form'=>$form,'formModel'=>$formModel,'social'=>$social)); ?>
+                        <?php $this->renderPartial('/auctions/_friendList',array('form'=>$form,'formModel'=>$formModel,'social'=>$social, 'auction'=>$data)); ?>
                     </div>
                 </div>
                 <script>

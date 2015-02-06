@@ -56,7 +56,8 @@ class Auctions extends PActiveRecord
 		return array(
 			array('name, lottery_type, prize_desc, prize_category, ticket_value, lottery_start_date, lottery_draw_date, prize_conditions', 'required'),
 			array('lottery_type, prize_category, min_ticket, max_ticket, last_modified_by', 'numerical', 'integerOnly'=>true),
-			array('ticket_value, prize_price', 'numerical'),
+			//array('ticket_value, prize_price', 'numerical','min'=>0.01,'tooSmall'=>'Il valore deve essere almeno di 0.02'),
+                        array('ticket_value, prize_price', 'numerical'),
 			array('name, prize_condition_text', 'length', 'max'=>45),
 			array('prize_shipping', 'length', 'max'=>155),
 			// The following rule is used by search().

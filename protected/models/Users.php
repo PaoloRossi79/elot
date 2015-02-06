@@ -249,6 +249,17 @@ class Users extends PActiveRecord
             return $ticketRes;
         }
         
+        public function addPromotionForBuy($amount, $userId = null){
+            if(!$userId){
+                $userId = Yii::app()->user->id;
+            }
+            if($userId){
+               $offer = new UserSpecialOffers();
+               $offer->offer_on = Yii::app()->params['specialOffersCode']['ticket-buy'];
+               
+            }
+        }
+        
         public function getConfirmLink($user){
             return Yii::app()->createAbsoluteUrl('users/confirmEmail',array('email'=>$user->email,'id'=>$user->id));
         }

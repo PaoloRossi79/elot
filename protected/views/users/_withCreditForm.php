@@ -13,6 +13,9 @@
     ?>
 
     <?php if($resOk){ ?>
+        <script>
+            setTimeout(function(){ location.reload(); }, 3000);
+        </script>
         <div id="alert-box" class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong id="alert-strong"></strong><span id="alert-msg"><?php echo $resOk;?></span>

@@ -58,14 +58,14 @@ class SubscriptionForm extends CFormModel
                 );
                 $this->catSelections = array();
                 $this->othSelections = array();
-                /*$newsletters = Subscriptions::model()->findAll('user_id = '.Yii::app()->user->id);
+                $newsletters = Subscriptions::model()->findAll('user_id = '.Yii::app()->user->id);
                 foreach($newsletters as $k => $news) {
                     if($news->nl_type == "cat"){
                         $this->catSelections[] = $news->nl_type_id;
                     } elseif($news->nl_type == "oth"){
                         $this->othSelections[] = $news->nl_type_id;
                     }
-                }*/
+                }
                 parent::__construct($scenario);
 	}
 }

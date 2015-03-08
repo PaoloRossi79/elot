@@ -36,14 +36,14 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('ajaxCheckUsername','confirmEmail','getNumUnreadNotifications','confirmBuyCredit'),
+				'actions'=>array('ajaxCheckUsername','confirmEmail','getNumUnreadNotifications'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
                                     'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
                                     'savePayInfo','requestWithdraw','acceptPolicy','payInfo','searchTicket',
-                                    'okBuyCredit','koBuyCredit','testPg'),
+                                    'okBuyCredit','koBuyCredit','confirmBuyCredit'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -58,26 +58,19 @@ class UsersController extends Controller
 	}
         
         protected function beforeAction(CAction $action){
-            if($action->id != "confirmBuyCredit" && $action->id != "actionConfirmBuyCredit"){
-                $model = Users::model()->getMyProfile();
-                Yii::import("xupload.models.XUploadForm");
-                $this->upForm = new XUploadForm;
-                $this->locationForm=new Locations;
-                $this->subscriptionForm = new SubscriptionForm;
-                $this->tickets = Tickets::model()->getMyTickets(array());
-                $this->userWithdraw = new UserWithdraw;
-                if($model->id){
-                    $existLoc=Locations::model()->findByPk($model->location_id);
-                    if($existLoc)
-                        $this->locationForm=$existLoc;
-                } 
-            }
+            $model = Users::model()->getMyProfile();
+            Yii::import("xupload.models.XUploadForm");
+            $this->upForm = new XUploadForm;
+            $this->locationForm=new Locations;
+            $this->subscriptionForm = new SubscriptionForm;
+            $this->tickets = Tickets::model()->getMyTickets(array());
+            $this->userWithdraw = new UserWithdraw;
+            if($model->id){
+                $existLoc=Locations::model()->findByPk($model->location_id);
+                if($existLoc)
+                    $this->locationForm=$existLoc;
+            } 
             return parent::beforeAction($action);
-        }
-        
-        public function actionTestPg(){
-            $this->render("testPg");
-            
         }
         
         public function actionConfirmEmail()
@@ -691,8 +684,6 @@ class UsersController extends Controller
 	}
         
         public function actionOkBuyCredit(){
-            Yii::log("OkBuyCredit","warning");
-            Yii::log(print_r($_POST),"warning");
             $model = Users::model()->getMyProfile();
             $this->confirmMsg = array("res"=>true);
             $this->render('_creditPanel',
@@ -703,8 +694,6 @@ class UsersController extends Controller
         }
         
         public function actionKoBuyCredit(){
-            Yii::log("KoBuyCredit","warning");
-            Yii::log(print_r($_POST),"warning");
             $model = Users::model()->getMyProfile();
             $this->confirmMsg = array("res"=>false);
             $this->render('_creditPanel',
@@ -715,8 +704,6 @@ class UsersController extends Controller
         }
         
         public function actionConfirmBuyCredit(){
-            Yii::log("ConfirmBuyCredit","warning");
-            Yii::log(print_r($_POST),"warning");
             Yii::log("MPS-conf1", "warning");
             Yii::import('application.vendor.*');
             require_once('mps/PgConsTriv.php');
@@ -753,8 +740,6 @@ class UsersController extends Controller
                             Yii::log("MPS 8:".$Auth, "warning");
                             Yii::log("MPS 9:".$creditRecord->status, "warning");
                             $creditRecord->save();
-                            echo "REDIRECT=". $pg->getURL_NM();
-                            //echo "REDIRECT=". "www.wonlot.com/users/okBuyCredit";
                         }
                     }
                 }
@@ -930,13 +915,10 @@ class UsersController extends Controller
                 require_once('mps/PgConsTriv.php');
                 $secCode = sha1(Yii::app()->params['hashString'].$newUserBuyCredit->id.'-'.$newUserBuyCredit->user_id);
                 // init PgConsTriv Class
-                Yii::log("FinalizeBuyCredit","warning");
-                Yii::log("SecCode=".$secCode,"warning");
                 $pg = new PgConsTriv();
                 $pg->setAction('Purchase');
                 $pg->setSecurityCode_PI( $secCode );
                 $pg->sendVal_PI($credit, $newUserBuyCredit->id);
-                Yii::log("OpID=".$newUserBuyCredit->id,"warning");
                 
                 // Verifico esito del PaymentInit
                 if( $pg->hasError_PI() )
@@ -949,7 +931,6 @@ class UsersController extends Controller
                 } else {
                     // Registro il PaymentID nel database e invio l'utente alla HPP del Gateway
                     $newUserBuyCredit->mps_payment_id = $pg->getID_PI();
-                    Yii::log("MpsId=".$pg->getID_PI(),"warning");
                     if($newUserBuyCredit->save()){
                         return array("res"=>true,"msg"=>$pg->getPaymentURL_PI());
                     } else {

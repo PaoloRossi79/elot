@@ -1,8 +1,10 @@
 <?php
 
-/*$db = array(
-        'connectionString' => 'mysql:host=localhost;dbname=wonlot',
+$db = array(
+        'connectionString' => 'mysql:host=localhost;dbname=elot',
         'emulatePrepare' => true,
+        'username' => 'root',
+        'password' => 'localdb',
         'username' => 'elot',
         'password' => 'elotroot',
         'charset' => 'utf8',

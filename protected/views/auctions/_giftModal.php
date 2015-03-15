@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><?php echo Yii::t('wonlot','Regala Ticket'); ?><span id="gift-to-header"></span></h4>
+        <h4 class="modal-title" id="myModalLabel"><?php echo Yii::t('wonlot','Regala Wticket'); ?><span id="gift-to-header"></span></h4>
       </div>
       <div class="modal-body">
             <?php if($checkBuy === true){ ?>                    
@@ -31,15 +31,17 @@
             <?php } ?>
       </div>
       <div class="modal-footer">
-          <?php echo CHtml::ajaxButton ("Regala!",
-            CController::createUrl('auctions/giftTicket'), 
-            array(
-              'update' => '#gift-main',
-              'type' => 'POST', 
-              'data'=>'js:$("#giftLotteryForm").serialize()',
-            ),
-            array('name'=>'giftBtn', 'class'=>'btn btn-primary', 'disabled'=>($checkBuy ? '' : 'disabled'))
-            ); ?>
+          <?php if($checkBuy >= 0){ ?>
+                <?php echo CHtml::ajaxButton ("Regala!",
+                  CController::createUrl('auctions/giftTicket'), 
+                  array(
+                    'update' => '#gift-main',
+                    'type' => 'POST', 
+                    'data'=>'js:$("#giftLotteryForm").serialize()',
+                  ),
+                  array('name'=>'giftBtn', 'class'=>'btn btn-primary', 'disabled'=>($checkBuy ? '' : 'disabled'))
+                  ); ?>
+          <?php } ?>
           <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo Yii::t('wonlot','Chiudi'); ?></button>
       </div>
     </div>

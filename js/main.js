@@ -595,8 +595,9 @@ $(window).bind("load", function() {
    //$('#UserWithdraw_creditValue').change(function(event){
         var newVal = event.srcElement.value;
         if(newVal){
-            var commValue = parseInt(newVal) + (parseInt(newVal) / 100);
-            $('#valueWithCommission').text(commValue);
+            //var commValue = parseInt(newVal) + (parseInt(newVal) / 100);
+            var commValue = parseInt(newVal) - (parseInt(newVal) / 100);
+            $('#valueWithoutCommission').text(commValue);
             $('#valueWithCommissionBlock').show();
         } else {
             $('#valueWithCommissionBlock').hide();

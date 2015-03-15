@@ -53,26 +53,26 @@ class LoginForm extends CFormModel
                         $authRes = $this->_identity->authenticate();
                         switch ($this->_identity->errorCode) {
                             case UserIdentity::ERROR_EMAIL_INVALID:
-                                $this->addError('username','Incorrect email');
+                                $this->addError('username','Email non valida');
                                 break;
                             case UserIdentity::ERROR_USERNAME_INVALID:
-                                $this->addError('username','Incorrect username');
+                                $this->addError('username','Nome utente non valido');
                                 break;
                             case UserIdentity::ERROR_PASSWORD_INVALID:
-                                $this->addError('password','Incorrect password.');
+                                $this->addError('password','Password non valida');
                                 break;
                             case UserIdentity::ERROR_STATUS_NOTACTIV:
-                                $this->addError('username','User is not Active');
+                                $this->addError('username','L\'utente non è attivo');
                                 break;
                             case UserIdentity::ERROR_STATUS_EMAILCONFIRM:
-                                $this->addError('username','Email not confirmed');
+                                $this->addError('username','Email non confermata');
                                 break;
                             case UserIdentity::ERROR_STATUS_EXTUSERINVALID:
-                                $this->addError('username','Incorrect external user');
+                                $this->addError('username','Utente esterno non valido');
                                 break;
                             case UserIdentity::ERROR_WRONGSOURCE:
                                 $ext = array_search($this->_identity->extSource, Yii::app()->params['authExtSource']);
-                                $this->addError('username','Login with '.$ext);
+                                $this->addError('username','Login con '.$ext);
                                 break;
                             default:
                                 break;

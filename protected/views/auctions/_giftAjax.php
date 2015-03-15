@@ -53,7 +53,7 @@
                         </dl>
                         <dl class="dl-horizontal  col-md-6">
                             <input class="winningValHidden" type="hidden" value="<?php echo $data->winning_sum; ?>">
-                            <dt><?php echo Yii::t('wonlot','Punteggio'); ?></dt>
+                            <dt><?php echo Yii::t('wonlot','WCREDITS totali'); ?></dt>
                             <dd><b class="winningVal"><?php echo $data->winning_sum; ?></b></dd>
                         </dl>
                     </div>
@@ -108,7 +108,7 @@
                                 <?php echo CHtml::image(Yii::app()->baseUrl."/images/site/loading-dots.gif", "Loading"); ?>
                             </td></tr></table>
                         </div>
-                        <?php $this->renderPartial('/auctions/_friendList',array('form'=>$form,'formModel'=>$formModel,'social'=>$social)); ?>
+                        <?php $this->renderPartial('/auctions/_friendList',array('form'=>$form,'formModel'=>$formModel,'social'=>$social, 'auction'=>$data)); ?>
                     </div>
                 </div>
                 <script>
@@ -155,7 +155,7 @@
     // globals
     var baseTicketUrl = '<?php echo Yii::app()->createAbsoluteUrl('site/register'); ?>';
     var baseUrl = '<?php echo Yii::app()->createAbsoluteUrl(''); ?>';
-    var baseGiftMsg = '<?php echo Yii::t('wonlot','Ecco un Ticket in regalo per te su') . Yii::app()->name ."!"; ?>';
+    var baseGiftMsg = '<?php echo Yii::t('wonlot','Ecco un Wticket in regalo per te su') . Yii::app()->name ."!"; ?>';
     var noUserErrorMsg = '<?php echo Yii::t('wonlot','Nessun utente selezionato!'); ?>';
     (function() {
         var po = document.createElement('script');

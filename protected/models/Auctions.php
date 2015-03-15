@@ -56,7 +56,8 @@ class Auctions extends PActiveRecord
 		return array(
 			array('name, lottery_type, prize_desc, prize_category, ticket_value, lottery_start_date, lottery_draw_date, prize_conditions', 'required'),
 			array('lottery_type, prize_category, min_ticket, max_ticket, last_modified_by', 'numerical', 'integerOnly'=>true),
-			array('ticket_value, prize_price', 'numerical'),
+			//array('ticket_value, prize_price', 'numerical','min'=>0.01,'tooSmall'=>'Il valore deve essere almeno di 0.02'),
+                        array('ticket_value, prize_price', 'numerical'),
 			array('name, prize_condition_text', 'length', 'max'=>45),
 			array('prize_shipping', 'length', 'max'=>155),
 			// The following rule is used by search().
@@ -290,6 +291,12 @@ class Auctions extends PActiveRecord
             if(isset($type['onlyPrivate'])){
                 $criteria->with = array('owner');
                 $criteria->addCondition('owner.user_type_id = '.Yii::app()->user->userTypes['user']);
+            }
+            if(isset($type['onlyNew'])){
+                $criteria->addCondition('t.prize_conditions = '.array_search('Nuovo', Yii::app()->params['prizeConditionsId']));
+            }
+            if(isset($type['onlyUsed'])){
+                $criteria->addCondition('t.prize_conditions = '.array_search('Usato', Yii::app()->params['prizeConditionsId']));
             }
             if(isset($type['favorite'])){
                 $myFavLot = CHtml::listData(FavoriteLottery::model()->findAll('t.user_id ='.Yii::app()->user->id.' AND t.active=1'), 'lottery_id', 'lottery_id');

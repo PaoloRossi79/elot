@@ -17,17 +17,19 @@
             <?php if(count($user->followings) > 0){ ?>
                 <div class="">
                     <?php foreach($user->followings as $fl){ ?>
-                    <div class="user-small-ticket-box">
-                        <input type="hidden" name="id" value="<?php echo $fl->user->id; ?>">
-                        <input type="hidden" name="username" value="<?php echo $fl->user->username; ?>">
-                        <div class="user-small-vendor-container">
-                            <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
-                        </div>
-                        <div class="user-small-avatar-container">                        
-                            <?php // echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
-                            <?php echo Users::model()->getImageTag($fl->user); ?>
-                        </div>
-                    </div>
+                        <?php if($fl->user_id != $auction->owner_id){ ?>
+                            <div class="user-small-ticket-box">
+                                <input type="hidden" name="id" value="<?php echo $fl->user->id; ?>">
+                                <input type="hidden" name="username" value="<?php echo $fl->user->username; ?>">
+                                <div class="user-small-vendor-container">
+                                    <span class="small-username"><?php echo CHtml::encode($fl->user->username); ?></span>
+                                </div>
+                                <div class="user-small-avatar-container">                        
+                                    <?php // echo CHtml::image("/images/userProfiles/".$fl->user->id."/smallThumb/".$fl->user->profile->img, "User Avatar", array("class"=>"img-thumbnail user-small-thumb")); ?>
+                                    <?php echo Users::model()->getImageTag($fl->user); ?>
+                                </div>
+                            </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             <?php } ?>
@@ -36,7 +38,7 @@
             <?php if(count($user->followers) > 0){ ?>
                 <div class="">
                     <?php foreach($user->followers as $fw){ ?>
-                        <?php if($fw->follower){ ?>
+                        <?php if($fw->follower && $fw->follower_id != $auction->owner_id){ ?>
                             <div class="user-small-ticket-box">
                                 <input type="hidden" name="id" value="<?php echo $fw->follower->id; ?>">
                                 <input type="hidden" name="username" value="<?php echo $fw->follower->username; ?>">

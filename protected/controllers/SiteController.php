@@ -184,7 +184,12 @@ class SiteController extends Controller
                 if(!Yii::app()->user->isGuest()){
                     $this->redirect(Yii::app()->homeUrl);
                 }
-		$model=new RegisterForm;
+                if($_POST['RegisterForm']){
+                    $model=new RegisterForm;
+                    $model->attributes = $_POST['RegisterForm'];
+                } else {
+                    $model=new RegisterForm;
+                }
 
 		// if it is ajax validation request
 		if(isset($_POST['ajax']) && $_POST['ajax']==='register-form')
@@ -196,18 +201,28 @@ class SiteController extends Controller
 		// collect user input data
 		if(isset($_POST['RegisterForm']))
 		{
-                        // check if already registered
-                        $already = Users::model()->find('email = "'.$_POST['RegisterForm']['email'].'"');
-                        if($already){
-                            $model->addError('email', 'Email already registered. Try login.');
+                    
+                    // check if already registered
+                    $already = Users::model()->find('email = "'.$_POST['RegisterForm']['email'].'"');
+                    if($already){
+                        $model->addError('email', 'Email already registered. Try login.');
+                    } else {
+                        $model->attributes=$_POST['RegisterForm'];
+                        if(!$model->terms){
+                            $model->addError('terms', 'Devi accettare i Termini e Condizioni');
                         } else {
-                            $model->attributes=$_POST['RegisterForm'];
                             // validate user input and redirect to the previous page if valid
-                            if($model->validate() && $newUser = $model->register()){
-                                EmailManager::sendConfirmEmail($newUser);
-                                $this->redirect(Yii::app()->homeUrl);
+                            if($model->validate()){
+                                $newUser = $model->register();
+                                if(!$newUser->getErrors()){
+                                    EmailManager::sendConfirmEmail($newUser);
+                                    $this->redirect(Yii::app()->homeUrl);
+                                } else {
+                                    $model->errors = $newUser->getErrors();
+                                }
                             }
                         }
+                    }
 		}
 		// display the login form
 		$this->render('register',array('model'=>$model));

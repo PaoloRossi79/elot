@@ -142,9 +142,11 @@ class UserTransactions extends PActiveRecord
             }
         }
         
-        public function addBuyCreditTrans($credit,$promotionId=null){
+        public function addBuyCreditTrans($credit,$userId,$promotionId=null){
+            Yii::log("addBuyCreditTrans Par: credit= ".$credit, "error");
+            Yii::log("addBuyCreditTrans Par: userId= ".$userId, "error");
             $trans=new UserTransactions;
-            $trans->user_id=Yii::app()->user->id;
+            $trans->user_id=$userId;
             $trans->transaction_type=Yii::app()->params['userTransactionConst']['buyCredit'];
             //TODO: add tracking for paypal transactions table
             $trans->value=$credit;
@@ -154,6 +156,14 @@ class UserTransactions extends PActiveRecord
             if($trans->save()){
                 return true;
             } else {
+                $errs = $trans->getErrors();
+                $eS = "";
+                foreach($errs as $e){
+                    foreach($e as $ee){
+                        $eS .= $ee;
+                    }
+                }
+                Yii::log("addBuyCreditTrans Error: ".$eS, "error");
                 return false;
             }
         }

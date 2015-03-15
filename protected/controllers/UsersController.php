@@ -58,18 +58,22 @@ class UsersController extends Controller
 	}
         
         protected function beforeAction(CAction $action){
-            $model = Users::model()->getMyProfile();
-            Yii::import("xupload.models.XUploadForm");
-            $this->upForm = new XUploadForm;
-            $this->locationForm=new Locations;
-            $this->subscriptionForm = new SubscriptionForm;
-            $this->tickets = Tickets::model()->getMyTickets(array());
-            $this->userWithdraw = new UserWithdraw;
-            if($model->id){
-                $existLoc=Locations::model()->findByPk($model->location_id);
-                if($existLoc)
-                    $this->locationForm=$existLoc;
-            } 
+            if(!Yii::app()->user->isGuest()){
+                if($action->id != "confirmBuyCredit" && $action->id != "actionConfirmBuyCredit"){
+                    $model = Users::model()->getMyProfile();
+                    Yii::import("xupload.models.XUploadForm");
+                    $this->upForm = new XUploadForm;
+                    $this->locationForm=new Locations;
+                    $this->subscriptionForm = new SubscriptionForm;
+                    $this->tickets = Tickets::model()->getMyTickets(array());
+                    $this->userWithdraw = new UserWithdraw;
+                    if($model->id){
+                        $existLoc=Locations::model()->findByPk($model->location_id);
+                        if($existLoc)
+                            $this->locationForm=$existLoc;
+                    } 
+                }
+            }
             return parent::beforeAction($action);
         }
         
@@ -399,14 +403,18 @@ class UsersController extends Controller
                 if(isset($withdraw['creditValue'])){
                     $withdrawVal = (float) $withdraw['creditValue'];
                     if($withdrawVal && $withdrawVal > 0){
-                        if($withdrawVal >= 7){
+                        //if($withdrawVal >= 7){
                             $withdrawValWithCommission = $withdrawVal + ($withdrawVal / 100) * 1;
+                            $withdrawValWithoutCommission = $withdrawVal - ($withdrawVal / 100) * 1;
                             $userInfoModel = UserPaymentInfo::model()->find('t.user_id = '.$user->id);
                             if($userInfoModel && (!empty($userInfoModel->paypal_account) || !empty($userInfoModel->iban))){
-                                if($withdrawValWithCommission <= Yii::app()->user->walletValue){
+                                //if($withdrawValWithCommission <= Yii::app()->user->walletValue){
+                                if($withdrawVal <= Yii::app()->user->walletValue){
                                     $drawReq = new UserWithdraw;
                                     $drawReq->user_id = $user->id;
-                                    $drawReq->value = $withdrawValWithCommission;
+                                    //$drawReq->value = $withdrawValWithCommission;
+                                    $drawReq->value = $withdrawVal;
+                                    $drawReq->net_value = $withdrawValWithoutCommission;
                                     $drawReq->status = 1;
 
                                     $dbTransaction=$user->dbConnection->beginTransaction();
@@ -433,9 +441,9 @@ class UsersController extends Controller
                             } else {
                                 $resError = Yii::t('wonlot','Dati di pagamento mancanti');
                             }
-                        } else {
+                        /*} else {
                             $resError = Yii::t('wonlot','L\'importo minimo da ritirare è 7 €');
-                        }
+                        }*/
                     } else {
                         $resError = Yii::t('wonlot','Valore da ritirare mancante o errato');
                     }
@@ -686,11 +694,10 @@ class UsersController extends Controller
         public function actionOkBuyCredit(){
             $model = Users::model()->getMyProfile();
             $this->confirmMsg = array("res"=>true);
-            $this->render('_creditPanel',
-                array(
-                    'model'=>$model,
-                )
-            );
+            $this->redirect(array(
+                'users/myProfile',
+                ''=>'#tabProfile2'
+            ));
         }
         
         public function actionKoBuyCredit(){
@@ -704,14 +711,16 @@ class UsersController extends Controller
         }
         
         public function actionConfirmBuyCredit(){
-            Yii::log("MPS-conf1", "warning");
+            Yii::log("ConfirmBuyCredit","warning");
             Yii::import('application.vendor.*');
             require_once('mps/PgConsTriv.php');
             $pg = new PgConsTriv($lng);
             $pg->setAction('Purchase');
-            foreach($_POST as $s){
-                Yii::log($s, "warning");
+            $sPost = "";
+            foreach($_POST as $k=>$s){
+                $sPost .= $k."=".$s;
             }
+            Yii::log("POST=".$sPost, "warning");
             $pg->setVal_NM($_POST);
             // get paymentid
             $paymentid = $pg->getPaymentID_NM();
@@ -719,7 +728,9 @@ class UsersController extends Controller
             if( $paymentid !== false ){
                 Yii::log("MPS 2: ".$paymentid, "warning");
                 // Recupero Ordine dal database in base al PaymentID settato in fase di PaymentInit
-                $creditRecord = UserBuyCredit::model()->findByPk($paymentid);
+                $mpsCrit = new CDbCriteria();
+                $mpsCrit->addCondition("t.mps_payment_id = ".$paymentid);
+                $creditRecord = UserBuyCredit::model()->find($mpsCrit);
                 if($creditRecord){
                     Yii::log("MPS 3", "warning");
                     // set Security Code per verifica validità del Notification Message
@@ -728,20 +739,51 @@ class UsersController extends Controller
                     Yii::log("MPS 4: secCode=".$secCode, "warning");
                     // Verifico autenticità del NotificationMessage
                     if( $pg->isValid_NM() ) {
-                        Yii::log("MPS 5", "warning");
                         # Transazione Elaborata
                         if( $pg->isTransGood_NM() && $creditRecord->status == "NEW" && $pg->getVal_NM("trackid") == $creditRecord->id) {
-                            Yii::log("MPS 6", "warning");
                             // OK, Registro STATO e dati TRANSAZIONE nel DB
-                            $TranID = $pg->getVal_NM("tranid");
-                            $Auth = $pg->getVal_NM("auth");
                             $creditRecord->status = $pg->getVal_NM("result");
-                            Yii::log("MPS 7:".$TranID, "warning");
-                            Yii::log("MPS 8:".$Auth, "warning");
-                            Yii::log("MPS 9:".$creditRecord->status, "warning");
+                            $creditRecord->is_complete = true;
+                            $creditRecord->mps_result_trans_id = $pg->getVal_NM("tranid");
+                            $creditRecord->mps_result_auth = $pg->getVal_NM("auth");
+                            if($creditRecord->save()){
+                                Yii::log("MPS 5", "warning");
+                                $user = Users::model()->findByPk($creditRecord->user_id);
+                                $dbTransaction=$user->dbConnection->beginTransaction();
+                                $user->available_balance_amount+=$creditRecord->amount;
+                                if($user->save()){
+                                    Yii::log("MPS 6", "warning");
+                                    if(UserTransactions::model()->addBuyCreditTrans($creditRecord->amount,$creditRecord->user_id)){
+                                        //Users::model()->addPromotionForBuy($creditRecord->amount,$creditRecord->user_id);
+                                        Yii::log("MPS 7", "warning");
+                                        $dbTransaction->commit();
+                                    } else {
+                                        // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
+                                        $dbTransaction->rollback();
+                                    }
+                                } else {
+                                    // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
+                                    $dbTransaction->rollback();
+                                }
+                                echo "REDIRECT=". $pg->getURL_NM();
+                            } else {
+                                // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
+                            }
+                        } else {
+                            if( $pg->isTransError_NM() ) {
+                                $creditRecord->error_msg = $pg->getVal_NM("ErrorText");
+                                $creditRecord->save();
+                            }
+                        }
+                    } else {
+                        if( $pg->isTransError_NM() ) {
+                            $creditRecord->error_msg = $pg->getVal_NM("ErrorText");
                             $creditRecord->save();
                         }
                     }
+                } else {
+                    Yii::log("MPS ID ERROR :".$paymentid, "warning");
+                    Yii::log("MPS ID Non trovato su DB", "warning");
                 }
             }
         }
@@ -930,7 +972,9 @@ class UsersController extends Controller
                     //$this->redirect(array('users/myProfile#tabProfile2'));
                 } else {
                     // Registro il PaymentID nel database e invio l'utente alla HPP del Gateway
-                    $newUserBuyCredit->mps_payment_id = $pg->getID_PI();
+                    $mps_payment_id = $pg->getID_PI();
+                    $newUserBuyCredit->mps_payment_id = $mps_payment_id;
+                    Yii::log("MpsId=".$mps_payment_id,"warning");
                     if($newUserBuyCredit->save()){
                         return array("res"=>true,"msg"=>$pg->getPaymentURL_PI());
                     } else {
@@ -938,19 +982,5 @@ class UsersController extends Controller
                     }
                 }
             }
-            
-
-            //TODO: manage PAYPAL!!!!
-            /*$dbTransaction=$user->dbConnection->beginTransaction();
-            $user->available_balance_amount+=$credit;
-            if($user->save()){
-                if(UserTransactions::model()->addBuyCreditTrans($credit)){
-                    $dbTransaction->commit();
-                } else {
-                    $dbTransaction->rollback();
-                }
-            } else {
-                $dbTransaction->rollback();
-            }*/
         }
 }

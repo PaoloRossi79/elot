@@ -16,13 +16,13 @@
     
         
         <button class="btn btn-success" data-toggle="modal" data-target="#buy-credit-modal">
-            <em class="glyphicon glyphicon-credit-card"> <?php echo Yii::t('wonlot','Compra credito'); ?></em>
+            <em class="glyphicon glyphicon-credit-card"> <?php echo Yii::t('wonlot','Acquista WMONEY'); ?></em>
         </button>
         <button class="btn btn-primary" data-toggle="modal" data-target="#with-credit-modal">
-            <em class="glyphicon glyphicon-download"> <?php echo Yii::t('wonlot','Preleva credito'); ?></em>
+            <em class="glyphicon glyphicon-download"> <?php echo Yii::t('wonlot','Converti i tuoi WMONEY'); ?></em>
         </button>
         <button class="btn btn-info" data-toggle="modal" data-target="#gift-credit-modal">
-            <em class="glyphicon glyphicon-gift"> <?php echo Yii::t('wonlot','Regala credito'); ?></em>
+            <em class="glyphicon glyphicon-gift"> <?php echo Yii::t('wonlot','Regala i tuoi WMONEY'); ?></em>
         </button>
         <div class="col-md-6" id="retrive-credit-panel">
             <div class="text-block">

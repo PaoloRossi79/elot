@@ -26,7 +26,7 @@ class RegisterForm extends CFormModel
 	{
 		return array(
 			// username and password are required
-			array('email, confirmEmail, password, confirmPassword , username', 'required'),
+			array('email, confirmEmail, password, confirmPassword , username, terms', 'required'),
 			array('email', 'email'),
 			array('confirmEmail', 'email'),
                         // flags need to be a boolean
@@ -85,6 +85,7 @@ class RegisterForm extends CFormModel
             $model->signup_ip=CHttpRequest::getUserHostAddress();
             $model->dns=CHttpRequest::getUserHost();
             $dbTransaction=$model->dbConnection->beginTransaction();
+            
             if($model->save()){
                 $profile=new UserProfiles;
                 $profile->user_id=$model->id;
@@ -99,7 +100,7 @@ class RegisterForm extends CFormModel
             } else {
                 $dbTransaction->rollback();
                 $model->addError('email', $model->errors);
-                return false;
+                return $model;
             }
 	}
 }

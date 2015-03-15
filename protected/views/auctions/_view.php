@@ -133,7 +133,11 @@
                     </p>
                     <div class="box-panel-win panel panel-warning">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                            <?php if($model->status >= Yii::app()->params['lotteryStatusConst']['closed']){ ?>
+                                <h3 class="panel-title"><?php echo Yii::t('wonlot','Vincitore'); ?></h3>
+                            <?php } else { ?>
+                                <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                            <?php } ?>
                         </div>
                         <div class="panel-body">
                             <dl class="dl-horizontal">
@@ -174,7 +178,11 @@
         <div class="col-md-4">
             <div class="box-panel-win panel panel-warning">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                    <?php if($model->status >= Yii::app()->params['lotteryStatusConst']['closed']){ ?>
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Vincitore'); ?></h3>
+                    <?php } else { ?>
+                        <h3 class="panel-title"><?php echo Yii::t('wonlot','Attualmente in testa'); ?></h3>
+                    <?php } ?>
                 </div>
                 <div class="panel-body winner-panel winningBox">
                     <dl class="dl-horizontal">
@@ -203,11 +211,11 @@
                     <?php if(in_array($model->status, array(Yii::app()->params['lotteryStatusConst']['open'],Yii::app()->params['lotteryStatusConst']['active']))){ ?>
                         <!--<button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal" onclick="js:$.updateLotteryModal('buy',<?php echo $model->id; ?>);">-->
                         <button class="btn btn-primary btn-lg" id="openBuyModal" data-toggle="modal" data-target="#buy-modal">
-                            <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Compra biglietto'); ?></em>
+                            <em class="glyphicon glyphicon-ok"><?php echo Yii::t('wonlot','Acquista WTICKET'); ?></em>
                         </button>
                         <!--<button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal"  onclick="js:$.updateLotteryModal('gift',<?php echo $model->id; ?>);">-->
                         <button class="btn btn-primary btn-lg" id="openGiftModal" data-toggle="modal" data-target="#gift-modal">
-                            <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala biglietto'); ?></em>
+                            <em class="glyphicon glyphicon-gift"><?php echo Yii::t('wonlot','Regala WTICKET'); ?></em>
                         </button>
                     <?php } else { ?>
                         <p>L' Asta non è aperta, non è possibile acquistare biglietti</p>

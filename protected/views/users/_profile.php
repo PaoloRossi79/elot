@@ -112,6 +112,36 @@
             
             <div class="form-group">
                 <div class="col-sm-2">
+                    <?php echo $form->labelEx($profile,'birthday',array('class'=>'control-label'));?>
+                </div>
+                <div class="col-sm-6">
+                    <div class="checkbox">
+                        <?php echo 
+                            $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
+                                'id' => 'birthday',
+                                'model' => $profile,
+                                'attribute' => 'birthday',
+                                'htmlOptions' => $htmlDisabled,
+                                'options'=>array(
+                                        'dateFormat'=>Yii::app()->params['toUserDateFormat'],
+                                        'minDate'=>date('d/m/Y'),
+                                        'timeFormat'=>Yii::app()->params['toUserTimeFormat'],
+                                        'showSecond'=>false,
+                                        'showTimezone'=>false,
+                                        'language' => 'it',
+                                        'ampm' => false,
+                                        'showAnim'=>'fold',
+                                ),
+                                'language' => 'it',
+                            ),true);
+                        ?>
+                        <?php echo $form->error($profile,'birthday'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-2">
                     <?php echo $form->labelEx($profile,'description',array('class'=>'control-label'));?>
                 </div>
                 <div class="col-sm-6">

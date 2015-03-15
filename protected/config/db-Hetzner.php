@@ -1,10 +1,10 @@
 <?php
 
 $db = array(
-        'connectionString' => 'mysql:host=localhost;dbname=socialcooking_old',
+        'connectionString' => 'mysql:host=localhost;dbname=wonlot',
         'emulatePrepare' => true,
-        'username' => 'cupu',
-        'password' => 'Cupuppo!!Reader',
+        'username' => 'root',
+        'password' => 'm0ney4us',
         'charset' => 'utf8',
 );
 

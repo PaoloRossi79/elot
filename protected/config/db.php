@@ -1,13 +1,20 @@
 <?php
 
-$db = array(
-        'connectionString' => 'mysql:host=localhost;dbname=socialcooking_old',
+/*$db = array(
+        'connectionString' => 'mysql:host=localhost;dbname=wonlot',
         'emulatePrepare' => true,
-        'username' => 'root',
-        'password' => 'rsspla79',
+        'username' => 'elot',
+        'password' => 'elotroot',
+        'charset' => 'utf8',
+);*/
+
+$db = array(
+        'connectionString' => 'mysql:host=db4free.net;dbname=elot',
+        'emulatePrepare' => true,
+        'username' => 'elot',
+        'password' => 'rootelot',
         'charset' => 'utf8',
 );
-
 $fbconfig = array(
     'class' => 'ext.yii-facebook-opengraph.SFacebook',
     'appId'=>'552702101478191', // needed for JS SDK, Social Plugins and PHP SDK

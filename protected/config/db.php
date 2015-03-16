@@ -1,5 +1,5 @@
 <?php
-
+/*
 $db = array(
         'connectionString' => 'mysql:host=localhost;dbname=elot',
         'emulatePrepare' => true,
@@ -17,6 +17,7 @@ $db = array(
         'password' => 'rootelot',
         'charset' => 'utf8',
 );
+
 $fbconfig = array(
     'class' => 'ext.yii-facebook-opengraph.SFacebook',
     'appId'=>'552702101478191', // needed for JS SDK, Social Plugins and PHP SDK

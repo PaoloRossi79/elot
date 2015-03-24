@@ -112,11 +112,11 @@
             
             <div class="form-group">
                 <div class="col-sm-2">
-                    <?php echo $form->labelEx($profile,'birthday',array('class'=>'control-label'));?>
+                    <?php //echo $form->labelEx($profile,'birthday',array('class'=>'control-label'));?>
                 </div>
                 <div class="col-sm-6">
                     <div class="checkbox">
-                        <?php echo 
+                        <?php /* echo 
                             $this->widget('ext.EJuiDateTimePicker.EJuiDateTimePicker', array(
                                 'id' => 'birthday',
                                 'model' => $profile,
@@ -133,9 +133,9 @@
                                         'showAnim'=>'fold',
                                 ),
                                 'language' => 'it',
-                            ),true);
+                            ),true);*/
                         ?>
-                        <?php echo $form->error($profile,'birthday'); ?>
+                        <?php //echo $form->error($profile,'birthday'); ?>
                     </div>
                 </div>
             </div>
@@ -249,7 +249,19 @@
             </div>
             <?php if(!$model->isNewRecord){ ?>
                 <div class="col-sm-2">
-                    <?php echo CHtml::ajaxButton('Cancella utente',Yii::app( )->createUrl( "/users/deleteMyUser"),array(),array('class'=>'btn btn-danger')); ?>
+                    <?php echo CHtml::ajaxButton('Cancella utente',Yii::app( )->createUrl( "/users/deleteMyUser"),
+                            array(
+                                'beforeSend'=>
+                                    'js:function(){
+                                        var res = confirm("Sei sicuro di voler cancellare il tuo profilo? L\'operazione non è annullabile");
+                                        if(res == true){
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }'
+                            ),
+                            array('class'=>'btn btn-danger')); ?>
                 </div>
             <?php } ?>
 	</div>

@@ -77,6 +77,7 @@ class Hybrid_Providers_Google extends Hybrid_Provider_Model_OAuth2
 			$this->user->profile->birthDay   = (int) $birthday_day;
 			$this->user->profile->birthMonth = (int) $birthday_month;
 			$this->user->profile->birthYear  = (int) $birthday_year;
+                        $this->user->profile->birthday = $response['birthday'];
 		}
 
 		return $this->user->profile;

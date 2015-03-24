@@ -255,9 +255,33 @@ class Users extends PActiveRecord
             }
             if($userId){
                $offer = new UserSpecialOffers();
+               $offer->user_id = $userId;
                $offer->offer_on = Yii::app()->params['specialOffersCode']['ticket-buy'];
-               
+               $offer->offer_value = 50;
+               $offer->start_date = new CDbExpression('NOW()');
+               $offer->comment = "Acquisto WTicket: " . $amount;
+               if($amount >= 400) {
+                   $offer->times_remaining = 70;
+               } elseif($amount >= 400) {
+                   $offer->times_remaining = 50;
+               } elseif($amount >= 300) {
+                   $offer->times_remaining = 35;
+               } elseif($amount >= 200) {
+                   $offer->times_remaining = 15;
+               } elseif($amount >= 100) {
+                   $offer->times_remaining = 7;
+               } elseif($amount >= 50) {
+                   $offer->times_remaining = 4;
+               } elseif($amount >= 30) {
+                   $offer->times_remaining = 1;
+               } elseif($amount >= 10) {
+                   $offer->times_remaining = 70;
+               } 
+               if($offer->save()){
+                   return true;
+               } 
             }
+            return false;
         }
         
         public function getConfirmLink($user){
@@ -290,6 +314,17 @@ class Users extends PActiveRecord
             } elseif (in_array($user->ext_source, array(Yii::app()->params['authExtSource']['Facebook'],Yii::app()->params['authExtSource']['Google']))) {
                 $url = CHtml::image($user->profile->img, "User Avatar", array("class"=>$class));
             }
+            if($user->is_active == -1){
+                $url = CHtml::image("/images/site/voidUser.jpg", "User Avatar", array("class"=>$class));
+            }
             return $url;
+        }
+        
+        protected function afterFind() {
+            // Format dates based on the locale
+            if($this->is_active == -1){
+                $this->username = "Utente cancellato";
+            }
+            return parent::afterFind();
         }
 }

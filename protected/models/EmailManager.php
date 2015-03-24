@@ -41,7 +41,22 @@ class EmailManager extends PActiveRecord
             }
         }
 
-	public function sendConfirmEmail($user){
+	public function sendAdminCreditErrorEmail($userBuyCredit, $errorMsg){
+            try {
+                $mail = new YiiMailer();
+                $mail->setView('adminCreditError');
+                $mail->setData(array('userBuyCredit' => $userBuyCredit, 'errorMsg' => $errorMsg));
+                $mail->setFrom('info@wonlot.com', 'WonLot');
+                $mail->setTo('paolorossi79@gmail.com');
+                $mail->setSubject('Error UserBuyCredit');
+                $sendRes=EmailManager::sendWithTry($mail);
+                return $sendRes;
+            } catch (Exception $e){
+                Yii::log("Err sending email: ".$e->getMessage(), "error");
+            }
+        }
+        
+        public function sendConfirmEmail($user){
             try {
                 $mail = new YiiMailer();
                 $mail->setView('confirmEmail');

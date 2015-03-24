@@ -36,14 +36,14 @@ class UsersController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('ajaxCheckUsername','confirmEmail','getNumUnreadNotifications'),
+				'actions'=>array('ajaxCheckUsername','confirmEmail','getNumUnreadNotifications','confirmBuyCredit'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('view','buyCredit','giftCredit','myProfile','editNewsletter',
                                     'setFavorite','unsetFavorite','allNotify','markNotifyRead','markNewNotifyRead',
                                     'savePayInfo','requestWithdraw','acceptPolicy','payInfo','searchTicket',
-                                    'okBuyCredit','koBuyCredit','confirmBuyCredit'),
+                                    'okBuyCredit','koBuyCredit','deleteMyUser'),
 				'users'=>array('@'),
 			),
                         array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -271,7 +271,11 @@ class UsersController extends Controller
 	{
                 $userId = Yii::app()->user->id;
                 try {
-                    $this->loadModel($userId)->delete();
+                    $userModel = $this->loadModel($userId);
+                    $userModel->is_active = -1;
+                    $userModel->save();
+                    Yii::app()->user->logout();
+                    $this->redirect(Yii::app()->homeUrl);
                 } catch (Exception $exc) {
                     echo $exc->getTraceAsString();
                 }
@@ -654,10 +658,16 @@ class UsersController extends Controller
                     if(isset($_POST['Users']['creditOption']) && $_POST['Users']['creditOption'] !== ""){
                         $credit=(float) Yii::app()->params['buyCreditOptions'][$_POST['Users']['creditOption']];
                         if(is_float($credit) and $credit > 0){
+                            Yii::log("MPS-F1", "warning");
                             $finalize = $this->_finalizeBuyCredit($credit,$model);
+                            Yii::log("MPS-F2", "warning");
+                            // SOLO PER DEBUG
+                            //$resSpecialOffer = Users::model()->addPromotionForBuy($credit,Yii::app()->user->id);
                             if($finalize['res']){
+                                Yii::log("MPS-F3", "warning");
                                 $location = $finalize['msg'];
                             } else {
+                                Yii::log("MPS-F4 ".$errMsg = $finalize['msg'], "warning");
                                 $errMsg = $finalize['msg'];
                             }
                         } else {
@@ -666,11 +676,15 @@ class UsersController extends Controller
                     } elseif(isset($_POST['Users']['creditValue']) && $_POST['Users']['creditValue'] !== ""){
                         $credit=(float) $_POST['Users']['creditValue'];
                         if(is_float($credit) and $credit > Yii::app()->params['buyCreditOptions'][0]){
-                            list($res,$msg) = $this->_finalizeBuyCredit($credit,$model);
+                            Yii::log("MPS-F5", "warning");
                             $finalize = $this->_finalizeBuyCredit($credit,$model);
+                            Yii::log("MPS-F6", "warning");
+                            //$finalize = $this->_finalizeBuyCredit($credit,$model);
                             if($finalize['res']){
+                                Yii::log("MPS-F7", "warning");
                                 $location = $finalize['msg'];
                             } else {
+                                Yii::log("MPS-F8 ".$errMsg = $finalize['msg'], "warning");
                                 $errMsg = $finalize['msg'];
                             }
                         } else {
@@ -754,19 +768,25 @@ class UsersController extends Controller
                                 if($user->save()){
                                     Yii::log("MPS 6", "warning");
                                     if(UserTransactions::model()->addBuyCreditTrans($creditRecord->amount,$creditRecord->user_id)){
-                                        //Users::model()->addPromotionForBuy($creditRecord->amount,$creditRecord->user_id);
-                                        Yii::log("MPS 7", "warning");
-                                        $dbTransaction->commit();
+                                        $resSpecialOffer = Users::model()->addPromotionForBuy($creditRecord->amount,$creditRecord->user_id);
+                                        if($resSpecialOffer){
+                                            Yii::log("MPS 7", "warning");
+                                            $dbTransaction->commit();
+                                        } else {
+                                            EmailManager::sendAdminCreditErrorEmail($creditRecord, "Errore salvataggio offerta speciale");
+                                            $dbTransaction->rollback();
+                                        }
                                     } else {
-                                        // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
+                                        EmailManager::sendAdminCreditErrorEmail($creditRecord, "Errore aggiunta tracciatura credito");
                                         $dbTransaction->rollback();
                                     }
                                 } else {
-                                    // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
+                                    EmailManager::sendAdminCreditErrorEmail($creditRecord, "Errore aggiunta credito");
                                     $dbTransaction->rollback();
                                 }
                                 echo "REDIRECT=". $pg->getURL_NM();
                             } else {
+                                EmailManager::sendAdminCreditErrorEmail($creditRecord, "Errore salvataggio record in userBuyCredit");
                                 // TODO: Manda Email ad ADMIN x avvisare dell'errore!!!
                             }
                         } else {
@@ -976,8 +996,10 @@ class UsersController extends Controller
                     $newUserBuyCredit->mps_payment_id = $mps_payment_id;
                     Yii::log("MpsId=".$mps_payment_id,"warning");
                     if($newUserBuyCredit->save()){
+                        Yii::log("MpsPayURL=".$pg->getPaymentURL_PI(),"warning");
                         return array("res"=>true,"msg"=>$pg->getPaymentURL_PI());
                     } else {
+                        Yii::log("MpsPayURL=ERRORE-save-newUserBuyCredit","warning");
                         return array("res"=>false,"msg"=>Yii::t('wonlot','Errore nel salvataggio dell\'ID transazione'));
                     }
                 }

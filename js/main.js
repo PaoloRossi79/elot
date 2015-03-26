@@ -628,7 +628,7 @@ $(window).bind("load", function() {
        },200);
    };
    
-   var modalHasBeenUpdated = false;
+   var modalHasBeenUpdated = false; 
    $.modalHasUpdated = function(val){
        modalHasBeenUpdated = val;
    };

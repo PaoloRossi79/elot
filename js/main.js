@@ -1,6 +1,5 @@
 // executed after ALL (also after document.ready !!!)
 $(window).bind("load", function() {
-   var urlPrefix = "/index.php?";
    var giftBoxActive;
    $('.profile-tab-item a').on('click', function (e) {
        $.each($(this).parent().parent().children('.profile-tab-item'), function(i,item){
@@ -169,7 +168,7 @@ $(window).bind("load", function() {
    $(".follUserBtn").click(function(event){
        var btnClick = $(this);
        var url;
-       url = urlPrefix + "users/setFavorite";
+       url = "/users/setFavorite";
        
        $.post( url , { userId: $(this).attr('name')})
             .done(function( data ) {
@@ -182,7 +181,7 @@ $(window).bind("load", function() {
    $(".unfollUserBtn").click(function(event){
        var btnClick = $(this);
        var url;
-       url = urlPrefix + "users/unsetFavorite";
+       url = "/users/unsetFavorite";
        
        $.post( url , { userId: $(this).attr('name')})
             .done(function( data ) {
@@ -648,7 +647,7 @@ $(window).bind("load", function() {
             jQuery.ajax({
                // The url must be appropriate for your configuration;
                // this works with the default config of 1.1.11
-               url: urlPrefix + 'auctions/getPartialView',
+               url: '/auctions/getPartialView',
                type: "POST",
                data: {view: view, lotId: lotId},  
                error: function(xhr,tStatus,e){
@@ -672,7 +671,7 @@ $(window).bind("load", function() {
     jQuery.ajax({
        // The url must be appropriate for your configuration;
        // this works with the default config of 1.1.11
-       url: urlPrefix + 'auctions/getPartialArray',
+       url: '/auctions/getPartialArray',
        type: "POST",
        data: {lotId: lotId, winnerId: winningUser, winnerVal : winningVal},  
        success: function(resp){

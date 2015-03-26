@@ -89,7 +89,7 @@ return array(
 		
 		'urlManager'=>array(
 			'urlFormat'=>'path',
-                        'showScriptName'=>true,
+                        'showScriptName'=>false,
 			'rules'=>array(
                                 'auctions/<id:\d+>'=>'auctions/view',
 				'auctions/<action:\w+>/<id:\d+>'=>'auctions/<action>',
